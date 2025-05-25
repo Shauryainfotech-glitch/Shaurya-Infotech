@@ -86,10 +86,11 @@ export default function Automation() {
 
   const handleCreateRule = async () => {
     try {
-      await apiRequest('/api/automation-rules', {
-        method: 'POST',
-        data: newRule
-      });
+      await apiRequest(
+        'POST',
+        '/api/automation-rules',
+        newRule
+      );
       
       // Reset form and close dialog
       setNewRule({
@@ -123,10 +124,11 @@ export default function Automation() {
 
   const handleToggleRule = async (ruleId: number, enabled: boolean) => {
     try {
-      await apiRequest(`/api/automation-rules/${ruleId}/toggle`, {
-        method: 'POST',
-        data: { enabled }
-      });
+      await apiRequest(
+        'POST',
+        `/api/automation-rules/${ruleId}/toggle`,
+        { enabled }
+      );
       
       // Success toast
       toast({
@@ -150,9 +152,11 @@ export default function Automation() {
 
   const handleDeleteRule = async (ruleId: number) => {
     try {
-      await apiRequest(`/api/automation-rules/${ruleId}`, {
-        method: 'DELETE'
-      });
+      await apiRequest(
+        'DELETE',
+        `/api/automation-rules/${ruleId}`,
+        undefined
+      );
       
       // Success toast
       toast({
@@ -524,10 +528,10 @@ export default function Automation() {
                     id="actionParams"
                     value={newRule.actionParams}
                     onChange={(e) => setNewRule({...newRule, actionParams: e.target.value})}
-                    placeholder="e.g. [Tender Alert] Deadline approaching for {{tender.title}}"
+                    placeholder="e.g. [Tender Alert] Deadline approaching for tender"
                   />
                   <p className="text-xs text-gray-500 mt-1">
-                    Use {{tender.title}}, {{tender.deadline}}, etc. as placeholders
+                    Use placeholders like tender name and deadline in your template
                   </p>
                 </div>
               )}

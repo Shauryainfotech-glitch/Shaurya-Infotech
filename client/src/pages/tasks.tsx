@@ -104,14 +104,15 @@ export default function Tasks() {
 
   const handleCreateTask = async () => {
     try {
-      await apiRequest('/api/tasks', {
-        method: 'POST',
-        body: JSON.stringify({
+      await apiRequest(
+        'POST',
+        '/api/tasks',
+        {
           ...newTask,
           assignedUserId: newTask.assignedUserId ? parseInt(newTask.assignedUserId) : null,
           tenderId: newTask.tenderId ? parseInt(newTask.tenderId) : null
-        })
-      });
+        }
+      );
       
       // Reset form and close dialog
       setNewTask({
@@ -134,9 +135,11 @@ export default function Tasks() {
 
   const handleCompleteTask = async (taskId: number) => {
     try {
-      await apiRequest(`/api/tasks/${taskId}/complete`, {
-        method: 'POST'
-      });
+      await apiRequest(
+        'POST',
+        `/api/tasks/${taskId}/complete`,
+        {}
+      );
       
       // Refetch tasks
       queryClient.invalidateQueries({ queryKey: ['/api/tasks'] });

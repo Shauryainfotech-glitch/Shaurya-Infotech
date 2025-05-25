@@ -129,15 +129,16 @@ export default function Calendar() {
 
   const handleCreateEvent = async () => {
     try {
-      await apiRequest('/api/calendar-events', {
-        method: 'POST',
-        body: JSON.stringify({
+      await apiRequest(
+        'POST',
+        '/api/calendar-events',
+        {
           ...newEvent,
           userId: newEvent.userId ? parseInt(newEvent.userId) : null,
           tenderId: newEvent.tenderId ? parseInt(newEvent.tenderId) : null,
           taskId: newEvent.taskId ? parseInt(newEvent.taskId) : null
-        })
-      });
+        }
+      );
       
       // Reset form and close dialog
       setNewEvent({

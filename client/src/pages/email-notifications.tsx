@@ -118,15 +118,16 @@ export default function EmailNotifications() {
 
   const handleCreateEmail = async () => {
     try {
-      await apiRequest('/api/email-notifications', {
-        method: 'POST',
-        data: {
+      await apiRequest(
+        'POST',
+        '/api/email-notifications',
+        {
           ...newEmail,
           tenderId: newEmail.tenderId ? parseInt(newEmail.tenderId) : null,
           userId: newEmail.userId ? parseInt(newEmail.userId) : null,
           taskId: newEmail.taskId ? parseInt(newEmail.taskId) : null
         }
-      });
+      );
       
       // Reset form and close dialog
       setNewEmail({
@@ -159,10 +160,11 @@ export default function EmailNotifications() {
 
   const handleSendEmail = async (emailId: number) => {
     try {
-      await apiRequest(`/api/email-notifications/${emailId}/send`, {
-        method: 'POST',
-        data: {}
-      });
+      await apiRequest(
+        'POST',
+        `/api/email-notifications/${emailId}/send`,
+        {}
+      );
       
       // Success toast
       toast({
@@ -184,9 +186,11 @@ export default function EmailNotifications() {
 
   const handleDeleteEmail = async (emailId: number) => {
     try {
-      await apiRequest(`/api/email-notifications/${emailId}`, {
-        method: 'DELETE'
-      });
+      await apiRequest(
+        'DELETE',
+        `/api/email-notifications/${emailId}`,
+        undefined
+      );
       
       // Success toast
       toast({
