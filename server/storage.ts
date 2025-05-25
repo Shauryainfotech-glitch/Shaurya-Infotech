@@ -2,7 +2,12 @@ import {
   users, type User, type InsertUser,
   tenders, type Tender, type InsertTender,
   firms, type Firm, type InsertFirm,
-  documents, type Document, type InsertDocument
+  documents, type Document, type InsertDocument,
+  pipelineStages, type PipelineStage, type InsertPipelineStage,
+  tasks, type Task, type InsertTask,
+  calendarEvents, type CalendarEvent, type InsertCalendarEvent,
+  emailNotifications, type EmailNotification, type InsertEmailNotification,
+  automationRules, type AutomationRule, type InsertAutomationRule
 } from "@shared/schema";
 
 // Define the storage interface
@@ -32,6 +37,47 @@ export interface IStorage {
   createDocument(document: InsertDocument): Promise<Document>;
   updateDocument(id: number, document: Partial<InsertDocument>): Promise<Document | undefined>;
   deleteDocument(id: number): Promise<boolean>;
+  
+  // Pipeline Stage methods
+  getPipelineStage(id: number): Promise<PipelineStage | undefined>;
+  getAllPipelineStages(): Promise<PipelineStage[]>;
+  createPipelineStage(stage: InsertPipelineStage): Promise<PipelineStage>;
+  updatePipelineStage(id: number, stage: InsertPipelineStage): Promise<PipelineStage | undefined>;
+  deletePipelineStage(id: number): Promise<boolean>;
+  
+  // Task methods
+  getTask(id: number): Promise<Task | undefined>;
+  getAllTasks(): Promise<Task[]>;
+  getTasksByTenderId(tenderId: number): Promise<Task[]>;
+  getTasksByUserId(userId: number): Promise<Task[]>;
+  createTask(task: InsertTask): Promise<Task>;
+  updateTask(id: number, task: Partial<InsertTask>): Promise<Task | undefined>;
+  completeTask(id: number): Promise<Task | undefined>;
+  deleteTask(id: number): Promise<boolean>;
+  
+  // Calendar Event methods
+  getCalendarEvent(id: number): Promise<CalendarEvent | undefined>;
+  getAllCalendarEvents(): Promise<CalendarEvent[]>;
+  getCalendarEventsByUserId(userId: number): Promise<CalendarEvent[]>;
+  getCalendarEventsByTenderId(tenderId: number): Promise<CalendarEvent[]>;
+  createCalendarEvent(event: InsertCalendarEvent): Promise<CalendarEvent>;
+  updateCalendarEvent(id: number, event: Partial<InsertCalendarEvent>): Promise<CalendarEvent | undefined>;
+  deleteCalendarEvent(id: number): Promise<boolean>;
+  
+  // Email Notification methods
+  getEmailNotification(id: number): Promise<EmailNotification | undefined>;
+  getAllEmailNotifications(): Promise<EmailNotification[]>;
+  createEmailNotification(notification: InsertEmailNotification): Promise<EmailNotification>;
+  updateEmailNotificationStatus(id: number, status: string): Promise<EmailNotification | undefined>;
+  deleteEmailNotification(id: number): Promise<boolean>;
+  
+  // Automation Rule methods
+  getAutomationRule(id: number): Promise<AutomationRule | undefined>;
+  getAllAutomationRules(): Promise<AutomationRule[]>;
+  createAutomationRule(rule: InsertAutomationRule): Promise<AutomationRule>;
+  updateAutomationRule(id: number, rule: Partial<InsertAutomationRule>): Promise<AutomationRule | undefined>;
+  toggleAutomationRule(id: number, enabled: boolean): Promise<AutomationRule | undefined>;
+  deleteAutomationRule(id: number): Promise<boolean>;
 }
 
 // In-memory storage implementation
@@ -40,22 +86,42 @@ export class MemStorage implements IStorage {
   private tenders: Map<number, Tender>;
   private firms: Map<number, Firm>;
   private documents: Map<number, Document>;
+  private pipelineStages: Map<number, PipelineStage>;
+  private tasks: Map<number, Task>;
+  private calendarEvents: Map<number, CalendarEvent>;
+  private emailNotifications: Map<number, EmailNotification>;
+  private automationRules: Map<number, AutomationRule>;
   
   private nextUserId: number;
   private nextTenderId: number;
   private nextFirmId: number;
   private nextDocumentId: number;
+  private nextPipelineStageId: number;
+  private nextTaskId: number;
+  private nextCalendarEventId: number;
+  private nextEmailNotificationId: number;
+  private nextAutomationRuleId: number;
 
   constructor() {
     this.users = new Map();
     this.tenders = new Map();
     this.firms = new Map();
     this.documents = new Map();
+    this.pipelineStages = new Map();
+    this.tasks = new Map();
+    this.calendarEvents = new Map();
+    this.emailNotifications = new Map();
+    this.automationRules = new Map();
     
     this.nextUserId = 1;
     this.nextTenderId = 1;
     this.nextFirmId = 1;
     this.nextDocumentId = 1;
+    this.nextPipelineStageId = 1;
+    this.nextTaskId = 1;
+    this.nextCalendarEventId = 1;
+    this.nextEmailNotificationId = 1;
+    this.nextAutomationRuleId = 1;
     
     // Add some initial data
     this.initializeData();
@@ -193,8 +259,309 @@ export class MemStorage implements IStorage {
     return this.documents.delete(id);
   }
   
+  // Pipeline Stage methods
+  async getPipelineStage(id: number): Promise<PipelineStage | undefined> {
+    return this.pipelineStages.get(id);
+  }
+  
+  async getAllPipelineStages(): Promise<PipelineStage[]> {
+    return Array.from(this.pipelineStages.values()).sort((a, b) => a.displayOrder - b.displayOrder);
+  }
+  
+  async createPipelineStage(stage: InsertPipelineStage): Promise<PipelineStage> {
+    const id = this.nextPipelineStageId++;
+    const newStage: PipelineStage = { ...stage, id };
+    this.pipelineStages.set(id, newStage);
+    return newStage;
+  }
+  
+  async updatePipelineStage(id: number, stage: InsertPipelineStage): Promise<PipelineStage | undefined> {
+    const existingStage = this.pipelineStages.get(id);
+    if (!existingStage) return undefined;
+    
+    const updatedStage: PipelineStage = {
+      ...existingStage,
+      ...stage,
+    };
+    
+    this.pipelineStages.set(id, updatedStage);
+    return updatedStage;
+  }
+  
+  async deletePipelineStage(id: number): Promise<boolean> {
+    return this.pipelineStages.delete(id);
+  }
+  
+  // Task methods
+  async getTask(id: number): Promise<Task | undefined> {
+    return this.tasks.get(id);
+  }
+  
+  async getAllTasks(): Promise<Task[]> {
+    return Array.from(this.tasks.values());
+  }
+  
+  async getTasksByTenderId(tenderId: number): Promise<Task[]> {
+    return Array.from(this.tasks.values()).filter(task => task.tenderId === tenderId);
+  }
+  
+  async getTasksByUserId(userId: number): Promise<Task[]> {
+    return Array.from(this.tasks.values()).filter(task => task.assignedUserId === userId);
+  }
+  
+  async createTask(task: InsertTask): Promise<Task> {
+    const id = this.nextTaskId++;
+    const now = new Date();
+    const newTask: Task = { 
+      ...task, 
+      id, 
+      createdAt: now,
+      completedAt: null
+    };
+    this.tasks.set(id, newTask);
+    return newTask;
+  }
+  
+  async updateTask(id: number, task: Partial<InsertTask>): Promise<Task | undefined> {
+    const existingTask = this.tasks.get(id);
+    if (!existingTask) return undefined;
+    
+    const updatedTask: Task = {
+      ...existingTask,
+      ...task,
+    };
+    
+    this.tasks.set(id, updatedTask);
+    return updatedTask;
+  }
+  
+  async completeTask(id: number): Promise<Task | undefined> {
+    const existingTask = this.tasks.get(id);
+    if (!existingTask) return undefined;
+    
+    const completedTask: Task = {
+      ...existingTask,
+      status: "Completed",
+      completedAt: new Date()
+    };
+    
+    this.tasks.set(id, completedTask);
+    return completedTask;
+  }
+  
+  async deleteTask(id: number): Promise<boolean> {
+    return this.tasks.delete(id);
+  }
+  
+  // Calendar Event methods
+  async getCalendarEvent(id: number): Promise<CalendarEvent | undefined> {
+    return this.calendarEvents.get(id);
+  }
+  
+  async getAllCalendarEvents(): Promise<CalendarEvent[]> {
+    return Array.from(this.calendarEvents.values());
+  }
+  
+  async getCalendarEventsByUserId(userId: number): Promise<CalendarEvent[]> {
+    return Array.from(this.calendarEvents.values()).filter(event => event.userId === userId);
+  }
+  
+  async getCalendarEventsByTenderId(tenderId: number): Promise<CalendarEvent[]> {
+    return Array.from(this.calendarEvents.values()).filter(event => event.tenderId === tenderId);
+  }
+  
+  async createCalendarEvent(event: InsertCalendarEvent): Promise<CalendarEvent> {
+    const id = this.nextCalendarEventId++;
+    const now = new Date();
+    const newEvent: CalendarEvent = { 
+      ...event, 
+      id, 
+      createdAt: now
+    };
+    this.calendarEvents.set(id, newEvent);
+    return newEvent;
+  }
+  
+  async updateCalendarEvent(id: number, event: Partial<InsertCalendarEvent>): Promise<CalendarEvent | undefined> {
+    const existingEvent = this.calendarEvents.get(id);
+    if (!existingEvent) return undefined;
+    
+    const updatedEvent: CalendarEvent = {
+      ...existingEvent,
+      ...event,
+    };
+    
+    this.calendarEvents.set(id, updatedEvent);
+    return updatedEvent;
+  }
+  
+  async deleteCalendarEvent(id: number): Promise<boolean> {
+    return this.calendarEvents.delete(id);
+  }
+  
+  // Email Notification methods
+  async getEmailNotification(id: number): Promise<EmailNotification | undefined> {
+    return this.emailNotifications.get(id);
+  }
+  
+  async getAllEmailNotifications(): Promise<EmailNotification[]> {
+    return Array.from(this.emailNotifications.values());
+  }
+  
+  async createEmailNotification(notification: InsertEmailNotification): Promise<EmailNotification> {
+    const id = this.nextEmailNotificationId++;
+    const now = new Date();
+    const newNotification: EmailNotification = { 
+      ...notification, 
+      id, 
+      createdAt: now,
+      sentAt: null
+    };
+    this.emailNotifications.set(id, newNotification);
+    return newNotification;
+  }
+  
+  async updateEmailNotificationStatus(id: number, status: string): Promise<EmailNotification | undefined> {
+    const existingNotification = this.emailNotifications.get(id);
+    if (!existingNotification) return undefined;
+    
+    const updatedNotification: EmailNotification = {
+      ...existingNotification,
+      status,
+      sentAt: status === "Sent" ? new Date() : existingNotification.sentAt
+    };
+    
+    this.emailNotifications.set(id, updatedNotification);
+    return updatedNotification;
+  }
+  
+  async deleteEmailNotification(id: number): Promise<boolean> {
+    return this.emailNotifications.delete(id);
+  }
+  
+  // Automation Rule methods
+  async getAutomationRule(id: number): Promise<AutomationRule | undefined> {
+    return this.automationRules.get(id);
+  }
+  
+  async getAllAutomationRules(): Promise<AutomationRule[]> {
+    return Array.from(this.automationRules.values());
+  }
+  
+  async createAutomationRule(rule: InsertAutomationRule): Promise<AutomationRule> {
+    const id = this.nextAutomationRuleId++;
+    const now = new Date();
+    const newRule: AutomationRule = { 
+      ...rule, 
+      id, 
+      createdAt: now
+    };
+    this.automationRules.set(id, newRule);
+    return newRule;
+  }
+  
+  async updateAutomationRule(id: number, rule: Partial<InsertAutomationRule>): Promise<AutomationRule | undefined> {
+    const existingRule = this.automationRules.get(id);
+    if (!existingRule) return undefined;
+    
+    const updatedRule: AutomationRule = {
+      ...existingRule,
+      ...rule,
+    };
+    
+    this.automationRules.set(id, updatedRule);
+    return updatedRule;
+  }
+  
+  async toggleAutomationRule(id: number, enabled: boolean): Promise<AutomationRule | undefined> {
+    const existingRule = this.automationRules.get(id);
+    if (!existingRule) return undefined;
+    
+    const updatedRule: AutomationRule = {
+      ...existingRule,
+      enabled
+    };
+    
+    this.automationRules.set(id, updatedRule);
+    return updatedRule;
+  }
+  
+  async deleteAutomationRule(id: number): Promise<boolean> {
+    return this.automationRules.delete(id);
+  }
+  
   // Initialize with sample data
   private initializeData() {
+    // Sample users
+    const adminUser = this.createUser({
+      username: "admin",
+      password: "admin123",
+      name: "Admin User",
+      email: "admin@tenderai.com",
+      role: "admin",
+      notificationPreferences: "email",
+      profilePicture: null
+    });
+    
+    this.createUser({
+      username: "manager",
+      password: "manager123",
+      name: "Tender Manager",
+      email: "manager@tenderai.com",
+      role: "manager",
+      notificationPreferences: "email",
+      profilePicture: null
+    });
+
+    // Sample pipeline stages
+    const pipelineStages: InsertPipelineStage[] = [
+      {
+        name: "Discovery",
+        description: "Initial discovery and evaluation of tender opportunities",
+        displayOrder: 1,
+        color: "#4F46E5"
+      },
+      {
+        name: "Qualification",
+        description: "Assessing eligibility and qualification criteria",
+        displayOrder: 2,
+        color: "#0EA5E9"
+      },
+      {
+        name: "Preparation",
+        description: "Document preparation and bid development",
+        displayOrder: 3,
+        color: "#10B981"
+      },
+      {
+        name: "Review",
+        description: "Internal review and quality assurance",
+        displayOrder: 4,
+        color: "#F59E0B"
+      },
+      {
+        name: "Submission",
+        description: "Final submission and tracking",
+        displayOrder: 5,
+        color: "#6366F1"
+      },
+      {
+        name: "Awarded",
+        description: "Successfully awarded tenders",
+        displayOrder: 6,
+        color: "#22C55E"
+      },
+      {
+        name: "Lost",
+        description: "Unsuccessful tender applications",
+        displayOrder: 7,
+        color: "#EF4444"
+      }
+    ];
+    
+    // Add pipeline stages
+    const stages = pipelineStages.map(stage => this.createPipelineStage(stage));
+    
     // Sample tenders
     const sampleTenders: InsertTender[] = [
       {
@@ -213,7 +580,10 @@ export class MemStorage implements IStorage {
         predictedMargin: 18.5,
         nlpSummary: "High-value IT infrastructure project focusing on cloud migration and digital transformation. Strong technical requirements match our capabilities.",
         blockchainVerified: true,
-        gptAnalysis: "GPT-4 recommends pursuing this tender. High alignment with firm capabilities, favorable market conditions."
+        gptAnalysis: "GPT-4 recommends pursuing this tender. High alignment with firm capabilities, favorable market conditions.",
+        pipelineStageId: 3, // Preparation stage
+        assignedUserId: 1,
+        submissionDate: new Date("2025-06-10")
       },
       {
         title: "Green Highway Construction Project",
@@ -231,7 +601,10 @@ export class MemStorage implements IStorage {
         predictedMargin: 12.3,
         nlpSummary: "Large-scale highway construction with sustainability focus. Environmental compliance critical.",
         blockchainVerified: true,
-        gptAnalysis: "Moderate recommendation. Higher competition but strong profit potential."
+        gptAnalysis: "Moderate recommendation. Higher competition but strong profit potential.",
+        pipelineStageId: 2, // Qualification stage
+        assignedUserId: 2,
+        submissionDate: new Date("2025-06-25")
       },
       {
         title: "Advanced Medical Equipment Supply",
@@ -249,7 +622,10 @@ export class MemStorage implements IStorage {
         predictedMargin: 22.1,
         nlpSummary: "Medical equipment tender with clear specifications. Strong match with our healthcare portfolio.",
         blockchainVerified: false,
-        gptAnalysis: "Highly recommended. Excellent fit, low risk, high success probability."
+        gptAnalysis: "Highly recommended. Excellent fit, low risk, high success probability.",
+        pipelineStageId: 1, // Discovery stage
+        assignedUserId: 1,
+        submissionDate: new Date("2025-07-05")
       }
     ];
     
@@ -296,23 +672,178 @@ export class MemStorage implements IStorage {
       }
     ];
     
-    // Add users
-    this.createUser({
-      username: "admin",
-      password: "admin123",
-      name: "Admin User",
-      email: "admin@tenderai.com",
-      role: "admin"
+    // Add tenders and firms
+    const tenders = sampleTenders.map(tender => this.createTender(tender));
+    const firms = sampleFirms.map(firm => this.createFirm(firm));
+    
+    // Sample tasks
+    const sampleTasks: InsertTask[] = [
+      {
+        title: "Prepare technical specifications document",
+        description: "Create detailed technical specs for the Smart City IT Infrastructure proposal",
+        status: "In Progress",
+        priority: "High",
+        dueDate: new Date("2025-06-01"),
+        assignedUserId: 1,
+        tenderId: 1,
+        reminderSent: false
+      },
+      {
+        title: "Gather compliance certificates",
+        description: "Collect all required compliance certificates and documentation",
+        status: "Pending",
+        priority: "Medium",
+        dueDate: new Date("2025-06-05"),
+        assignedUserId: 2,
+        tenderId: 1,
+        reminderSent: false
+      },
+      {
+        title: "Finalize pricing model",
+        description: "Complete the pricing model with competitive rates for IT infrastructure components",
+        status: "Pending",
+        priority: "High",
+        dueDate: new Date("2025-06-08"),
+        assignedUserId: 1,
+        tenderId: 1,
+        reminderSent: false
+      },
+      {
+        title: "Environmental impact assessment",
+        description: "Conduct environmental impact assessment for the Green Highway project",
+        status: "In Progress",
+        priority: "High",
+        dueDate: new Date("2025-06-15"),
+        assignedUserId: 2,
+        tenderId: 2,
+        reminderSent: false
+      },
+      {
+        title: "Research medical equipment suppliers",
+        description: "Identify and evaluate potential suppliers for the medical equipment tender",
+        status: "Completed",
+        priority: "Medium",
+        dueDate: new Date("2025-05-20"),
+        assignedUserId: 1,
+        tenderId: 3,
+        reminderSent: true
+      }
+    ];
+    
+    // Add tasks
+    sampleTasks.forEach(task => {
+      this.createTask(task);
     });
     
-    // Add tenders
-    sampleTenders.forEach(tender => {
-      this.createTender(tender);
+    // Sample calendar events
+    const sampleCalendarEvents: InsertCalendarEvent[] = [
+      {
+        title: "Smart City Tender Submission Deadline",
+        description: "Final deadline for Smart City IT Infrastructure Tender",
+        startDate: new Date("2025-06-15T09:00:00"),
+        endDate: new Date("2025-06-15T18:00:00"),
+        allDay: true,
+        location: "Online Portal",
+        userId: 1,
+        tenderId: 1,
+        taskId: null,
+        color: "#EF4444",
+        reminderSent: false
+      },
+      {
+        title: "Pre-bid Meeting",
+        description: "Pre-bid meeting for Smart City IT Infrastructure project",
+        startDate: new Date("2025-05-30T14:00:00"),
+        endDate: new Date("2025-05-30T16:00:00"),
+        allDay: false,
+        location: "Ministry of Electronics & IT, Conference Room 3",
+        userId: 1,
+        tenderId: 1,
+        taskId: null,
+        color: "#0EA5E9",
+        reminderSent: false
+      },
+      {
+        title: "Technical Specification Review",
+        description: "Team meeting to review technical specifications",
+        startDate: new Date("2025-05-28T10:00:00"),
+        endDate: new Date("2025-05-28T12:00:00"),
+        allDay: false,
+        location: "Virtual Meeting",
+        userId: 1,
+        tenderId: 1,
+        taskId: 1,
+        color: "#10B981",
+        reminderSent: false
+      }
+    ];
+    
+    // Add calendar events
+    sampleCalendarEvents.forEach(event => {
+      this.createCalendarEvent(event);
     });
     
-    // Add firms
-    sampleFirms.forEach(firm => {
-      this.createFirm(firm);
+    // Sample email notifications
+    const sampleEmails: InsertEmailNotification[] = [
+      {
+        recipientEmail: "admin@tenderai.com",
+        subject: "Tender Deadline Reminder: Smart City IT Infrastructure",
+        body: "This is a reminder that the Smart City IT Infrastructure tender submission deadline is approaching. Please ensure all documentation is prepared by June 10, 2025.",
+        status: "Pending",
+        userId: 1,
+        tenderId: 1,
+        taskId: null
+      },
+      {
+        recipientEmail: "manager@tenderai.com",
+        subject: "Task Assignment: Environmental Impact Assessment",
+        body: "You have been assigned to complete the Environmental Impact Assessment for the Green Highway Construction Project. Please complete this by June 15, 2025.",
+        status: "Sent",
+        userId: 2,
+        tenderId: 2,
+        taskId: 4
+      }
+    ];
+    
+    // Add email notifications
+    sampleEmails.forEach(email => {
+      this.createEmailNotification(email);
+    });
+    
+    // Sample automation rules
+    const sampleRules: InsertAutomationRule[] = [
+      {
+        name: "Tender Deadline Reminder",
+        description: "Send email reminder 5 days before tender deadline",
+        triggerType: "tender_deadline_approaching",
+        triggerValue: "5", // 5 days before
+        actionType: "send_email",
+        actionParams: JSON.stringify({
+          subject: "Tender Deadline Approaching: {tender_title}",
+          body: "The submission deadline for {tender_title} is approaching in 5 days. Please ensure all documentation is prepared.",
+          recipients: ["assigned_user", "tender_manager"]
+        }),
+        enabled: true
+      },
+      {
+        name: "Auto-create submission task",
+        description: "Create a submission preparation task when tender moves to review stage",
+        triggerType: "stage_change",
+        triggerValue: "4", // Review stage ID
+        actionType: "create_task",
+        actionParams: JSON.stringify({
+          title: "Prepare final submission package",
+          description: "Compile all documents and prepare the final submission package for {tender_title}",
+          priority: "High",
+          dueDate: "{tender_deadline-2}"
+        }),
+        enabled: true
+      }
+    ];
+    
+    // Add automation rules
+    sampleRules.forEach(rule => {
+      this.createAutomationRule(rule);
     });
   }
 }
