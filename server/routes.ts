@@ -16,6 +16,7 @@ import {
 import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
 import { aiService } from './ai-service';
+import { blockchainService } from './blockchain-service';
 
 // Configure multer for file uploads
 const upload = multer({ 
@@ -1220,6 +1221,165 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error predicting success probability:", error);
       res.status(500).json({ message: "Failed to predict success probability" });
+    }
+  });
+
+  // Blockchain API Endpoints for secure tender verification
+  
+  // Record tender submission on blockchain
+  app.post("/api/blockchain/record-tender", async (req: Request, res: Response) => {
+    try {
+      const { tenderId, submissionData, submittedBy } = req.body;
+      if (!tenderId || !submissionData || !submittedBy) {
+        return res.status(400).json({ message: "Tender ID, submission data, and submitter are required" });
+      }
+      
+      const blockHash = await blockchainService.recordTenderSubmission(tenderId, submissionData, submittedBy);
+      res.json({ 
+        success: true, 
+        blockHash,
+        message: "Tender submission recorded on blockchain" 
+      });
+    } catch (error) {
+      console.error("Error recording tender on blockchain:", error);
+      res.status(500).json({ message: "Failed to record tender on blockchain" });
+    }
+  });
+
+  // Record document upload on blockchain
+  app.post("/api/blockchain/record-document", async (req: Request, res: Response) => {
+    try {
+      const { tenderId, documentData, uploadedBy } = req.body;
+      if (!tenderId || !documentData || !uploadedBy) {
+        return res.status(400).json({ message: "Tender ID, document data, and uploader are required" });
+      }
+      
+      const blockHash = await blockchainService.recordDocumentUpload(tenderId, documentData, uploadedBy);
+      res.json({ 
+        success: true, 
+        blockHash,
+        message: "Document upload recorded on blockchain" 
+      });
+    } catch (error) {
+      console.error("Error recording document on blockchain:", error);
+      res.status(500).json({ message: "Failed to record document on blockchain" });
+    }
+  });
+
+  // Record tender award on blockchain
+  app.post("/api/blockchain/record-award", async (req: Request, res: Response) => {
+    try {
+      const { tenderId, awardData, awardedBy } = req.body;
+      if (!tenderId || !awardData || !awardedBy) {
+        return res.status(400).json({ message: "Tender ID, award data, and awarder are required" });
+      }
+      
+      const blockHash = await blockchainService.recordTenderAward(tenderId, awardData, awardedBy);
+      res.json({ 
+        success: true, 
+        blockHash,
+        message: "Tender award recorded on blockchain" 
+      });
+    } catch (error) {
+      console.error("Error recording award on blockchain:", error);
+      res.status(500).json({ message: "Failed to record award on blockchain" });
+    }
+  });
+
+  // Verify tender record integrity
+  app.get("/api/blockchain/verify/:tenderId", async (req: Request, res: Response) => {
+    try {
+      const tenderId = parseInt(req.params.tenderId);
+      if (isNaN(tenderId)) {
+        return res.status(400).json({ message: "Invalid tender ID" });
+      }
+      
+      const verification = blockchainService.verifyTenderRecord(tenderId);
+      res.json(verification);
+    } catch (error) {
+      console.error("Error verifying tender record:", error);
+      res.status(500).json({ message: "Failed to verify tender record" });
+    }
+  });
+
+  // Get tender audit trail
+  app.get("/api/blockchain/audit-trail/:tenderId", async (req: Request, res: Response) => {
+    try {
+      const tenderId = parseInt(req.params.tenderId);
+      if (isNaN(tenderId)) {
+        return res.status(400).json({ message: "Invalid tender ID" });
+      }
+      
+      const auditTrail = blockchainService.getTenderAuditTrail(tenderId);
+      res.json(auditTrail);
+    } catch (error) {
+      console.error("Error getting audit trail:", error);
+      res.status(500).json({ message: "Failed to get audit trail" });
+    }
+  });
+
+  // Generate digital signature
+  app.post("/api/blockchain/sign-document", async (req: Request, res: Response) => {
+    try {
+      const { documentData, privateKey } = req.body;
+      if (!documentData) {
+        return res.status(400).json({ message: "Document data is required" });
+      }
+      
+      const signature = blockchainService.generateDigitalSignature(documentData, privateKey);
+      res.json({ 
+        signature,
+        message: "Digital signature generated successfully" 
+      });
+    } catch (error) {
+      console.error("Error generating digital signature:", error);
+      res.status(500).json({ message: "Failed to generate digital signature" });
+    }
+  });
+
+  // Verify digital signature
+  app.post("/api/blockchain/verify-signature", async (req: Request, res: Response) => {
+    try {
+      const { documentData, signature, publicKey } = req.body;
+      if (!documentData || !signature) {
+        return res.status(400).json({ message: "Document data and signature are required" });
+      }
+      
+      const isValid = blockchainService.verifyDigitalSignature(documentData, signature, publicKey);
+      res.json({ 
+        isValid,
+        message: isValid ? "Signature verified successfully" : "Invalid signature" 
+      });
+    } catch (error) {
+      console.error("Error verifying digital signature:", error);
+      res.status(500).json({ message: "Failed to verify digital signature" });
+    }
+  });
+
+  // Create smart contract for tender
+  app.post("/api/blockchain/create-contract", async (req: Request, res: Response) => {
+    try {
+      const { tenderId, rules } = req.body;
+      if (!tenderId || !rules) {
+        return res.status(400).json({ message: "Tender ID and contract rules are required" });
+      }
+      
+      const contract = blockchainService.createTenderSmartContract(tenderId, rules);
+      res.json(contract);
+    } catch (error) {
+      console.error("Error creating smart contract:", error);
+      res.status(500).json({ message: "Failed to create smart contract" });
+    }
+  });
+
+  // Get blockchain statistics
+  app.get("/api/blockchain/stats", async (req: Request, res: Response) => {
+    try {
+      const stats = blockchainService.getBlockchainStats();
+      res.json(stats);
+    } catch (error) {
+      console.error("Error getting blockchain stats:", error);
+      res.status(500).json({ message: "Failed to get blockchain stats" });
     }
   });
 

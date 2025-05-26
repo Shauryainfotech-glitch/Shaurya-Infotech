@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { TenderList } from "@/components/tenders/tender-list";
 import { TenderDetails } from "@/components/tenders/tender-details";
 import { AIAnalysis } from "@/components/tenders/ai-analysis";
+import { TenderForm } from "@/components/tenders/tender-form";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Filter, Brain, Plus } from "lucide-react";
@@ -11,6 +12,7 @@ import { Tender } from "@shared/schema";
 export default function Tenders() {
   const [selectedTenderId, setSelectedTenderId] = useState<number | null>(null);
   const [viewMode, setViewMode] = useState<"list" | "details" | "ai">("list");
+  const [showTenderForm, setShowTenderForm] = useState(false);
 
   const { data: tenders, isLoading } = useQuery<Tender[]>({
     queryKey: ['/api/tenders'],
