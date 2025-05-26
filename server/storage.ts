@@ -153,28 +153,48 @@ export class MemStorage implements IStorage {
   async getAllTenders(): Promise<Tender[]> {
     try {
       const result = await db.select().from(tenders);
+      
       return result.map(tender => ({
         ...tender,
         deadline: new Date(tender.deadline),
-        createdAt: new Date(tender.createdAt)
+        createdAt: new Date(tender.createdAt),
+        submissionDate: tender.submissionDate ? new Date(tender.submissionDate) : null
       }));
     } catch (error) {
       console.error("Database error fetching tenders:", error);
-      // Fallback to in-memory storage
       return Array.from(this.tenders.values());
     }
   }
   
   async createTender(tender: InsertTender): Promise<Tender> {
     try {
-      // Try database first
-      const [newTender] = await db.insert(tenders).values({
-        ...tender,
+      // Create complete tender object with all required fields
+      const tenderData = {
+        title: tender.title,
+        organization: tender.organization,
+        description: tender.description,
+        value: tender.value,
+        deadline: tender.deadline,
         status: tender.status || 'Active',
         tenderId: tender.tenderId || null,
         departmentName: tender.departmentName || 'General',
-        tenderType: tender.tenderType || 'General'
-      }).returning();
+        tenderType: tender.tenderType || 'General',
+        aiScore: tender.aiScore || 85,
+        eligibility: tender.eligibility || 'Under Review',
+        // gemId: tender.gemId || null, // Temporarily removing due to schema mismatch
+        riskScore: tender.riskScore || 25,
+        successProbability: tender.successProbability || 75,
+        competition: tender.competition || 'Medium',
+        predictedMargin: tender.predictedMargin || 15.0,
+        nlpSummary: tender.nlpSummary || null,
+        blockchainVerified: tender.blockchainVerified || false,
+        gptAnalysis: tender.gptAnalysis || null,
+        pipelineStageId: tender.pipelineStageId || 1,
+        assignedUserId: tender.assignedUserId || null,
+        submissionDate: tender.submissionDate || null
+      };
+
+      const [newTender] = await db.insert(tenders).values(tenderData).returning();
       return newTender;
     } catch (error) {
       console.error("Database error creating tender:", error);
@@ -188,7 +208,15 @@ export class MemStorage implements IStorage {
         status: tender.status || 'Active',
         tenderId: tender.tenderId || null,
         departmentName: tender.departmentName || 'General',
-        tenderType: tender.tenderType || 'General'
+        tenderType: tender.tenderType || 'General',
+        aiScore: tender.aiScore || 85,
+        eligibility: tender.eligibility || 'Under Review',
+        riskScore: tender.riskScore || 25,
+        successProbability: tender.successProbability || 75,
+        competition: tender.competition || 'Medium',
+        predictedMargin: tender.predictedMargin || 15.0,
+        blockchainVerified: tender.blockchainVerified || false,
+        pipelineStageId: tender.pipelineStageId || 1
       };
       this.tenders.set(id, newTender);
       return newTender;
@@ -1221,4 +1249,4 @@ export class DatabaseStorage implements IStorage {
   }
 }
 
-export const storage = new DatabaseStorage();
+export const storage = new MemStorage();
