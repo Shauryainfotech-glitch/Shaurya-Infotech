@@ -57,7 +57,7 @@ export default function Tenders() {
                 <Brain className="w-4 h-4 mr-2" />
                 AI Analysis
               </Button>
-              <Button>
+              <Button onClick={() => setShowTenderForm(true)}>
                 <Plus className="w-4 h-4 mr-2" />
                 Create Tender
               </Button>
@@ -94,6 +94,11 @@ export default function Tenders() {
           {viewMode === "details" && selectedTender && <TenderDetails tender={selectedTender} />}
           {viewMode === "ai" && selectedTender && <AIAnalysis tender={selectedTender} />}
         </>
+      )}
+
+      {/* Comprehensive Tender Form with all fields from your image */}
+      {showTenderForm && (
+        <TenderForm onClose={() => setShowTenderForm(false)} />
       )}
     </div>
   );
