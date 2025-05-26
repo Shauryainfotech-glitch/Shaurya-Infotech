@@ -1,0 +1,16 @@
+Sr,Parameter,Description,Applicable Roles,Reward Type
+1,Tender Submission On-Time,Submitted complete tender documents before deadline with no delays,"Tender Executive, Proposal Writer, Legal",Cash Bonus / Points
+2,Tender Win Ratio,High success rate of tenders awarded vs. submitted,"Tender Manager, Entire Team",Quarterly Performance Bonus
+3,High-Value Tender Handled,Managed tenders above ₹50 lakh value,"Tender Manager, Proposal Writer",Slab-Based Incentive
+4,GeM Custom Bid Success,Successfully submitted and converted a custom bid into order,"GeM Coordinator, Proposal Writer",Fixed Bonus
+5,Zero Compliance Error,"No errors in affidavit, eligibility docs, EMD, or legal compliance","Legal Officer, Proposal Writer",Certificate + Points
+6,Proposal Turnaround Time,Created proposal within internal deadline (≤ 48 hours),"Proposal Writer, Document Executive",Performance Score
+7,Innovative Bid Strategy,Developed a creative and custom solution for a complex bid,"Technical, Proposal Writer",Spot Reward
+8,Pre-Bid Participation Quality,Prepared quality pre-bid queries and participated in meetings,"Tender Executive, Technical Coordinator",Points / Recognition
+9,New Department Registration,Completed vendor registration with a new government body,"GeM Coordinator, Tender Admin",Cash Reward
+10,BidAssist Lead Conversion,Successfully converted a lead from BidAssist to a submitted tender,Tender Executive,Fixed Incentive
+11,Odoo CRM Entry Compliance,Timely and accurate updates of tenders in Odoo with all docs,"Tender Executive, Document Control",Score-Based Appraisal
+12,Cross-Team Collaboration,"Coordinated efficiently with legal, BD, and technical teams",All Roles,Team-Based Reward
+13,Top Performer of Quarter,"Based on combined parameters: tenders won, value, quality, teamwork",Any Role,Certificate + Cash Voucher
+14,Zero Resubmission Error,No revisions required after final proposal prepared,"Proposal Writer, Document Control",Bonus Points
+15,Timely Compliance Renewal,Renewed MSME/ISO/CE certificates before expiry deadline,Legal / GeM Coordinator,Appreciation Reward

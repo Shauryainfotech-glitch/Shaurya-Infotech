@@ -848,7 +848,6 @@ export class MemStorage implements IStorage {
   }
 }
 
-import { users, tenders, firms, documents, pipelineStages, tasks, calendarEvents, emailNotifications, automationRules, type User, type InsertUser } from "@shared/schema";
 import { db } from "./db";
 import { eq } from "drizzle-orm";
 

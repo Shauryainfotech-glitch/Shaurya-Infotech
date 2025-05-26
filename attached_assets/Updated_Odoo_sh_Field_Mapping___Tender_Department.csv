@@ -1,0 +1,54 @@
+Module,Field Name,Field Type,Description
+HR & Employees,Position Title,Selection/Text,"Role name (e.g., Tender Manager, Executive)"
+HR & Employees,Department,Relation,Linked to Tender Department
+HR & Employees,Reporting Manager,Many2one,Assigned reporting head
+HR & Employees,Job Responsibilities,Text/HTML,All core tasks for role
+CRM/Tender Tracker,Tender ID,Char,Auto-generated Tender Identifier
+CRM/Tender Tracker,Tender Name,Char,Name of tender from portal
+CRM/Tender Tracker,Department Name,Many2one,Government department issuing tender
+CRM/Tender Tracker,Tender Type,Selection,Open/Limited/GeM/Offline etc.
+CRM/Tender Tracker,Submission Deadline,DateTime,Final submission date & time
+CRM/Tender Tracker,Bid Value,Float,Estimated value of the tender
+CRM/Tender Tracker,Assigned To,Many2one,Tender Executive assigned
+CRM/Tender Tracker,Technical Coordinator,Many2one,Linked technical officer
+CRM/Tender Tracker,Proposal Writer,Many2one,Linked proposal writer
+CRM/Tender Tracker,Compliance Officer,Many2one,Linked legal/compliance reviewer
+CRM/Tender Tracker,Submission Method,Selection,Online/Offline/GeM/Email
+CRM/Tender Tracker,Status,Selection,Draft/Submitted/Awarded/Rejected
+CRM/Tender Tracker,Corrigendum Issued,Boolean,Check if corrigendum is released
+CRM/Tender Tracker,Result Date,Date,Expected or actual bid opening date
+Document Management,Proposal Document,Binary/File,Upload final proposal file
+Document Management,Affidavit/Declaration,Binary/File,Upload notarized legal documents
+Document Management,Compliance Certificate Folder,Many2many,"Linked ISO, MSME, BIS, etc."
+Document Management,Technical Datasheet,Binary/File,Upload datasheets/product compliance
+Document Management,Test Reports,Binary/File,"Attach NABL, CE, FDA reports"
+Analytics & KPI,Submission Success Rate,Float (Computed),Won vs Total Submitted Tenders
+Analytics & KPI,Total Value Submitted,Float,Cumulative value of submitted tenders
+Analytics & KPI,Total Tenders Won,Integer,Count of successful tender outcomes
+Analytics & KPI,Tender Cycle Time,Float,Avg. days taken from release to submission
+CRM/Tender Tracker,Tender Source Portal,Selection,GeM / CPPP / eProc / TenderTiger / Manual
+CRM/Tender Tracker,Tender Classification,Selection,Works / Goods / Services / Consultancy
+CRM/Tender Tracker,EMD Required,Boolean,Whether EMD is applicable for the tender
+CRM/Tender Tracker,EMD Amount,Float,Earnest Money Deposit amount
+CRM/Tender Tracker,EMD Submission Mode,Selection,BG / Online Payment / MSME Exemption
+CRM/Tender Tracker,Affidavit Required,Boolean,Checkbox if affidavit/declaration needed
+CRM/Tender Tracker,Bid Submission Mode,Selection,Manual / Courier / Online / Email
+CRM/Tender Tracker,Post-Bid Requirement,Selection,Presentation / Technical Demo / Price Negotiation
+CRM/Tender Tracker,Bid Clarification Notes,Text,Clarifications asked or responded
+CRM/Tender Tracker,Pre-Bid Meeting Date,DateTime,If applicable
+CRM/Tender Tracker,Pre-Bid Attended,Boolean,Checkbox for internal tracking
+CRM/Tender Tracker,Consortium Partner,Many2one,If submitted in JV/consortium
+CRM/Tender Tracker,Work Order Received,Boolean,If WO is awarded
+CRM/Tender Tracker,Work Order Date,Date,Date of receiving WO
+CRM/Tender Tracker,Agreement Signed,Boolean,If post-bid agreement is done
+CRM/Tender Tracker,Execution Team Assigned,Many2one,Operations or project team lead
+CRM/Tender Tracker,Completion Certificate Uploaded,Binary/File,Proof of successful execution
+Document Management,Pre-Bid Documents,Many2many,Uploaded clarification or queries sent
+Document Management,Award Letter,Binary/File,Final letter from authority
+Document Management,Tender Result Screenshot,Binary/File,Online proof of bid result
+Finance,Tender Budget Estimate,Float,Internal estimate prepared for pricing
+Finance,Final Quoted Price,Float,Price quoted in commercial bid
+Finance,Quotation Margin %,Float (Computed),Profit margin based on estimate vs quote
+Finance,Invoice Raised Post-Win,Boolean,If invoice has been generated
+Finance,Payment Received,Boolean,If payment is received
+Finance,Recovery / Legal Status,Selection,Normal / Legal / Arbitration

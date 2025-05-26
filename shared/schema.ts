@@ -2,26 +2,23 @@ import { pgTable, text, serial, integer, boolean, timestamp, real, date } from "
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
-// User model
+// User model with expanded role management
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   username: text("username").notNull().unique(),
   password: text("password").notNull(),
   name: text("name").notNull(),
   email: text("email").notNull(),
-  role: text("role").notNull().default("user"),
+  positionTitle: text("position_title").notNull().default("Tender Executive"), // Role name (e.g., Tender Manager, Executive, Proposal Writer, Legal Officer, etc.)
+  department: text("department").notNull().default("Tender Department"),
+  reportingManagerId: integer("reporting_manager_id"),
+  jobResponsibilities: text("job_responsibilities"),
   notificationPreferences: text("notification_preferences").notNull().default("email"),
   profilePicture: text("profile_picture"),
 });
 
-export const insertUserSchema = createInsertSchema(users).pick({
-  username: true,
-  password: true,
-  name: true,
-  email: true,
-  role: true,
-  notificationPreferences: true,
-  profilePicture: true,
+export const insertUserSchema = createInsertSchema(users).omit({
+  id: true,
 });
 
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -43,18 +40,64 @@ export const insertPipelineStageSchema = createInsertSchema(pipelineStages).omit
 export type InsertPipelineStage = z.infer<typeof insertPipelineStageSchema>;
 export type PipelineStage = typeof pipelineStages.$inferSelect;
 
-// Tender model
+// Tender model with comprehensive Odoo field mapping
 export const tenders = pgTable("tenders", {
   id: serial("id").primaryKey(),
-  title: text("title").notNull(),
+  tenderId: text("tender_id"), // Auto-generated Tender Identifier
+  title: text("title").notNull(), // Tender Name
+  departmentName: text("department_name").notNull(), // Government department issuing tender
   organization: text("organization").notNull(),
   description: text("description").notNull(),
-  value: text("value").notNull(),
-  deadline: text("deadline").notNull(),
-  status: text("status").notNull().default("Active"),
+  tenderType: text("tender_type").notNull().default("Open"), // Open/Limited/GeM/Offline etc.
+  value: text("value").notNull(), // Bid Value
+  deadline: timestamp("deadline").notNull(), // Final submission date & time
+  status: text("status").notNull().default("Draft"), // Draft/Submitted/Awarded/Rejected
+  
+  // Role assignments based on CSV roles
+  assignedUserId: integer("assigned_user_id"), // Tender Executive assigned
+  technicalCoordinatorId: integer("technical_coordinator_id"), // Technical Coordinator
+  proposalWriterId: integer("proposal_writer_id"), // Proposal Writer
+  complianceOfficerId: integer("compliance_officer_id"), // Legal/Compliance Officer
+  
+  // Submission details
+  submissionMethod: text("submission_method").notNull().default("Online"), // Online/Offline/GeM/Email
+  tenderSourcePortal: text("tender_source_portal").notNull().default("Manual"), // GeM / CPPP / eProc / TenderTiger / Manual
+  tenderClassification: text("tender_classification").notNull().default("Goods"), // Works / Goods / Services / Consultancy
+  
+  // EMD and compliance
+  emdRequired: boolean("emd_required").notNull().default(false),
+  emdAmount: real("emd_amount"),
+  emdSubmissionMode: text("emd_submission_mode"), // BG / Online Payment / MSME Exemption
+  affidavitRequired: boolean("affidavit_required").notNull().default(false),
+  
+  // Pre-bid details
+  preBidMeetingDate: timestamp("pre_bid_meeting_date"),
+  preBidAttended: boolean("pre_bid_attended").notNull().default(false),
+  corrigendumIssued: boolean("corrigendum_issued").notNull().default(false),
+  
+  // Post-bid requirements
+  postBidRequirement: text("post_bid_requirement"), // Presentation / Technical Demo / Price Negotiation
+  bidClarificationNotes: text("bid_clarification_notes"),
+  consortiumPartner: text("consortium_partner"),
+  
+  // Results and awards
+  resultDate: date("result_date"), // Expected or actual bid opening date
+  workOrderReceived: boolean("work_order_received").notNull().default(false),
+  workOrderDate: date("work_order_date"),
+  agreementSigned: boolean("agreement_signed").notNull().default(false),
+  executionTeamAssignedId: integer("execution_team_assigned_id"),
+  
+  // Financial details
+  tenderBudgetEstimate: real("tender_budget_estimate"),
+  finalQuotedPrice: real("final_quoted_price"),
+  quotationMargin: real("quotation_margin"), // Profit margin %
+  invoiceRaised: boolean("invoice_raised").notNull().default(false),
+  paymentReceived: boolean("payment_received").notNull().default(false),
+  recoveryLegalStatus: text("recovery_legal_status").notNull().default("Normal"), // Normal / Legal / Arbitration
+  
+  // AI and analysis fields
   aiScore: integer("ai_score").notNull().default(0),
   eligibility: text("eligibility").notNull().default("Under Review"),
-  gemId: text("gem_id"),
   riskScore: integer("risk_score").notNull().default(50),
   successProbability: integer("success_probability").notNull().default(50),
   competition: text("competition").notNull().default("Medium"),
@@ -62,8 +105,9 @@ export const tenders = pgTable("tenders", {
   nlpSummary: text("nlp_summary"),
   blockchainVerified: boolean("blockchain_verified").notNull().default(false),
   gptAnalysis: text("gpt_analysis"),
+  
+  // Pipeline management
   pipelineStageId: integer("pipeline_stage_id"),
-  assignedUserId: integer("assigned_user_id"),
   submissionDate: timestamp("submission_date"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
@@ -215,3 +259,29 @@ export const insertAutomationRuleSchema = createInsertSchema(automationRules).om
 
 export type InsertAutomationRule = z.infer<typeof insertAutomationRuleSchema>;
 export type AutomationRule = typeof automationRules.$inferSelect;
+
+// Performance Rewards model based on CSV parameters
+export const performanceRewards = pgTable("performance_rewards", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull(),
+  tenderId: integer("tender_id"),
+  parameter: text("parameter").notNull(), // e.g., "Tender Submission On-Time", "Tender Win Ratio"
+  description: text("description").notNull(),
+  applicableRoles: text("applicable_roles").array(), // Roles this applies to
+  rewardType: text("reward_type").notNull(), // Cash Bonus / Points / Certificate etc.
+  pointsEarned: integer("points_earned").notNull().default(0),
+  cashBonus: real("cash_bonus").notNull().default(0),
+  achievedDate: timestamp("achieved_date").notNull().defaultNow(),
+  quarterYear: text("quarter_year"), // For quarterly tracking
+  status: text("status").notNull().default("Earned"), // Earned / Pending / Processed
+  notes: text("notes"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const insertPerformanceRewardSchema = createInsertSchema(performanceRewards).omit({
+  id: true,
+  createdAt: true,
+});
+
+export type InsertPerformanceReward = z.infer<typeof insertPerformanceRewardSchema>;
+export type PerformanceReward = typeof performanceRewards.$inferSelect;
