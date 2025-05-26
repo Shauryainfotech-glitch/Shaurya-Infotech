@@ -17,6 +17,7 @@ import Tasks from "@/pages/tasks";
 import Calendar from "@/pages/calendar";
 import EmailNotifications from "@/pages/email-notifications";
 import Automation from "@/pages/automation";
+import DocumentManagement from "@/pages/document-management";
 
 function App() {
   return (
@@ -48,6 +49,7 @@ function Router() {
       <Route path="/calendar" component={Calendar} />
       <Route path="/email-notifications" component={EmailNotifications} />
       <Route path="/automation" component={Automation} />
+      <Route path="/document-management" component={DocumentManagement} />
       <Route component={NotFound} />
     </Switch>
   );
