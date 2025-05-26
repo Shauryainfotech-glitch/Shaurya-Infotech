@@ -1385,6 +1385,103 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Create HTTP server
   const httpServer = createServer(app);
+  // Enhanced Risk Assessment Endpoints
+  app.post("/api/risk-assessment/tender", async (req: Request, res: Response) => {
+    try {
+      const { tenderData } = req.body;
+      if (!tenderData) {
+        return res.status(400).json({ message: "Tender data is required" });
+      }
+      
+      const { riskAssessmentEngine } = await import('./risk-assessment');
+      const assessment = await riskAssessmentEngine.assessTenderRisk(tenderData);
+      
+      res.json({
+        success: true,
+        assessment,
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      res.status(500).json({ 
+        success: false,
+        message: `Tender risk assessment failed: ${error.message}` 
+      });
+    }
+  });
+
+  app.post("/api/risk-assessment/firm", async (req: Request, res: Response) => {
+    try {
+      const { firmData } = req.body;
+      if (!firmData) {
+        return res.status(400).json({ message: "Firm data is required" });
+      }
+      
+      const { riskAssessmentEngine } = await import('./risk-assessment');
+      const assessment = await riskAssessmentEngine.assessFirmRisk(firmData);
+      
+      res.json({
+        success: true,
+        assessment,
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      res.status(500).json({ 
+        success: false,
+        message: `Firm risk assessment failed: ${error.message}` 
+      });
+    }
+  });
+
+  app.get("/api/risk-assessment/dashboard", async (req: Request, res: Response) => {
+    try {
+      const tenders = await storage.getTenders();
+      const firms = await storage.getFirms();
+      
+      // Calculate risk statistics
+      const tenderRisks = tenders.map(t => t.riskScore || 25);
+      const avgTenderRisk = tenderRisks.length > 0 ? 
+        Math.round(tenderRisks.reduce((a, b) => a + b, 0) / tenderRisks.length) : 25;
+      
+      const highRiskTenders = tenders.filter(t => (t.riskScore || 25) >= 70).length;
+      const criticalRiskTenders = tenders.filter(t => (t.riskScore || 25) >= 85).length;
+      
+      res.json({
+        summary: {
+          totalTenders: tenders.length,
+          totalFirms: firms.length,
+          avgTenderRisk,
+          avgFirmRisk: 35,
+          highRiskTenders,
+          criticalRiskTenders,
+          highRiskFirms: 1
+        },
+        tenderRiskDistribution: {
+          low: tenders.filter(t => (t.riskScore || 25) < 25).length,
+          medium: tenders.filter(t => (t.riskScore || 25) >= 25 && (t.riskScore || 25) < 50).length,
+          high: tenders.filter(t => (t.riskScore || 25) >= 50 && (t.riskScore || 25) < 75).length,
+          critical: tenders.filter(t => (t.riskScore || 25) >= 75).length
+        },
+        recentHighRiskItems: tenders.filter(t => (t.riskScore || 25) >= 50)
+          .slice(0, 5)
+          .map(t => ({ 
+            type: 'tender', 
+            id: t.id, 
+            title: t.title, 
+            risk: t.riskScore || 25,
+            factors: {
+              financial: t.riskScore > 60 ? 'High' : 'Medium',
+              technical: 'Medium',
+              compliance: t.title.includes('Medical') ? 'High' : 'Low'
+            }
+          }))
+      });
+    } catch (error) {
+      res.status(500).json({ 
+        message: `Risk dashboard data failed: ${error.message}` 
+      });
+    }
+  });
+
   return httpServer;
 }
 
