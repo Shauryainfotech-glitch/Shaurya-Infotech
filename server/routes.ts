@@ -15,6 +15,7 @@ import {
 } from "@shared/schema";
 import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
+import { aiService } from './ai-service';
 
 // Configure multer for file uploads
 const upload = multer({ 
@@ -1137,6 +1138,88 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Integration dashboard error:", error);
       res.status(500).json({ message: "Failed to load integration dashboard" });
+    }
+  });
+
+  // AI API Endpoints for complete OpenAI integration
+  
+  // AI Chatbot endpoint
+  app.post("/api/ai/chat", async (req: Request, res: Response) => {
+    try {
+      const { message } = req.body;
+      if (!message) {
+        return res.status(400).json({ message: "Message is required" });
+      }
+      
+      const response = await aiService.generateChatResponse(message);
+      res.json({ response });
+    } catch (error) {
+      console.error("Error generating AI chat response:", error);
+      res.status(500).json({ message: "Failed to generate AI response" });
+    }
+  });
+
+  // Document analysis endpoint
+  app.post("/api/ai/analyze-document", async (req: Request, res: Response) => {
+    try {
+      const { documentText } = req.body;
+      if (!documentText) {
+        return res.status(400).json({ message: "Document text is required" });
+      }
+      
+      const analysis = await aiService.analyzeDocument(documentText);
+      res.json(analysis);
+    } catch (error) {
+      console.error("Error analyzing document:", error);
+      res.status(500).json({ message: "Failed to analyze document" });
+    }
+  });
+
+  // Tender analysis endpoint
+  app.post("/api/ai/analyze-tender", async (req: Request, res: Response) => {
+    try {
+      const { tenderData } = req.body;
+      if (!tenderData) {
+        return res.status(400).json({ message: "Tender data is required" });
+      }
+      
+      const analysis = await aiService.analyzeTender(tenderData);
+      res.json(analysis);
+    } catch (error) {
+      console.error("Error analyzing tender:", error);
+      res.status(500).json({ message: "Failed to analyze tender" });
+    }
+  });
+
+  // Risk score calculation endpoint
+  app.post("/api/ai/risk-score", async (req: Request, res: Response) => {
+    try {
+      const { tenderData } = req.body;
+      if (!tenderData) {
+        return res.status(400).json({ message: "Tender data is required" });
+      }
+      
+      const riskScore = await aiService.calculateRiskScore(tenderData);
+      res.json({ riskScore });
+    } catch (error) {
+      console.error("Error calculating risk score:", error);
+      res.status(500).json({ message: "Failed to calculate risk score" });
+    }
+  });
+
+  // Success probability prediction endpoint
+  app.post("/api/ai/success-probability", async (req: Request, res: Response) => {
+    try {
+      const { tenderData, firmData } = req.body;
+      if (!tenderData || !firmData) {
+        return res.status(400).json({ message: "Both tender data and firm data are required" });
+      }
+      
+      const successProbability = await aiService.predictSuccessProbability(tenderData, firmData);
+      res.json({ successProbability });
+    } catch (error) {
+      console.error("Error predicting success probability:", error);
+      res.status(500).json({ message: "Failed to predict success probability" });
     }
   });
 

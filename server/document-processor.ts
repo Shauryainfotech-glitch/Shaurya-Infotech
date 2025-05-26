@@ -270,12 +270,6 @@ export class DocumentProcessor {
       };
     }
   }
-    
-    // Generate summary (first 200 characters)
-    extraction.summary = content.substring(0, 200) + (content.length > 200 ? '...' : '');
-
-    return extraction;
-  }
 }
 
 export const documentProcessor = new DocumentProcessor();
