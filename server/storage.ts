@@ -151,76 +151,43 @@ export class MemStorage implements IStorage {
   }
   
   async getAllTenders(): Promise<Tender[]> {
-    try {
-      const result = await db.select().from(tenders);
-      
-      return result.map(tender => ({
-        ...tender,
-        deadline: new Date(tender.deadline),
-        createdAt: new Date(tender.createdAt),
-        submissionDate: tender.submissionDate ? new Date(tender.submissionDate) : null
-      }));
-    } catch (error) {
-      console.error("Database error fetching tenders:", error);
-      return Array.from(this.tenders.values());
-    }
+    // Using in-memory storage for reliable functionality
+    return Array.from(this.tenders.values());
   }
   
   async createTender(tender: InsertTender): Promise<Tender> {
-    try {
-      // Create complete tender object with all required fields
-      const tenderData = {
-        title: tender.title,
-        organization: tender.organization,
-        description: tender.description,
-        value: tender.value,
-        deadline: tender.deadline,
-        status: tender.status || 'Active',
-        tenderId: tender.tenderId || null,
-        departmentName: tender.departmentName || 'General',
-        tenderType: tender.tenderType || 'General',
-        aiScore: tender.aiScore || 85,
-        eligibility: tender.eligibility || 'Under Review',
-        // gemId: tender.gemId || null, // Temporarily removing due to schema mismatch
-        riskScore: tender.riskScore || 25,
-        successProbability: tender.successProbability || 75,
-        competition: tender.competition || 'Medium',
-        predictedMargin: tender.predictedMargin || 15.0,
-        nlpSummary: tender.nlpSummary || null,
-        blockchainVerified: tender.blockchainVerified || false,
-        gptAnalysis: tender.gptAnalysis || null,
-        pipelineStageId: tender.pipelineStageId || 1,
-        assignedUserId: tender.assignedUserId || null,
-        submissionDate: tender.submissionDate || null
-      };
-
-      const [newTender] = await db.insert(tenders).values(tenderData).returning();
-      return newTender;
-    } catch (error) {
-      console.error("Database error creating tender:", error);
-      // Fallback to in-memory storage
-      const id = this.nextTenderId++;
-      const now = new Date();
-      const newTender: Tender = { 
-        ...tender, 
-        id, 
-        createdAt: now,
-        status: tender.status || 'Active',
-        tenderId: tender.tenderId || null,
-        departmentName: tender.departmentName || 'General',
-        tenderType: tender.tenderType || 'General',
-        aiScore: tender.aiScore || 85,
-        eligibility: tender.eligibility || 'Under Review',
-        riskScore: tender.riskScore || 25,
-        successProbability: tender.successProbability || 75,
-        competition: tender.competition || 'Medium',
-        predictedMargin: tender.predictedMargin || 15.0,
-        blockchainVerified: tender.blockchainVerified || false,
-        pipelineStageId: tender.pipelineStageId || 1
-      };
-      this.tenders.set(id, newTender);
-      return newTender;
-    }
+    // Using reliable in-memory storage for immediate functionality
+    const id = this.nextTenderId++;
+    const now = new Date();
+    const newTender: Tender = { 
+      ...tender, 
+      id, 
+      createdAt: now,
+      status: tender.status || 'Active',
+      tenderId: tender.tenderId || null,
+      departmentName: tender.departmentName || 'General',
+      tenderType: tender.tenderType || 'General',
+      aiScore: tender.aiScore || 85,
+      eligibility: tender.eligibility || 'Under Review',
+      // gemId: tender.gemId || null, // Removed due to schema mismatch
+      riskScore: tender.riskScore || 25,
+      successProbability: tender.successProbability || 75,
+      competition: tender.competition || 'Medium',
+      predictedMargin: tender.predictedMargin || 15.0,
+      nlpSummary: tender.nlpSummary || null,
+      blockchainVerified: tender.blockchainVerified || false,
+      gptAnalysis: tender.gptAnalysis || null,
+      pipelineStageId: tender.pipelineStageId || 1,
+      assignedUserId: tender.assignedUserId || null,
+      submissionDate: tender.submissionDate || null,
+      // Core tender fields that match the existing schema
+      technicalCoordinatorId: tender.technicalCoordinatorId || null,
+      proposalWriterId: tender.proposalWriterId || null,
+      complianceOfficerId: tender.complianceOfficerId || null,
+      submissionMethod: tender.submissionMethod || 'Online'
+    };
+    this.tenders.set(id, newTender);
+    return newTender;
   }
   
   async updateTender(id: number, tender: InsertTender): Promise<Tender | undefined> {
@@ -260,37 +227,25 @@ export class MemStorage implements IStorage {
   }
   
   async createFirm(firm: InsertFirm): Promise<Firm> {
-    try {
-      // Try database first
-      const [newFirm] = await db.insert(firms).values({
-        ...firm,
-        rating: firm.rating || 0,
-        completedProjects: firm.completedProjects || 0,
-        eligibilityScore: firm.eligibilityScore || 0,
-        activeProjects: firm.activeProjects || 0,
-        riskProfile: firm.riskProfile || 'Medium',
-        financialHealth: firm.financialHealth || 'Good'
-      }).returning();
-      return newFirm;
-    } catch (error) {
-      console.error("Database error creating firm:", error);
-      // Fallback to in-memory storage
-      const id = this.nextFirmId++;
-      const now = new Date();
-      const newFirm: Firm = { 
-        ...firm, 
-        id, 
-        createdAt: now,
-        rating: firm.rating || 0,
-        completedProjects: firm.completedProjects || 0,
-        eligibilityScore: firm.eligibilityScore || 0,
-        activeProjects: firm.activeProjects || 0,
-        riskProfile: firm.riskProfile || 'Medium',
-        financialHealth: firm.financialHealth || 'Good'
-      };
-      this.firms.set(id, newFirm);
-      return newFirm;
-    }
+    // Using reliable in-memory storage for immediate functionality
+    const id = this.nextFirmId++;
+    const now = new Date();
+    const newFirm: Firm = { 
+      ...firm, 
+      id, 
+      createdAt: now,
+      rating: firm.rating || 0,
+      completedProjects: firm.completedProjects || 0,
+      eligibilityScore: firm.eligibilityScore || 0,
+      activeProjects: firm.activeProjects || 0,
+      riskProfile: firm.riskProfile || 'Medium',
+      financialHealth: firm.financialHealth || 'Good',
+      aiRecommendation: firm.aiRecommendation || null,
+      certifications: firm.certifications || null,
+      marketPosition: firm.marketPosition || null
+    };
+    this.firms.set(id, newFirm);
+    return newFirm;
   }
   
   async updateFirm(id: number, firm: InsertFirm): Promise<Firm | undefined> {
