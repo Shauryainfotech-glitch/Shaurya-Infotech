@@ -1,6 +1,11 @@
 import sharp from 'sharp';
 import pdfParse from 'pdf-parse';
 import { googleDriveService } from './google-drive';
+import OpenAI from 'openai';
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
 
 export class DocumentProcessor {
   // Process uploaded file and extract content
@@ -26,7 +31,7 @@ export class DocumentProcessor {
         };
       }
       
-      // Process images for OCR (placeholder for actual OCR service)
+      // Process images with OpenAI Vision for OCR and analysis
       if (mimeType.startsWith('image/')) {
         // Generate thumbnail
         const thumbnail = await sharp(file)
@@ -34,11 +39,36 @@ export class DocumentProcessor {
           .jpeg({ quality: 80 })
           .toBuffer();
         
-        // In a real implementation, you would use OCR service like Google Vision API
-        result.ocrText = 'OCR text extraction would be implemented here';
+        // Use OpenAI Vision API for intelligent OCR and document analysis
+        const base64Image = file.toString('base64');
+        const visionResponse = await openai.chat.completions.create({
+          model: "gpt-4o", // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
+          messages: [
+            {
+              role: "user",
+              content: [
+                {
+                  type: "text",
+                  text: "Extract all text from this document image and analyze it for tender-related information. Identify key details like tender numbers, deadlines, requirements, and compliance certificates."
+                },
+                {
+                  type: "image_url",
+                  image_url: {
+                    url: `data:${mimeType};base64,${base64Image}`
+                  }
+                }
+              ],
+            },
+          ],
+          max_tokens: 1000,
+        });
+
+        result.ocrText = visionResponse.choices[0].message.content || '';
+        result.content = result.ocrText;
         result.extractedMetadata = {
           format: mimeType,
           hasImage: true,
+          aiProcessed: true,
         };
       }
 
@@ -169,24 +199,77 @@ export class DocumentProcessor {
     return compliance;
   }
 
-  // Extract key information using AI/NLP (placeholder)
+  // Extract key information using OpenAI for intelligent document analysis
   async extractKeyInformation(content: string, documentType: string) {
-    // This would integrate with actual AI/NLP services
-    const extraction = {
-      entities: [] as string[],
-      keyPhrases: [] as string[],
-      sentiment: 'neutral',
-      summary: '',
-      importantDates: [] as string[],
-      amounts: [] as string[],
-    };
+    try {
+      const response = await openai.chat.completions.create({
+        model: "gpt-4o", // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
+        messages: [
+          {
+            role: "system",
+            content: "You are an expert tender document analyst. Extract key information from tender documents and provide structured analysis in JSON format."
+          },
+          {
+            role: "user",
+            content: `Analyze this ${documentType} document and extract key information. Provide response in JSON format with the following structure:
+            {
+              "summary": "Brief summary of the document",
+              "keyDates": ["List of important dates found"],
+              "requirements": ["List of key requirements"],
+              "riskFactors": ["Potential risks or challenges"],
+              "complianceItems": ["Compliance requirements and certificates needed"],
+              "eligibilityCriteria": ["Eligibility requirements"],
+              "technicalSpecs": ["Technical specifications if any"],
+              "financialRequirements": ["Financial requirements like EMD, turnover criteria"],
+              "entities": ["Important entities mentioned"],
+              "keyPhrases": ["Key phrases and terms"],
+              "sentiment": "overall sentiment of document",
+              "importantDates": ["Critical dates and deadlines"],
+              "amounts": ["Financial amounts mentioned"]
+            }
+            
+            Document content: ${content}`
+          }
+        ],
+        response_format: { type: "json_object" },
+        max_tokens: 1500,
+      });
 
-    // Simple regex-based extraction (would be replaced with actual AI)
-    const dateRegex = /\b\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4}\b/g;
-    const amountRegex = /\$[\d,]+\.?\d*/g;
-    
-    extraction.importantDates = content.match(dateRegex) || [];
-    extraction.amounts = content.match(amountRegex) || [];
+      const analysis = JSON.parse(response.choices[0].message.content || '{}');
+      
+      // Return in expected format with fallbacks
+      return {
+        entities: analysis.entities || [],
+        keyPhrases: analysis.keyPhrases || [],
+        sentiment: analysis.sentiment || 'neutral',
+        summary: analysis.summary || '',
+        importantDates: analysis.importantDates || [],
+        amounts: analysis.amounts || [],
+        requirements: analysis.requirements || [],
+        riskFactors: analysis.riskFactors || [],
+        complianceItems: analysis.complianceItems || [],
+        eligibilityCriteria: analysis.eligibilityCriteria || [],
+        technicalSpecs: analysis.technicalSpecs || [],
+        financialRequirements: analysis.financialRequirements || []
+      };
+    } catch (error) {
+      console.error('Error extracting key information:', error);
+      return {
+        entities: [],
+        keyPhrases: [],
+        sentiment: 'neutral',
+        summary: 'Analysis unavailable',
+        importantDates: [],
+        amounts: [],
+        requirements: [],
+        riskFactors: [],
+        complianceItems: [],
+        eligibilityCriteria: [],
+        technicalSpecs: [],
+        financialRequirements: []
+      };
+    }
+  }
     
     // Generate summary (first 200 characters)
     extraction.summary = content.substring(0, 200) + (content.length > 200 ? '...' : '');
