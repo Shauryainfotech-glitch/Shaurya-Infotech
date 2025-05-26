@@ -151,19 +151,44 @@ export class MemStorage implements IStorage {
   }
   
   async getAllTenders(): Promise<Tender[]> {
-    return Array.from(this.tenders.values());
+    try {
+      const result = await db.select().from(tenders);
+      return result;
+    } catch (error) {
+      console.error("Database error fetching tenders:", error);
+      // Fallback to in-memory storage
+      return Array.from(this.tenders.values());
+    }
   }
   
   async createTender(tender: InsertTender): Promise<Tender> {
-    const id = this.nextTenderId++;
-    const now = new Date();
-    const newTender: Tender = { 
-      ...tender, 
-      id, 
-      createdAt: now
-    };
-    this.tenders.set(id, newTender);
-    return newTender;
+    try {
+      // Try database first
+      const [newTender] = await db.insert(tenders).values({
+        ...tender,
+        status: tender.status || 'Active',
+        tenderId: tender.tenderId || null,
+        departmentName: tender.departmentName || 'General',
+        tenderType: tender.tenderType || 'General'
+      }).returning();
+      return newTender;
+    } catch (error) {
+      console.error("Database error creating tender:", error);
+      // Fallback to in-memory storage
+      const id = this.nextTenderId++;
+      const now = new Date();
+      const newTender: Tender = { 
+        ...tender, 
+        id, 
+        createdAt: now,
+        status: tender.status || 'Active',
+        tenderId: tender.tenderId || null,
+        departmentName: tender.departmentName || 'General',
+        tenderType: tender.tenderType || 'General'
+      };
+      this.tenders.set(id, newTender);
+      return newTender;
+    }
   }
   
   async updateTender(id: number, tender: InsertTender): Promise<Tender | undefined> {
