@@ -151,8 +151,13 @@ export class MemStorage implements IStorage {
   }
   
   async getAllTenders(): Promise<Tender[]> {
-    // Using in-memory storage for reliable functionality
-    return Array.from(this.tenders.values());
+    try {
+      // Try in-memory first, fallback gracefully
+      return Array.from(this.tenders.values());
+    } catch (error) {
+      console.error("Error fetching tenders:", error);
+      return [];
+    }
   }
   
   async createTender(tender: InsertTender): Promise<Tender> {
