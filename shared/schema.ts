@@ -169,18 +169,71 @@ export const insertFirmSchema = createInsertSchema(firms).omit({
 export type InsertFirm = z.infer<typeof insertFirmSchema>;
 export type Firm = typeof firms.$inferSelect;
 
-// Document model
+// Enhanced Document Management model with Google Drive integration
 export const documents = pgTable("documents", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
-  type: text("type").notNull(),
+  originalFileName: text("original_file_name").notNull(),
+  fileSize: integer("file_size"), // File size in bytes
+  mimeType: text("mime_type").notNull(),
+  
+  // Document categorization based on Odoo CSV mapping
+  documentType: text("document_type").notNull(), // Proposal Document, Affidavit/Declaration, Test Reports, etc.
+  documentCategory: text("document_category").notNull().default("General"), // Technical, Compliance, Financial, Legal
+  
+  // Linking to tenders and entities
   tenderId: integer("tender_id"),
   firmId: integer("firm_id"),
-  content: text("content"),
-  ocrText: text("ocr_text"),
-  nlpAnalysis: text("nlp_analysis"),
-  gptAnalysis: text("gpt_analysis"),
+  userId: integer("user_id"), // Who uploaded the document
+  
+  // Google Drive integration
+  googleDriveFileId: text("google_drive_file_id"), // Google Drive file ID
+  googleDriveUrl: text("google_drive_url"), // Direct Google Drive URL
+  googleDriveFolderId: text("google_drive_folder_id"), // Parent folder ID
+  drivePermissions: text("drive_permissions").array(), // List of permissions
+  
+  // Local storage backup
+  localFilePath: text("local_file_path"), // Local backup path
+  cloudStorageUrl: text("cloud_storage_url"), // Alternative cloud storage
+  
+  // Document processing and analysis
+  content: text("content"), // Extracted text content
+  ocrText: text("ocr_text"), // OCR extracted text
+  nlpAnalysis: text("nlp_analysis"), // NLP processing results
+  gptAnalysis: text("gpt_analysis"), // AI analysis
+  extractedMetadata: text("extracted_metadata"), // JSON metadata
+  
+  // Document status and validation
+  status: text("status").notNull().default("Uploaded"), // Uploaded, Processing, Verified, Rejected
+  isVerified: boolean("is_verified").notNull().default(false),
+  verificationNotes: text("verification_notes"),
+  verifiedBy: integer("verified_by"), // User ID who verified
+  verifiedAt: timestamp("verified_at"),
+  
+  // Compliance and legal tracking
+  complianceStatus: text("compliance_status").notNull().default("Pending"), // Compliant, Non-compliant, Under Review
+  legalReview: boolean("legal_review").notNull().default(false),
+  legalNotes: text("legal_notes"),
+  expiryDate: date("expiry_date"), // For certificates and time-bound documents
+  
+  // Version control
+  version: text("version").notNull().default("1.0"),
+  previousVersionId: integer("previous_version_id"), // Link to previous version
+  isLatestVersion: boolean("is_latest_version").notNull().default(true),
+  
+  // Access and security
+  accessLevel: text("access_level").notNull().default("Internal"), // Public, Internal, Confidential, Restricted
+  downloadCount: integer("download_count").notNull().default(0),
+  lastAccessedAt: timestamp("last_accessed_at"),
+  
+  // Integration tracking
+  syncStatus: text("sync_status").notNull().default("Synced"), // Synced, Pending, Failed
+  lastSyncAt: timestamp("last_sync_at"),
+  syncErrors: text("sync_errors"),
+  
+  // Timestamps
   uploadedAt: timestamp("uploaded_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
 export const insertDocumentSchema = createInsertSchema(documents).omit({
@@ -285,3 +338,116 @@ export const insertPerformanceRewardSchema = createInsertSchema(performanceRewar
 
 export type InsertPerformanceReward = z.infer<typeof insertPerformanceRewardSchema>;
 export type PerformanceReward = typeof performanceRewards.$inferSelect;
+
+// API Integration Hooks for inbound and outbound integrations
+export const apiIntegrations = pgTable("api_integrations", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(), // Integration name (Google Drive, Webhook, External API)
+  type: text("type").notNull(), // inbound, outbound, bidirectional
+  endpoint: text("endpoint").notNull(), // API endpoint URL
+  method: text("method").notNull().default("POST"), // HTTP method
+  
+  // Authentication and security
+  authType: text("auth_type").notNull().default("bearer"), // bearer, oauth, apikey, basic
+  apiKey: text("api_key"), // Encrypted API key
+  accessToken: text("access_token"), // OAuth access token
+  refreshToken: text("refresh_token"), // OAuth refresh token
+  tokenExpiresAt: timestamp("token_expires_at"),
+  
+  // Integration configuration
+  config: text("config"), // JSON configuration
+  headers: text("headers"), // JSON headers
+  isActive: boolean("is_active").notNull().default(true),
+  
+  // Monitoring and tracking
+  lastExecuted: timestamp("last_executed"),
+  executionCount: integer("execution_count").notNull().default(0),
+  successCount: integer("success_count").notNull().default(0),
+  errorCount: integer("error_count").notNull().default(0),
+  lastError: text("last_error"),
+  
+  // Rate limiting
+  rateLimit: integer("rate_limit").notNull().default(100), // Requests per hour
+  rateLimitWindow: integer("rate_limit_window").notNull().default(3600), // Window in seconds
+  
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const insertApiIntegrationSchema = createInsertSchema(apiIntegrations).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export type InsertApiIntegration = z.infer<typeof insertApiIntegrationSchema>;
+export type ApiIntegration = typeof apiIntegrations.$inferSelect;
+
+// Webhook Events for real-time integrations
+export const webhookEvents = pgTable("webhook_events", {
+  id: serial("id").primaryKey(),
+  integrationId: integer("integration_id").notNull(),
+  eventType: text("event_type").notNull(), // tender_created, document_uploaded, status_changed
+  entityType: text("entity_type").notNull(), // tender, document, task, etc.
+  entityId: integer("entity_id").notNull(),
+  
+  // Payload and processing
+  payload: text("payload").notNull(), // JSON payload
+  response: text("response"), // Response from webhook
+  status: text("status").notNull().default("pending"), // pending, success, failed, retrying
+  
+  // Retry mechanism
+  retryCount: integer("retry_count").notNull().default(0),
+  maxRetries: integer("max_retries").notNull().default(3),
+  nextRetryAt: timestamp("next_retry_at"),
+  
+  // Timestamps
+  triggeredAt: timestamp("triggered_at").notNull().defaultNow(),
+  processedAt: timestamp("processed_at"),
+  completedAt: timestamp("completed_at"),
+});
+
+export const insertWebhookEventSchema = createInsertSchema(webhookEvents).omit({
+  id: true,
+  triggeredAt: true,
+});
+
+export type InsertWebhookEvent = z.infer<typeof insertWebhookEventSchema>;
+export type WebhookEvent = typeof webhookEvents.$inferSelect;
+
+// Document Folders for organizing Google Drive structure
+export const documentFolders = pgTable("document_folders", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  description: text("description"),
+  parentFolderId: integer("parent_folder_id"),
+  
+  // Google Drive integration
+  googleDriveFolderId: text("google_drive_folder_id"),
+  googleDriveUrl: text("google_drive_url"),
+  
+  // Organization
+  tenderId: integer("tender_id"), // Link to specific tender
+  folderType: text("folder_type").notNull().default("general"), // tender, compliance, technical, financial
+  accessLevel: text("access_level").notNull().default("internal"), // public, internal, restricted
+  
+  // Permissions
+  allowedRoles: text("allowed_roles").array(), // Roles that can access this folder
+  ownerId: integer("owner_id").notNull(),
+  
+  // Status
+  isActive: boolean("is_active").notNull().default(true),
+  syncStatus: text("sync_status").notNull().default("synced"),
+  
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const insertDocumentFolderSchema = createInsertSchema(documentFolders).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export type InsertDocumentFolder = z.infer<typeof insertDocumentFolderSchema>;
+export type DocumentFolder = typeof documentFolders.$inferSelect;
