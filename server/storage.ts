@@ -185,11 +185,34 @@ export class MemStorage implements IStorage {
       pipelineStageId: tender.pipelineStageId || 1,
       assignedUserId: tender.assignedUserId || null,
       submissionDate: tender.submissionDate || null,
-      // Core tender fields that match the existing schema
+      // Complete Odoo integration fields from your CSV mapping
       technicalCoordinatorId: tender.technicalCoordinatorId || null,
       proposalWriterId: tender.proposalWriterId || null,
       complianceOfficerId: tender.complianceOfficerId || null,
-      submissionMethod: tender.submissionMethod || 'Online'
+      submissionMethod: tender.submissionMethod || 'Online',
+      tenderSourcePortal: tender.tenderSourcePortal || 'Manual',
+      tenderClassification: tender.tenderClassification || 'Goods',
+      emdRequired: tender.emdRequired || false,
+      emdAmount: tender.emdAmount || null,
+      emdSubmissionMode: tender.emdSubmissionMode || null,
+      affidavitRequired: tender.affidavitRequired || false,
+      preBidMeetingDate: tender.preBidMeetingDate || null,
+      preBidAttended: tender.preBidAttended || false,
+      corrigendumIssued: tender.corrigendumIssued || false,
+      postBidRequirement: tender.postBidRequirement || null,
+      bidClarificationNotes: tender.bidClarificationNotes || null,
+      consortiumPartner: tender.consortiumPartner || null,
+      resultDate: tender.resultDate || null,
+      workOrderReceived: tender.workOrderReceived || false,
+      workOrderDate: tender.workOrderDate || null,
+      agreementSigned: tender.agreementSigned || false,
+      executionTeamAssignedId: tender.executionTeamAssignedId || null,
+      tenderBudgetEstimate: tender.tenderBudgetEstimate || null,
+      finalQuotedPrice: tender.finalQuotedPrice || null,
+      quotationMargin: tender.quotationMargin || null,
+      invoiceRaised: tender.invoiceRaised || false,
+      paymentReceived: tender.paymentReceived || false,
+      recoveryLegalStatus: tender.recoveryLegalStatus || 'Normal'
     };
     this.tenders.set(id, newTender);
     return newTender;
