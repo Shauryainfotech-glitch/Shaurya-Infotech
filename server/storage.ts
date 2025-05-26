@@ -218,19 +218,51 @@ export class MemStorage implements IStorage {
   }
   
   async getAllFirms(): Promise<Firm[]> {
-    return Array.from(this.firms.values());
+    try {
+      const result = await db.select().from(firms);
+      return result.map(firm => ({
+        ...firm,
+        createdAt: new Date(firm.createdAt)
+      }));
+    } catch (error) {
+      console.error("Database error fetching firms:", error);
+      // Fallback to in-memory storage
+      return Array.from(this.firms.values());
+    }
   }
   
   async createFirm(firm: InsertFirm): Promise<Firm> {
-    const id = this.nextFirmId++;
-    const now = new Date();
-    const newFirm: Firm = { 
-      ...firm, 
-      id, 
-      createdAt: now
-    };
-    this.firms.set(id, newFirm);
-    return newFirm;
+    try {
+      // Try database first
+      const [newFirm] = await db.insert(firms).values({
+        ...firm,
+        rating: firm.rating || 0,
+        completedProjects: firm.completedProjects || 0,
+        eligibilityScore: firm.eligibilityScore || 0,
+        activeProjects: firm.activeProjects || 0,
+        riskProfile: firm.riskProfile || 'Medium',
+        financialHealth: firm.financialHealth || 'Good'
+      }).returning();
+      return newFirm;
+    } catch (error) {
+      console.error("Database error creating firm:", error);
+      // Fallback to in-memory storage
+      const id = this.nextFirmId++;
+      const now = new Date();
+      const newFirm: Firm = { 
+        ...firm, 
+        id, 
+        createdAt: now,
+        rating: firm.rating || 0,
+        completedProjects: firm.completedProjects || 0,
+        eligibilityScore: firm.eligibilityScore || 0,
+        activeProjects: firm.activeProjects || 0,
+        riskProfile: firm.riskProfile || 'Medium',
+        financialHealth: firm.financialHealth || 'Good'
+      };
+      this.firms.set(id, newFirm);
+      return newFirm;
+    }
   }
   
   async updateFirm(id: number, firm: InsertFirm): Promise<Firm | undefined> {
