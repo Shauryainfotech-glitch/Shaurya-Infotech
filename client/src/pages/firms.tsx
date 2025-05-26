@@ -5,10 +5,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Brain, Plus } from "lucide-react";
 import { useState } from "react";
 import { FirmDetails } from "@/components/firms/firm-details";
+import { FirmForm } from "@/components/firms/firm-form";
 import { Firm } from "@shared/schema";
 
 export default function Firms() {
   const [selectedFirmId, setSelectedFirmId] = useState<number | null>(null);
+  const [showFirmForm, setShowFirmForm] = useState(false);
 
   const { data: firms, isLoading } = useQuery<Firm[]>({
     queryKey: ['/api/firms'],
@@ -39,7 +41,7 @@ export default function Firms() {
                 <Brain className="w-4 h-4 mr-2" />
                 AI Matchmaker
               </Button>
-              <Button>
+              <Button onClick={() => setShowFirmForm(true)}>
                 <Plus className="w-4 h-4 mr-2" />
                 Add Firm
               </Button>
@@ -80,6 +82,11 @@ export default function Firms() {
             <FirmDetails firm={selectedFirm} />
           )}
         </>
+      )}
+
+      {/* Comprehensive Firm Form with all detailed fields */}
+      {showFirmForm && (
+        <FirmForm onClose={() => setShowFirmForm(false)} />
       )}
     </div>
   );
