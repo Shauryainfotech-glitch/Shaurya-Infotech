@@ -153,7 +153,11 @@ export class MemStorage implements IStorage {
   async getAllTenders(): Promise<Tender[]> {
     try {
       const result = await db.select().from(tenders);
-      return result;
+      return result.map(tender => ({
+        ...tender,
+        deadline: new Date(tender.deadline),
+        createdAt: new Date(tender.createdAt)
+      }));
     } catch (error) {
       console.error("Database error fetching tenders:", error);
       // Fallback to in-memory storage
