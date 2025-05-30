@@ -18,6 +18,7 @@ import Calendar from "@/pages/calendar";
 import EmailNotifications from "@/pages/email-notifications";
 import Automation from "@/pages/automation";
 import DocumentManagement from "@/pages/document-management";
+import Predictions from "@/pages/predictions";
 
 function App() {
   return (

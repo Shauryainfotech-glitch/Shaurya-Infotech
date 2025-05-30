@@ -1482,6 +1482,109 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Enhanced Prediction Engine Endpoints
+  app.post("/api/prediction/tender", async (req: Request, res: Response) => {
+    try {
+      const { tenderData, firmData } = req.body;
+      if (!tenderData) {
+        return res.status(400).json({ message: "Tender data is required" });
+      }
+      
+      const { predictionEngine } = await import('./prediction-engine');
+      const prediction = await predictionEngine.generateTenderPrediction(tenderData, firmData);
+      
+      res.json({
+        success: true,
+        prediction,
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      res.status(500).json({ 
+        success: false,
+        message: `Tender prediction failed: ${error.message}` 
+      });
+    }
+  });
+
+  app.get("/api/prediction/market-intelligence", async (req: Request, res: Response) => {
+    try {
+      const { sector } = req.query;
+      
+      const { predictionEngine } = await import('./prediction-engine');
+      const intelligence = await predictionEngine.generateMarketIntelligence(sector as string);
+      
+      res.json({
+        success: true,
+        intelligence,
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      res.status(500).json({ 
+        success: false,
+        message: `Market intelligence generation failed: ${error.message}` 
+      });
+    }
+  });
+
+  app.get("/api/prediction/dashboard", async (req: Request, res: Response) => {
+    try {
+      const tenders = await storage.getTenders();
+      
+      // Calculate prediction statistics
+      const predictions = tenders.map(t => ({
+        id: t.id,
+        title: t.title,
+        successProbability: t.successProbability || 50,
+        predictedMargin: t.predictedMargin || 15,
+        sector: t.sector || 'General'
+      }));
+      
+      const avgSuccessProbability = predictions.length > 0 ? 
+        Math.round(predictions.reduce((sum, p) => sum + p.successProbability, 0) / predictions.length) : 50;
+      
+      const highProbabilityTenders = predictions.filter(p => p.successProbability >= 70).length;
+      const lowProbabilityTenders = predictions.filter(p => p.successProbability < 30).length;
+      
+      // Sector analysis
+      const sectorStats = predictions.reduce((acc, p) => {
+        acc[p.sector] = (acc[p.sector] || 0) + 1;
+        return acc;
+      }, {} as Record<string, number>);
+      
+      res.json({
+        summary: {
+          totalTenders: tenders.length,
+          avgSuccessProbability,
+          highProbabilityTenders,
+          lowProbabilityTenders,
+          avgPredictedMargin: Math.round(predictions.reduce((sum, p) => sum + p.predictedMargin, 0) / predictions.length) || 15
+        },
+        sectorDistribution: sectorStats,
+        topOpportunities: predictions
+          .filter(p => p.successProbability >= 60)
+          .sort((a, b) => b.successProbability - a.successProbability)
+          .slice(0, 5)
+          .map(p => ({
+            id: p.id,
+            title: p.title,
+            successProbability: p.successProbability,
+            sector: p.sector,
+            recommendation: p.successProbability >= 80 ? 'High Priority' : 'Consider'
+          })),
+        marketTrends: {
+          emergingSectors: ['AI & Technology', 'Renewable Energy', 'Healthcare Tech'],
+          growthSectors: ['Digital Infrastructure', 'Cybersecurity', 'Smart Cities'],
+          averageWinRate: 32,
+          competitionLevel: 'Medium'
+        }
+      });
+    } catch (error) {
+      res.status(500).json({ 
+        message: `Prediction dashboard failed: ${error.message}` 
+      });
+    }
+  });
+
   return httpServer;
 }
 
