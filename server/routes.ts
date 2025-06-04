@@ -725,6 +725,83 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // ==================== ENHANCED DOCUMENT MANAGEMENT SYSTEM ====================
   
+  // OCR-powered document upload with automatic tender creation
+  app.post("/api/documents/upload-ocr", upload.single('file'), async (req: Request, res: Response) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ message: "No file uploaded" });
+      }
+
+      const { tenderId, firmId, autoCreateTender = 'true' } = req.body;
+      
+      // Process document with OCR
+      const { documentProcessor } = await import('./document-processor');
+      const ocrResult = await documentProcessor.processDocument(
+        req.file.buffer,
+        req.file.mimetype,
+        req.file.originalname
+      );
+
+      // Create document record
+      const document = await storage.createDocument({
+        name: req.file.originalname.split('.')[0],
+        originalFileName: req.file.originalname,
+        mimeType: req.file.mimetype,
+        documentType: req.file.mimetype.includes('pdf') ? 'tender_document' : 'general',
+        tenderId: tenderId ? parseInt(tenderId) : null,
+        firmId: firmId ? parseInt(firmId) : null,
+        content: ocrResult.extractedText || '',
+        ocrText: ocrResult.extractedText || '',
+        nlpAnalysis: JSON.stringify(ocrResult.analysis || {}),
+        gptAnalysis: JSON.stringify(ocrResult.keyInformation || {}),
+        status: 'processed',
+        version: '1.0'
+      });
+
+      let createdTender = null;
+      let extractedData = null;
+      
+      // Auto-create tender from OCR if document contains tender information
+      if (autoCreateTender === 'true' && ocrResult.extractedText && 
+          (req.file.originalname.toLowerCase().includes('gem') || 
+           req.file.originalname.toLowerCase().includes('bid') ||
+           ocrResult.extractedText.includes('Bid Number') ||
+           ocrResult.extractedText.includes('Ministry'))) {
+        
+        try {
+          const { tenderOCRProcessor } = await import('./tender-ocr-processor');
+          extractedData = await tenderOCRProcessor.processGeMLBiddingDocument(ocrResult.extractedText);
+          createdTender = await tenderOCRProcessor.createTenderFromExtractedData(extractedData);
+          
+          // Link document to created tender
+          if (createdTender) {
+            await storage.updateDocument(document.id, { tenderId: createdTender.id });
+          }
+          
+        } catch (ocrError) {
+          console.error('OCR tender creation failed:', ocrError);
+        }
+      }
+
+      res.status(201).json({
+        message: createdTender ? "Document processed and tender created successfully" : "Document processed successfully",
+        document,
+        ocrResult: {
+          extractedText: ocrResult.extractedText?.substring(0, 500) + '...',
+          keyInformation: ocrResult.keyInformation
+        },
+        createdTender,
+        extractedData,
+        autoTenderCreation: !!createdTender
+      });
+      
+    } catch (error) {
+      res.status(500).json({ 
+        message: `OCR document processing failed: ${error.message}` 
+      });
+    }
+  });
+
   // Upload document with Google Drive integration and processing
   app.post("/api/documents/upload-enhanced", upload.single('file'), async (req: Request, res: Response) => {
     try {
