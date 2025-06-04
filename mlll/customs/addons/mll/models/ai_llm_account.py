@@ -55,6 +55,12 @@ class AiLlmAccount(models.Model):
         compute='_compute_current_usage'
     )
     
+    conversation_ids = fields.One2many(
+        'ai.llm.conversation',
+        'account_id',
+        string='Conversations'
+    )
+    
     state = fields.Selection([
         ('draft', 'Draft'),
         ('active', 'Active'),

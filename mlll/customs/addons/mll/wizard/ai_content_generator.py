@@ -22,7 +22,7 @@ class AiContentGenerator(models.TransientModel):
     
     custom_prompt = fields.Text(
         string='Your Request',
-        placeholder='What would you like AI to help you with?'
+        help='What would you like AI to help you with?'
     )
     
     # Configuration
