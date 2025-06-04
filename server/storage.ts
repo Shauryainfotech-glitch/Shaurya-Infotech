@@ -306,6 +306,12 @@ export class MemStorage implements IStorage {
   async deleteFirm(id: number): Promise<boolean> {
     return this.firms.delete(id);
   }
+
+  // Firm documents management
+  async getFirmDocuments(firmId: number): Promise<any[]> {
+    // For now, return empty array - will be implemented with database
+    return [];
+  }
   
   // Document methods
   async getDocument(id: number): Promise<Document | undefined> {

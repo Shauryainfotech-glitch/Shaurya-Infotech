@@ -19,6 +19,7 @@ import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
 import { aiService } from './ai-service';
 import { blockchainService } from './blockchain-service';
+import { riskAssessmentEngine } from './risk-assessment';
 
 // Configure multer for file uploads
 const upload = multer({ 
@@ -1495,8 +1496,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Firm data is required" });
       }
       
-      const { riskAssessmentEngine } = await import('./risk-assessment');
-      const assessment = await riskAssessmentEngine.assessFirmRisk(firmData);
+      const assessment = await riskAssessmentEngine.assessTenderRisk(firmData.id, firmData.id);
       
       res.json({
         success: true,
