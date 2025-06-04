@@ -169,6 +169,60 @@ export const insertFirmSchema = createInsertSchema(firms).omit({
 export type InsertFirm = z.infer<typeof insertFirmSchema>;
 export type Firm = typeof firms.$inferSelect;
 
+// Firm Document Management System
+export const firmDocuments = pgTable("firm_documents", {
+  id: serial("id").primaryKey(),
+  firmId: integer("firm_id").notNull(),
+  
+  // Document Categories
+  category: text("category").notNull(), // Basic Documents, Advance Document, Authorization Document, etc.
+  documentName: text("document_name").notNull(),
+  documentNumber: text("document_number"),
+  
+  // Status and Validity
+  status: text("status").notNull().default("Not Available"), // Available, Not Available, Checking, Waiting for, etc.
+  validity: text("validity"), // NA, date string, or validity period
+  renewal: text("renewal").notNull().default("NA"), // NA, Every Year Update, Monthly, etc.
+  
+  // Responsibility and Management
+  responsible: text("responsible"), // Pranali, Viresh Sir, etc.
+  charges: text("charges"), // Fee amounts
+  duration: text("duration"), // Processing duration
+  challenges: text("challenges"), // Implementation challenges
+  support: text("support"), // Required support
+  timeline: text("timeline"), // Expected timeline
+  
+  // Document specific fields
+  certificateNumber: text("certificate_number"), // For certificates
+  issuingAuthority: text("issuing_authority"),
+  expiryDate: date("expiry_date"),
+  renewalDate: date("renewal_date"),
+  
+  // File management
+  filePath: text("file_path"),
+  fileSize: integer("file_size"),
+  uploadedAt: timestamp("uploaded_at"),
+  
+  // Tracking
+  lastUpdated: timestamp("last_updated").defaultNow(),
+  createdAt: timestamp("created_at").defaultNow(),
+  
+  // Additional metadata
+  priority: text("priority").notNull().default("Medium"), // High, Medium, Low
+  complianceRequired: boolean("compliance_required").notNull().default(false),
+  reminderDays: integer("reminder_days").default(30), // Days before expiry to remind
+  notes: text("notes")
+});
+
+export const insertFirmDocumentSchema = createInsertSchema(firmDocuments).omit({
+  id: true,
+  createdAt: true,
+  lastUpdated: true
+});
+
+export type InsertFirmDocument = z.infer<typeof insertFirmDocumentSchema>;
+export type FirmDocument = typeof firmDocuments.$inferSelect;
+
 // Enhanced Document Management model with Google Drive integration
 export const documents = pgTable("documents", {
   id: serial("id").primaryKey(),

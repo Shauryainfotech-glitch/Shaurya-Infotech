@@ -2,6 +2,7 @@ import {
   users, type User, type InsertUser,
   tenders, type Tender, type InsertTender,
   firms, type Firm, type InsertFirm,
+  firmDocuments, type FirmDocument, type InsertFirmDocument,
   documents, type Document, type InsertDocument,
   pipelineStages, type PipelineStage, type InsertPipelineStage,
   tasks, type Task, type InsertTask,
@@ -78,6 +79,15 @@ export interface IStorage {
   updateAutomationRule(id: number, rule: Partial<InsertAutomationRule>): Promise<AutomationRule | undefined>;
   toggleAutomationRule(id: number, enabled: boolean): Promise<AutomationRule | undefined>;
   deleteAutomationRule(id: number): Promise<boolean>;
+  
+  // Firm Document methods
+  getFirmDocument(id: number): Promise<FirmDocument | undefined>;
+  getFirmDocuments(firmId?: number): Promise<FirmDocument[]>;
+  createFirmDocument(document: InsertFirmDocument): Promise<FirmDocument>;
+  updateFirmDocument(id: number, document: Partial<InsertFirmDocument>): Promise<FirmDocument | undefined>;
+  deleteFirmDocument(id: number): Promise<boolean>;
+  getFirmDocumentsByCategory(firmId: number, category: string): Promise<FirmDocument[]>;
+  getExpiringDocuments(days: number): Promise<FirmDocument[]>;
 }
 
 // In-memory storage implementation
