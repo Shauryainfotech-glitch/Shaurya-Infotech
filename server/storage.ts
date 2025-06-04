@@ -95,6 +95,7 @@ export class MemStorage implements IStorage {
   private users: Map<number, User>;
   private tenders: Map<number, Tender>;
   private firms: Map<number, Firm>;
+  private firmDocuments: Map<number, FirmDocument>;
   private documents: Map<number, Document>;
   private pipelineStages: Map<number, PipelineStage>;
   private tasks: Map<number, Task>;
@@ -105,6 +106,7 @@ export class MemStorage implements IStorage {
   private nextUserId: number;
   private nextTenderId: number;
   private nextFirmId: number;
+  private nextFirmDocumentId: number;
   private nextDocumentId: number;
   private nextPipelineStageId: number;
   private nextTaskId: number;
@@ -116,6 +118,7 @@ export class MemStorage implements IStorage {
     this.users = new Map();
     this.tenders = new Map();
     this.firms = new Map();
+    this.firmDocuments = new Map();
     this.documents = new Map();
     this.pipelineStages = new Map();
     this.tasks = new Map();
@@ -126,6 +129,7 @@ export class MemStorage implements IStorage {
     this.nextUserId = 1;
     this.nextTenderId = 1;
     this.nextFirmId = 1;
+    this.nextFirmDocumentId = 1;
     this.nextDocumentId = 1;
     this.nextPipelineStageId = 1;
     this.nextTaskId = 1;
@@ -926,6 +930,66 @@ export class MemStorage implements IStorage {
     // Add automation rules
     sampleRules.forEach(rule => {
       this.createAutomationRule(rule);
+    });
+  }
+
+  // Firm Document methods
+  async getFirmDocument(id: number): Promise<FirmDocument | undefined> {
+    return this.firmDocuments.get(id);
+  }
+
+  async getFirmDocuments(firmId?: number): Promise<FirmDocument[]> {
+    const documents = Array.from(this.firmDocuments.values());
+    if (firmId) {
+      return documents.filter(doc => doc.firmId === firmId);
+    }
+    return documents;
+  }
+
+  async createFirmDocument(document: InsertFirmDocument): Promise<FirmDocument> {
+    const id = this.nextFirmDocumentId++;
+    const newDocument: FirmDocument = {
+      id,
+      createdAt: new Date(),
+      lastUpdated: new Date(),
+      ...document
+    };
+    this.firmDocuments.set(id, newDocument);
+    return newDocument;
+  }
+
+  async updateFirmDocument(id: number, document: Partial<InsertFirmDocument>): Promise<FirmDocument | undefined> {
+    const existing = this.firmDocuments.get(id);
+    if (!existing) return undefined;
+
+    const updated: FirmDocument = {
+      ...existing,
+      ...document,
+      lastUpdated: new Date()
+    };
+    this.firmDocuments.set(id, updated);
+    return updated;
+  }
+
+  async deleteFirmDocument(id: number): Promise<boolean> {
+    return this.firmDocuments.delete(id);
+  }
+
+  async getFirmDocumentsByCategory(firmId: number, category: string): Promise<FirmDocument[]> {
+    const documents = Array.from(this.firmDocuments.values());
+    return documents.filter(doc => doc.firmId === firmId && doc.category === category);
+  }
+
+  async getExpiringDocuments(days: number): Promise<FirmDocument[]> {
+    const currentDate = new Date();
+    const futureDate = new Date();
+    futureDate.setDate(currentDate.getDate() + days);
+
+    const documents = Array.from(this.firmDocuments.values());
+    return documents.filter(doc => {
+      if (!doc.expiryDate) return false;
+      const expiryDate = new Date(doc.expiryDate);
+      return expiryDate >= currentDate && expiryDate <= futureDate;
     });
   }
 }

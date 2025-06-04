@@ -6,6 +6,7 @@ import { z } from "zod";
 import { 
   insertTenderSchema, 
   insertFirmSchema, 
+  insertFirmDocumentSchema,
   insertDocumentSchema,
   insertPipelineStageSchema,
   insertTaskSchema,
@@ -13,6 +14,7 @@ import {
   insertEmailNotificationSchema,
   insertAutomationRuleSchema
 } from "@shared/schema";
+import { firmDocumentService } from "./firm-document-service";
 import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
 import { aiService } from './ai-service';
@@ -1775,5 +1777,215 @@ function simulateGptAnalysis(text: string): Promise<string> {
         summary: "GPT-4 recommends pursuing this tender. High alignment with firm capabilities, favorable market conditions, and strong potential ROI make this an excellent opportunity."
       }));
     }, 2000);
+  });
+}
+
+// Firm Document Management API Endpoints
+export function registerFirmDocumentRoutes(app: Express) {
+  
+  // Get all firm documents for a specific firm
+  app.get("/api/firms/:firmId/documents", async (req: Request, res: Response) => {
+    try {
+      const firmId = parseInt(req.params.firmId);
+      const documents = await storage.getFirmDocuments(firmId);
+      res.json(documents);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch firm documents" });
+    }
+  });
+
+  // Get firm documents by category
+  app.get("/api/firms/:firmId/documents/category/:category", async (req: Request, res: Response) => {
+    try {
+      const firmId = parseInt(req.params.firmId);
+      const category = req.params.category;
+      const documents = await storage.getFirmDocumentsByCategory(firmId, category);
+      res.json(documents);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch documents by category" });
+    }
+  });
+
+  // Initialize firm documents with Wildrex Solutions template
+  app.post("/api/firms/:firmId/documents/initialize", async (req: Request, res: Response) => {
+    try {
+      const firmId = parseInt(req.params.firmId);
+      const documents = await firmDocumentService.initializeFirmDocuments(firmId);
+      res.json({
+        message: "Firm documents initialized successfully",
+        documentsCreated: documents.length,
+        documents
+      });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to initialize firm documents" });
+    }
+  });
+
+  // Create a new firm document
+  app.post("/api/firms/documents", async (req: Request, res: Response) => {
+    try {
+      const documentData = insertFirmDocumentSchema.parse(req.body);
+      const document = await storage.createFirmDocument(documentData);
+      res.status(201).json(document);
+    } catch (error) {
+      if (error instanceof ZodError) {
+        res.status(400).json({ error: fromZodError(error).toString() });
+      } else {
+        res.status(500).json({ error: "Failed to create firm document" });
+      }
+    }
+  });
+
+  // Update firm document
+  app.put("/api/firms/documents/:id", async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      const updateData = req.body;
+      const document = await storage.updateFirmDocument(id, updateData);
+      
+      if (!document) {
+        return res.status(404).json({ error: "Document not found" });
+      }
+      
+      res.json(document);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to update firm document" });
+    }
+  });
+
+  // Update document status (for tracking workflow)
+  app.patch("/api/firms/documents/:id/status", async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { status, notes } = req.body;
+      const document = await firmDocumentService.updateDocumentStatus(id, status, notes);
+      
+      if (!document) {
+        return res.status(404).json({ error: "Document not found" });
+      }
+      
+      res.json(document);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to update document status" });
+    }
+  });
+
+  // Get expiring documents
+  app.get("/api/firms/documents/expiring", async (req: Request, res: Response) => {
+    try {
+      const days = parseInt(req.query.days as string) || 30;
+      const firmId = req.query.firmId ? parseInt(req.query.firmId as string) : undefined;
+      
+      const documents = await firmDocumentService.getExpiringDocuments(firmId, days);
+      res.json(documents);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch expiring documents" });
+    }
+  });
+
+  // Get firm documents organized by category
+  app.get("/api/firms/:firmId/documents/categorized", async (req: Request, res: Response) => {
+    try {
+      const firmId = parseInt(req.params.firmId);
+      const categorizedDocuments = await firmDocumentService.getFirmDocumentsByCategory(firmId);
+      res.json(categorizedDocuments);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch categorized documents" });
+    }
+  });
+
+  // Get compliance report for a firm
+  app.get("/api/firms/:firmId/compliance-report", async (req: Request, res: Response) => {
+    try {
+      const firmId = parseInt(req.params.firmId);
+      const report = await firmDocumentService.getDocumentComplianceReport(firmId);
+      res.json(report);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to generate compliance report" });
+    }
+  });
+
+  // Delete firm document
+  app.delete("/api/firms/documents/:id", async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      const success = await storage.deleteFirmDocument(id);
+      
+      if (!success) {
+        return res.status(404).json({ error: "Document not found" });
+      }
+      
+      res.json({ message: "Document deleted successfully" });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to delete firm document" });
+    }
+  });
+
+  // Bulk update document statuses
+  app.patch("/api/firms/:firmId/documents/bulk-update", async (req: Request, res: Response) => {
+    try {
+      const firmId = parseInt(req.params.firmId);
+      const { updates } = req.body; // Array of { id, status, notes }
+      
+      const updatedDocuments = [];
+      for (const update of updates) {
+        const document = await storage.updateFirmDocument(update.id, {
+          status: update.status,
+          notes: update.notes,
+          lastUpdated: new Date()
+        });
+        if (document) {
+          updatedDocuments.push(document);
+        }
+      }
+      
+      res.json({
+        message: `Successfully updated ${updatedDocuments.length} documents`,
+        documents: updatedDocuments
+      });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to bulk update documents" });
+    }
+  });
+
+  // Get document statistics for dashboard
+  app.get("/api/firms/:firmId/document-stats", async (req: Request, res: Response) => {
+    try {
+      const firmId = parseInt(req.params.firmId);
+      const documents = await storage.getFirmDocuments(firmId);
+      
+      const stats = {
+        total: documents.length,
+        available: documents.filter(doc => doc.status === 'Available').length,
+        missing: documents.filter(doc => doc.status === 'No' || doc.status === 'Not Available').length,
+        checking: documents.filter(doc => doc.status === 'Checking').length,
+        waitingFor: documents.filter(doc => doc.status === 'Waiting for').length,
+        byCategory: {} as Record<string, number>,
+        byResponsible: {} as Record<string, number>,
+        expiringSoon: documents.filter(doc => {
+          if (!doc.expiryDate) return false;
+          const expiryDate = new Date(doc.expiryDate);
+          const thirtyDaysFromNow = new Date();
+          thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
+          return expiryDate <= thirtyDaysFromNow;
+        }).length
+      };
+      
+      // Calculate category distribution
+      documents.forEach(doc => {
+        stats.byCategory[doc.category] = (stats.byCategory[doc.category] || 0) + 1;
+      });
+      
+      // Calculate responsible person distribution
+      documents.forEach(doc => {
+        if (doc.responsible) {
+          stats.byResponsible[doc.responsible] = (stats.byResponsible[doc.responsible] || 0) + 1;
+        }
+      });
+      
+      res.json(stats);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch document statistics" });
+    }
   });
 }
