@@ -4,6 +4,7 @@
     <record id="view_ai_llm_conversation_tree" model="ir.ui.view">
         <field name="name">ai.llm.conversation.tree</field>
         <field name="model">ai.llm.conversation</field>
+        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="AI Conversations">
                 <field name="name"/>
@@ -20,6 +21,7 @@
     <record id="view_ai_llm_conversation_form" model="ir.ui.view">
         <field name="name">ai.llm.conversation.form</field>
         <field name="model">ai.llm.conversation</field>
+        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="AI Conversation">
                 <sheet>
@@ -80,6 +82,7 @@
     <record id="view_ai_llm_conversation_search" model="ir.ui.view">
         <field name="name">ai.llm.conversation.search</field>
         <field name="model">ai.llm.conversation</field>
+        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Conversations">
                 <field name="name"/>

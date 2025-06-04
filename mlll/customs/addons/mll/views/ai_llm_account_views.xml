@@ -4,6 +4,7 @@
     <record id="view_ai_llm_account_tree" model="ir.ui.view">
         <field name="name">ai.llm.account.tree</field>
         <field name="model">ai.llm.account</field>
+        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="AI Accounts" decoration-warning="state=='suspended'" decoration-muted="state=='draft'">
                 <field name="display_name"/>
@@ -20,6 +21,7 @@
     <record id="view_ai_llm_account_form" model="ir.ui.view">
         <field name="name">ai.llm.account.form</field>
         <field name="model">ai.llm.account</field>
+        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="AI Account">
                 <header>
@@ -88,6 +90,7 @@
     <record id="view_ai_llm_account_search" model="ir.ui.view">
         <field name="name">ai.llm.account.search</field>
         <field name="model">ai.llm.account</field>
+        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search AI Accounts">
                 <field name="name"/>
