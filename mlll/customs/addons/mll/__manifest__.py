@@ -22,6 +22,10 @@ This module provides comprehensive AI integration capabilities:
         'base',
         'mail',
         'web',
+        'sale_management',  # For sale.order model
+        'project',         # For project.task model
+        'hr',             # For hr.employee model
+        'account',        # For account.move model
     ],
     'data': [
         'security/ai_llm_security.xml',
@@ -35,8 +39,8 @@ This module provides comprehensive AI integration capabilities:
     ],
     'assets': {
         'web.assets_backend': [
-            'ai_llm_integration/static/src/js/ai_assistant_widget.js',
-            'ai_llm_integration/static/src/xml/ai_assistant_templates.xml',
+            'mll/static/src/js/ai_assistant_widget.js',
+            'mll/static/src/xml/ai_assistant_templates.xml',
         ],
     },
     'installable': True,
