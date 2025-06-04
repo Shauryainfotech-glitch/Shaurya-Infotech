@@ -1778,6 +1778,11 @@ function simulateGptAnalysis(text: string): Promise<string> {
       }));
     }, 2000);
   });
+
+  // Register firm document management routes
+  registerFirmDocumentRoutes(app);
+
+  return createServer(app);
 }
 
 // Firm Document Management API Endpoints
