@@ -19,6 +19,7 @@ import EmailNotifications from "@/pages/email-notifications";
 import Automation from "@/pages/automation";
 import DocumentManagement from "@/pages/document-management";
 import Predictions from "@/pages/predictions";
+import RiskAssessment from "@/pages/risk-assessment";
 
 function App() {
   return (
@@ -51,6 +52,8 @@ function Router() {
       <Route path="/email-notifications" component={EmailNotifications} />
       <Route path="/automation" component={Automation} />
       <Route path="/document-management" component={DocumentManagement} />
+      <Route path="/predictions" component={Predictions} />
+      <Route path="/risk-assessment" component={RiskAssessment} />
       <Route component={NotFound} />
     </Switch>
   );
