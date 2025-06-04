@@ -329,7 +329,7 @@ export class TenderOCRProcessor {
       bidClarificationNotes: extractedData.termsAndConditions,
       
       // Results and awards
-      resultDate: extractedData.bidOpeningDate,
+      resultDate: extractedData.bidOpeningDate.toISOString().split('T')[0],
       workOrderReceived: false,
       agreementSigned: false,
       

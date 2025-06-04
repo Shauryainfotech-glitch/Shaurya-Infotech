@@ -1662,6 +1662,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // OCR Test Endpoint for GeM Document Processing
+  app.get("/api/test-ocr-gem", async (req: Request, res: Response) => {
+    try {
+      const { testOCREndpoint } = await import('./routes-ocr-test');
+      await testOCREndpoint(req, res);
+    } catch (error) {
+      res.status(500).json({ 
+        success: false,
+        message: `OCR test failed: ${error.message}` 
+      });
+    }
+  });
+
   return httpServer;
 }
 
