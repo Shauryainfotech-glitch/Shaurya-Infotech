@@ -43,7 +43,7 @@
         </record>
 
         <record id="doc_category_permits" model="architect.document.category">
-            <field name="name">Permits & Approvals</field>
+            <field name="name">Permits &amp; Approvals</field>
             <field name="code">PRM</field>
             <field name="sequence">50</field>
             <field name="allowed_file_types">pdf,jpg,png</field>
@@ -53,7 +53,7 @@
         </record>
 
         <record id="doc_category_photos" model="architect.document.category">
-            <field name="name">Photos & Media</field>
+            <field name="name">Photos &amp; Media</field>
             <field name="code">PHT</field>
             <field name="sequence">60</field>
             <field name="allowed_file_types">jpg,jpeg,png,gif,mp4,avi</field>
