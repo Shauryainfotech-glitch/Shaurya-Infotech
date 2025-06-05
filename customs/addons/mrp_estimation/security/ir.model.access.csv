@@ -9,5 +9,3 @@ access_estimation_version_user,estimation.version.user,model_mrp_estimation_vers
 access_estimation_version_manager,estimation.version.manager,model_mrp_estimation_version,group_estimation_manager,1,1,1,1
 access_mrp_costing_user,mrp.costing.user,model_mrp_costing,group_estimation_user,1,1,1,0
 access_mrp_costing_manager,mrp.costing.manager,model_mrp_costing,group_estimation_manager,1,1,1,1
-access_estimation_performance_user,estimation.performance.user,model_mrp_estimation_performance,group_estimation_user,1,0,0,0
-access_estimation_performance_manager,estimation.performance.manager,model_mrp_estimation_performance,group_estimation_manager,1,0,0,0
