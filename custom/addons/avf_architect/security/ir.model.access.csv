@@ -1,0 +1,14 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_avf_rate_schedule,avf.rate.schedule,model_avf_rate_schedule,,1,1,1,1
+access_avf_rate_schedule_line,avf.rate.schedule.line,model_avf_rate_schedule_line,,1,1,1,1
+access_avf_ai_assistant,avf.ai.assistant,model_avf_ai_assistant,,1,1,1,1
+access_avf_project_stage,avf.project.stage,model_avf_project_stage,,1,1,1,1
+access_avf_dpr_management,avf.dpr.management,model_avf_dpr_management,,1,1,1,1
+access_avf_compliance_tracking,avf.compliance.tracking,model_avf_compliance_tracking,,1,1,1,1
+access_avf_drawing_management,avf.drawing.management,model_avf_drawing_management,,1,1,1,1
+access_avf_survey_management,avf.survey.management,model_avf_survey_management,,1,1,1,1
+access_avf_team_collaboration,avf.team.collaboration,model_avf_team_collaboration,,1,1,1,1
+access_avf_document_management,avf.document.management,model_avf_document_management,,1,1,1,1
+access_avf_document_tag,avf.document.tag,model_avf_document_tag,,1,1,1,1
+access_avf_financial_tracking,avf.financial.tracking,model_avf_financial_tracking,,1,1,1,1
+access_avf_client_portal,avf.client.portal,model_avf_client_portal,,1,1,1,1

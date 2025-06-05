@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Project Stages -->
+        <record id="stage_initiation" model="architect.project.stage">
+            <field name="name">Project Initiation</field>
+            <field name="sequence">1</field>
+            <field name="progress">5</field>
+            <field name="color">1</field>
+            <field name="is_initial" eval="True"/>
+            <field name="description">Initial project setup and planning</field>
+        </record>
+
+        <record id="stage_design" model="architect.project.stage">
+            <field name="name">Design Development</field>
+            <field name="sequence">2</field>
+            <field name="progress">25</field>
+            <field name="color">3</field>
+            <field name="description">Architectural design and drawing phase</field>
+        </record>
+
+        <record id="stage_approval" model="architect.project.stage">
+            <field name="name">Approval Process</field>
+            <field name="sequence">3</field>
+            <field name="progress">50</field>
+            <field name="color">6</field>
+            <field name="description">Government approvals and compliance verification</field>
+        </record>
+
+        <record id="stage_construction" model="architect.project.stage">
+            <field name="name">Construction Documentation</field>
+            <field name="sequence">4</field>
+            <field name="progress">75</field>
+            <field name="color">4</field>
+            <field name="description">Detailed construction drawings and specifications</field>
+        </record>
+
+        <record id="stage_completion" model="architect.project.stage">
+            <field name="name">Project Completion</field>
+            <field name="sequence">5</field>
+            <field name="progress">100</field>
+            <field name="color">10</field>
+            <field name="is_closed" eval="True"/>
+            <field name="description">Project completion and handover</field>
+        </record>
+    </data>
+</odoo>
