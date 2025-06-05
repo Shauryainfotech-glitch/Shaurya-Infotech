@@ -1,8 +1,3 @@
-# -*- coding: utf-8 -*-
-from odoo import models, fields, api
-from odoo.exceptions import ValidationError
-
-
 class SolarQuoteLine(models.Model):
     _name = "solar.quote.line"
     _description = "Solar Quote Line"
@@ -21,7 +16,7 @@ class SolarQuoteLine(models.Model):
         required=True,
         domain="[('active', '=', True)]"
     )
-    name = fields.Char(
+    description = fields.Char(  # Updated from 'name' to 'description'
         string="Description",
         required=True
     )
@@ -94,10 +89,10 @@ class SolarQuoteLine(models.Model):
     def _onchange_product_id(self):
         """Update fields when product changes"""
         if self.product_id:
-            self.name = self.product_id.name
+            self.description = self.product_id.name  # Updated from 'name' to 'description'
             self.unit_price = self.product_id.list_price
             if self.product_id.description:
-                self.name = f"{self.product_id.name} - {self.product_id.description}"
+                self.description = f"{self.product_id.name} - {self.product_id.description}"
 
     @api.depends('quantity', 'unit_price', 'discount_pct')
     def _compute_price_subtotal(self):
@@ -113,5 +108,5 @@ class SolarQuoteLine(models.Model):
             'product_id': self.product_id.id,
             'quantity': self.quantity,
             'unit_cost': self.product_id.standard_price,
-            'description': self.name,
+            'description': self.description,  # Updated from 'name' to 'description'
         }
