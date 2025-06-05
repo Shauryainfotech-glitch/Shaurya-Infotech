@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="view_ai_llm_conversation_list" model="ir.ui.view">
+        <field name="name">ai.llm.conversation.list</field>
+        <field name="model">ai.llm.conversation</field>
+        <field name="type">list</field>
+        <field name="arch" type="xml">
+            <list string="AI Conversations">
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="account_id"/>
+                <field name="model_name"/>
+                <field name="total_tokens"/>
+                <field name="create_date"/>
+            </list>
+        </field>
+    </record>
+    
+    <!-- Form View -->
+    <record id="view_ai_llm_conversation_form" model="ir.ui.view">
+        <field name="name">ai.llm.conversation.form</field>
+        <field name="model">ai.llm.conversation</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="AI Conversation">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="account_id"/>
+                            <field name="total_tokens"/>
+                        </group>
+                        <group>
+                            <field name="model_name"/>
+                            <field name="res_id"/>
+                            <field name="create_date"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Messages">
+                            <field name="message_ids" readonly="1">
+                                <list>
+                                    <field name="role" widget="badge" 
+                                           decoration-info="role == 'system'"
+                                           decoration-success="role == 'user'"
+                                           decoration-warning="role == 'assistant'"/>
+                                    <field name="content"/>
+                                    <field name="token_count"/>
+                                    <field name="create_date"/>
+                                </list>
+                                <form>
+                                    <group>
+                                        <field name="role"/>
+                                        <field name="token_count"/>
+                                        <field name="create_date"/>
+                                    </group>
+                                    <field name="content" widget="text"/>
+                                    <field name="metadata" widget="text" groups="base.group_no_one"/>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Context Data" groups="base.group_no_one">
+                            <field name="context_data" widget="text"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    
+    <!-- Search View -->
+    <record id="view_ai_llm_conversation_search" model="ir.ui.view">
+        <field name="name">ai.llm.conversation.search</field>
+        <field name="model">ai.llm.conversation</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Search Conversations">
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="account_id"/>
+                <field name="model_name"/>
+                <filter string="My Conversations" name="my_conversations" domain="[('user_id', '=', uid)]"/>
+                <filter string="Today" name="today" domain="[('create_date', '>=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]"/>
+                <filter string="This Week" name="this_week" domain="[('create_date', '>=', (context_today() - datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                <group expand="0" string="Group By">
+                    <filter string="User" name="group_by_user" context="{'group_by': 'user_id'}"/>
+                    <filter string="Account" name="group_by_account" context="{'group_by': 'account_id'}"/>
+                    <filter string="Source Model" name="group_by_model" context="{'group_by': 'model_name'}"/>
+                    <filter string="Date" name="group_by_date" context="{'group_by': 'create_date:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    
+    <!-- Action -->
+    <record id="action_ai_llm_conversation" model="ir.actions.act_window">
+        <field name="name">AI Conversations</field>
+        <field name="res_model">ai.llm.conversation</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_ai_llm_conversation_search"/>
+        <field name="context">{'search_default_my_conversations': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No conversations yet
+            </p>
+            <p>
+                Your AI conversations will appear here once you start using the AI assistant.
+            </p>
+        </field>
+    </record>
+</odoo>
