@@ -1,4 +1,6 @@
 import logging
+_logger = logging.getLogger(__name__)
+
 from . import models
 from . import report
 
@@ -7,8 +9,6 @@ try:
     from . import wizards
 except ImportError:
     # If wizards.py doesn't exist, we can safely ignore it
-    import logging
-    _logger = logging.getLogger(__name__)
     _logger.debug("wizards.py not found, skipping import")
 
 def post_init_hook(env):
@@ -21,5 +21,4 @@ def post_init_hook(env):
     """
     # You can add initialization code here if needed
     # For example, setting up default configurations
-    _logger = logging.getLogger(__name__)
     _logger.info("Post-init hook for day_plan_work_report_ai module executed successfully")
