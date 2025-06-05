@@ -1,12 +1,4 @@
-2025-06-05 03:41:20,587 4 WARNING shauryainfotech-glitch-shaurya-infotech-viresh-20995362 odoo.addons.base.models.ir_ui_view: An alert (class alert-*) must have an alert, alertdialog or status role or an alert-link class. Please use alert and alertdialog only for what expects to stop any activity to be read immediately.
-View error context:
-{'file': '/home/odoo/src/user/mlll/customs/addons/mll/wizard/ai_content_generator_views.xml',
- 'line': 4,
- 'name': 'ai.content.generator.form',
- 'view': ir.ui.view(2244,),
- 'view.model': 'ai.content.generator',
- 'view.parent': ir.ui.view(),
- 'xmlid': 'view_ai_content_generator_form'}<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!-- Module Category -->
     <record id="module_category_ai_llm" model="ir.module.category">
