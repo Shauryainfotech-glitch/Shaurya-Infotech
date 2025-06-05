@@ -4,7 +4,7 @@
     <menuitem id="menu_ai_llm_root"
               name="AI Assistant"
               sequence="5"
-              web_icon="ai_llm_integration,static/description/icon.png"/>
+              web_icon="mll,static/description/icon.png"/>
     
     <!-- Configuration Menu -->
     <menuitem id="menu_ai_llm_config"

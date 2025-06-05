@@ -6,7 +6,7 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="AI Assistant">
-                <group invisible="not ai_response">
+                <group invisible="!ai_response">
                     <div class="alert alert-info" role="status" aria-live="polite">
                         <h4 class="alert-heading">AI Response:</h4>
                         <field name="ai_response" readonly="1" nolabel="1" 
@@ -19,10 +19,10 @@
                         <field name="prompt_type" widget="radio"/>
                         <field name="custom_prompt" 
                                invisible="prompt_type != 'custom'"
-                               nolabel="1" 
-                               colspan="2"
                                style="min-height: 100px;"
-                               help="What would you like AI to help you with?"/>
+                               help="What would you like AI to help you with?"
+                               nolabel="1" 
+                               colspan="2"/>
                     </group>
                     <group>
                         <field name="account_id" options="{'no_create': True}"/>
@@ -47,7 +47,7 @@
                             type="object" 
                             string="Apply" 
                             class="btn-primary"
-                            invisible="not ai_response"/>
+                            invisible="!ai_response"/>
                     <button string="Cancel" class="btn-secondary" special="cancel"/>
                 </footer>
             </form>
