@@ -65,11 +65,13 @@ class SolarQuoteLine(models.Model):
             if line.discount_pct < 0 or line.discount_pct > 100:
                 raise ValidationError("Discount percentage must be between 0 and 100!")
 
-    @api.constrains('unit_price')
-    def _check_unit_price(self):
+
+    @api.depends('unit_price', 'quantity', 'discount_pct')
+    def _compute_price_subtotal(self):
         for line in self:
-            if line.unit_price < 0:
-                raise ValidationError("Unit price cannot be negative!")
+            # Apply discount to the unit price
+            discounted_price = line.unit_price * (1 - (line.discount_pct / 100))
+            line.price_subtotal = discounted_price * line.quantity
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
