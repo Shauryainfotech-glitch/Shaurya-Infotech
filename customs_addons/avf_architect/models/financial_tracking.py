@@ -130,6 +130,11 @@ class ArchitectBudget(models.Model):
         default=lambda self: self.env.company,
         index=True
     )
+    manager_id = fields.Many2one(
+        'res.users',
+        string='Manager',
+        default=lambda self: self.env.user
+    )
     # Budget Details
     total_budget = fields.Monetary(string='Total Budget', currency_field='currency_id',
                                    required=True, tracking=True)
