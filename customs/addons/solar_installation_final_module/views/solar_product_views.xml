@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Action for Solar Products -->
+        <record id="action_solar_product_views" model="ir.actions.act_window">
+            <field name="name">Solar Products</field>
+            <field name="res_model">solar.product.product</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_solar_product_form"/>
+            <field name="help" type="html">
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="view_solar_product_form" model="ir.ui.view">
+            <field name="name">solar.product.form</field>
+            <field name="model">solar.product.product</field>
+            <field name="arch" type="xml">
+                <form string="Solar Product">
+                    <header>
+                        <field name="active"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="name" required="1"/>
+                            <field name="product_code"/>
+                            <field name="product_type"/>
+                            <field name="brand"/>
+                            <field name="model_number"/>
+                        </group>
+                        <notebook>
+                            <page string="Technical Specs">
+                                <group>
+                                    <field name="capacity_watt"/>
+                                    <field name="voltage"/>
+                                    <field name="current"/>
+                                    <field name="efficiency_pct"/>
+                                    <field name="battery_type"/>
+                                </group>
+                            </page>
+                            <page string="Physical Info">
+                                <group>
+                                    <field name="weight_kg"/>
+                                    <field name="dimension_length_mm"/>
+                                    <field name="dimension_width_mm"/>
+                                    <field name="dimension_height_mm"/>
+                                </group>
+                            </page>
+                            <page string="Pricing  Inventory">
+                                <group>
+                                    <field name="list_price"/>
+                                    <field name="standard_price"/>
+                                    <field name="currency_id"/>
+                                    <field name="uom_id"/>
+                                    <field name="uom_po_id"/>
+                                </group>
+                                <group>
+                                    <field name="stock_quantity" readonly="1"/>
+                                    <field name="incoming_qty" readonly="1"/>
+                                    <field name="outgoing_qty" readonly="1"/>
+                                </group>
+                            </page>
+                            <page string="Description">
+                                <field name="description"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

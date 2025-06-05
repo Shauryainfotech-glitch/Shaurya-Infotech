@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+   <data>
+  <!-- Action for Solar Projects -->
+  <record id="action_solar_project" model="ir.actions.act_window">
+    <field name="name">Solar Projects</field>
+    <field name="res_model">solar.project</field>
+    <field name="view_mode">form</field>
+    <field name="help" type="html">
+      <p class="o_view_nocontent_smiling_face">
+        Create your first solar project
+      </p>
+    </field>
+  </record>
+
+  <!-- Form View -->
+  <record id="view_solar_project_form" model="ir.ui.view">
+    <field name="name">solar.project.form</field>
+    <field name="model">solar.project</field>
+    <field name="arch" type="xml">
+      <form string="Solar Project" version="1.1">
+        <header>
+          <field name="state" widget="statusbar"
+                 statusbar_visible="draft,surveyed,quoted,confirmed,scheduled,in_progress,completed,cancelled"/>
+        </header>
+        <sheet>
+          <group>
+            <field name="name" readonly="1"/>
+            <field name="project_name"/>
+            <field name="customer_id"/>
+            <field name="inquiry_date" readonly="1"/>
+          </group>
+          <group string="Site Information">
+            <field name="site_address"/>
+            <field name="site_city"/>
+            <field name="site_state"/>
+            <field name="site_zip"/>
+            <field name="site_country_id"/>
+            <field name="gps_latitude"/>
+            <field name="gps_longitude"/>
+          </group>
+
+          <notebook>
+            <page string="Survey">
+              <field name="survey_id" context="{'default_project_id': active_id}"/>
+            </page>
+            <page string="Quotations">
+              <field name="quote_ids">
+                <form string="Quotation Entries">
+                  <field name="quote_number"/>
+                  <field name="quote_date"/>
+                  <field name="total_amount"/>
+                  <field name="state"/>
+                </form>
+              </field>
+            </page>
+            <page string="Schedule">
+              <field name="schedule_ids">
+                <form string="Schedule Entries">
+                  <field name="team_id"/>
+                  <field name="start_datetime"/>
+                  <field name="end_datetime"/>
+                  <field name="state"/>
+                </form>
+              </field>
+            </page>
+            <page string="Products (BOM)">
+              <field name="product_line_ids">
+                <form string="Product Lines">
+                  <field name="product_id"/>
+                  <field name="quantity"/>
+                  <field name="unit_cost"/>
+                  <field name="manual_unit_cost"/>
+                  <field name="subtotal"/>
+                </form>
+              </field>
+            </page>
+            <page string="Metrics">
+              <group>
+                <field name="total_quote_amount" readonly="1"/>
+                <field name="total_cost" readonly="1"/>
+                <field name="scheduled_start_date" readonly="1"/>
+                <field name="scheduled_end_date" readonly="1"/>
+                <field name="product_count" readonly="1"/>
+                <field name="schedule_count" readonly="1"/>
+              </group>
+            </page>
+            <page string="Notes">
+              <field name="description" widget="html"/>
+              <field name="notes"/>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+   </data>
+</odoo>

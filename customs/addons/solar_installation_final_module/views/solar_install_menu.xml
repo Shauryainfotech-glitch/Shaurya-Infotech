@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+   <data>
+  <!-- Main Root Menu -->
+  <menuitem id="menu_solar_root"
+            name="Solar Installation"
+            sequence="10"/>
+
+  <!-- Submenus under Solar Installation -->
+
+  <menuitem id="menu_solar_product"
+            name="Products"
+            parent="menu_solar_root"
+            action="solar_installation_final_module.action_solar_product_views"
+            sequence="10"/>
+
+
+  <menuitem id="menu_solar_install_skill"
+            name="Installation Skills"
+            parent="menu_solar_root"
+            action="solar_installation_final_module.action_solar_install_skill"
+            sequence="20"/>
+
+  <menuitem id="menu_solar_project"
+            name="Projects"
+            parent="menu_solar_root"
+            action="solar_installation_final_module.action_solar_project"
+            sequence="30"/>
+
+  <menuitem id="menu_solar_site_survey"
+            name="Site Surveys"
+            parent="menu_solar_root"
+            action="solar_installation_final_module.action_solar_site_survey"
+            sequence="40"/>
+
+  <menuitem id="menu_solar_quote"
+            name="Quotations"
+            parent="menu_solar_root"
+            action="solar_installation_final_module.action_solar_quote"
+            sequence="50"/>
+
+  <menuitem id="menu_solar_install_schedule"
+            name="Schedules"
+            parent="menu_solar_root"
+            action="solar_installation_final_module.action_solar_install_schedule"
+            sequence="60"/>
+
+  <menuitem id="menu_solar_install_team"
+            name="Installation Teams"
+            parent="menu_solar_root"
+            action="solar_installation_final_module.action_solar_install_team"
+            sequence="70"/>
+
+
+ </data>
+</odoo>
