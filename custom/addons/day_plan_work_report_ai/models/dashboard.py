@@ -20,11 +20,10 @@ class DayPlanDashboard(models.Model):
     # Adding alias model to support frontend calls to day.plan.dashboard
 
     def init(self):
-        """Initialize database - safely handle migration issues"""
+        """Initialize database - simplified to avoid test issues"""
         super(DayPlanDashboard, self).init()
-        _logger.info("Dashboard model initialized")
-        # Remove direct SQL execution that could interfere with test database setup
-        # This will be handled properly by Odoo's ORM system instead
+        # No longer executing direct SQL to avoid test database issues
+        _logger.info("Dashboard model initialized without direct SQL execution")
 
     name = fields.Char(string="Name", readonly=True, default="Dashboard")
 

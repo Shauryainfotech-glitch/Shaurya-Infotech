@@ -10,3 +10,5 @@ access_day_plan_report_generator,day.plan.report.generator,model_day_plan_report
 access_day_plan_task_tag_user,day.plan.task.tag,model_day_plan_task_tag,day_plan_work_report_ai.group_user,1,1,1,1
 access_day_plan_dashboard_user,day.plan.dashboard.clean,model_day_plan_dashboard_clean,day_plan_work_report_ai.group_user,1,0,0,0
 access_day_plan_dashboard_manager,day.plan.dashboard.manager,model_day_plan_dashboard_clean,day_plan_work_report_ai.group_manager,1,0,0,0
+access_day_plan_dashboard_alias_user,day.plan.dashboard,model_day_plan_dashboard,day_plan_work_report_ai.group_user,1,0,0,0
+access_day_plan_dashboard_alias_manager,day.plan.dashboard.alias.manager,model_day_plan_dashboard,day_plan_work_report_ai.group_manager,1,0,0,0
