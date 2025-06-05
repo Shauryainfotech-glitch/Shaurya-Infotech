@@ -59,7 +59,7 @@ class SolarProject(models.Model):
         ondelete="cascade",
         tracking=True
     )
-
+    active_id = fields.Many2one('survey.survey', string="Survey", help="Survey related to the project")
     # Relationship to Site Survey
     survey_id = fields.Many2one(
         comodel_name="solar.site.survey",
