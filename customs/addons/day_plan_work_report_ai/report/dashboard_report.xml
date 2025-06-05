@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Register the report -->
+    <record id="action_report_dashboard" model="ir.actions.report">
+        <field name="name">Dashboard PDF Report</field>
+        <field name="model">day.plan.dashboard.clean</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">day_plan_work_report_ai.report_dashboard</field>
+        <field name="report_file">day_plan_work_report_ai.report_dashboard</field>
+        <field name="binding_model_id" ref="model_day_plan_dashboard_clean"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'Dashboard Report - %s' % (object.name)</field>
+    </record>
+</odoo>
