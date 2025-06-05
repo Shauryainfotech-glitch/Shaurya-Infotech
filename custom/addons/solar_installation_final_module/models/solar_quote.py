@@ -17,6 +17,9 @@ class SolarQuote(models.Model):
         readonly=True,
         default=lambda self: self.env['ir.sequence'].next_by_code('solar.quote') or "New"
     )
+
+    product_id = fields.Many2one('product.product', string="Product", required=True)
+
     project_id = fields.Many2one(
         comodel_name="solar.project",
         string="Related Project",
