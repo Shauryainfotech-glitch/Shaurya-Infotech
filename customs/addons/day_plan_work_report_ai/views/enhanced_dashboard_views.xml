@@ -33,8 +33,8 @@
                         <div class="card bg-primary text-white">
                             <div class="card-body">
                                 <h6 class="card-title">Total Plans</h6>
-                                <h2 class="mb-0"><t t-esc="state.totalPlans"/></h2>
-                                <small class="text-white-50"><t t-esc="state.plansChange"/> from last period</small>
+                                <h2 class="mb-0"><field name="plans_today" widget="statinfo"/></h2>
+                                <small class="text-white-50">from last period</small>
                             </div>
                         </div>
                     </div>
@@ -42,7 +42,7 @@
                         <div class="card bg-success text-white">
                             <div class="card-body">
                                 <h6 class="card-title">Completion Rate</h6>
-                                <h2 class="mb-0"><t t-esc="state.completionRate"/>%</h2>
+                                <h2 class="mb-0"><field name="completion_rate" widget="percentage"/></h2>
                                 <small class="text-white-50">of tasks completed on time</small>
                             </div>
                         </div>
@@ -51,7 +51,7 @@
                         <div class="card bg-info text-white">
                             <div class="card-body">
                                 <h6 class="card-title">Avg. Productivity</h6>
-                                <h2 class="mb-0"><t t-esc="state.productivityScore"/></h2>
+                                <h2 class="mb-0"><field name="avg_productivity" widget="percentage"/></h2>
                                 <small class="text-white-50">based on AI analysis</small>
                             </div>
                         </div>
@@ -60,7 +60,7 @@
                         <div class="card bg-warning text-dark">
                             <div class="card-body">
                                 <h6 class="card-title">Attention Needed</h6>
-                                <h2 class="mb-0"><t t-esc="state.attentionItems"/></h2>
+                                <h2 class="mb-0"><field name="attention_items" widget="statinfo"/></h2>
                                 <small class="text-dark-50">items require your attention</small>
                             </div>
                         </div>
@@ -76,12 +76,13 @@
                                 <h5 class="card-title mb-0">Productivity Trend</h5>
                             </div>
                             <div class="card-body">
-                                <t t-if="state.chartData">
-                                    <DashboardChart data="state.chartData" type="'line'" style="'height: 300px;'"/>
-                                </t>
-                                <div t-else="" class="text-center py-4">
-                                    <p class="text-muted">No productivity data available</p>
-                                </div>
+                                <field name="productivity_chart" widget="dashboard_chart" options="{
+                                    'title': 'Productivity Over Time',
+                                    'x_axis': 'date',
+                                    'y_axis': 'productivity_score',
+                                    'type': 'line',
+                                    'colors': ['#4e73df']
+                                }"/>
                             </div>
                         </div>
 
@@ -93,20 +94,20 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <t t-if="state.pieChartData">
-                                            <DashboardChart data="state.pieChartData" type="'pie'" style="'height: 250px;'"/>
-                                        </t>
-                                        <div t-else="" class="text-center py-4">
-                                            <p class="text-muted">No task status data available</p>
-                                        </div>
+                                        <field name="task_distribution_chart" widget="dashboard_pie" options="{
+                                            'title': 'By Status',
+                                            'value': 'count',
+                                            'key': 'state',
+                                            'colors': {'draft': '#f6c23e', 'in_progress': '#36b9cc', 'completed': '#1cc88a', 'cancelled': '#e74a3b'}
+                                        }"/>
                                     </div>
                                     <div class="col-md-6">
-                                        <t t-if="state.radarChartData">
-                                            <DashboardChart data="state.radarChartData" type="'radar'" style="'height: 250px;'"/>
-                                        </t>
-                                        <div t-else="" class="text-center py-4">
-                                            <p class="text-muted">No task priority data available</p>
-                                        </div>
+                                        <field name="task_priority_chart" widget="dashboard_pie" options="{
+                                            'title': 'By Priority',
+                                            'value': 'count',
+                                            'key': 'priority',
+                                            'colors': {'high': '#e74a3b', 'medium': '#f6c23e', 'low': '#1cc88a'}
+                                        }"/>
                                     </div>
                                 </div>
                             </div>
@@ -115,17 +116,53 @@
 
                     <!-- Right Column -->
                     <div class="col-md-4">
-                        <!-- Productivity Overview -->
+                        <!-- Team Performance -->
                         <div class="card mb-4">
-                            <div class="card-header">
-                                <h5 class="card-title mb-0">Productivity Overview</h5>
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="card-title mb-0">Team Performance</h5>
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-link p-0" data-toggle="dropdown">
+                                        <i class="fa fa-ellipsis-v"></i>
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-right">
+                                        <a class="dropdown-item" href="#" data-action="team_performance" data-period="week">This Week</a>
+                                        <a class="dropdown-item" href="#" data-action="team_performance" data-period="month">This Month</a>
+                                        <a class="dropdown-item" href="#" data-action="team_performance" data-period="quarter">This Quarter</a>
+                                    </div>
+                                </div>
                             </div>
                             <div class="card-body">
-                                <t t-if="state.lineChartData">
-                                    <DashboardChart data="state.lineChartData" type="'bar'" style="'height: 250px;'"/>
-                                </t>
-                                <div t-else="" class="text-center py-4">
-                                    <p class="text-muted">No overview data available</p>
+                                <field name="team_performance" widget="dashboard_list" options="{
+                                    'template': 'day_plan_work_report_ai.team_performance_item',
+                                    'editable': False
+                                }">
+                                    <list>
+                                        <field name="employee_id"/>
+                                        <field name="completed_tasks"/>
+                                        <field name="completion_rate"/>
+                                        <field name="productivity_score" widget="progressbar"/>
+                                    </list>
+                                </field>
+                            </div>
+                        </div>
+
+                        <!-- Recent Activities -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Recent Activities</h5>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="list-group list-group-flush">
+                                    <t t-foreach="recent_activities" t-as="activity" t-key="activity.id">
+                                        <a href="#" class="list-group-item list-group-item-action">
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <h6 class="mb-1"><t t-esc="activity.title"/></h6>
+                                                <small class="text-muted"><t t-esc="activity.time"/></small>
+                                            </div>
+                                            <p class="mb-1"><t t-esc="activity.description"/></p>
+                                            <small class="text-muted"><t t-esc="activity.employee_name"/></small>
+                                        </a>
+                                    </t>
                                 </div>
                             </div>
                         </div>
@@ -175,8 +212,8 @@
                             <div class="card bg-primary text-white">
                                 <div class="card-body">
                                     <h6 class="card-title">Total Plans</h6>
-                                    <h2 class="mb-0"><field name="total_plans" widget="statinfo"/></h2>
-                                    <small class="text-white-50"><field name="plans_change" widget="statinfo"/> from last period</small>
+                                    <h2 class="mb-0"><field name="plans_today" widget="statinfo"/></h2>
+                                    <small class="text-white-50">from last period</small>
                                 </div>
                             </div>
                         </div>
@@ -211,9 +248,7 @@
 
                     <!-- Main Content -->
                     <div class="row">
-                        <!-- Left Column -->
                         <div class="col-md-8">
-                            <!-- Productivity Trend -->
                             <div class="card mb-4">
                                 <div class="card-header">
                                     <h5 class="card-title mb-0">Productivity Trend</h5>
@@ -229,7 +264,6 @@
                                 </div>
                             </div>
 
-                            <!-- Task Distribution -->
                             <div class="card">
                                 <div class="card-header">
                                     <h5 class="card-title mb-0">Task Distribution</h5>
@@ -257,9 +291,7 @@
                             </div>
                         </div>
 
-                        <!-- Right Column -->
                         <div class="col-md-4">
-                            <!-- Team Performance -->
                             <div class="card mb-4">
                                 <div class="card-header d-flex justify-content-between align-items-center">
                                     <h5 class="card-title mb-0">Team Performance</h5>
@@ -289,7 +321,6 @@
                                 </div>
                             </div>
 
-                            <!-- Recent Activities -->
                             <div class="card">
                                 <div class="card-header">
                                     <h5 class="card-title mb-0">Recent Activities</h5>
@@ -316,7 +347,6 @@
         </field>
     </record>
 
-    <!-- Dashboard Action -->
     <record id="action_enhanced_day_plan_dashboard" model="ir.actions.act_window">
         <field name="name">Enhanced Productivity Dashboard</field>
         <field name="res_model">day.plan</field>
@@ -334,7 +364,6 @@
         </field>
     </record>
 
-    <!-- Menu Item -->
     <menuitem id="menu_enhanced_dashboard"
               name="Enhanced Dashboard"
               parent="day_plan_work_report_ai.menu_day_plan_root"
