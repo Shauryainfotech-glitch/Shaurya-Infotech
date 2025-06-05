@@ -1,94 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <!-- Action for Solar Products -->
-             <!-- Action for Solar Products -->
-        <record id="action_solar_product_views" model="ir.actions.act_window">
-            <field name="name">Solar Products</field>
-            <field name="res_model">solar.product.product</field>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="view_solar_product_form"/>
-            <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">
-                    Create your first solar product
-                </p>
-            </field>
-        </record>
-
-        <!-- Form View -->
+        <!-- Form View - Define this FIRST before referencing it -->
         <record id="view_solar_product_form" model="ir.ui.view">
             <field name="name">solar.product.form</field>
             <field name="model">solar.product.product</field>
             <field name="arch" type="xml">
                 <form string="Solar Product">
-                    <header>
-                        <field name="active" invisible="1"/>
-                    </header>
                     <sheet>
-                        <div class="oe_button_box" name="button_box">
-                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
-                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
-                            </button>
-                        </div>
                         <group>
-                            <group>
-                                <field name="name" required="1"/>
-                                <field name="product_code"/>
-                                <field name="product_type"/>
-                            </group>
-                            <group>
-                                <field name="brand"/>
-                                <field name="model_number"/>
-                            </group>
+                            <field name="name" required="1"/>
+                            <field name="product_code"/>
+                            <field name="product_type"/>
+                            <field name="brand"/>
+                            <field name="model_number"/>
                         </group>
                         <notebook>
                             <page string="Technical Specs">
                                 <group>
-                                    <group>
-                                        <field name="capacity_watt"/>
-                                        <field name="voltage"/>
-                                        <field name="current"/>
-                                    </group>
-                                    <group>
-                                        <field name="efficiency_pct"/>
-                                        <field name="battery_type" attrs="{'invisible': [('product_type', '!=', 'battery')]}"/>
-                                    </group>
+                                    <field name="capacity_watt"/>
+                                    <field name="voltage"/>
+                                    <field name="current"/>
+                                    <field name="efficiency_pct"/>
+                                    <field name="battery_type"/>
                                 </group>
                             </page>
                             <page string="Physical Info">
                                 <group>
-                                    <group>
-                                        <field name="weight_kg"/>
-                                        <field name="dimension_length_mm"/>
-                                    </group>
-                                    <group>
-                                        <field name="dimension_width_mm"/>
-                                        <field name="dimension_height_mm"/>
-                                    </group>
+                                    <field name="weight_kg"/>
+                                    <field name="dimension_length_mm"/>
+                                    <field name="dimension_width_mm"/>
+                                    <field name="dimension_height_mm"/>
                                 </group>
                             </page>
-                            <page string="Pricing &amp; Inventory">
+                            <page string="Pricing Inventory">
                                 <group>
-                                    <group string="Pricing">
-                                        <field name="list_price"/>
-                                        <field name="standard_price"/>
-                                        <field name="currency_id"/>
-                                    </group>
-                                    <group string="Units">
-                                        <field name="uom_id"/>
-                                        <field name="uom_po_id"/>
-                                    </group>
+                                    <field name="list_price"/>
+                                    <field name="standard_price"/>
+                                    <field name="currency_id"/>
+                                    <field name="uom_id"/>
+                                    <field name="uom_po_id"/>
                                 </group>
                                 <group>
-                                    <group string="Stock Information">
-                                        <field name="stock_quantity" readonly="1"/>
-                                        <field name="incoming_qty" readonly="1"/>
-                                        <field name="outgoing_qty" readonly="1"/>
-                                    </group>
+                                    <field name="stock_quantity" readonly="1"/>
+                                    <field name="incoming_qty" readonly="1"/>
+                                    <field name="outgoing_qty" readonly="1"/>
                                 </group>
                             </page>
                             <page string="Description">
-                                <field name="description" placeholder="Add a description..."/>
+                                <field name="description"/>
                             </page>
                         </notebook>
                     </sheet>
@@ -96,10 +56,16 @@
             </field>
         </record>
 
-
-         <!-- Update the action to include tree view -->
+        <!-- Action for Solar Products - Define this AFTER the view -->
         <record id="action_solar_product_views" model="ir.actions.act_window">
+            <field name="name">Solar Products</field>
+            <field name="res_model">solar.product.product</field>
             <field name="view_mode">form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first solar product
+                </p>
+            </field>
         </record>
-        </data>
+    </data>
 </odoo>
