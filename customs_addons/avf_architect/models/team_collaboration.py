@@ -193,3 +193,11 @@ class ArchitectCertification(models.Model):
         today = fields.Date.today()
         for cert in self:
             cert.active = (not cert.expiry_date) or (cert.expiry_date >= today)
+
+
+# 🆕 ADD THIS MODEL EXTENSION TO FIX THE BUG:
+
+class ArchitectProject(models.Model):
+    _inherit = 'architect.project'
+
+    quality_rating = fields.Float(string='Quality Rating')  # <-- Missing field added
