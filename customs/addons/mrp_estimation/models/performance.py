@@ -1,5 +1,4 @@
 from odoo import models, api
-from odoo.tools.profiler import profile
 
 
 class EstimationPerformance(models.AbstractModel):
@@ -19,7 +18,6 @@ class EstimationPerformance(models.AbstractModel):
         return domain
 
     @api.model
-    @profile
     def get_estimation_statistics(self, partner_id=None, date_from=None, date_to=None):
         """Optimized statistics calculation using SQL."""
         domain = self._get_estimation_domain(partner_id, date_from, date_to)
