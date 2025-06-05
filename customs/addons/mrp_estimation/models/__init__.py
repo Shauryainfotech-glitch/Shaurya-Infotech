@@ -1,12 +1,9 @@
-from . import estimation
+from . import estimation_version
 from . import estimation_line
 from . import estimation_cost
-from . import estimation_version
 from . import mrp_costing
 from . import res_config_settings
 from . import portal_mixin
 from . import calculation_engine
-from . import sale_integration
-from . import mrp_integration
-from . import automation
 from . import performance
+from . import estimation  # Moving estimation last since it likely depends on other models

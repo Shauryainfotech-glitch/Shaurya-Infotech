@@ -82,11 +82,12 @@ class MrpCosting(models.Model):
         ('cancelled', 'Cancelled')
     ], string='Status', default='draft', tracking=True)
 
-    @api.model
-    def create(self, vals):
-        if vals.get('name', _('New')) == _('New'):
-            vals['name'] = self.env['ir.sequence'].next_by_code('mrp.costing') or _('New')
-        return super().create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('name', _('New')) == _('New'):
+                vals['name'] = self.env['ir.sequence'].next_by_code('mrp.costing') or _('New')
+        return super().create(vals_list)
 
     @api.depends('raw_material_cost', 'labor_cost_actual', 'overhead_cost', 'machine_cost', 'quality_cost')
     def _compute_actual_costs(self):
