@@ -69,7 +69,6 @@
 
                 <!-- Charts -->
                 <div class="row">
-                    <!-- Left Column -->
                     <div class="col-md-8">
                         <!-- Productivity Trend -->
                         <div class="card mb-4">
@@ -142,6 +141,7 @@
             <canvas t-ref="chart"></canvas>
         </div>
     </template>
+
     <!-- Enhanced Dashboard View -->
     <record id="view_enhanced_day_plan_dashboard" model="ir.ui.view">
         <field name="name">enhanced.day.plan.dashboard</field>
@@ -155,18 +155,15 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <h1>Productivity Dashboard</h1>
                                 <div class="btn-group" role="group">
-                                    <!-- New Plan button removed as requested -->
-                                    <div class="btn-group" role="group">
-                                        <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="fa fa-calendar"></i>
-                                            <span class="ms-2">This Week</span>
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" href="#" data-action="set_date_range" data-range="week">This Week</a></li>
-                                            <li><a class="dropdown-item" href="#" data-action="set_date_range" data-range="month">This Month</a></li>
-                                            <li><a class="dropdown-item" href="#" data-action="set_date_range" data-range="quarter">This Quarter</a></li>
-                                        </ul>
-                                    </div>
+                                    <button name="button_date_range" type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="fa fa-calendar"></i>
+                                        <span class="ms-2">This Week</span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="#" data-action="set_date_range" data-range="week">This Week</a></li>
+                                        <li><a class="dropdown-item" href="#" data-action="set_date_range" data-range="month">This Month</a></li>
+                                        <li><a class="dropdown-item" href="#" data-action="set_date_range" data-range="quarter">This Quarter</a></li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
