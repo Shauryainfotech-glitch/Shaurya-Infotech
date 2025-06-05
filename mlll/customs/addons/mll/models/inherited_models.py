@@ -91,6 +91,21 @@ class HrEmployee(models.Model):
     _name = 'hr.employee'
     _inherit = ['hr.employee', 'ai.llm.mixin']
     
+    # Override AI fields with additional security for HR employee context
+    ai_conversation_ids = fields.One2many(
+        'ai.llm.conversation',
+        'res_id',
+        compute='_compute_ai_conversations',
+        string='AI Conversations',
+        groups='mll.group_ai_user,hr.group_hr_user'
+    )
+    
+    ai_suggestions = fields.Text(
+        string='AI Suggestions',
+        compute='_compute_ai_suggestions',
+        groups='mll.group_ai_user,hr.group_hr_user'
+    )
+    
     def _get_ai_context(self):
         """Provide employee-specific context for AI"""
         context = super()._get_ai_context()
@@ -104,6 +119,22 @@ class HrEmployee(models.Model):
             'work_phone': self.work_phone or '',
         })
         return json.dumps(context_data)
+    
+    def _compute_ai_conversations(self):
+        """Compute related AI conversations with permission check"""
+        if not self.user_has_groups('mll.group_ai_user,hr.group_hr_user'):
+            for record in self:
+                record.ai_conversation_ids = self.env['ai.llm.conversation']
+            return
+        super()._compute_ai_conversations()
+    
+    def _compute_ai_suggestions(self):
+        """Compute AI suggestions with permission check"""
+        if not self.user_has_groups('mll.group_ai_user,hr.group_hr_user'):
+            for record in self:
+                record.ai_suggestions = False
+            return
+        super()._compute_ai_suggestions()
 
 
 class AccountMove(models.Model):
