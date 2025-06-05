@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="day_plan_work_report_ai.ProductivityDashboard" owl="1">
+        <div class="o_productivity_dashboard h-100 d-flex flex-column">
+            <!-- Dashboard Header -->
+            <div class="o_dashboard_header p-3 bg-white border-bottom">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <h2 class="m-0">Productivity Dashboard</h2>
+                        <p class="text-muted mb-0">Track your productivity, tasks, and wellbeing metrics</p>
+                    </div>
+                    <div class="col-auto">
+                        <button class="btn btn-primary" t-on-click="_loadData">
+                            <i class="fa fa-refresh me-1"></i> Refresh
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Dashboard Content -->
+            <div class="o_dashboard_content flex-grow-1 p-3 overflow-auto">
+                <t t-if="state.loading">
+                    <div class="d-flex justify-content-center align-items-center h-100">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </t>
+                <t t-else="">
+                    <!-- KPI Cards -->
+                    <div class="row mb-4">
+                        <div class="col-lg-3 col-md-6 mb-3">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body">
+                                    <h6 class="card-subtitle mb-2 text-muted">Total Plans</h6>
+                                    <h2 class="card-title mb-0"><t t-esc="state.stats.total_plans"/></h2>
+                                    <p class="card-text small mb-0">
+                                        <t t-if="state.stats.plans_change >= 0">
+                                            <span class="text-success">
+                                                <i class="fa fa-arrow-up"></i> <t t-esc="state.stats.plans_change"/>%
+                                            </span>
+                                        </t>
+                                        <t t-else="">
+                                            <span class="text-danger">
+                                                <i class="fa fa-arrow-down"></i> <t t-esc="Math.abs(state.stats.plans_change)"/>%
+                                            </span>
+                                        </t>
+                                        vs previous period
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 mb-3">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body">
+                                    <h6 class="card-subtitle mb-2 text-muted">Completion Rate</h6>
+                                    <h2 class="card-title mb-0"><t t-esc="state.stats.completion_rate"/>%</h2>
+                                    <div class="progress mt-2" style="height: 6px;">
+                                        <div class="progress-bar bg-success" role="progressbar" t-att-style="'width: ' + state.stats.completion_rate + '%'" 
+                                            aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 mb-3">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body">
+                                    <h6 class="card-subtitle mb-2 text-muted">Productivity Score</h6>
+                                    <h2 class="card-title mb-0"><t t-esc="state.stats.productivity_score"/></h2>
+                                    <div class="progress mt-2" style="height: 6px;">
+                                        <div class="progress-bar bg-info" role="progressbar" t-att-style="'width: ' + state.stats.productivity_score + '%'" 
+                                            aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 mb-3">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body">
+                                    <h6 class="card-subtitle mb-2 text-muted">Tasks Pending</h6>
+                                    <h2 class="card-title mb-0"><t t-esc="state.stats.pending_tasks"/></h2>
+                                    <p class="card-text small mb-0">
+                                        <span class="text-danger">
+                                            <t t-esc="state.stats.overdue_tasks"/> overdue
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Charts -->
+                    <div class="row mb-4">
+                        <!-- Productivity Trend -->
+                        <div class="col-lg-8 mb-3">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-header bg-white">
+                                    <h5 class="card-title mb-0">Productivity Trend</h5>
+                                </div>
+                                <div class="card-body">
+                                    <canvas t-ref="productivity-chart" height="250"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Completion Status -->
+                        <div class="col-lg-4 mb-3">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-header bg-white">
+                                    <h5 class="card-title mb-0">Task Completion</h5>
+                                </div>
+                                <div class="card-body">
+                                    <canvas t-ref="completion-chart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Task Statistics -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card shadow-sm">
+                                <div class="card-header bg-white">
+                                    <h5 class="card-title mb-0">Task Statistics by Category</h5>
+                                </div>
+                                <div class="card-body">
+                                    <canvas t-ref="tasks-chart" height="200"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>

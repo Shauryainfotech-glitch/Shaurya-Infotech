@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Dashboard View -->
+    <record id="view_day_plan_dashboard" model="ir.ui.view">
+        <field name="name">day.plan.dashboard</field>
+        <field name="model">day.plan</field>
+        <field name="arch" type="xml">
+            <form string="Day Plan Dashboard">
+                <div class="o_dashboard_container">
+                    <!-- Header -->
+                    <div class="o_dashboard_header">
+                        <h1>Day Plan Dashboard</h1>
+                        <!-- Buttons removed as requested -->
+                    </div>
+
+                    <!-- Stats Cards -->
+                    <div class="row mt16">
+                        <div class="col-md-3">
+                            <div class="o_dashboard_card">
+                                <div class="o_dashboard_card_icon bg-info">
+                                    <i class="fa fa-calendar"/>
+                                </div>
+                                <div class="o_dashboard_card_content">
+                                    <h3><field name="plans_today" widget="statinfo"/></h3>
+                                    <p>Plans for Today</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="o_dashboard_card">
+                                <div class="o_dashboard_card_icon bg-success">
+                                    <i class="fa fa-check-circle"/>
+                                </div>
+                                <div class="o_dashboard_card_content">
+                                    <h3><field name="completed_plans" widget="statinfo"/></h3>
+                                    <p>Completed Plans</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="o_dashboard_card">
+                                <div class="o_dashboard_card_icon bg-warning">
+                                    <i class="fa fa-clock-o"/>
+                                </div>
+                                <div class="o_dashboard_card_content">
+                                    <h3><field name="pending_tasks" widget="statinfo"/></h3>
+                                    <p>Pending Tasks</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="o_dashboard_card">
+                                <div class="o_dashboard_card_icon bg-primary">
+                                    <i class="fa fa-line-chart"/>
+                                </div>
+                                <div class="o_dashboard_card_content">
+                                    <h3><field name="productivity_score" widget="statinfo"/></h3>
+                                    <p>Productivity Score</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Plans and Tasks section removed as requested -->
+                    
+                    <!-- Upcoming Tasks -->
+                    <div class="row mt16">
+                        <div class="col-md-6">
+                            <div class="o_dashboard_section">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h2 class="mb-0">Upcoming Tasks</h2>
+                                    <a href="#" class="btn btn-sm btn-link" name="action_view_tasks">
+                                        View All
+                                    </a>
+                                </div>
+                                <div class="o_dashboard_card">
+                                    <div class="o_dashboard_card_icon bg-info">
+                                        <i class="fa fa-tasks"/>
+                                    </div>
+                                    <div class="o_dashboard_card_content">
+                                        <h3><field name="total_tasks" widget="statinfo"/></h3>
+                                        <p>Tasks Pending</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Dashboard Action -->
+    <record id="action_day_plan_dashboard" model="ir.actions.act_window">
+        <field name="name">Dashboard</field>
+        <field name="res_model">day.plan</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_day_plan_dashboard"/>
+        <field name="target">main</field>
+    </record>
+
+    <!-- Dashboard menu item -->
+    <menuitem id="menu_day_plan_dashboard" 
+              name="Dashboard" 
+              parent="menu_day_plan_root" 
+              action="action_day_plan_dashboard"
+              sequence="1"/>
+</odoo>

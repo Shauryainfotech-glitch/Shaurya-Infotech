@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Sequence for AI Analysis -->
+        <record id="seq_ai_analysis" model="ir.sequence">
+            <field name="name">AI Analysis Sequence</field>
+            <field name="code">ai.analysis</field>
+            <field name="prefix">AI/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Default Prompt Templates -->
+        <record id="ai_prompt_template_daily" model="ai.prompt.template">
+            <field name="name">Default Daily Plan Analysis</field>
+            <field name="analysis_type">daily</field>
+            <field name="is_default" eval="True"/>
+            <field name="description">Analyzes daily plan completion and task performance</field>
+            <field name="template"><![CDATA[
+Analyze the following day plan and completed tasks:
+
+User: {user_name}
+Date: {date}
+
+Plan Title: {plan_title}
+Goals: {goals}
+
+Tasks:
+{tasks}
+
+Task Completion Rate: {completion_rate}%
+
+Please provide:
+1. A productivity score (0-100)
+2. An efficiency rating (0-100)
+3. A wellbeing assessment (0-100)
+4. Key strengths observed
+5. Areas for improvement
+6. Specific actionable recommendations
+7. Time allocation analysis
+
+Format your response as JSON with the following structure:
+{
+    "productivity_score": 85,
+    "efficiency_rating": 80,
+    "wellbeing_assessment": 75,
+    "summary": "Brief overview...",
+    "strengths": "Areas of strong performance...",
+    "improvement_areas": "Areas needing improvement...",
+    "recommendations": "Specific actionable suggestions...",
+    "time_allocation": {"category1": percentage, "category2": percentage}
+}
+]]></field>
+        </record>
+
+        <record id="ai_prompt_template_work_report" model="ai.prompt.template">
+            <field name="name">Default Work Report Analysis</field>
+            <field name="analysis_type">work_report</field>
+            <field name="is_default" eval="True"/>
+            <field name="description">Analyzes work report content for insights and recommendations</field>
+            <field name="template"><![CDATA[
+Analyze the following work report:
+
+User: {user_name}
+Date: {date}
+
+Accomplishments: {accomplishments}
+Challenges: {challenges}
+Solutions: {solutions}
+
+Self-Assessment:
+- Productivity: {self_productivity}
+- Quality: {self_quality}
+- Satisfaction: {self_satisfaction}
+
+Learnings: {learnings}
+Next Steps: {next_steps}
+
+Please provide:
+1. A productivity score (0-100)
+2. An efficiency rating (0-100)
+3. A wellbeing assessment (0-100)
+4. Key strengths observed
+5. Areas for improvement
+6. Specific actionable recommendations
+
+Format your response as JSON with the following structure:
+{
+    "productivity_score": 85,
+    "efficiency_rating": 80,
+    "wellbeing_assessment": 75,
+    "summary": "Brief overview...",
+    "strengths": "Areas of strong performance...",
+    "improvement_areas": "Areas needing improvement...",
+    "recommendations": "Specific actionable suggestions..."
+}
+]]></field>
+        </record>
+
+        <record id="ai_prompt_template_weekly" model="ai.prompt.template">
+            <field name="name">Default Weekly Summary</field>
+            <field name="analysis_type">weekly</field>
+            <field name="is_default" eval="True"/>
+            <field name="description">Provides a weekly summary of productivity and patterns</field>
+            <field name="template"><![CDATA[
+Analyze the following weekly data:
+
+User: {user_name}
+Period: {start_date} to {end_date}
+Total Plans: {total_plans}
+Total Reports: {total_reports}
+
+Plans:
+{plans}
+
+Reports:
+{reports}
+
+Please provide:
+1. A weekly productivity score (0-100)
+2. An efficiency rating (0-100)
+3. A wellbeing assessment (0-100)
+4. Key patterns observed
+5. Areas of consistency
+6. Areas of improvement
+7. Recommendations for the coming week
+
+Format your response as JSON with the following structure:
+{
+    "productivity_score": 85,
+    "efficiency_rating": 80,
+    "wellbeing_assessment": 75,
+    "summary": "Weekly overview...",
+    "strengths": "Consistent areas...",
+    "improvement_areas": "Areas to focus on...",
+    "recommendations": "For next week...",
+    "trend_analysis": "Patterns observed..."
+}
+]]></field>
+        </record>
+    </data>
+</odoo>

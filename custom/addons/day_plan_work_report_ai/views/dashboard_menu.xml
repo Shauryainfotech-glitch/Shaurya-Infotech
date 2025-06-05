@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Main Dashboard Menu - Using the consolidated dashboard with charts -->
+        <menuitem 
+            id="menu_dashboard"
+            name="Advanced Dashboard"
+            parent="day_plan_work_report_ai.menu_day_plan_root"
+            action="day_plan_work_report_ai.action_advanced_dashboard"
+            sequence="1"/>
+        
+        <!-- Remove the old dashboard menu if it exists -->
+        <delete id="menu_day_plan_dashboard" model="ir.ui.menu"/>
+    </data>
+</odoo>
