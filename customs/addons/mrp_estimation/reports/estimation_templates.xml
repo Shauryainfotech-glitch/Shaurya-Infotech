@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        
+        <record id="action_report_estimation" model="ir.actions.report">
+            <field name="name">Manufacturing Estimation</field>
+            <field name="model">mrp.estimation</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">mrp_estimation.report_estimation_document</field>
+            <field name="report_file">mrp_estimation.report_estimation_document</field>
+            <field name="print_report_name">'Estimation - %s' % (object.name)</field>
+        </record>
+
         <!-- Main Estimation Report Template -->
         <template id="report_estimation_document">
             <t t-call="web.external_layout">
                 <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)"/>
                 <div class="page">
                     <div class="oe_structure"/>
-                    
                     <!-- Header Information -->
                     <div class="row mt32 mb32">
                         <div class="col-6">
@@ -170,18 +177,5 @@
                 </t>
             </t>
         </template>
-
-        <!-- Report Action -->
-        <record id="action_report_estimation" model="ir.actions.report">
-            <field name="name">Manufacturing Estimation</field>
-            <field name="model">mrp.estimation</field>
-            <field name="report_type">qweb-pdf</field>
-            <field name="report_name">mrp_estimation.report_estimation</field>
-            <field name="report_file">mrp_estimation.report_estimation</field>
-            <field name="print_report_name">'Estimation - %s' % object.name</field>
-            <field name="binding_model_id" ref="model_mrp_estimation"/>
-            <field name="binding_type">report</field>
-        </record>
-
     </data>
 </odoo>
