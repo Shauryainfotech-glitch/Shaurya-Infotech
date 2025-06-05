@@ -457,3 +457,167 @@
               parent="menu_document_root" 
               action="action_architect_document_template" sequence="30"/>
 </odoo>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Document Category Views -->
+        <record id="view_architect_document_category_tree" model="ir.ui.view">
+            <field name="name">architect.document.category.tree</field>
+            <field name="model">architect.document.category</field>
+            <field name="arch" type="xml">
+                <tree string="Document Categories">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="parent_id"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_architect_document_category_form" model="ir.ui.view">
+            <field name="name">architect.document.category.form</field>
+            <field name="model">architect.document.category</field>
+            <field name="arch" type="xml">
+                <form string="Document Category">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="code"/>
+                                <field name="parent_id"/>
+                                <field name="sequence"/>
+                            </group>
+                            <group>
+                                <field name="allowed_file_types"/>
+                                <field name="max_file_size"/>
+                                <field name="active"/>
+                                <field name="color" widget="color"/>
+                            </group>
+                        </group>
+                        <field name="description"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Document Views -->
+        <record id="view_architect_document_tree" model="ir.ui.view">
+            <field name="name">architect.document.tree</field>
+            <field name="model">architect.document</field>
+            <field name="arch" type="xml">
+                <tree string="Project Documents">
+                    <field name="name"/>
+                    <field name="project_id"/>
+                    <field name="category_id"/>
+                    <field name="version"/>
+                    <field name="state" decoration-success="state=='approved'" decoration-info="state=='submitted'" decoration-muted="state=='draft'"/>
+                    <field name="submission_date"/>
+                    <field name="created_by"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_architect_document_form" model="ir.ui.view">
+            <field name="name">architect.document.form</field>
+            <field name="model">architect.document</field>
+            <field name="arch" type="xml">
+                <form string="Project Document">
+                    <header>
+                        <button name="action_submit" string="Submit" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                        <button name="action_approve" string="Approve" type="object" class="btn-success" attrs="{'invisible': [('state', '!=', 'submitted')]}"/>
+                        <button name="action_reject" string="Reject" type="object" class="btn-danger" attrs="{'invisible': [('state', '!=', 'submitted')]}"/>
+                        <button name="action_archive" string="Archive" type="object" attrs="{'invisible': [('state', 'in', ['draft', 'archived'])]}"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,submitted,approved"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="project_id"/>
+                                <field name="category_id"/>
+                                <field name="subcategory_id"/>
+                                <field name="version"/>
+                            </group>
+                            <group>
+                                <field name="attachment_id" widget="binary"/>
+                                <field name="file_name" readonly="1"/>
+                                <field name="file_size" widget="size" readonly="1"/>
+                                <field name="file_type" readonly="1"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="submission_date"/>
+                                <field name="approval_date"/>
+                                <field name="expiry_date"/>
+                            </group>
+                            <group>
+                                <field name="created_by"/>
+                                <field name="approved_by"/>
+                                <field name="confidential"/>
+                                <field name="shared_with_client"/>
+                            </group>
+                        </group>
+                        <group string="Compliance Information" attrs="{'invisible': [('is_compliance_doc', '=', False)]}">
+                            <field name="is_compliance_doc"/>
+                            <field name="compliance_type" attrs="{'required': [('is_compliance_doc', '=', True)]}"/>
+                        </group>
+                        <group>
+                            <field name="description" placeholder="Document description..."/>
+                            <field name="tags" placeholder="tag1, tag2, tag3"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Actions -->
+        <record id="action_architect_document_category" model="ir.actions.act_window">
+            <field name="name">Document Categories</field>
+            <field name="res_model">architect.document.category</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first document category!
+                </p>
+                <p>
+                    Categories help organize project documents efficiently.
+                </p>
+            </field>
+        </record>
+
+        <record id="action_architect_document" model="ir.actions.act_window">
+            <field name="name">Project Documents</field>
+            <field name="res_model">architect.document</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Upload your first project document!
+                </p>
+                <p>
+                    Store and manage all project-related documents in one place.
+                </p>
+            </field>
+        </record>
+
+        <!-- Menu Items -->
+        <menuitem id="menu_architect_document_category" 
+                  name="Document Categories" 
+                  parent="menu_architect_configuration" 
+                  action="action_architect_document_category" 
+                  sequence="30"/>
+
+        <menuitem id="menu_architect_document" 
+                  name="Documents" 
+                  parent="menu_architect_main" 
+                  action="action_architect_document" 
+                  sequence="40"/>
+
+    </data>
+</odoo>

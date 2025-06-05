@@ -1,0 +1,28 @@
+
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Rate Schedule Views (Placeholder) -->
+        <record id="view_rate_schedule_tree" model="ir.ui.view">
+            <field name="name">rate.schedule.tree</field>
+            <field name="model">project.project</field>
+            <field name="arch" type="xml">
+                <tree string="Rate Schedule">
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="date_start"/>
+                    <field name="stage_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_rate_schedule" model="ir.actions.act_window">
+            <field name="name">Rate Schedule</field>
+            <field name="res_model">project.project</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('is_architect_project', '=', True)]</field>
+        </record>
+
+    </data>
+</odoo>
