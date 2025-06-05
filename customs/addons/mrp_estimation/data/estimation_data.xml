@@ -113,5 +113,55 @@
             <field name="value">15.0</field>
         </record>
 
+        <!-- Estimation Stages -->
+        <record id="estimation_stage_draft" model="mrp.estimation.stage">
+            <field name="name">Draft</field>
+            <field name="sequence">10</field>
+            <field name="is_done" eval="False"/>
+        </record>
+
+        <record id="estimation_stage_waiting_approval" model="mrp.estimation.stage">
+            <field name="name">Waiting Approval</field>
+            <field name="sequence">20</field>
+            <field name="is_done" eval="False"/>
+        </record>
+
+        <record id="estimation_stage_approved" model="mrp.estimation.stage">
+            <field name="name">Approved</field>
+            <field name="sequence">30</field>
+            <field name="is_done" eval="True"/>
+        </record>
+
+        <record id="estimation_stage_rejected" model="mrp.estimation.stage">
+            <field name="name">Rejected</field>
+            <field name="sequence">40</field>
+            <field name="is_done" eval="True"/>
+        </record>
+
+        <!-- Cost Categories -->
+        <record id="cost_category_material" model="mrp.estimation.cost.category">
+            <field name="name">Material Cost</field>
+            <field name="code">MAT</field>
+            <field name="sequence">10</field>
+        </record>
+
+        <record id="cost_category_labor" model="mrp.estimation.cost.category">
+            <field name="name">Labor Cost</field>
+            <field name="code">LAB</field>
+            <field name="sequence">20</field>
+        </record>
+
+        <record id="cost_category_overhead" model="mrp.estimation.cost.category">
+            <field name="name">Overhead Cost</field>
+            <field name="code">OVH</field>
+            <field name="sequence">30</field>
+        </record>
+
+        <record id="cost_category_other" model="mrp.estimation.cost.category">
+            <field name="name">Other Cost</field>
+            <field name="code">OTH</field>
+            <field name="sequence">40</field>
+        </record>
+
     </data>
 </odoo>

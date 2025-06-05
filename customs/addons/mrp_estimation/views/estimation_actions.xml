@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_estimation_approve" model="ir.actions.server">
+        <field name="name">Approve Estimation</field>
+        <field name="model_id" ref="model_mrp_estimation"/>
+        <field name="binding_model_id" ref="model_mrp_estimation"/>
+        <field name="binding_view_types">form</field>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                action = records.action_approve()
+        </field>
+    </record>
+
+    <record id="action_estimation_reject" model="ir.actions.server">
+        <field name="name">Reject Estimation</field>
+        <field name="model_id" ref="model_mrp_estimation"/>
+        <field name="binding_model_id" ref="model_mrp_estimation"/>
+        <field name="binding_view_types">form</field>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                action = records.action_reject()
+        </field>
+    </record>
+
+    <record id="action_estimation_export" model="ir.actions.server">
+        <field name="name">Export Estimation</field>
+        <field name="model_id" ref="model_mrp_estimation"/>
+        <field name="binding_model_id" ref="model_mrp_estimation"/>
+        <field name="binding_view_types">form</field>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                action = records.action_export()
+        </field>
+    </record>
+</odoo> 

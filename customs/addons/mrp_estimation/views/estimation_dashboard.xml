@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_estimation_dashboard" model="ir.ui.view">
+        <field name="name">mrp.estimation.dashboard</field>
+        <field name="model">mrp.estimation</field>
+        <field name="arch" type="xml">
+            <dashboard>
+                <view type="graph" ref="view_estimation_graph"/>
+                <view type="pivot" ref="view_estimation_pivot"/>
+                <view type="search" ref="view_estimation_search"/>
+            </dashboard>
+        </field>
+    </record>
+
+    <record id="action_estimation_dashboard" model="ir.actions.act_window">
+        <field name="name">Estimation Dashboard</field>
+        <field name="res_model">mrp.estimation</field>
+        <field name="view_mode">dashboard</field>
+        <field name="view_id" ref="view_estimation_dashboard"/>
+    </record>
+
+    <menuitem id="menu_estimation_dashboard"
+        name="Dashboard"
+        parent="menu_mrp_estimation_root"
+        action="action_estimation_dashboard"
+        sequence="1"/>
+</odoo> 

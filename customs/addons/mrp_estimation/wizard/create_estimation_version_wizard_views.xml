@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Create Estimation Version Wizard Form -->
+        <record id="view_create_estimation_version_wizard_form" model="ir.ui.view">
+            <field name="name">create.estimation.version.wizard.form</field>
+            <field name="model">create.estimation.version.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Create Estimation Version">
+                    <group>
+                        <field name="estimation_id"/>
+                        <field name="version_number"/>
+                        <field name="notes"/>
+                    </group>
+                    <group string="Copy Options">
+                        <field name="copy_materials"/>
+                        <field name="copy_operations"/>
+                        <field name="copy_overhead"/>
+                    </group>
+                    <footer>
+                        <button name="action_create_version" string="Create Version" type="object" 
+                                class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Create Estimation Version Action -->
+        <record id="action_create_estimation_version_wizard" model="ir.actions.act_window">
+            <field name="name">Create Version</field>
+            <field name="res_model">create.estimation.version.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <!-- Create Estimation Version Menu -->
+        <menuitem id="menu_create_estimation_version"
+                  name="Create Version"
+                  parent="menu_mrp_estimation"
+                  action="action_create_estimation_version_wizard"
+                  sequence="40"/>
+    </data>
+</odoo> 

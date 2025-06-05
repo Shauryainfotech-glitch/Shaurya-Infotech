@@ -108,5 +108,98 @@
             </field>
         </record>
 
+        <!-- Material Line Form View -->
+        <record id="view_mrp_estimation_material_line_form" model="ir.ui.view">
+            <field name="name">mrp.estimation.material.line.form</field>
+            <field name="model">mrp.estimation.material.line</field>
+            <field name="arch" type="xml">
+                <form string="Material Line">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="estimation_id"/>
+                                <field name="product_id"/>
+                                <field name="product_qty"/>
+                                <field name="product_uom_id"/>
+                            </group>
+                            <group>
+                                <field name="unit_cost"/>
+                                <field name="total_cost"/>
+                                <field name="sequence" widget="handle"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Material Line Tree View -->
+        <record id="view_mrp_estimation_material_line_tree" model="ir.ui.view">
+            <field name="name">mrp.estimation.material.line.tree</field>
+            <field name="model">mrp.estimation.material.line</field>
+            <field name="arch" type="xml">
+                <tree string="Material Lines" editable="bottom">
+                    <field name="sequence" widget="handle"/>
+                    <field name="product_id"/>
+                    <field name="product_qty"/>
+                    <field name="product_uom_id"/>
+                    <field name="unit_cost"/>
+                    <field name="total_cost" sum="Total"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Labor Line Form View -->
+        <record id="view_mrp_estimation_labor_line_form" model="ir.ui.view">
+            <field name="name">mrp.estimation.labor.line.form</field>
+            <field name="model">mrp.estimation.labor.line</field>
+            <field name="arch" type="xml">
+                <form string="Labor Line">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="estimation_id"/>
+                                <field name="operation_id"/>
+                                <field name="hours"/>
+                            </group>
+                            <group>
+                                <field name="rate"/>
+                                <field name="total_cost"/>
+                                <field name="sequence" widget="handle"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Labor Line Tree View -->
+        <record id="view_mrp_estimation_labor_line_tree" model="ir.ui.view">
+            <field name="name">mrp.estimation.labor.line.tree</field>
+            <field name="model">mrp.estimation.labor.line</field>
+            <field name="arch" type="xml">
+                <tree string="Labor Lines" editable="bottom">
+                    <field name="sequence" widget="handle"/>
+                    <field name="operation_id"/>
+                    <field name="hours"/>
+                    <field name="rate"/>
+                    <field name="total_cost" sum="Total"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Actions -->
+        <record id="action_mrp_estimation_material_line" model="ir.actions.act_window">
+            <field name="name">Material Lines</field>
+            <field name="res_model">mrp.estimation.material.line</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="action_mrp_estimation_labor_line" model="ir.actions.act_window">
+            <field name="name">Labor Lines</field>
+            <field name="res_model">mrp.estimation.labor.line</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
     </data>
 </odoo>

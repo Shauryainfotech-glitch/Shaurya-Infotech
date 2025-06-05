@@ -3,78 +3,81 @@ from odoo.exceptions import UserError
 
 class CreateEstimationVersionWizard(models.TransientModel):
     _name = 'create.estimation.version.wizard'
-    _description = 'Create New Estimation Version'
+    _description = 'Create Estimation Version'
 
-    estimation_id = fields.Many2one(
-        'mrp.estimation',
-        string='Estimation',
-        required=True,
-        readonly=True
-    )
-    
-    current_version = fields.Float(
-        string='Current Version',
-        readonly=True
-    )
-    
-    new_version = fields.Float(
-        string='New Version',
-        readonly=True
-    )
-    
-    version_notes = fields.Text(
-        string='Version Notes',
-        required=True,
-        help="Describe the changes made in this version"
-    )
+    estimation_id = fields.Many2one('mrp.estimation', string='Estimation', required=True)
+    version_number = fields.Char(string='Version Number', required=True)
+    notes = fields.Text(string='Version Notes')
+    copy_materials = fields.Boolean(string='Copy Materials', default=True)
+    copy_operations = fields.Boolean(string='Copy Operations', default=True)
+    copy_overhead = fields.Boolean(string='Copy Overhead', default=True)
 
-    @api.model
-    def default_get(self, fields_list):
-        res = super().default_get(fields_list)
-        if self.env.context.get('active_model') == 'mrp.estimation' and \
-           self.env.context.get('active_id'):
-            estimation = self.env['mrp.estimation'].browse(self.env.context.get('active_id'))
+    @api.onchange('estimation_id')
+    def _onchange_estimation_id(self):
+        if self.estimation_id:
+            # Get the next version number
+            last_version = self.env['mrp.estimation.version'].search([
+                ('estimation_id', '=', self.estimation_id.id)
+            ], order='version_number desc', limit=1)
             
-            # Get version increment from settings
-            version_increment = float(self.env['ir.config_parameter'].sudo().get_param(
-                'mrp_estimation.version_increment', '0.1'
-            ))
-            
-            res.update({
-                'estimation_id': estimation.id,
-                'current_version': estimation.version,
-                'new_version': estimation.version + version_increment
-            })
-        return res
+            if last_version:
+                try:
+                    current_version = float(last_version.version_number)
+                    self.version_number = str(current_version + 0.1)
+                except ValueError:
+                    self.version_number = '1.0'
+            else:
+                self.version_number = '1.0'
 
     def action_create_version(self):
         self.ensure_one()
         
-        if not self.estimation_id:
-            raise UserError(_("No estimation selected."))
-
-        # Create version record
-        self.env['mrp.estimation.version'].create({
-            'parent_estimation_id': self.estimation_id.id,
-            'version_number': self.current_version,
-            'version_notes': self.version_notes,
+        # Create new version
+        version = self.env['mrp.estimation.version'].create({
+            'estimation_id': self.estimation_id.id,
+            'version_number': self.version_number,
+            'notes': self.notes,
             'created_by': self.env.user.id,
-            'creation_date': fields.Datetime.now(),
         })
 
-        # Copy estimation with new version
-        new_estimation = self.estimation_id.copy({
-            'name': self.estimation_id.name + ' v' + str(self.new_version),
-            'version': self.new_version,
-            'state': 'draft',
-        })
+        # Copy materials if requested
+        if self.copy_materials:
+            for material in self.estimation_id.material_ids:
+                self.env['mrp.estimation.material'].create({
+                    'estimation_id': self.estimation_id.id,
+                    'version_id': version.id,
+                    'product_id': material.product_id.id,
+                    'product_qty': material.product_qty,
+                    'product_uom_id': material.product_uom_id.id,
+                    'cost_price': material.cost_price,
+                })
 
-        # Open the new estimation
+        # Copy operations if requested
+        if self.copy_operations:
+            for operation in self.estimation_id.operation_ids:
+                self.env['mrp.estimation.operation'].create({
+                    'estimation_id': self.estimation_id.id,
+                    'version_id': version.id,
+                    'workcenter_id': operation.workcenter_id.id,
+                    'name': operation.name,
+                    'time_cycle': operation.time_cycle,
+                    'sequence': operation.sequence,
+                })
+
+        # Copy overhead if requested
+        if self.copy_overhead:
+            for overhead in self.estimation_id.overhead_ids:
+                self.env['mrp.estimation.overhead'].create({
+                    'estimation_id': self.estimation_id.id,
+                    'version_id': version.id,
+                    'name': overhead.name,
+                    'amount': overhead.amount,
+                    'type': overhead.type,
+                })
+
         return {
             'type': 'ir.actions.act_window',
-            'name': _('New Version'),
-            'res_model': 'mrp.estimation',
-            'res_id': new_estimation.id,
+            'res_model': 'mrp.estimation.version',
             'view_mode': 'form',
-            'target': 'current',
+            'res_id': version.id,
         }
