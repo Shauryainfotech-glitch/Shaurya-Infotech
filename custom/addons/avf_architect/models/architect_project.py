@@ -6,7 +6,7 @@ import json
 
 class ArchitectProject(models.Model):
     _inherit = 'project.project'
-    
+
     is_architect_project = fields.Boolean(string='Is Architect Project', default=False)
     project_type = fields.Selection([
         ('government', 'Government Project'),
@@ -14,12 +14,12 @@ class ArchitectProject(models.Model):
         ('dpr', 'DPR Project'),
         ('survey', 'Survey Project')
     ], string='Project Type')
-    
+
     client_name = fields.Char(string='Client Name')
     project_location = fields.Text(string='Project Location')
     estimated_area = fields.Float(string='Estimated Area (sq ft)')
     estimated_budget = fields.Monetary(string='Estimated Budget')
-    
+
     # DPR related fields
     dpr_required = fields.Boolean(string='DPR Required')
     dpr_status = fields.Selection([
@@ -27,11 +27,11 @@ class ArchitectProject(models.Model):
         ('in_progress', 'In Progress'),
         ('completed', 'Completed')
     ], string='DPR Status', default='not_started')
-    
+
     # Compliance fields
     fca_compliance = fields.Boolean(string='FCA Compliance Required')
     ecotourism_compliance = fields.Boolean(string='Ecotourism Compliance')
-    
+
     stage_id = fields.Many2one('avf.project.stage', string='Project Stage')
 
 class ArchitectProject(models.Model):
@@ -119,11 +119,16 @@ class ArchitectProject(models.Model):
             project.drawing_count = 0  # Will be updated when drawing model is complete
             project.document_count = 0  # Will be updated when document model is complete
 
-    @api.model
-    def create(self, vals):
-        if not vals.get('code'):
-            vals['code'] = self.env['ir.sequence'].next_by_code('architect.project') or 'New'
-        return super(ArchitectProject, self).create(vals)
+    
+    def create(self, vals_list):
+        if not isinstance(vals_list, list):
+            vals_list = [vals_list]
+
+        for vals in vals_list:
+            if vals.get('is_architect_project'):
+                vals['name'] = self.env['ir.sequence'].next_by_code('avf.architect.project') or _('New Project')
+
+        return super().create(vals_list)
 
 class ArchitectProjectStage(models.Model):
     _name = 'architect.project.stage'
@@ -135,22 +140,22 @@ class ArchitectProjectStage(models.Model):
     sequence = fields.Integer(string='Sequence', default=10)
     progress = fields.Float(string='Progress %', help="Progress percentage for this stage")
     fold = fields.Boolean(string='Folded in Pipeline')
-    
+
     # Stage Requirements
     requirements = fields.Text(string='Stage Requirements')
     deliverables = fields.Text(string='Expected Deliverables')
-    
+
     # Approval Settings
     requires_approval = fields.Boolean(string='Requires Approval')
     approval_users = fields.Many2many('res.users', string='Approval Users')
-    
+
     # Color coding
     color = fields.Integer(string='Color')
 
 
 class ProjectTask(models.Model):
     _inherit = 'project.task'
-    
+
     architect_project_id = fields.Many2one('architect.project', string='Architect Project')
     task_type = fields.Selection([
         ('design', 'Design'),
@@ -161,7 +166,7 @@ class ProjectTask(models.Model):
         ('approval', 'Approval'),
         ('coordination', 'Coordination')
     ], string='Task Type')
-    
+
     drawing_ids = fields.Many2many('architect.drawing', string='Related Drawings')
     requires_site_visit = fields.Boolean(string='Requires Site Visit')
     site_visit_date = fields.Datetime(string='Site Visit Date')

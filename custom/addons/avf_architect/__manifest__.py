@@ -1,4 +1,3 @@
-
 # -*- coding: utf-8 -*-
 {
     'name': 'AVF Creative Architect ERP',
@@ -8,7 +7,7 @@
     'description': """
         Advanced Architectural ERP Module for AVF Creative Firm
         =====================================================
-        
+
         Core Features:
         * Government Project Management
         * AI-Powered Design Assistance
@@ -20,7 +19,7 @@
         * Real-time Progress Tracking
         * Document Management System
         * Automated Reporting
-        
+
         DPR & Survey Management:
         * DPR (Detailed Project Report) Creation
         * SSR/DSR Survey Report Integration
@@ -28,7 +27,7 @@
         * AI-Enhanced DPR Generation
         * Survey Data Analysis & Recommendations
         * Compliance Checklist Automation
-        
+
         FCA & Ecotourism Compliance:
         * Forest Conservation Act (FCA) Compliance
         * PARIVESH Portal Integration
@@ -38,7 +37,7 @@
         * Community Engagement Strategies
         * Carbon Footprint Analysis
         * Wildlife-Friendly Design Features
-        
+
         Rate Schedule & Estimation:
         * DSR (District Schedule of Rates)
         * SSR (State Schedule of Rates)
@@ -88,9 +87,8 @@
         'reports/dpr_report.xml',
         'reports/compliance_report.xml',
         'reports/estimation_report.xml',
-        'wizard/ai_assistant_views.xml',
-        'wizard/dpr_generator_views.xml',
-        'wizard/compliance_checker_views.xml',
+        'views/compliance_views.xml',
+        'views/rate_schedule_views.xml',
     ],
     'assets': {
         'web.assets_backend': [

@@ -77,3 +77,47 @@
     </data>
 </odoo>
 </process>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Rate Schedule Views -->
+    <record id="view_rate_schedule_tree" model="ir.ui.view">
+        <field name="name">avf.rate.schedule.tree</field>
+        <field name="model">avf.rate.schedule</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="schedule_type"/>
+                <field name="state"/>
+                <field name="rate"/>
+                <field name="effective_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_rate_schedule_form" model="ir.ui.view">
+        <field name="name">avf.rate.schedule.form</field>
+        <field name="model">avf.rate.schedule</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="schedule_type"/>
+                        <field name="state"/>
+                        <field name="rate"/>
+                        <field name="effective_date"/>
+                    </group>
+                    <group string="Details">
+                        <field name="description" colspan="2"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_rate_schedule" model="ir.actions.act_window">
+        <field name="name">Rate Schedule</field>
+        <field name="res_model">avf.rate.schedule</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>
