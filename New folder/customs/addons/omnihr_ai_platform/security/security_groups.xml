@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- AI Platform Categories -->
+        <record id="module_category_omnihr_ai" model="ir.module.category">
+            <field name="name">OmniHR AI Platform</field>
+            <field name="description">Manage OmniHR AI Platform access rights</field>
+            <field name="sequence">20</field>
+        </record>
+        
+        <!-- AI Platform User Group -->
+        <record id="group_omnihr_ai_user" model="res.groups">
+            <field name="name">AI Platform User</field>
+            <field name="category_id" ref="module_category_omnihr_ai"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="comment">Basic AI platform access for employees</field>
+        </record>
+        
+        <!-- AI Platform Manager Group -->
+        <record id="group_omnihr_ai_manager" model="res.groups">
+            <field name="name">AI Platform Manager</field>
+            <field name="category_id" ref="module_category_omnihr_ai"/>
+            <field name="implied_ids" eval="[(4, ref('group_omnihr_ai_user'))]"/>
+            <field name="comment">Full AI platform management access</field>
+        </record>
+        
+        <!-- AI Platform Admin Group -->
+        <record id="group_omnihr_ai_admin" model="res.groups">
+            <field name="name">AI Platform Administrator</field>
+            <field name="category_id" ref="module_category_omnihr_ai"/>
+            <field name="implied_ids" eval="[(4, ref('group_omnihr_ai_manager'))]"/>
+            <field name="comment">Complete AI platform administration access</field>
+        </record>
+        
+    </data>
+</odoo> 

@@ -1,0 +1,42 @@
+/* AI Interface Styles */
+.ai-interface {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.ai-loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #007bff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.ai-score-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    font-weight: bold;
+}
+
+.ai-score-high {
+    background: #d4edda;
+    color: #155724;
+}
+
+.ai-score-medium {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.ai-score-low {
+    background: #f8d7da;
+    color: #721c24;
+} 

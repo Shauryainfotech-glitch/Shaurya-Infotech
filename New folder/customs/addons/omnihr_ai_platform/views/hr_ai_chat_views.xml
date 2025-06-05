@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- AI Chat List View -->
+        <record id="view_hr_ai_chat_list" model="ir.ui.view">
+            <field name="name">hr.ai.chat.list</field>
+            <field name="model">hr.ai.chat</field>
+            <field name="arch" type="xml">
+                <list string="AI Chat Sessions">
+                    <field name="session_name"/>
+                    <field name="user_id"/>
+                    <field name="session_type"/>
+                    <field name="session_status"/>
+                    <field name="total_messages"/>
+                    <field name="create_date"/>
+                </list>
+            </field>
+        </record>
+        
+        <!-- AI Chat Action -->
+        <record id="action_hr_ai_chat" model="ir.actions.act_window">
+            <field name="name">AI Chat</field>
+            <field name="res_model">hr.ai.chat</field>
+            <field name="view_mode">list,form</field>
+        </record>
+        
+    </data>
+</odoo> 

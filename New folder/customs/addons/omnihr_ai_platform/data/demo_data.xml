@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Demo AI Configuration -->
+        <record id="demo_ai_config" model="hr.advanced.ai.config">
+            <field name="name">Demo AI Configuration</field>
+            <field name="active">False</field>
+            <field name="provider_priority">{"recruitment": ["openai"], "analysis": ["openai"], "conversation": ["openai"]}</field>
+            <field name="enable_multi_provider">False</field>
+            <field name="enable_consensus_mode">False</field>
+            <field name="consensus_threshold">0.7</field>
+            <field name="enable_caching">True</field>
+            <field name="cache_duration">12</field>
+            <field name="max_concurrent_requests">5</field>
+            <field name="monthly_budget_limit">500.0</field>
+            <field name="cost_alert_threshold">70.0</field>
+            <field name="enable_response_validation">False</field>
+            <field name="min_confidence_score">0.6</field>
+            <field name="enable_human_review">False</field>
+            <field name="enable_detailed_logging">False</field>
+            <field name="log_retention_days">30</field>
+        </record>
+        
+    </data>
+</odoo> 

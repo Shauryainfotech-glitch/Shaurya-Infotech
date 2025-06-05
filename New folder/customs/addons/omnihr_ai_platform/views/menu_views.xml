@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Main Menu -->
+        <menuitem id="menu_omnihr_ai_main" 
+                  name="OmniHR AI Platform" 
+                  sequence="50"
+                  web_icon="omnihr_ai_platform,static/description/icon.png"/>
+        
+        <!-- Configuration Menu -->
+        <menuitem id="menu_omnihr_ai_config" 
+                  name="Configuration" 
+                  parent="menu_omnihr_ai_main" 
+                  sequence="10"/>
+        
+        <menuitem id="menu_ai_config" 
+                  name="AI Configuration" 
+                  parent="menu_omnihr_ai_config" 
+                  action="action_hr_ai_config" 
+                  sequence="10"/>
+        
+        <menuitem id="menu_ai_providers" 
+                  name="AI Providers" 
+                  parent="menu_omnihr_ai_config" 
+                  action="action_hr_multi_ai_provider" 
+                  sequence="20"/>
+        
+        <!-- Analytics Menu -->
+        <menuitem id="menu_omnihr_ai_analytics" 
+                  name="Analytics" 
+                  parent="menu_omnihr_ai_main" 
+                  sequence="20"/>
+        
+        <menuitem id="menu_employee_intelligence" 
+                  name="Employee Intelligence" 
+                  parent="menu_omnihr_ai_analytics" 
+                  action="action_hr_employee_intelligence" 
+                  sequence="10"/>
+        
+        <menuitem id="menu_performance_analytics" 
+                  name="Performance Analytics" 
+                  parent="menu_omnihr_ai_analytics" 
+                  action="action_hr_performance_analytics" 
+                  sequence="20"/>
+        
+        <menuitem id="menu_sentiment_analysis" 
+                  name="Sentiment Analysis" 
+                  parent="menu_omnihr_ai_analytics" 
+                  action="action_hr_sentiment_analysis" 
+                  sequence="30"/>
+        
+        <!-- Recruitment Menu -->
+        <menuitem id="menu_omnihr_ai_recruitment" 
+                  name="Recruitment AI" 
+                  parent="menu_omnihr_ai_main" 
+                  sequence="30"/>
+        
+        <menuitem id="menu_recruitment_ai" 
+                  name="AI Assessments" 
+                  parent="menu_omnihr_ai_recruitment" 
+                  action="action_hr_recruitment_ai" 
+                  sequence="10"/>
+        
+        <!-- AI Tools Menu -->
+        <menuitem id="menu_omnihr_ai_tools" 
+                  name="AI Tools" 
+                  parent="menu_omnihr_ai_main" 
+                  sequence="40"/>
+        
+        <menuitem id="menu_ai_chat" 
+                  name="AI Chat" 
+                  parent="menu_omnihr_ai_tools" 
+                  action="action_hr_ai_chat" 
+                  sequence="10"/>
+        
+        <menuitem id="menu_ai_tasks" 
+                  name="AI Tasks" 
+                  parent="menu_omnihr_ai_tools" 
+                  action="action_hr_ai_task" 
+                  sequence="20"/>
+        
+        <menuitem id="menu_ai_insights" 
+                  name="AI Insights" 
+                  parent="menu_omnihr_ai_tools" 
+                  action="action_hr_ai_insights" 
+                  sequence="30"/>
+        
+        <menuitem id="menu_predictive_models" 
+                  name="Predictive Models" 
+                  parent="menu_omnihr_ai_tools" 
+                  action="action_hr_predictive_models" 
+                  sequence="40"/>
+        
+    </data>
+</odoo> 
