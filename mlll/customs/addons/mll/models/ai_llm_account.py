@@ -26,7 +26,7 @@ class AiLlmAccount(models.Model):
     api_key = fields.Char(
         string='API Key',
         required=True,
-        groups='ai_llm_integration.group_ai_admin'
+        groups='mll.group_ai_admin'
     )
     
     user_ids = fields.Many2many(
