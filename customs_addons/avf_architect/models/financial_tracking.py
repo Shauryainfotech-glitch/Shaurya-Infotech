@@ -124,7 +124,12 @@ class ArchitectBudget(models.Model):
     name = fields.Char(string='Budget Name', required=True, tracking=True)
     project_id = fields.Many2one('architect.project', string='Project', required=True)
     version = fields.Integer(string='Version', default=1)
-
+    company_id = fields.Many2one(
+        'res.company',
+        string='Company',
+        default=lambda self: self.env.company,
+        index=True
+    )
     # Budget Details
     total_budget = fields.Monetary(string='Total Budget', currency_field='currency_id',
                                    required=True, tracking=True)
