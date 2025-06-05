@@ -1,3 +1,7 @@
+import logging
+
+_logger = logging.getLogger(__name__)
+
 from . import models
 from . import report
 
@@ -5,7 +9,8 @@ from . import report
 try:
     from . import wizards
 except ImportError:
-    # If wizards.py doesn't exist, we can safely ignore it
-    import logging
-    _logger = logging.getLogger(__name__)
     _logger.debug("wizards.py not found, skipping import")
+
+def post_init_hook(cr, registry):
+    # Placeholder for post-init hook logic
+    _logger.info("post_init_hook called for day_plan_work_report_ai module")
