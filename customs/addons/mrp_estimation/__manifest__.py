@@ -46,7 +46,7 @@
         
         # Reports
         'reports/estimation_templates.xml',
-        #'report/estimation_report.xml',
+        'report/estimation_report.xml',
         
         'data/estimation_data.xml',
         
