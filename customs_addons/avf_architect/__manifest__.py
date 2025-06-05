@@ -62,7 +62,7 @@
         'mail',
         'calendar',
         'hr_timesheet',
-        'document',
+        #'document',
         'website',
         'portal',
         'website_sale',  # Added for Odoo 18 ecommerce features
