@@ -273,7 +273,12 @@ class ArchitectDocumentTemplate(models.Model):
     # Configuration
     description = fields.Text(string='Description')
     instructions = fields.Html(string='Usage Instructions')
-    
+    company_id = fields.Many2one(
+        'res.company',
+        string='Company',
+        default=lambda self: self.env.company,
+        index=True
+    )
     # Metadata Template
     default_category_id = fields.Many2one('architect.document.category', 
                                         string='Default Category')
