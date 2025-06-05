@@ -20,11 +20,27 @@
             <field name="arch" type="xml">
                 <form string="Solar Quote">
                     <header>
-                        <button string="Send" type="object" name="action_send" states="draft" class="oe_highlight"/>
-                        <button string="Accept" type="object" name="action_accept" states="sent" class="oe_highlight"/>
-                        <button string="Refuse" type="object" name="action_refuse" states="draft,sent"/>
-                        <button string="Reset to Draft" type="object" name="action_reset_to_draft" states="refused,expired"/>
-                        <button string="Mark as Expired" type="object" name="action_mark_expired" states="sent"/>
+                        <!-- Send Button -->
+                        <button string="Send" type="object" name="action_send" class="oe_highlight"
+                                modifiers="{'invisible': [('state', '!=', 'draft')]}"/>
+
+                        <!-- Accept Button -->
+                        <button string="Accept" type="object" name="action_accept" class="oe_highlight"
+                                modifiers="{'invisible': [('state', '!=', 'sent')]}"/>
+
+                        <!-- Refuse Button -->
+                        <button string="Refuse" type="object" name="action_refuse"
+                                modifiers="{'invisible': [('state', 'not in', ['draft', 'sent'])]}"/>
+
+                        <!-- Reset to Draft Button -->
+                        <button string="Reset to Draft" type="object" name="action_reset_to_draft"
+                                modifiers="{'invisible': [('state', 'not in', ['refused', 'expired'])]}"/>
+
+                        <!-- Mark as Expired Button -->
+                        <button string="Mark as Expired" type="object" name="action_mark_expired"
+                                modifiers="{'invisible': [('state', '!=', 'sent')]}"/>
+
+                        <!-- State -->
                         <field name="state" widget="statusbar" statusbar_visible="draft,sent,accepted,refused,expired"/>
                     </header>
                     <sheet>
@@ -65,7 +81,8 @@
                                     <div class="oe_subtotal_footer_separator oe_inline">
                                         <label for="total_amount"/>
                                     </div>
-                                    <field name="total_amount" widget="monetary" options="{'currency_field': 'currency_id'}" class="oe_subtotal_footer_separator"/>
+                                    <field name="total_amount" widget="monetary" options="{'currency_field': 'currency_id'}"
+                                           class="oe_subtotal_footer_separator"/>
                                 </group>
                                 <div class="oe_clear"/>
                             </page>
