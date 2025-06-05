@@ -19,7 +19,8 @@ class SolarQuote(models.Model):
     )
 
     product_id = fields.Many2one('product.product', string="Product", required=True)
-
+    quantity = fields.Float(string="Quantity", required=True)
+    description = fields.Text(string="Description")
     project_id = fields.Many2one(
         comodel_name="solar.project",
         string="Related Project",
