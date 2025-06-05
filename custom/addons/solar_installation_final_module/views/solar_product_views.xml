@@ -41,8 +41,8 @@
 
                         <notebook>
                             <page string="Survey">
-                                <!-- Removed active_id context -->
-                                <field name="survey_id"/>
+                                <!-- Only show the field if the user has access to it -->
+                                <field name="survey_id" groups="solar_installation_final_module.group_solar_user"/>
                             </page>
                             <page string="Quotations">
                                 <field name="quote_ids">
