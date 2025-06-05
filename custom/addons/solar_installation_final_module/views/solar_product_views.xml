@@ -12,7 +12,7 @@
             </field>
         </record>
 
-        <!-- Form View -->
+        <!-- Form View for Solar Projects -->
         <record id="view_solar_project_form" model="ir.ui.view">
             <field name="name">solar.project.form</field>
             <field name="model">solar.project</field>
@@ -29,6 +29,8 @@
                             <field name="customer_id" options="{'no_create': True}"/>
                             <field name="inquiry_date" readonly="1"/>
                         </group>
+
+                        <!-- Site Information Section -->
                         <group string="Site Information">
                             <field name="site_address"/>
                             <field name="site_city"/>
@@ -39,10 +41,15 @@
                             <field name="gps_longitude"/>
                         </group>
 
+                        <!-- Notebook for various tabs -->
                         <notebook>
+                            <!-- Survey Tab -->
                             <page string="Survey">
-                        <field name="survey_id" context="{'default_project_id': project_id}"/>
+                                <!-- Updated context to link survey_id to project_id -->
+                                <field name="survey_id" context="{'default_project_id': project_id}"/>
                             </page>
+
+                            <!-- Quotations Tab -->
                             <page string="Quotations">
                                 <field name="quote_ids">
                                     <form>
@@ -53,6 +60,8 @@
                                     </form>
                                 </field>
                             </page>
+
+                            <!-- Schedule Tab -->
                             <page string="Schedule">
                                 <field name="schedule_ids">
                                     <form>
@@ -63,6 +72,8 @@
                                     </form>
                                 </field>
                             </page>
+
+                            <!-- Products (BOM) Tab -->
                             <page string="Products (BOM)">
                                 <field name="product_line_ids">
                                     <form>
@@ -74,6 +85,8 @@
                                     </form>
                                 </field>
                             </page>
+
+                            <!-- Metrics Tab -->
                             <page string="Metrics">
                                 <group>
                                     <field name="total_quote_amount" readonly="1"/>
@@ -84,6 +97,8 @@
                                     <field name="schedule_count" readonly="1"/>
                                 </group>
                             </page>
+
+                            <!-- Notes Tab -->
                             <page string="Notes">
                                 <field name="description" widget="html"/>
                                 <field name="notes"/>
