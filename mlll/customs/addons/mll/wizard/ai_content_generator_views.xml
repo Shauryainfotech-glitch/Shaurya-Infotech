@@ -6,7 +6,7 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="AI Assistant">
-                <group invisible="!ai_response">
+                <group invisible="not ai_response">
                     <div class="alert alert-info" role="status" aria-live="polite">
                         <h4 class="alert-heading">AI Response:</h4>
                         <field name="ai_response" readonly="1" nolabel="1" 
@@ -47,7 +47,7 @@
                             type="object" 
                             string="Apply" 
                             class="btn-primary"
-                            invisible="!ai_response"/>
+                            invisible="not ai_response"/>
                     <button string="Cancel" class="btn-secondary" special="cancel"/>
                 </footer>
             </form>
