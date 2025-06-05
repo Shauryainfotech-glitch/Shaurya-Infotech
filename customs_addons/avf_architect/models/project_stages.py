@@ -25,7 +25,12 @@ class ArchitectProjectStage(models.Model):
     # Approvals
     requires_approval = fields.Boolean(string='Requires Approval')
     approval_user_ids = fields.Many2many('res.users', string='Approvers')
-    
+    company_id = fields.Many2one(
+        'res.company',
+        string='Company',
+        default=lambda self: self.env.company,
+        index=True
+    )
     # Stage Type
     stage_type = fields.Selection([
         ('concept', 'Concept Design'),
