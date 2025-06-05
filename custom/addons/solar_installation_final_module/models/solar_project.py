@@ -52,6 +52,13 @@ class SolarProject(models.Model):
     gps_latitude = fields.Float(string="Latitude", digits=(9, 6))
     gps_longitude = fields.Float(string="Longitude", digits=(9, 6))
 
+    project_id = fields.Many2one(
+        comodel_name="solar.project",
+        string="Related Project",
+        required=True,
+        ondelete="cascade",
+        tracking=True
+    )
     # Relationship to Site Survey
     survey_id = fields.Many2one(
         comodel_name="solar.site.survey",

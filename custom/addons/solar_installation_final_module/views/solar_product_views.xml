@@ -41,8 +41,10 @@
 
                         <notebook>
                             <page string="Survey">
-                                <!-- Removed active_id context, added default context -->
-                                <field name="survey_id" context="{'default_project_id': project_id}"/>
+                                <field name="project_id"/>
+                            <!-- Survey ID Field with context for linking project -->
+                            <field name="survey_id" context="{'default_project_id': project_id}"
+                                   groups="solar_installation_final_module.group_solar_user"/>
                             </page>
                             <page string="Quotations">
                                 <field name="quote_ids">
