@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+    <t t-name="day_plan_work_report_ai.DayPlanCalendar">
+        <!-- Placeholder template for day_plan_calendar -->
+        <div>
+            <h1>Day Plan Calendar</h1>
+            <p>This is a placeholder template for the Day Plan Calendar component.</p>
+        </div>
+    </t>
+</templates>
