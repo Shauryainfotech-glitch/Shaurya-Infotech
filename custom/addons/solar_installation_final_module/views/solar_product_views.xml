@@ -41,8 +41,8 @@
 
                         <notebook>
                             <page string="Survey">
-                                <!-- Adjust the context or remove the reference to active_id -->
-                                <field name="survey_id" context="{'default_project_id': active_id}"/>
+                                <!-- Removed active_id context -->
+                                <field name="survey_id"/>
                             </page>
                             <page string="Quotations">
                                 <field name="quote_ids">
