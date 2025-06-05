@@ -253,7 +253,12 @@ class ArchitectProjectStage(models.Model):
     sequence = fields.Integer(string='Sequence', default=10)
     progress = fields.Float(string='Progress %', help="Progress percentage for this stage")
     fold = fields.Boolean(string='Folded in Pipeline')
-    
+    company_id = fields.Many2one(
+        'res.company',
+        string='Company',
+        default=lambda self: self.env.company,
+        index=True
+    )
     # Stage Requirements
     requirements = fields.Text(string='Stage Requirements')
     deliverables = fields.Text(string='Expected Deliverables')
