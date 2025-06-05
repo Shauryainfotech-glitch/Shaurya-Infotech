@@ -14,38 +14,39 @@ class FinancialTracking(models.Model):
     name = fields.Char(string='Transaction Reference', required=True, default=lambda self: _('New'))
     project_id = fields.Many2one('project.project', string='Project', required=True)
     category_id = fields.Many2one('architect.financial.category', string='Category', required=True)
-    
+
     transaction_type = fields.Selection([
         ('income', 'Income'),
         ('expense', 'Expense'),
         ('budget', 'Budget Allocation')
     ], string='Transaction Type', required=True)
-    
+
     amount = fields.Monetary(string='Amount', required=True)
     currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
-    
+
     transaction_date = fields.Date(string='Transaction Date', default=fields.Date.today)
     description = fields.Text(string='Description')
-    
+
     state = fields.Selection([
         ('draft', 'Draft'),
         ('confirmed', 'Confirmed'),
         ('cancelled', 'Cancelled')
     ], string='State', default='draft', tracking=True)
-    
+
     invoice_id = fields.Many2one('account.move', string='Related Invoice')
     payment_reference = fields.Char(string='Payment Reference')
-    
-    @api.model
-    def create(self, vals):
-        if vals.get('name', _('New')) == _('New'):
-            vals['name'] = self.env['ir.sequence'].next_by_code('architect.financial.tracking') or _('New')
-        return super().create(vals)
-    
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('name', _('New')) == _('New'):
+                vals['name'] = self.env['ir.sequence'].next_by_code('architect.financial.tracking') or _('New')
+        return super().create(vals_list)
+
     def action_confirm(self):
         self.state = 'confirmed'
         self.message_post(body=_("Financial transaction confirmed."))
-    
+
     def action_cancel(self):
         self.state = 'cancelled'
         self.message_post(body=_("Financial transaction cancelled."))
@@ -75,36 +76,37 @@ class CostEstimate(models.Model):
 
     name = fields.Char(string='Estimate Name', required=True, default=lambda self: _('New'))
     project_id = fields.Many2one('project.project', string='Project', required=True)
-    
+
     estimate_date = fields.Date(string='Estimate Date', default=fields.Date.today)
     currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
-    
+
     estimate_line_ids = fields.One2many('architect.cost.estimate.line', 'estimate_id', string='Estimate Lines')
-    
+
     subtotal = fields.Monetary(string='Subtotal', compute='_compute_totals', store=True)
     contingency_percentage = fields.Float(string='Contingency %', default=10.0)
     contingency_amount = fields.Monetary(string='Contingency Amount', compute='_compute_totals', store=True)
-    
+
     overhead_percentage = fields.Float(string='Overhead %', default=15.0)
     overhead_amount = fields.Monetary(string='Overhead Amount', compute='_compute_totals', store=True)
-    
+
     profit_percentage = fields.Float(string='Profit %', default=10.0)
     profit_amount = fields.Monetary(string='Profit Amount', compute='_compute_totals', store=True)
-    
+
     total_estimate = fields.Monetary(string='Total Estimate', compute='_compute_totals', store=True)
-    
+
     state = fields.Selection([
         ('draft', 'Draft'),
         ('submitted', 'Submitted'),
         ('approved', 'Approved'),
         ('rejected', 'Rejected')
     ], string='State', default='draft', tracking=True)
-    
-    @api.model
-    def create(self, vals):
-        if vals.get('name', _('New')) == _('New'):
-            vals['name'] = self.env['ir.sequence'].next_by_code('architect.cost.estimate') or _('New')
-        return super().create(vals)
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('name', _('New')) == _('New'):
+                vals['name'] = self.env['ir.sequence'].next_by_code('architect.cost.estimate') or _('New')
+        return super().create(vals_list)
 
 class FinancialTracking(models.Model):
     _name = 'avf.financial.tracking'
@@ -361,7 +363,7 @@ class ArchitectBudgetLine(models.Model):
     remaining_amount = fields.Monetary(string='Remaining Amount', 
                                       compute='_compute_spent_amount', store=True)
 
-    currency_id = fields.Many2one('res.currency', related='budget_id.currency_id', store=True)
+    currency_id = fields.Many2one('res.currency', string='Currency', related='budget_id.currency_id', store=True)
 
     # Analysis
     utilization_percentage = fields.Float(string='Utilization (%)', 
@@ -469,13 +471,13 @@ class CostEstimateLine(models.Model):
     estimate_id = fields.Many2one('architect.cost.estimate', string='Estimate', required=True, ondelete='cascade')
     name = fields.Char(string='Description', required=True)
     category_id = fields.Many2one('architect.financial.category', string='Category')
-    
+
     quantity = fields.Float(string='Quantity', default=1.0)
     unit_price = fields.Monetary(string='Unit Price', required=True)
     total_amount = fields.Monetary(string='Total Amount', compute='_compute_total_amount', store=True)
-    
+
     currency_id = fields.Many2one('res.currency', related='estimate_id.currency_id', store=True)
-    
+
     @api.depends('quantity', 'unit_price')
     def _compute_total_amount(self):
         for line in self:
@@ -490,52 +492,53 @@ class ProjectBudget(models.Model):
 
     name = fields.Char(string='Budget Name', required=True, default=lambda self: _('New'))
     project_id = fields.Many2one('project.project', string='Project', required=True)
-    
+
     budget_date = fields.Date(string='Budget Date', default=fields.Date.today)
     currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
-    
+
     budget_line_ids = fields.One2many('architect.budget.line', 'budget_id', string='Budget Lines')
-    
+
     total_budget = fields.Monetary(string='Total Budget', compute='_compute_total_budget', store=True)
     total_spent = fields.Monetary(string='Total Spent', compute='_compute_total_spent')
     remaining_budget = fields.Monetary(string='Remaining Budget', compute='_compute_remaining_budget')
-    
+
     state = fields.Selection([
         ('draft', 'Draft'),
         ('approved', 'Approved'),
         ('active', 'Active'),
         ('closed', 'Closed')
     ], string='State', default='draft', tracking=True)
-    
-    @api.model
-    def create(self, vals):
-        if vals.get('name', _('New')) == _('New'):
-            vals['name'] = self.env['ir.sequence'].next_by_code('architect.project.budget') or _('New')
-        return super().create(vals)
-    
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('name', _('New')) == _('New'):
+                vals['name'] = self.env['ir.sequence'].next_by_code('architect.project.budget') or _('New')
+        return super().create(vals_list)
+
     @api.depends('budget_line_ids.allocated_amount')
     def _compute_total_budget(self):
         for budget in self:
             budget.total_budget = sum(budget.budget_line_ids.mapped('allocated_amount'))
-    
+
     @api.depends('budget_line_ids.spent_amount')
     def _compute_total_spent(self):
         for budget in self:
             budget.total_spent = sum(budget.budget_line_ids.mapped('spent_amount'))
-    
+
     @api.depends('total_budget', 'total_spent')
     def _compute_remaining_budget(self):
         for budget in self:
             budget.remaining_budget = budget.total_budget - budget.total_spent
-    
+
     def action_approve(self):
         self.state = 'approved'
         self.message_post(body=_("Budget approved."))
-    
+
     def action_activate(self):
         self.state = 'active'
         self.message_post(body=_("Budget activated."))
-    
+
     def action_close(self):
         self.state = 'closed'
         self.message_post(body=_("Budget closed."))
@@ -547,13 +550,13 @@ class ArchitectBudgetLine(models.Model):
 
     budget_id = fields.Many2one('architect.project.budget', string='Budget', required=True, ondelete='cascade')
     category_id = fields.Many2one('architect.financial.category', string='Category', required=True)
-    
+
     allocated_amount = fields.Monetary(string='Allocated Amount', required=True)
     spent_amount = fields.Monetary(string='Spent Amount', compute='_compute_spent_amount', store=True)
     remaining_amount = fields.Monetary(string='Remaining Amount', compute='_compute_spent_amount', store=True)
     utilization_percentage = fields.Float(string='Utilization %', compute='_compute_spent_amount', store=True)
-    
-    currency_id = fields.Many2one('res.currency', related='budget_id.currency_id', store=True)
+
+    currency_id = fields.Many2one('res.currency', string='Currency', related='budget_id.currency_id', store=True)
 
 
 class ArchitectCostEstimateLine(models.Model):
@@ -577,7 +580,7 @@ class ArchitectCostEstimateLine(models.Model):
                                   compute='_compute_total_amount', store=True,
                                   currency_field='currency_id')
 
-    currency_id = fields.Related('estimate_id.currency_id', store=True)
+    currency_id = fields.related('estimate_id.currency_id', store=True)
 
     # Notes
     notes = fields.Text(string='Notes')

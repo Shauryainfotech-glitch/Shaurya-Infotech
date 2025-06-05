@@ -100,6 +100,9 @@ class ArchitectProject(models.Model):
     # Related Records
     drawing_count = fields.Integer(string='Drawings', compute='_compute_counts')
     document_count = fields.Integer(string='Documents', compute='_compute_counts')
+    financial_tracking_ids = fields.One2many('architect.financial.tracking', 'project_id', string='Financial Records')
+    budget_ids = fields.One2many('architect.budget', 'project_id', string='Budgets')
+    cost_estimate_ids = fields.One2many('architect.cost.estimate', 'project_id', string='Cost Estimates')
 
     company_id = fields.Many2one('res.company', string='Company', 
                                  default=lambda self: self.env.company)
@@ -119,7 +122,7 @@ class ArchitectProject(models.Model):
             project.drawing_count = 0  # Will be updated when drawing model is complete
             project.document_count = 0  # Will be updated when document model is complete
 
-    
+
     def create(self, vals_list):
         if not isinstance(vals_list, list):
             vals_list = [vals_list]
