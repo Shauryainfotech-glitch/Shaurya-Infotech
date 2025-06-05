@@ -11,3 +11,7 @@ access_ai_llm_message_user,ai.llm.message.user,model_ai_llm_message,group_ai_use
 access_ai_llm_message_manager,ai.llm.message.manager,model_ai_llm_message,group_ai_manager,1,1,1,1
 access_ai_content_generator_user,ai.content.generator.user,model_ai_content_generator,group_ai_user,1,1,1,1
 access_ai_content_generator_manager,ai.content.generator.manager,model_ai_content_generator,group_ai_manager,1,1,1,1
+access_ai_purchase_assistant_user,ai.purchase.assistant.user,model_ai_purchase_assistant,group_ai_user,1,1,1,1
+access_ai_purchase_assistant_manager,ai.purchase.assistant.manager,model_ai_purchase_assistant,group_ai_manager,1,1,1,1
+access_ai_vendor_recommendation_user,ai.vendor.recommendation.user,model_ai_vendor_recommendation,group_ai_user,1,1,1,1
+access_ai_vendor_recommendation_manager,ai.vendor.recommendation.manager,model_ai_vendor_recommendation,group_ai_manager,1,1,1,1

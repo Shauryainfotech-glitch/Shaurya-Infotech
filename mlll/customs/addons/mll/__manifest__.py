@@ -26,6 +26,7 @@ This module provides comprehensive AI integration capabilities:
         'project',         # For project.task model
         'hr',             # For hr.employee model
         'account',        # For account.move model
+        'purchase',       # For purchase.order model
     ],
     'data': [
         'security/ai_llm_security.xml',
@@ -35,7 +36,10 @@ This module provides comprehensive AI integration capabilities:
         'views/ai_llm_account_views.xml',
         'views/ai_llm_conversation_views.xml',
         'views/ai_llm_menus.xml',
+        'views/purchase_order_views.xml',
+        'views/ai_purchase_dashboard.xml',
         'wizard/ai_content_generator_views.xml',
+        'wizard/ai_purchase_assistant_views.xml',
     ],
     'assets': {
         'web.assets_backend': [
