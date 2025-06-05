@@ -1,4 +1,5 @@
-from odoo import models, fields, api  # Import the necessary modules
+from odoo import models, fields, api
+from odoo.exceptions import ValidationError
 
 class SolarQuoteLine(models.Model):
     _name = "solar.quote.line"
@@ -18,10 +19,7 @@ class SolarQuoteLine(models.Model):
         required=True,
         domain="[('active', '=', True)]"
     )
-    name = fields.Char(
-        string="Description",
-        required=True
-    )
+    description = fields.Char(string="Description", required=True)  # Add the description field here
     quantity = fields.Float(
         string="Quantity",
         default=1.0,
@@ -53,20 +51,6 @@ class SolarQuoteLine(models.Model):
         string="Currency",
         related="quote_id.currency_id",
         readonly=True
-    )
-
-    # Additional fields for better tracking
-    product_type = fields.Selection(
-        related="product_id.product_type",
-        string="Product Type",
-        readonly=True,
-        store=True
-    )
-    capacity_watt = fields.Float(
-        related="product_id.capacity_watt",
-        string="Capacity (W)",
-        readonly=True,
-        store=True
     )
 
     @api.constrains('quantity')
@@ -102,13 +86,3 @@ class SolarQuoteLine(models.Model):
             price = line.quantity * line.unit_price
             discount = price * (line.discount_pct / 100.0)
             line.price_subtotal = price - discount
-
-    def _prepare_project_line_vals(self):
-        """Prepare values for creating project product line from quote line"""
-        self.ensure_one()
-        return {
-            'product_id': self.product_id.id,
-            'quantity': self.quantity,
-            'unit_cost': self.product_id.standard_price,
-            'description': self.name,
-        }
