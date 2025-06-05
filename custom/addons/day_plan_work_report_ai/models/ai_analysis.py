@@ -1,9 +1,8 @@
-from odoo import models, fields, api
+from odoo import models, fields, api, _
 import logging
 import json
 import requests
 from datetime import datetime, timedelta
-from odoo import models, fields, api, _
 from lxml import etree
 
 _logger = logging.getLogger(__name__)

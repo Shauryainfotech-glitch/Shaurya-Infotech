@@ -20,14 +20,11 @@ class DayPlanDashboard(models.Model):
     # Adding alias model to support frontend calls to day.plan.dashboard
 
     def init(self):
-        """Initialize database - simplified to avoid migration issues"""
+        """Initialize database - safely handle migration issues"""
         super(DayPlanDashboard, self).init()
-        try:
-            # Drop any conflicting objects if they exist
-            self.env.cr.execute("DROP VIEW IF EXISTS day_plan_dashboard CASCADE")
-            _logger.info("Cleaned up any existing day_plan_dashboard view if it existed")
-        except Exception as e:
-            _logger.error("Error handling database objects: %s", str(e), exc_info=True)
+        _logger.info("Dashboard model initialized")
+        # Remove direct SQL execution that could interfere with test database setup
+        # This will be handled properly by Odoo's ORM system instead
 
     name = fields.Char(string="Name", readonly=True, default="Dashboard")
 
