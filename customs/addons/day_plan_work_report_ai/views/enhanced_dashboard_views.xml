@@ -170,47 +170,4 @@
             </div> <!-- Closing t-else div -->
         </div> <!-- Closing main template div -->
     </template>
-
-    <!-- Form View for Dashboard -->
-    <record id="view_enhanced_day_plan_dashboard_form" model="ir.ui.view">
-        <field name="name">day.plan.dashboard.form</field>
-        <field name="model">day.plan</field>
-        <field name="priority">100</field>
-        <field name="arch" type="xml">
-            <form>
-                <sheet>
-                    <div class="oe_title">
-                        <h1>Productivity Dashboard</h1>
-                    </div>
-                    <div class="o_dashboard_content">
-                        <!-- Dashboard content will be rendered here -->
-                    </div>
-                </sheet>
-            </form>
-        </field>
-    </record>
-
-    <record id="action_enhanced_day_plan_dashboard" model="ir.actions.act_window">
-        <field name="name">Enhanced Productivity Dashboard</field>
-        <field name="res_model">day.plan</field>
-        <field name="view_mode">form</field>
-        <field name="view_id" ref="view_enhanced_day_plan_dashboard_form"/>
-        <field name="target">main</field>
-        <field name="context">{'search_default_my_plans': 1}</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Welcome to the Enhanced Productivity Dashboard!
-            </p>
-            <p>
-                Track your team's performance, monitor productivity trends, and get insights
-                to improve your daily planning and work reporting.
-            </p>
-        </field>
-    </record>
-
-    <menuitem id="menu_enhanced_dashboard"
-              name="Enhanced Dashboard"
-              parent="day_plan_work_report_ai.menu_day_plan_root"
-              action="action_enhanced_day_plan_dashboard"
-              sequence="5"/>
 </odoo>

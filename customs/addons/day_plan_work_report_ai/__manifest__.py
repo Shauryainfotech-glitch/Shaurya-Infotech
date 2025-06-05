@@ -48,7 +48,6 @@
 #     Day Plan & Work Report with AI Analysis
 #     ======================================
 #
-#
 #     A comprehensive productivity management system with AI-powered insights.
 #
 #     Key Features:
@@ -99,7 +98,7 @@
         "views/dynamic_dashboard_views.xml",
         "views/dashboard_actions.xml",
         "views/dashboard_menu.xml",
-        "views/enhanced_dashboard_views.xml",
+        "views/enhanced_dashboard_views.xml",  # Ensure this is included
         "report/dashboard_report.xml",
         "report/dashboard_report_templates.xml"
     ],
@@ -108,15 +107,15 @@
     "application": True,
     "assets": {
         "web.assets_backend": [
-            # External library for charts
+            # External libraries for charts
             ("include", "https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"),
             # Component JS files
-            "day_plan_work_report_ai/static/src/components/dashboard_chart.js",
+            "day_plan_work_report_ai/static/src/js/dashboard_component.js",  # Ensure JS file is included
+            "day_plan_work_report_ai/static/src/js/new_dashboard_client_action.js",
             "day_plan_work_report_ai/static/src/views/day_plan_calendar/day_plan_calendar.js",
-            "day_plan_work_report_ai/static/src/new_dashboard_client_action.js",
             # Templates
             "day_plan_work_report_ai/static/src/views/day_plan_calendar/day_plan_calendar.xml",
-            "day_plan_work_report_ai/views/enhanced_dashboard_views.xml",
+            "day_plan_work_report_ai/views/enhanced_dashboard_views.xml",  # Ensure this template is referenced
         ],
     },
     "description": """
