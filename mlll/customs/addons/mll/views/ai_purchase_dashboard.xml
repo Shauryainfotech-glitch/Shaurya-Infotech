@@ -89,19 +89,10 @@
     <record id="view_purchase_order_tree_ai_enhanced" model="ir.ui.view">
         <field name="name">purchase.order.tree.ai.enhanced</field>
         <field name="model">purchase.order</field>
-        <field name="type">tree</field>
+        <field name="inherit_id" ref="purchase.purchase_order_tree"/>
         <field name="arch" type="xml">
-            <tree>
-                <field name="name"/>
-                <field name="partner_id"/>
-                <field name="date_order"/>
-                <field name="amount_total" sum="Total"/>
-                <field name="currency_id" invisible="1"/>
-                <field name="state" widget="badge" 
-                       decoration-info="state == 'draft'" 
-                       decoration-warning="state == 'sent'" 
-                       decoration-success="state == 'purchase'"/>
-                <!-- AI Insights Columns -->
+            <!-- Add AI fields after state column -->
+            <field name="state" position="after">
                 <field name="ai_vendor_suggestions" 
                        string="AI Vendor Suggestions" 
                        optional="show"
@@ -110,7 +101,9 @@
                        string="AI Negotiation Tips" 
                        optional="show"
                        groups="mll.group_ai_user"/>
-                <!-- Quick Actions -->
+            </field>
+            <!-- Add AI Analysis button -->
+            <tree position="inside">
                 <button name="action_ai_analyze_vendor" 
                         string="AI Analysis" 
                         type="object" 
