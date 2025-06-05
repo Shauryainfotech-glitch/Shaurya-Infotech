@@ -31,43 +31,7 @@
                         </page>
                         <page string="Vendor Recommendations" name="vendor_recommendations" 
                               invisible="analysis_type != 'vendor_search'">
-                            <field name="vendor_recommendations">
-                                <tree>
-                                    <field name="vendor_id"/>
-                                    <field name="score" widget="progressbar"/>
-                                    <field name="products_count"/>
-                                    <button name="action_contact_vendor" 
-                                            string="Contact" 
-                                            type="object" 
-                                            class="btn-secondary"/>
-                                    <button name="action_create_rfq" 
-                                            string="Create RFQ" 
-                                            type="object" 
-                                            class="btn-primary"/>
-                                </tree>
-                                <form>
-                                    <group>
-                                        <group>
-                                            <field name="vendor_id"/>
-                                            <field name="score"/>
-                                            <field name="products_count"/>
-                                        </group>
-                                        <group>
-                                            <field name="analysis"/>
-                                        </group>
-                                    </group>
-                                    <footer>
-                                        <button name="action_contact_vendor" 
-                                                string="Contact Vendor" 
-                                                type="object" 
-                                                class="btn-secondary"/>
-                                        <button name="action_create_rfq" 
-                                                string="Create RFQ" 
-                                                type="object" 
-                                                class="btn-primary"/>
-                                    </footer>
-                                </form>
-                            </field>
+                            <field name="vendor_recommendations" context="{'tree_view_ref': 'mll.view_ai_vendor_recommendation_tree', 'form_view_ref': 'mll.view_ai_vendor_recommendation_form'}"/>
                         </page>
                     </notebook>
                     

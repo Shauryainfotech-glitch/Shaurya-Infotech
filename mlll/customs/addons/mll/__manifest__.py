@@ -39,6 +39,7 @@ This module provides comprehensive AI integration capabilities:
         'views/purchase_order_views.xml',
         'views/ai_purchase_dashboard.xml',
         'wizard/ai_content_generator_views.xml',
+        'wizard/ai_vendor_recommendation_views.xml',
         'wizard/ai_purchase_assistant_views.xml',
     ],
     'assets': {
