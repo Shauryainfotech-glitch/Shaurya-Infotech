@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="view_ai_llm_provider_list" model="ir.ui.view">
+        <field name="name">ai.llm.provider.list</field>
+        <field name="model">ai.llm.provider</field>
+        <field name="type">list</field>
+        <field name="arch" type="xml">
+            <list string="AI Providers">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="model_name"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+    
+    <!-- Form View -->
+    <record id="view_ai_llm_provider_form" model="ir.ui.view">
+        <field name="name">ai.llm.provider.form</field>
+        <field name="model">ai.llm.provider</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="AI Provider">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" help="Provider Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="model_name" help="e.g., gpt-4, claude-3"/>
+                            <field name="api_endpoint"/>
+                            <field name="auth_type"/>
+                        </group>
+                        <group>
+                            <field name="max_tokens"/>
+                            <field name="temperature" widget="percentage"/>
+                            <field name="sequence"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Advanced Settings">
+                            <group>
+                                <!-- Advanced configuration fields can be added here -->
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <!-- Search View -->
+    <record id="view_ai_llm_provider_search" model="ir.ui.view">
+        <field name="name">ai.llm.provider.search</field>
+        <field name="model">ai.llm.provider</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Search AI Providers">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="model_name"/>
+                <filter string="Active" name="active" domain="[('active', '=', True)]"/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Provider Code" name="group_by_code" context="{'group_by': 'code'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    
+    <!-- Action -->
+    <record id="action_ai_llm_provider" model="ir.actions.act_window">
+        <field name="name">AI Providers</field>
+        <field name="res_model">ai.llm.provider</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_ai_llm_provider_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Configure AI Providers
+            </p>
+            <p>
+                Add and configure AI language model providers like OpenAI, Anthropic, etc.
+            </p>
+        </field>
+    </record>
+</odoo>

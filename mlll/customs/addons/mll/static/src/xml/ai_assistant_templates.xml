@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <!-- AI Assistant Button Widget Template -->
+    <t t-name="ai_llm_integration.AiAssistantWidget" owl="1">
+        <button class="btn btn-secondary" t-on-click="onClickAiAssist">
+            <i class="fa fa-robot me-2"/>
+            AI Assistant
+        </button>
+    </t>
+    
+    <!-- AI Chat Widget Template -->
+    <t t-name="ai_llm_integration.AiChatWidget" owl="1">
+        <div class="ai-chat-widget" t-att-class="{ 'open': state.isOpen }">
+            <!-- Chat Toggle Button -->
+            <button class="ai-chat-toggle btn btn-primary rounded-circle" 
+                    t-on-click="toggleChat">
+                <i class="fa" t-att-class="state.isOpen ? 'fa-times' : 'fa-robot'"/>
+            </button>
+            
+            <!-- Chat Window -->
+            <div class="ai-chat-window" t-if="state.isOpen">
+                <div class="ai-chat-header">
+                    <h5>AI Assistant</h5>
+                </div>
+                
+                <!-- Messages Container -->
+                <div class="ai-chat-messages">
+                    <t t-foreach="state.messages" t-as="message" t-key="message_index">
+                        <div class="ai-chat-message" t-att-class="message.role">
+                            <div class="message-content">
+                                <t t-esc="message.content"/>
+                            </div>
+                            <small class="message-time">
+                                <t t-esc="message.timestamp.toLocaleTimeString()"/>
+                            </small>
+                        </div>
+                    </t>
+                    
+                    <!-- Loading Indicator -->
+                    <div class="ai-chat-loading" t-if="state.isLoading">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Input Area -->
+                <div class="ai-chat-input">
+                    <textarea class="form-control" 
+                             t-model="state.inputText"
+                             t-on-keypress="onKeyPress"
+                             placeholder="Type your message..."
+                             rows="2"/>
+                    <button class="btn btn-primary" 
+                            t-on-click="sendMessage"
+                            t-att-disabled="!state.inputText.trim() || state.isLoading">
+                        <i class="fa fa-paper-plane"/>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>
