@@ -4,7 +4,6 @@
         <!-- Define Solar Category (parent for solar modules) -->
         <record id="module_category_solar" model="ir.module.category">
             <field name="name">Solar</field>
-            <field name="parent_id" ref="module_category_user_type"/>
         </record>
 
         <!-- Solar User Group -->
