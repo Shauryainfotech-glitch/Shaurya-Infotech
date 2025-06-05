@@ -1,181 +1,179 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
-        <record id="action_report_estimation" model="ir.actions.report">
-            <field name="name">Manufacturing Estimation</field>
-            <field name="model">mrp.estimation</field>
-            <field name="report_type">qweb-pdf</field>
-            <field name="report_name">mrp_estimation.report_estimation_document</field>
-            <field name="report_file">mrp_estimation.report_estimation_document</field>
-            <field name="print_report_name">'Estimation - %s' % (object.name)</field>
-        </record>
+    <record id="action_report_estimation" model="ir.actions.report">
+        <field name="name">Manufacturing Estimation</field>
+        <field name="model">mrp.estimation</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">mrp_estimation.report_estimation_document</field>
+        <field name="report_file">mrp_estimation.report_estimation_document</field>
+        <field name="print_report_name">'Estimation - %s' % (object.name)</field>
+    </record>
 
-        <!-- Main Estimation Report Template -->
-        <template id="report_estimation_document">
-            <t t-call="web.external_layout">
-                <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)"/>
-                <div class="page">
-                    <div class="oe_structure"/>
-                    <!-- Header Information -->
-                    <div class="row mt32 mb32">
-                        <div class="col-6">
-                            <strong>Customer:</strong>
-                            <div t-field="doc.partner_id" 
-                                 t-options='{"widget": "contact", "fields": ["address", "name", "phone", "email"], "no_marker": True}'/>
-                        </div>
-                        <div class="col-6">
-                            <div class="row">
-                                <div class="col-6">
-                                    <strong>Estimation Reference:</strong>
-                                    <p t-field="doc.name"/>
-                                </div>
-                                <div class="col-6">
-                                    <strong>Version:</strong>
-                                    <p t-field="doc.version"/>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-6">
-                                    <strong>Date:</strong>
-                                    <p t-field="doc.estimation_date"/>
-                                </div>
-                                <div class="col-6">
-                                    <strong>Valid Until:</strong>
-                                    <p t-field="doc.validity_date"/>
-                                </div>
-                            </div>
-                        </div>
+    <!-- Main Estimation Report Template -->
+    <template id="report_estimation_document">
+        <t t-call="web.external_layout">
+            <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)"/>
+            <div class="page">
+                <div class="oe_structure"/>
+                <!-- Header Information -->
+                <div class="row mt32 mb32">
+                    <div class="col-6">
+                        <strong>Customer:</strong>
+                        <div t-field="doc.partner_id" 
+                             t-options='{"widget": "contact", "fields": ["address", "name", "phone", "email"], "no_marker": True}'/>
                     </div>
-
-                    <!-- Product Information -->
-                    <h3>Manufacturing Estimation</h3>
-                    <div class="row mt32 mb32">
-                        <div class="col-12">
-                            <strong>Product:</strong>
-                            <span t-field="doc.product_id"/>
-                            <br/>
-                            <strong>Quantity:</strong>
-                            <span t-field="doc.product_qty"/>
-                            <span t-field="doc.product_uom_id"/>
-                        </div>
-                    </div>
-
-                    <!-- Material Lines -->
-                    <table class="table table-sm o_main_table">
-                        <thead>
-                            <tr>
-                                <th>Material</th>
-                                <th class="text-right">Quantity</th>
-                                <th class="text-right">Unit</th>
-                                <th class="text-right">Unit Cost</th>
-                                <th class="text-right">Subtotal</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr t-foreach="doc.estimation_line_ids" t-as="line">
-                                <td>
-                                    <span t-field="line.product_id"/>
-                                </td>
-                                <td class="text-right">
-                                    <span t-field="line.product_qty"/>
-                                </td>
-                                <td class="text-right">
-                                    <span t-field="line.product_uom_id"/>
-                                </td>
-                                <td class="text-right">
-                                    <span t-field="line.marked_up_cost"
-                                          t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
-                                </td>
-                                <td class="text-right">
-                                    <span t-field="line.subtotal"
-                                          t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <!-- Cost Breakdown -->
-                    <table class="table table-sm o_main_table">
-                        <thead>
-                            <tr>
-                                <th>Cost Type</th>
-                                <th>Description</th>
-                                <th class="text-right">Amount</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr t-foreach="doc.estimation_cost_ids" t-as="cost">
-                                <td>
-                                    <span t-field="cost.cost_type"/>
-                                </td>
-                                <td>
-                                    <span t-field="cost.name"/>
-                                </td>
-                                <td class="text-right">
-                                    <span t-field="cost.total_cost"
-                                          t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <!-- Totals -->
-                    <div class="clearfix">
+                    <div class="col-6">
                         <div class="row">
-                            <div class="col-6"/>
                             <div class="col-6">
-                                <table class="table table-sm" style="page-break-inside: avoid;">
-                                    <tr class="border-black o_subtotal">
-                                        <td><strong>Materials Subtotal</strong></td>
-                                        <td class="text-right">
-                                            <span t-field="doc.material_total"
-                                                  t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Costs Subtotal</strong></td>
-                                        <td class="text-right">
-                                            <span t-field="doc.cost_total"
-                                                  t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Total Markup</strong></td>
-                                        <td class="text-right">
-                                            <span t-field="doc.markup_total"
-                                                  t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
-                                        </td>
-                                    </tr>
-                                    <tr class="border-black o_total">
-                                        <td><strong>Total</strong></td>
-                                        <td class="text-right">
-                                            <span t-field="doc.estimation_total"
-                                                  t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
-                                        </td>
-                                    </tr>
-                                </table>
+                                <strong>Estimation Reference:</strong>
+                                <p t-field="doc.name"/>
+                            </div>
+                            <div class="col-6">
+                                <strong>Version:</strong>
+                                <p t-field="doc.version"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <strong>Date:</strong>
+                                <p t-field="doc.estimation_date"/>
+                            </div>
+                            <div class="col-6">
+                                <strong>Valid Until:</strong>
+                                <p t-field="doc.validity_date"/>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Customer Notes -->
-                    <div t-if="doc.customer_notes" class="mt32">
-                        <strong>Notes:</strong>
-                        <div t-field="doc.customer_notes"/>
-                    </div>
-
-                    <div class="oe_structure"/>
                 </div>
-            </t>
-        </template>
 
-        <!-- Main Report Template -->
-        <template id="report_estimation">
-            <t t-call="web.html_container">
-                <t t-foreach="docs" t-as="doc">
-                    <t t-call="mrp_estimation.report_estimation_document"/>
-                </t>
+                <!-- Product Information -->
+                <h3>Manufacturing Estimation</h3>
+                <div class="row mt32 mb32">
+                    <div class="col-12">
+                        <strong>Product:</strong>
+                        <span t-field="doc.product_id"/>
+                        <br/>
+                        <strong>Quantity:</strong>
+                        <span t-field="doc.product_qty"/>
+                        <span t-field="doc.product_uom_id"/>
+                    </div>
+                </div>
+
+                <!-- Material Lines -->
+                <table class="table table-sm o_main_table">
+                    <thead>
+                        <tr>
+                            <th>Material</th>
+                            <th class="text-right">Quantity</th>
+                            <th class="text-right">Unit</th>
+                            <th class="text-right">Unit Cost</th>
+                            <th class="text-right">Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="doc.estimation_line_ids" t-as="line">
+                            <td>
+                                <span t-field="line.product_id"/>
+                            </td>
+                            <td class="text-right">
+                                <span t-field="line.product_qty"/>
+                            </td>
+                            <td class="text-right">
+                                <span t-field="line.product_uom_id"/>
+                            </td>
+                            <td class="text-right">
+                                <span t-field="line.marked_up_cost"
+                                      t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                            </td>
+                            <td class="text-right">
+                                <span t-field="line.subtotal"
+                                      t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- Cost Breakdown -->
+                <table class="table table-sm o_main_table">
+                    <thead>
+                        <tr>
+                            <th>Cost Type</th>
+                            <th>Description</th>
+                            <th class="text-right">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="doc.estimation_cost_ids" t-as="cost">
+                            <td>
+                                <span t-field="cost.cost_type"/>
+                            </td>
+                            <td>
+                                <span t-field="cost.name"/>
+                            </td>
+                            <td class="text-right">
+                                <span t-field="cost.total_cost"
+                                      t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- Totals -->
+                <div class="clearfix">
+                    <div class="row">
+                        <div class="col-6"/>
+                        <div class="col-6">
+                            <table class="table table-sm" style="page-break-inside: avoid;">
+                                <tr class="border-black o_subtotal">
+                                    <td><strong>Materials Subtotal</strong></td>
+                                    <td class="text-right">
+                                        <span t-field="doc.material_total"
+                                              t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Costs Subtotal</strong></td>
+                                    <td class="text-right">
+                                        <span t-field="doc.cost_total"
+                                              t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Total Markup</strong></td>
+                                    <td class="text-right">
+                                        <span t-field="doc.markup_total"
+                                              t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                    </td>
+                                </tr>
+                                <tr class="border-black o_total">
+                                    <td><strong>Total</strong></td>
+                                    <td class="text-right">
+                                        <span t-field="doc.estimation_total"
+                                              t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Customer Notes -->
+                <div t-if="doc.customer_notes" class="mt32">
+                    <strong>Notes:</strong>
+                    <div t-field="doc.customer_notes"/>
+                </div>
+
+                <div class="oe_structure"/>
+            </div>
+        </t>
+    </template>
+
+    <!-- Main Report Template -->
+    <template id="report_estimation">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="mrp_estimation.report_estimation_document"/>
             </t>
-        </template>
-    </data>
+        </t>
+    </template>
 </odoo>
