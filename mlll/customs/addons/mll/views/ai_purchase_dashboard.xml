@@ -85,34 +85,6 @@
         </field>
     </record>
     
-    <!-- Enhanced Purchase Order List View with AI Columns -->
-    <record id="view_purchase_order_tree_ai_enhanced" model="ir.ui.view">
-        <field name="name">purchase.order.tree.ai.enhanced</field>
-        <field name="model">purchase.order</field>
-        <field name="inherit_id" ref="purchase.purchase_order_tree"/>
-        <field name="arch" type="xml">
-            <!-- Add AI fields after state column -->
-            <field name="state" position="after">
-                <field name="ai_vendor_suggestions" 
-                       string="AI Vendor Suggestions" 
-                       optional="show"
-                       groups="mll.group_ai_user"/>
-                <field name="ai_negotiation_tips" 
-                       string="AI Negotiation Tips" 
-                       optional="show"
-                       groups="mll.group_ai_user"/>
-            </field>
-            <!-- Add AI Analysis button -->
-            <tree position="inside">
-                <button name="action_ai_analyze_vendor" 
-                        string="AI Analysis" 
-                        type="object" 
-                        icon="fa-magic"
-                        groups="mll.group_ai_user"/>
-            </tree>
-        </field>
-    </record>
-    
     <!-- AI Purchase Insights Report -->
     <record id="action_ai_purchase_insights" model="ir.actions.act_window">
         <field name="name">AI Purchase Insights</field>
