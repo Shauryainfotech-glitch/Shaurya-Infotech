@@ -12,9 +12,9 @@ class EstimationPerformance(models.AbstractModel):
         if partner_id:
             domain.append(('partner_id', '=', partner_id))
         if date_from:
-            domain.append(('date', '>=', date_from))
+            domain.append(('estimation_date', '>=', date_from))
         if date_to:
-            domain.append(('date', '<=', date_to))
+            domain.append(('estimation_date', '<=', date_to))
         return domain
 
     @api.model
@@ -25,8 +25,8 @@ class EstimationPerformance(models.AbstractModel):
         query = """
             SELECT 
                 COUNT(*) as total_count,
-                AVG(total_amount) as avg_amount,
-                SUM(total_amount) as total_amount,
+                AVG(estimation_total) as avg_amount,
+                SUM(estimation_total) as total_amount,
                 COUNT(CASE WHEN state = 'approved' THEN 1 END) as approved_count
             FROM mrp_estimation
             WHERE %s
@@ -50,8 +50,8 @@ class EstimationPerformance(models.AbstractModel):
             
         # Prefetch related records in a single query
         self.env['mrp.estimation'].browse(estimation_ids).read([
-            'name', 'partner_id', 'date', 'state', 'total_amount',
-            'line_ids', 'approver_id'
+            'name', 'partner_id', 'estimation_date', 'state', 'estimation_total',
+            'estimation_line_ids', 'user_id'
         ])
         
         # Prefetch line details
@@ -59,6 +59,6 @@ class EstimationPerformance(models.AbstractModel):
             ('estimation_id', 'in', estimation_ids)
         ])
         line_ids.read([
-            'product_id', 'quantity', 'unit_price',
-            'material_cost', 'labor_cost'
+            'product_id', 'product_qty', 'product_cost',
+            'subtotal'
         ]) 

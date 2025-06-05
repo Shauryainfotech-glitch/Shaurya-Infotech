@@ -2,6 +2,7 @@ from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 from datetime import datetime, timedelta
 import logging
+import base64
 
 _logger = logging.getLogger(__name__)
 
@@ -390,13 +391,13 @@ class MrpEstimation(models.Model):
         
         # Generate PDF report
         report = self.env.ref('mrp_estimation.action_report_estimation')
-        pdf_content, _ = report._render_qweb_pdf(self.ids)
+        pdf_content = report._render_qweb_pdf([self.id])[0]
         
         # Create attachment
         attachment = self.env['ir.attachment'].create({
             'name': f'Estimation_{self.name}.pdf',
             'type': 'binary',
-            'datas': pdf_content,
+            'datas': base64.b64encode(pdf_content),
             'res_model': self._name,
             'res_id': self.id,
             'mimetype': 'application/pdf'
@@ -430,6 +431,80 @@ class MrpEstimation(models.Model):
         """Reset to draft state"""
         self.state = 'draft'
         self.message_post(body=_("Estimation reset to draft"))
+    
+    def action_view_boms(self):
+        """View related BOMs"""
+        self.ensure_one()
+        boms = self.env['mrp.bom'].search([
+            ('product_tmpl_id', '=', self.product_id.product_tmpl_id.id)
+        ])
+        action = {
+            'name': _('Bills of Materials'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'mrp.bom',
+            'view_mode': 'tree,form',
+            'domain': [('id', 'in', boms.ids)],
+        }
+        if len(boms) == 1:
+            action.update({
+                'view_mode': 'form',
+                'res_id': boms.id,
+            })
+        return action
+
+    def action_view_manufacturing_orders(self):
+        """View related manufacturing orders"""
+        self.ensure_one()
+        manufacturing_orders = self.env['mrp.production'].search([
+            ('product_id', '=', self.product_id.id),
+            ('origin', 'ilike', self.name)
+        ])
+        action = {
+            'name': _('Manufacturing Orders'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'mrp.production',
+            'view_mode': 'tree,form',
+            'domain': [('id', 'in', manufacturing_orders.ids)],
+        }
+        if len(manufacturing_orders) == 1:
+            action.update({
+                'view_mode': 'form',
+                'res_id': manufacturing_orders.id,
+            })
+        return action
+
+    def action_view_sale_orders(self):
+        """View related sale orders"""
+        self.ensure_one()
+        sale_orders = self.env['sale.order'].search([
+            ('partner_id', '=', self.partner_id.id),
+            ('origin', 'ilike', self.name)
+        ])
+        action = {
+            'name': _('Sales Orders'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'sale.order',
+            'view_mode': 'tree,form',
+            'domain': [('id', 'in', sale_orders.ids)],
+        }
+        if len(sale_orders) == 1:
+            action.update({
+                'view_mode': 'form',
+                'res_id': sale_orders.id,
+            })
+        return action
+
+    def action_view_versions(self):
+        """View estimation versions"""
+        self.ensure_one()
+        action = {
+            'name': _('Estimation Versions'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'mrp.estimation.version',
+            'view_mode': 'tree,form',
+            'domain': [('parent_estimation_id', '=', self.id)],
+        }
+        return action
     
     # ======================
     # BUSINESS LOGIC METHODS

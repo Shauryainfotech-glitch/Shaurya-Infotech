@@ -1,0 +1,32 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# PyCharm
+.idea/
+
+# VSCode
+.vscode/
+
+# Odoo
+*.log
+.env
+.venv
+*.pot
+*.pyc
+*.pyo
+*.pyd
+local_settings.py
+db.sqlite3
+media/
+
+# Project specific
+customs/
+temp/
+backups/ 
