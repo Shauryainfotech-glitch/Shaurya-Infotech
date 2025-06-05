@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Analytics Dashboard View -->
+        <record id="view_requisition_analytics_dashboard" model="ir.ui.view">
+            <field name="name">requisition.analytics.dashboard</field>
+            <field name="model">shop.floor.analytics</field>
+            <field name="arch" type="xml">
+                <form string="Requisition Analytics" class="o_dashboard">
+                    <sheet>
+                        <div class="o_form_statusbar">
+                            <button name="action_refresh" type="object" string="Refresh" class="btn-primary"/>
+                        </div>
+                        <group col="4">
+                            <group string="Performance Metrics">
+                                <field name="avg_completion_time" widget="float_time"/>
+                                <field name="sla_percentage" widget="percentage"/>
+                                <field name="emergency_count" widget="integer"/>
+                            </group>
+                            <group string="Cost Analysis">
+                                <field name="total_cost" widget="monetary"/>
+                                <field name="avg_cost_per_requisition" widget="monetary"/>
+                                <field name="cost_variance" widget="percentage"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Requisition Trends">
+                                <field name="requisition_chart" widget="graph_widget" nolabel="1"/>
+                            </page>
+                            <page string="Department Analysis">
+                                <field name="department_chart" widget="pie_chart" nolabel="1"/>
+                            </page>
+                            <page string="Material Analysis">
+                                <field name="material_analysis" widget="pivot" nolabel="1"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Analytics Tree View -->
+        <record id="view_shop_floor_analytics_tree" model="ir.ui.view">
+            <field name="name">shop.floor.analytics.tree</field>
+            <field name="model">shop.floor.analytics</field>
+            <field name="arch" type="xml">
+                <tree string="Analytics Records">
+                    <field name="requisition_id"/>
+                    <field name="completion_time" widget="float_time"/>
+                    <field name="sla_met" widget="boolean_toggle"/>
+                    <field name="production_impact"/>
+                    <field name="create_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Analytics Action -->
+        <record id="action_requisition_analytics" model="ir.actions.act_window">
+            <field name="name">Requisition Analytics</field>
+            <field name="res_model">shop.floor.analytics</field>
+            <field name="view_mode">tree,form,graph,pivot</field>
+            <field name="context">{'search_default_this_month': 1}</field>
+        </record>
+    </data>
+</odoo> 

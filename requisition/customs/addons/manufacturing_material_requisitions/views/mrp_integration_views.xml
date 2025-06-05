@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- MRP Integration Views - Placeholder -->
+
+        <!-- MRP Production Extension -->
+        <record id="view_mrp_production_form_requisition" model="ir.ui.view">
+            <field name="name">mrp.production.form.requisition</field>
+            <field name="model">mrp.production</field>
+            <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='miscellaneous']" position="before">
+                    <page string="Material Requisitions">
+                        <group>
+                            <group>
+                                <field name="auto_requisition_enabled" widget="boolean_toggle"/>
+                                <field name="requisition_count" widget="statinfo"/>
+                            </group>
+                            <group>
+                                <button name="action_create_requisition" type="object" string="Create Requisition" class="btn-primary" attrs="{'invisible': [('state', 'not in', ['confirmed', 'progress'])]}"/>
+                                <button name="action_view_requisitions" type="object" string="View Requisitions" class="oe_link"/>
+                            </group>
+                        </group>
+                        <field name="requisition_ids" readonly="1">
+                            <tree>
+                                <field name="name"/>
+                                <field name="requisition_type"/>
+                                <field name="priority" widget="priority"/>
+                                <field name="state" widget="badge" decoration-success="state == 'approved'" decoration-warning="state == 'submitted'" decoration-danger="state == 'rejected'"/>
+                                <field name="total_amount" widget="monetary"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- MRP Work Order Extension -->
+        <record id="view_mrp_workorder_form_requisition" model="ir.ui.view">
+            <field name="name">mrp.workorder.form.requisition</field>
+            <field name="model">mrp.workorder</field>
+            <field name="inherit_id" ref="mrp.mrp_production_workorder_form_view_inherit"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='production_id']" position="after">
+                    <field name="material_requisition_ids" widget="many2many_tags" readonly="1" attrs="{'invisible': [('material_requisition_ids', '=', [])]}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- MRP BOM Extension -->
+        <record id="view_mrp_bom_form_requisition" model="ir.ui.view">
+            <field name="name">mrp.bom.form.requisition</field>
+            <field name="model">mrp.bom</field>
+            <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='code']" position="after">
+                    <field name="auto_requisition_enabled" widget="boolean_toggle"/>
+                    <field name="requisition_lead_time" attrs="{'invisible': [('auto_requisition_enabled', '=', False)]}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- MRP Requisition Analysis View -->
+        <record id="view_mrp_requisition_analysis_tree" model="ir.ui.view">
+            <field name="name">mrp.requisition.analysis.tree</field>
+            <field name="model">manufacturing.material.requisition</field>
+            <field name="arch" type="xml">
+                <tree string="MRP Requisition Analysis">
+                    <field name="manufacturing_order_id"/>
+                    <field name="work_order_id"/>
+                    <field name="bom_id"/>
+                    <field name="product_id"/>
+                    <field name="total_amount" widget="monetary" sum="Total"/>
+                    <field name="state" widget="badge"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- MRP Integration Dashboard -->
+        <record id="view_mrp_integration_dashboard" model="ir.ui.view">
+            <field name="name">mrp.integration.dashboard</field>
+            <field name="model">manufacturing.mrp.integration</field>
+            <field name="arch" type="xml">
+                <form string="MRP Integration Dashboard" class="o_dashboard">
+                    <sheet>
+                        <div class="o_form_statusbar">
+                            <button name="action_analyze_shortages" type="object" string="Analyze Material Shortages" class="btn-primary"/>
+                        </div>
+                        <group col="4">
+                            <group string="Auto-Requisitions">
+                                <field name="auto_requisitions_count" widget="statinfo"/>
+                                <field name="pending_requisitions" widget="statinfo"/>
+                            </group>
+                            <group string="Material Status">
+                                <field name="material_availability" widget="percentage"/>
+                                <field name="shortage_count" widget="statinfo"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Material Shortages">
+                                <field name="shortage_analysis" widget="html" readonly="1"/>
+                            </page>
+                            <page string="Requisition Forecast">
+                                <field name="forecast_data" widget="graph" readonly="1"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo> 

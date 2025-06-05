@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Demo Manufacturing Requisitions -->
+        <record id="demo_requisition_1" model="manufacturing.material.requisition">
+            <field name="name">MR00001</field>
+            <field name="requisition_type">production_material</field>
+            <field name="production_stage">raw_material</field>
+            <field name="department_id" ref="hr.dep_production"/>
+            <field name="location_id" ref="stock.stock_location_stock"/>
+            <field name="dest_location_id" ref="stock.location_production"/>
+            <field name="requested_by" ref="base.user_admin"/>
+            <field name="required_date" eval="(DateTime.now() + timedelta(days=7)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="priority">high</field>
+            <field name="state">submitted</field>
+            <field name="reason">Materials needed for production order MO/00025</field>
+        </record>
+
+        <record id="demo_requisition_line_1_1" model="manufacturing.material.requisition.line">
+            <field name="requisition_id" ref="demo_requisition_1"/>
+            <field name="product_id" ref="product.product_product_3"/>
+            <field name="qty_required">100</field>
+            <field name="unit_price">15.50</field>
+            <field name="required_date" eval="(DateTime.now() + timedelta(days=7)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="demo_requisition_line_1_2" model="manufacturing.material.requisition.line">
+            <field name="requisition_id" ref="demo_requisition_1"/>
+            <field name="product_id" ref="product.product_product_4"/>
+            <field name="qty_required">50</field>
+            <field name="unit_price">25.00</field>
+            <field name="required_date" eval="(DateTime.now() + timedelta(days=7)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <!-- Demo Emergency Requisition -->
+        <record id="demo_requisition_emergency" model="manufacturing.material.requisition">
+            <field name="name">EM00001</field>
+            <field name="requisition_type">emergency</field>
+            <field name="production_stage">maintenance</field>
+            <field name="department_id" ref="hr.dep_production"/>
+            <field name="location_id" ref="stock.stock_location_stock"/>
+            <field name="dest_location_id" ref="stock.location_production"/>
+            <field name="requested_by" ref="base.user_admin"/>
+            <field name="required_date" eval="DateTime.now().strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="priority">critical</field>
+            <field name="urgency_level">emergency</field>
+            <field name="is_emergency">True</field>
+            <field name="production_impact">production_stop</field>
+            <field name="state">approved</field>
+            <field name="reason">Emergency breakdown - Machine #5 bearing failure</field>
+            <field name="shop_floor_approved">True</field>
+            <field name="supervisor_approved">True</field>
+            <field name="manager_approved">True</field>
+        </record>
+
+        <record id="demo_requisition_line_emergency_1" model="manufacturing.material.requisition.line">
+            <field name="requisition_id" ref="demo_requisition_emergency"/>
+            <field name="product_id" ref="product.product_product_11"/>
+            <field name="qty_required">2</field>
+            <field name="unit_price">125.00</field>
+            <field name="required_date" eval="DateTime.now().strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="reason">Emergency replacement bearing</field>
+        </record>
+
+        <!-- Demo Shop Floor Terminal -->
+        <record id="demo_shop_floor_terminal_1" model="shop.floor.terminal">
+            <field name="name">Production Line 1 Terminal</field>
+            <field name="work_center_id" ref="mrp.mrp_workcenter_1"/>
+            <field name="location">Building A - Production Floor</field>
+            <field name="ip_address">192.168.1.100</field>
+            <field name="has_barcode_scanner">True</field>
+            <field name="has_camera">True</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- Demo Manufacturing Shift -->
+        <record id="demo_shift_morning" model="manufacturing.shift">
+            <field name="name">Morning Shift</field>
+            <field name="start_time">6.0</field>
+            <field name="end_time">14.0</field>
+            <field name="supervisor_id" ref="base.user_admin"/>
+            <field name="monday">True</field>
+            <field name="tuesday">True</field>
+            <field name="wednesday">True</field>
+            <field name="thursday">True</field>
+            <field name="friday">True</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- Demo Approval Limits -->
+        <record id="demo_approval_limit_operator" model="shop.floor.approval.limits">
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="work_center_id" ref="mrp.mrp_workcenter_1"/>
+            <field name="max_amount">500.00</field>
+            <field name="can_approve_emergency">False</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- Demo Requisition Template -->
+        <record id="demo_requisition_template_1" model="manufacturing.requisition.template">
+            <field name="name">Standard Maintenance Kit</field>
+            <field name="requisition_type">maintenance_material</field>
+            <field name="description">Standard kit for routine maintenance activities</field>
+            <field name="active">True</field>
+        </record>
+
+        <record id="demo_template_line_1" model="manufacturing.requisition.template.line">
+            <field name="template_id" ref="demo_requisition_template_1"/>
+            <field name="product_id" ref="product.product_product_11"/>
+            <field name="qty_standard">2</field>
+            <field name="notes">Standard bearing set</field>
+        </record>
+
+        <record id="demo_template_line_2" model="manufacturing.requisition.template.line">
+            <field name="template_id" ref="demo_requisition_template_1"/>
+            <field name="product_id" ref="product.product_product_12"/>
+            <field name="qty_standard">5</field>
+            <field name="notes">Lubricant oil</field>
+        </record>
+    </data>
+</odoo> 

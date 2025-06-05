@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Quality Check Extension for Requisitions -->
+        <record id="view_quality_check_form_requisition" model="ir.ui.view">
+            <field name="name">quality.check.form.requisition</field>
+            <field name="model">quality.check</field>
+            <field name="inherit_id" ref="quality_control.quality_check_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_id']" position="after">
+                    <field name="requisition_id" readonly="1" attrs="{'invisible': [('requisition_id', '=', False)]}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Manufacturing Requisition Quality View -->
+        <record id="view_manufacturing_requisition_quality_form" model="ir.ui.view">
+            <field name="name">manufacturing.requisition.quality.form</field>
+            <field name="model">manufacturing.material.requisition</field>
+            <field name="inherit_id" ref="view_manufacturing_material_requisition_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@string='Additional Information']" position="after">
+                    <page string="Quality Control" attrs="{'invisible': [('quality_check_required', '=', False)]}">
+                        <group>
+                            <field name="quality_check_required"/>
+                            <field name="quality_check_ids" readonly="1">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="test_type_id"/>
+                                    <field name="quality_state"/>
+                                    <field name="control_date"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Quality Integration Dashboard -->
+        <record id="view_quality_integration_dashboard" model="ir.ui.view">
+            <field name="name">quality.integration.dashboard</field>
+            <field name="model">manufacturing.quality.integration</field>
+            <field name="arch" type="xml">
+                <form string="Quality Dashboard" class="o_dashboard">
+                    <sheet>
+                        <group col="3">
+                            <group string="Quality Status">
+                                <field name="quality_state" widget="badge"/>
+                                <field name="quality_score" widget="progressbar"/>
+                            </group>
+                            <group string="Test Results">
+                                <field name="test_passed" widget="boolean_toggle"/>
+                                <field name="test_date" widget="datetime"/>
+                            </group>
+                            <group string="Compliance">
+                                <field name="compliance_status" widget="badge"/>
+                                <field name="certificate_number" readonly="1"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo> 

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Sequences for Manufacturing Requisitions -->
+        <record id="seq_manufacturing_requisition" model="ir.sequence">
+            <field name="name">Manufacturing Material Requisition</field>
+            <field name="code">manufacturing.material.requisition</field>
+            <field name="prefix">MR</field>
+            <field name="padding">5</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="seq_shop_floor_requisition" model="ir.sequence">
+            <field name="name">Shop Floor Requisition</field>
+            <field name="code">shop.floor.requisition</field>
+            <field name="prefix">SF</field>
+            <field name="padding">5</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+        <record id="seq_emergency_requisition" model="ir.sequence">
+            <field name="name">Emergency Requisition</field>
+            <field name="code">emergency.requisition</field>
+            <field name="prefix">EM</field>
+            <field name="padding">5</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        
+    </data>
+</odoo> 

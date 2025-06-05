@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Inventory Integration Views - Placeholder -->
+
+        <!-- Inherit Stock Move to Add Requisition Reference -->
+        <record id="view_stock_move_form_requisition" model="ir.ui.view">
+            <field name="name">stock.move.form.requisition</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='origin']" position="after">
+                    <field name="requisition_id" readonly="1" attrs="{'invisible': [('requisition_id', '=', False)]}"/>
+                    <field name="requisition_line_id" readonly="1" attrs="{'invisible': [('requisition_line_id', '=', False)]}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Inherit Stock Picking to Add Requisition Reference -->
+        <record id="view_stock_picking_form_requisition" model="ir.ui.view">
+            <field name="name">stock.picking.form.requisition</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='origin']" position="after">
+                    <field name="requisition_id" readonly="1" attrs="{'invisible': [('requisition_id', '=', False)]}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Inventory Status Dashboard -->
+        <record id="view_inventory_requisition_dashboard" model="ir.ui.view">
+            <field name="name">inventory.requisition.dashboard</field>
+            <field name="model">manufacturing.material.requisition</field>
+            <field name="arch" type="xml">
+                <form string="Inventory Status" class="o_dashboard">
+                    <sheet>
+                        <group col="3">
+                            <group string="Stock Availability">
+                                <field name="inventory_available" widget="boolean_toggle"/>
+                                <field name="inventory_check_date" widget="datetime"/>
+                            </group>
+                            <group string="Transfer Status">
+                                <field name="picking_count" widget="statinfo"/>
+                                <button name="action_view_pickings" type="object" string="View Transfers" class="oe_link"/>
+                            </group>
+                            <group string="Location Info">
+                                <field name="location_id"/>
+                                <field name="dest_location_id"/>
+                            </group>
+                        </group>
+                        <field name="inventory_notes" placeholder="Inventory notes..."/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo> 
