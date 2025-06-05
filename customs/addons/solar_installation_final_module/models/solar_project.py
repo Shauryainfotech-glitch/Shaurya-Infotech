@@ -26,13 +26,8 @@ class SolarProject(models.Model):
         required=True,
         default=lambda self: self.env.company
     )
-    customer_id = fields.Many2one(
-        comodel_name="res.partner",
-        string="Customer",
-        required=True,
-        domain="[('customer_rank', '>', 0)]",
-        tracking=True
-    )
+    customer_id = fields.Many2one('res.partner', string='Customer', domain=[('is_company', '=', True)])
+    
     project_name = fields.Char(
         string="Project Name",
         required=True,
