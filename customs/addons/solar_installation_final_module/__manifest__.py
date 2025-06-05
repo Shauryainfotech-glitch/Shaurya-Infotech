@@ -41,5 +41,8 @@
         'views/solar_install_schedule_views.xml',
         'views/solar_site_survey_views.xml',
         'views/solar_install_menu.xml',
+        'views/solar_product_action.xml',
+        'views/solar_install_team_views.xml',
+        'views/solar_project_product_line_views.xml',
     ],
 }
