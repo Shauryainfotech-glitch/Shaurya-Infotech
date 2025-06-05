@@ -26,3 +26,54 @@
 
     </data>
 </odoo>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Rate Schedule Views -->
+        <record id="view_architect_rate_schedule_tree" model="ir.ui.view">
+            <field name="name">architect.rate.schedule.tree</field>
+            <field name="model">architect.rate.schedule</field>
+            <field name="arch" type="xml">
+                <tree string="Rate Schedules">
+                    <field name="name"/>
+                    <field name="schedule_type"/>
+                    <field name="state"/>
+                    <field name="effective_date"/>
+                    <field name="version"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_architect_rate_schedule_form" model="ir.ui.view">
+            <field name="name">architect.rate.schedule.form</field>
+            <field name="model">architect.rate.schedule</field>
+            <field name="arch" type="xml">
+                <form string="Rate Schedule">
+                    <header>
+                        <button name="action_activate" string="Activate" type="object" class="btn-primary"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="schedule_type"/>
+                                <field name="version"/>
+                            </group>
+                            <group>
+                                <field name="effective_date"/>
+                                <field name="state"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Description">
+                                <field name="description"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>
+</process>

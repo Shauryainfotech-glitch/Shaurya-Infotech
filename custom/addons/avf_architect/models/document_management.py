@@ -200,11 +200,12 @@ class ArchitectDocument(models.Model):
     shared_with_client = fields.Boolean(string='Shared with Client')
     active = fields.Boolean(default=True)
 
-    @api.model
-    def create(self, vals):
-        if 'submission_date' not in vals and vals.get('state') == 'submitted':
-            vals['submission_date'] = fields.Date.today()
-        return super().create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if 'submission_date' not in vals and vals.get('state') == 'submitted':
+                vals['submission_date'] = fields.Date.today()
+        return super().create(vals_list)
 
     def action_submit(self):
         self.write({

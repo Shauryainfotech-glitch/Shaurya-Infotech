@@ -258,7 +258,7 @@ class ArchitectBudgetLine(models.Model):
     remaining_amount = fields.Monetary(string='Remaining Amount', 
                                       compute='_compute_spent_amount', store=True)
     
-    currency_id = fields.Related('budget_id.currency_id', store=True)
+    currency_id = fields.related('budget_id.currency_id', store=True)
     
     # Analysis
     utilization_percentage = fields.Float(string='Utilization (%)', 

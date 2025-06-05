@@ -63,3 +63,56 @@
 
     </data>
 </odoo>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Compliance Management Views -->
+        <record id="view_architect_compliance_tree" model="ir.ui.view">
+            <field name="name">architect.compliance.tree</field>
+            <field name="model">architect.compliance</field>
+            <field name="arch" type="xml">
+                <tree string="Compliance Tracking">
+                    <field name="compliance_number"/>
+                    <field name="project_id"/>
+                    <field name="compliance_type"/>
+                    <field name="state"/>
+                    <field name="submission_date"/>
+                    <field name="approval_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_architect_compliance_form" model="ir.ui.view">
+            <field name="name">architect.compliance.form</field>
+            <field name="model">architect.compliance</field>
+            <field name="arch" type="xml">
+                <form string="Compliance">
+                    <header>
+                        <button name="action_submit" string="Submit" type="object" class="btn-primary"/>
+                        <button name="action_approve" string="Approve" type="object" class="btn-success"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="compliance_number"/>
+                                <field name="project_id"/>
+                                <field name="compliance_type"/>
+                            </group>
+                            <group>
+                                <field name="submission_date"/>
+                                <field name="approval_date"/>
+                                <field name="expiry_date"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Description">
+                                <field name="description"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>
