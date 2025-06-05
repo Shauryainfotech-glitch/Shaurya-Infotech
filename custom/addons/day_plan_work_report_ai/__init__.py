@@ -4,12 +4,12 @@ _logger = logging.getLogger(__name__)
 from . import models
 from . import report
 
-# Import wizards if the module exists
+# Import wizard if the module exists
 try:
-    from . import wizards
+    from . import wizard  # Changed from 'wizards' to 'wizard' to match directory name
 except ImportError:
-    # If wizards.py doesn't exist, we can safely ignore it
-    _logger.debug("wizards.py not found, skipping import")
+    # If wizard directory doesn't exist, we can safely ignore it
+    _logger.debug("wizard directory not found, skipping import")
 
 def post_init_hook(env):
     """Post-init hook to perform actions after module installation.

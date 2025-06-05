@@ -12,8 +12,8 @@ class DayPlanDashboardAlias(models.Model):
     """
     _name = 'day.plan.dashboard'
     _description = 'Day Plan Dashboard (Alias)'
-    _inherit = ['day.plan.dashboard.clean']
-    _table = 'day_plan_dashboard_clean'  # Use same table as the original model
+    _inherit = 'day.plan.dashboard.clean'
+    # Changed _inherit from list notation to string notation for proper inheritance
 
     @api.model
     def get_dashboard_data(self, date_range='week', employee_id=False, department_id=False):

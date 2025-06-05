@@ -19,7 +19,7 @@ class DayPlanTask(models.Model):
         ('in_progress', 'In Progress'),
         ('done', 'Done'),
         ('cancelled', 'Cancelled')
-    ], default='todo', string="Status", tracking=True)
+    ], default='todo', string="Status")
     estimated_hours = fields.Float(string="Estimated Hours")
     actual_hours = fields.Float(string="Actual Hours")
     progress = fields.Float(string="Progress %", default=0.0)

@@ -93,17 +93,17 @@ class AIAnalysis(models.Model):
         ('processing', 'Processing'),
         ('done', 'Completed'),
         ('failed', 'Failed')
-    ], string="Status", default='draft', tracking=True)
+    ], string="Status", default='draft')
     error_message = fields.Text(string="Error Message")
     
     # Metrics and Insights
-    productivity_score = fields.Float(string="Productivity Score", tracking=True, 
+    productivity_score = fields.Float(string="Productivity Score", 
                                      help="Overall productivity rating from 0-100")
-    efficiency_rating = fields.Float(string="Efficiency Rating", tracking=True,
+    efficiency_rating = fields.Float(string="Efficiency Rating",
                                     help="Measure of time management effectiveness from 0-100")
-    wellbeing_assessment = fields.Float(string="Wellbeing Assessment", tracking=True,
+    wellbeing_assessment = fields.Float(string="Wellbeing Assessment",
                                        help="Work-life balance indicator from 0-100")
-    focus_score = fields.Float(string="Focus Score", tracking=True,
+    focus_score = fields.Float(string="Focus Score",
                               help="Ability to maintain concentration on priority tasks")
     
     # Textual Analysis
