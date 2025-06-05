@@ -31,15 +31,23 @@
         'product'
     ],
     'data': [
-        'data/ir_sequence_data.xml',  # Ensure this path is correct
+        # Data files first
+        'data/ir_sequence_data.xml',
+
+        # Security files
         'security/solar_security.xml',
         'security/ir.model.access.csv',
+
+        # View files
         'views/solar_install_skill_views.xml',
         'views/solar_product_views.xml',
         'views/solar_project_views.xml',
         'views/solar_quote_views.xml',
         'views/solar_install_schedule_views.xml',
         'views/solar_site_survey_views.xml',
+        'views/solar_install_team_views.xml',
         'views/solar_install_menu.xml',
     ],
+    'demo': [],
+    'qweb': [],
 }

@@ -3,8 +3,6 @@ from odoo import models, fields, api
 from odoo.exceptions import ValidationError, UserError
 from datetime import timedelta
 
-
-
 class SolarProject(models.Model):
     _name = "solar.project"
     _description = "Solar Installation Project"
@@ -21,19 +19,24 @@ class SolarProject(models.Model):
         tracking=True
     )
     company_id = fields.Many2one(
-        'res.company', 
+        'res.company',
         string='Company',
         required=True,
         default=lambda self: self.env.company
     )
-    customer_id = fields.Many2one('res.partner', string='Customer', domain=[('is_company', '=', True)])
+    customer_id = fields.Many2one(
+        'res.partner',
+        string='Customer',
+        domain=[('is_company', '=', True)],
+        tracking=True
+    )
 
     project_name = fields.Char(
         string="Project Name",
         required=True,
         tracking=True
     )
-    active_id = fields.Many2one('some.related.model', string="Active ID")  # Add the correct field type based on your requirements
+
     # Address and Location
     site_address = fields.Char(
         string="Site Address",
@@ -160,6 +163,19 @@ class SolarProject(models.Model):
         compute="_compute_schedule_count"
     )
 
+    # Additional computed fields for analytics
+    progress = fields.Float(
+        string="Progress",
+        compute="_compute_progress",
+        store=True,
+        help="Project completion progress in percentage"
+    )
+    days_to_deadline = fields.Integer(
+        string="Days to Deadline",
+        compute="_compute_days_to_deadline",
+        store=True
+    )
+
     # Miscellaneous
     notes = fields.Text(string="Internal Notes")
     description = fields.Html(string="Project Description")
@@ -181,19 +197,6 @@ class SolarProject(models.Model):
                     rec.current_quote_id = rec.quote_ids.sorted(key='quote_date', reverse=True)[0]
                 else:
                     rec.current_quote_id = False
-
-    # Additional computed fields for analytics
-    progress = fields.Float(
-        string="Progress",
-        compute="_compute_progress",
-        store=True,
-        help="Project completion progress in percentage"
-    )
-    days_to_deadline = fields.Integer(
-        string="Days to Deadline",
-        compute="_compute_days_to_deadline",
-        store=True
-    )
 
     @api.constrains('scheduled_start_date', 'scheduled_end_date')
     def _check_dates(self):
@@ -263,7 +266,7 @@ class SolarProject(models.Model):
         }
         for record in self:
             if record.state == 'in_progress' and record.schedule_ids:
-                completed_schedules = len(record.schedule_ids.filtered(lambda s: s.state == 'completed'))
+                completed_schedules = len(record.schedule_ids.filtered(lambda s: s.state == 'done'))
                 total_schedules = len(record.schedule_ids)
                 base_progress = state_progress['in_progress']
                 additional_progress = (completed_schedules / total_schedules) * 20 if total_schedules else 0
