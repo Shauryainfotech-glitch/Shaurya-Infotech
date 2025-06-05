@@ -146,6 +146,13 @@ class SolarProduct(models.Model):
         readonly=True
     )
 
+    project_id = fields.Many2one(
+        comodel_name="solar.project",
+        string="Related Project",
+        required=True,
+        ondelete="cascade",
+        tracking=True
+    )
     active = fields.Boolean(string="Active", default=True)
 
     @api.model
