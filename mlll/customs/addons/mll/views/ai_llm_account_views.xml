@@ -11,7 +11,8 @@
                 <field name="provider_id"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="current_usage" widget="progressbar" options="{'max_value': 'usage_limit'}"/>
-                <field name="usage_limit" invisible="1"/>
+                <!-- usage_limit field is required for progressbar widget max_value -->
+                <field name="usage_limit" invisible="1" force_save="1"/>
                 <field name="state" widget="badge" decoration-success="state == 'active'" decoration-warning="state == 'suspended'"/>
             </list>
         </field>

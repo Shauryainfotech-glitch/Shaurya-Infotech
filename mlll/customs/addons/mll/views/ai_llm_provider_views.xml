@@ -46,7 +46,7 @@
                     <notebook>
                         <page string="Advanced Settings">
                             <group>
-                                <field name="id" invisible="1"/>
+                                <!-- Advanced configuration fields can be added here -->
                             </group>
                         </page>
                     </notebook>

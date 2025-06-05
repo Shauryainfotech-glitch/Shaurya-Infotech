@@ -1,10 +1,11 @@
 /** @odoo-module **/
 
 import { Component } from "@odoo/owl";
+import { useState } from "@odoo/owl";  // Added missing useState import
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
-export class AiAssistantWidget extends Component {
+class AiAssistantWidget extends Component {
     setup() {
         this.orm = useService("orm");
         this.action = useService("action");
@@ -20,10 +21,11 @@ export class AiAssistantWidget extends Component {
                 "action_open_ai_assistant",
                 [resId]
             );
-            this.action.doAction(action);
+            await this.action.doAction(action);  // Added await for better error handling
         } catch (error) {
+            console.error("AI Assistant Error:", error);  // Added error logging
             this.notification.add(
-                "Error opening AI Assistant",
+                error.message || "Error opening AI Assistant",
                 { type: "danger" }
             );
         }
@@ -32,11 +34,14 @@ export class AiAssistantWidget extends Component {
 
 AiAssistantWidget.template = "ai_llm_integration.AiAssistantWidget";
 
-// Register the widget
-registry.category("view_widgets").add("ai_assistant", AiAssistantWidget);
+// Register the widget with error handling
+try {
+    registry.category("view_widgets").add("ai_assistant", AiAssistantWidget);
+} catch (error) {
+    console.error("Failed to register AI Assistant widget:", error);
+}
 
-// AI Chat Widget for universal access
-export class AiChatWidget extends Component {
+class AiChatWidget extends Component {
     setup() {
         this.orm = useService("orm");
         this.action = useService("action");
@@ -62,14 +67,14 @@ export class AiChatWidget extends Component {
         this.state.inputText = "";
         this.state.isLoading = true;
         
-        // Add user message to chat
-        this.state.messages.push({
-            role: "user",
-            content: userMessage,
-            timestamp: new Date()
-        });
-        
         try {
+            // Add user message to chat
+            this.state.messages.push({
+                role: "user",
+                content: userMessage,
+                timestamp: new Date()
+            });
+            
             // Open AI content generator
             const action = await this.orm.call(
                 "ai.content.generator",
@@ -80,7 +85,7 @@ export class AiChatWidget extends Component {
                 }]
             );
             
-            this.action.doAction({
+            await this.action.doAction({
                 type: "ir.actions.act_window",
                 res_model: "ai.content.generator",
                 res_id: action,
@@ -89,8 +94,9 @@ export class AiChatWidget extends Component {
             });
             
         } catch (error) {
+            console.error("AI Chat Error:", error);  // Added error logging
             this.notification.add(
-                "Error sending message to AI",
+                error.message || "Error sending message to AI",
                 { type: "danger" }
             );
         } finally {
@@ -108,5 +114,12 @@ export class AiChatWidget extends Component {
 
 AiChatWidget.template = "ai_llm_integration.AiChatWidget";
 
-// Register the chat widget
-registry.category("view_widgets").add("ai_chat", AiChatWidget);
+// Register the chat widget with error handling
+try {
+    registry.category("view_widgets").add("ai_chat", AiChatWidget);
+} catch (error) {
+    console.error("Failed to register AI Chat widget:", error);
+}
+
+// Export the widgets for potential external use
+export { AiAssistantWidget, AiChatWidget };
