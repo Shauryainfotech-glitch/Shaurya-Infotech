@@ -4,7 +4,7 @@
     <record id="view_ai_llm_provider_tree" model="ir.ui.view">
         <field name="name">ai.llm.provider.tree</field>
         <field name="model">ai.llm.provider</field>
-        <field name="type">tree</field>
+        <field name="type">list</field>
         <field name="arch" type="xml">
             <tree string="AI Providers">
                 <field name="sequence" widget="handle"/>

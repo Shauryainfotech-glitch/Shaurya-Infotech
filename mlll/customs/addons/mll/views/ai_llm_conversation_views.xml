@@ -4,7 +4,7 @@
     <record id="view_ai_llm_conversation_tree" model="ir.ui.view">
         <field name="name">ai.llm.conversation.tree</field>
         <field name="model">ai.llm.conversation</field>
-        <field name="type">tree</field>
+        <field name="type">list</field>
         <field name="arch" type="xml">
             <tree string="AI Conversations">
                 <field name="name"/>

@@ -4,7 +4,7 @@
     <record id="view_ai_llm_account_tree" model="ir.ui.view">
         <field name="name">ai.llm.account.tree</field>
         <field name="model">ai.llm.account</field>
-        <field name="type">tree</field>
+        <field name="type">list</field>
         <field name="arch" type="xml">
             <tree string="AI Accounts" decoration-warning="state=='suspended'" decoration-muted="state=='draft'">
                 <field name="display_name"/>
