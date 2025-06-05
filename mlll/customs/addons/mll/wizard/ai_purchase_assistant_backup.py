@@ -412,3 +412,5 @@ class AiPurchaseAssistant(models.TransientModel):
         analysis.append("   - Leverage market intelligence in negotiations")
         
         self.ai_response = "\n".join(analysis)
+
+
