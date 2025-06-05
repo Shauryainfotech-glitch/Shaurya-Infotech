@@ -29,7 +29,9 @@
                     <button name="action_activate" type="object" string="Activate" 
                             class="oe_highlight" invisible="state != 'draft'"/>
                     <button name="action_suspend" type="object" string="Suspend" 
-                            invisible="state != 'active'" confirm="Are you sure you want to suspend this account?"/>
+                            invisible="state != 'active'" 
+                            confirm="Are you sure you want to suspend this account?"
+                            aria-label="Suspend AI account"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,active,suspended"/>
                 </header>
                 <sheet>
