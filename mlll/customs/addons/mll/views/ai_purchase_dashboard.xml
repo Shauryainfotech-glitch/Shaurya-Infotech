@@ -34,7 +34,7 @@
                 <field name="ai_vendor_suggestions"/>
                 <field name="ai_negotiation_tips"/>
                 <templates>
-                    <t t-name="kanban-box">
+                    <t t-name="card">
                         <div class="oe_kanban_card oe_kanban_global_click">
                             <div class="o_kanban_record_top">
                                 <div class="o_kanban_record_headings">
@@ -89,6 +89,7 @@
     <record id="view_purchase_order_tree_ai_enhanced" model="ir.ui.view">
         <field name="name">purchase.order.tree.ai.enhanced</field>
         <field name="model">purchase.order</field>
+        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree>
                 <field name="name"/>
@@ -102,13 +103,11 @@
                        decoration-success="state == 'purchase'"/>
                 <!-- AI Insights Columns -->
                 <field name="ai_vendor_suggestions" 
-                       string="AI Vendor Score" 
-                       widget="badge"
+                       string="AI Vendor Suggestions" 
                        optional="show"
                        groups="mll.group_ai_user"/>
                 <field name="ai_negotiation_tips" 
-                       string="AI Tips Available" 
-                       widget="boolean"
+                       string="AI Negotiation Tips" 
                        optional="show"
                        groups="mll.group_ai_user"/>
                 <!-- Quick Actions -->

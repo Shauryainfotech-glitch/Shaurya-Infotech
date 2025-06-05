@@ -45,8 +45,8 @@
         <field name="inherit_id" ref="purchase.purchase_order_tree"/>
         <field name="arch" type="xml">
             <field name="state" position="after">
-                <field name="ai_vendor_suggestions" optional="show" widget="badge"/>
-                <field name="ai_negotiation_tips" optional="show" widget="badge"/>
+                <field name="ai_vendor_suggestions" optional="show"/>
+                <field name="ai_negotiation_tips" optional="show"/>
             </field>
         </field>
     </record>
