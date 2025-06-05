@@ -1,190 +1,275 @@
-# AI LLM Integration for Odoo 18
+# AI LLM Integration Module
 
-A comprehensive AI Large Language Model integration module for Odoo 18 that provides intelligent assistance, automation, and insights across all Odoo modules.
+## Overview
 
-## Features
+The AI LLM Integration module provides comprehensive AI-powered assistance across all Odoo modules, with specialized focus on Purchase Management. This module integrates Large Language Models (LLMs) to enhance productivity, automate content generation, and provide intelligent insights.
 
-- **Universal AI Assistant**: Accessible from any Odoo module with context-aware responses
-- **Multi-Provider Support**: OpenAI, Anthropic, Google AI, and custom providers
-- **Automated Content Generation**: Generate emails, descriptions, summaries, and analysis
-- **Conversation History**: Track and manage AI interactions
-- **Security & Access Control**: Role-based permissions and usage limits
-- **Cross-Module Integration**: AI capabilities added to Partners, Sales, Projects, HR, and Accounting
+## Key Features
 
-## Installation
+### Core AI Integration
+- **Multiple LLM Provider Support**: OpenAI, Anthropic Claude, and extensible architecture for additional providers
+- **Context-Aware AI**: Intelligent understanding of business context across all modules
+- **Conversation History**: Complete tracking of AI interactions
+- **Security Groups**: Granular permission control for AI features
 
-1. **Copy Module**: Place the `ai_llm_integration` folder in your Odoo addons directory
-2. **Update Apps List**: Go to Apps menu and click "Update Apps List"
-3. **Install Module**: Search for "AI LLM Integration" and click Install
+### AI Purchase Assistant & Vendor Guide
+
+The module includes advanced AI-powered purchase management capabilities:
+
+#### 🔍 **Vendor Discovery & Analysis**
+- **Smart Vendor Search**: AI analyzes product requirements and suggests alternative vendors
+- **Performance Scoring**: Automated vendor scoring based on historical data, delivery performance, and quality metrics
+- **Category Matching**: Intelligent matching of vendors to product categories
+- **Geographic Optimization**: Consider location factors in vendor recommendations
+
+#### 💰 **Price Analysis & Optimization**
+- **Historical Price Tracking**: Compare current prices with historical averages
+- **Market Trend Analysis**: Identify price trends and seasonal patterns
+- **Volume Discount Opportunities**: Suggest bulk purchasing strategies
+- **Cost Optimization**: Recommendations for reducing procurement costs
+
+#### 🤝 **Negotiation Strategy**
+- **Vendor Relationship Analysis**: Leverage historical business relationships
+- **Negotiation Tips**: AI-generated strategies based on vendor behavior patterns
+- **Timing Optimization**: Identify best times for negotiations (end of quarter, seasonal patterns)
+- **Competitive Leverage**: Use market intelligence for better negotiations
+
+#### ⚠️ **Risk Assessment**
+- **Vendor Concentration Risk**: Alert on over-dependence on single vendors
+- **Single Source Risk**: Identify products with limited supplier options
+- **Delivery Risk Assessment**: Evaluate timeline and capacity risks
+- **Quality Risk Indicators**: Flag potential quality issues
+
+#### 📊 **Market Intelligence**
+- **Category Analysis**: Deep insights into product category markets
+- **Price Benchmarking**: Compare prices across vendors and time periods
+- **Supply Chain Insights**: Market conditions and supplier landscape analysis
+- **Procurement Recommendations**: Strategic purchasing advice
+
+## Installation & Setup
+
+### Prerequisites
+- Odoo 16.0 or later
+- Python packages: `requests`, `json`
+- AI Provider API keys (OpenAI, Anthropic, etc.)
+
+### Installation Steps
+
+1. **Install the Module**
+   ```bash
+   # Copy module to addons directory
+   cp -r mll /path/to/odoo/addons/
+   
+   # Update module list and install
+   odoo-bin -d your_database -u mll
+   ```
+
+2. **Configure AI Providers**
+   - Navigate to `AI Assistant → AI Providers`
+   - Configure your preferred LLM providers with API credentials
+
+3. **Set Up AI Accounts**
+   - Go to `AI Assistant → AI Accounts`
+   - Create accounts linking providers with usage limits and user permissions
+
+4. **Configure Security Groups**
+   - Assign users to appropriate AI security groups:
+     - `AI User`: Basic AI features access
+     - `AI Manager`: Advanced features and analytics
+     - `AI Administrator`: Full configuration access
+
+## Usage Guide
+
+### Purchase Team Workflow
+
+#### 1. **AI Purchase Dashboard**
+Access the enhanced purchase dashboard via `Purchase → AI Purchase Assistant → AI Dashboard`
+
+Features:
+- Kanban view with AI insights badges
+- Quick access to vendor analysis
+- Real-time AI recommendations display
+
+#### 2. **Vendor Analysis Workflow**
+
+**Step 1: Create/Open Purchase Order**
+- Create a new purchase order or open existing draft order
+- Add product lines with quantities and specifications
+
+**Step 2: Launch AI Analysis**
+- Click "AI Vendor Analysis" button in the purchase order
+- Select analysis type:
+  - **Find Alternative Vendors**: Discover new supplier options
+  - **Price Analysis**: Compare current pricing with market data
+  - **Negotiation Strategy**: Get tailored negotiation advice
+  - **Risk Assessment**: Identify potential procurement risks
+  - **Market Analysis**: Understand market conditions
+
+**Step 3: Review AI Recommendations**
+- Analyze vendor suggestions with performance scores
+- Review negotiation tips and market insights
+- Use "Contact Vendor" or "Create RFQ" for recommended suppliers
+
+**Step 4: Execute Procurement Strategy**
+- Apply AI recommendations to your procurement process
+- Track results and vendor performance
+- Build historical data for improved future recommendations
+
+#### 3. **Advanced Features**
+
+**AI Insights Tab**
+Every purchase order includes an "AI Insights" tab showing:
+- Vendor suggestions with performance metrics
+- Negotiation tips based on vendor history
+- Market intelligence and pricing trends
+
+**Automated Vendor Scoring**
+The system automatically calculates vendor scores based on:
+- Historical delivery performance
+- Order frequency and reliability
+- Geographic proximity
+- Quality ratings (if available)
+- Business relationship value
+
+**Smart Notifications**
+AI-powered alerts for:
+- Price anomalies (above historical average)
+- Vendor concentration risks
+- Single-source dependencies
+- Optimal negotiation timing
+
+## AI Capabilities by Module
+
+### Sales Management
+- Quotation content generation
+- Product description enhancement
+- Customer communication optimization
+
+### Project Management
+- Task description generation
+- Project planning assistance
+- Resource allocation recommendations
+
+### Human Resources
+- Employee profile insights
+- Performance analysis support
+- Training recommendations
+
+### Accounting
+- Invoice analysis and categorization
+- Financial report insights
+- Expense optimization suggestions
+
+## Security & Permissions
+
+### Security Groups
+- **AI User** (`mll.group_ai_user`): Basic AI features
+- **AI Manager** (`mll.group_ai_manager`): Advanced analytics and management
+- **AI Administrator** (`mll.group_ai_admin`): Full system configuration
+
+### Data Protection
+- API keys are encrypted and access-controlled
+- Conversation history is user-specific
+- Sensitive fields are protected by security groups
+- Audit trail for all AI interactions
 
 ## Configuration
 
-### 1. Configure AI Providers
+### AI Provider Setup
+1. Navigate to `AI Assistant → AI Providers`
+2. Configure providers:
+   - **OpenAI**: Requires API key and model selection
+   - **Anthropic Claude**: Requires API key and model version
+   - **Custom Providers**: Extensible architecture for additional LLMs
 
-Navigate to **AI Assistant > Configuration > AI Providers**
+### Account Management
+1. Go to `AI Assistant → AI Accounts`
+2. Create accounts with:
+   - Provider selection
+   - API credentials (admin-only access)
+   - Usage limits and monitoring
+   - User access permissions
 
-Default providers are pre-configured:
-- OpenAI GPT-4
-- OpenAI GPT-3.5 Turbo
-- Anthropic Claude 3
-- Google Gemini Pro
-
-### 2. Create AI Accounts
-
-Navigate to **AI Assistant > AI Accounts**
-
-1. Click "Create"
-2. Enter account name
-3. Select provider
-4. Enter API key (obtain from provider's website)
-5. Set usage limits
-6. Assign users (optional - leave empty for all users)
-7. Click "Activate"
-
-### 3. Assign User Permissions
-
-Navigate to **Settings > Users & Companies > Users**
-
-Assign appropriate AI groups:
-- **AI User**: Basic access to AI features
-- **AI Manager**: Can manage accounts and view all conversations
-- **AI Administrator**: Full access including provider configuration
-
-## Usage
-
-### Universal AI Assistant
-
-1. **From Any Record**: Click the "AI Assistant" button on any form view
-2. **Chat Widget**: Use the floating AI chat widget (if enabled)
-3. **Menu Access**: Navigate to AI Assistant menu for conversations
-
-### Content Generation
-
-The AI assistant can help with:
-
-- **Summaries**: Generate concise summaries of records
-- **Emails**: Draft professional emails
-- **Descriptions**: Create product or service descriptions
-- **Analysis**: Analyze data and provide insights
-- **Custom Requests**: Any specific AI assistance needed
-
-### Context-Aware Assistance
-
-The AI automatically understands the context of your current record:
-
-- **Partners**: Knows customer/vendor details, contact info, history
-- **Sales Orders**: Understands order details, products, amounts
-- **Projects**: Aware of tasks, deadlines, team members
-- **Invoices**: Knows billing details, amounts, due dates
-- **Employees**: Understands roles, departments, managers
-
-## API Integration
-
-### Getting API Keys
-
-#### OpenAI
-1. Visit [OpenAI Platform](https://platform.openai.com/)
-2. Create account or sign in
-3. Navigate to API Keys section
-4. Create new secret key
-5. Copy and paste into Odoo AI Account
-
-#### Anthropic
-1. Visit [Anthropic Console](https://console.anthropic.com/)
-2. Create account or sign in
-3. Navigate to API Keys
-4. Generate new key
-5. Copy and paste into Odoo AI Account
-
-#### Google AI
-1. Visit [Google AI Studio](https://makersuite.google.com/)
-2. Create account or sign in
-3. Generate API key
-4. Copy and paste into Odoo AI Account
-
-## Security
-
-### Data Protection
-- API keys are encrypted and only visible to administrators
-- Conversations are isolated by user (unless manager/admin)
-- Company-based access control for multi-company setups
-
-### Usage Controls
-- Monthly usage limits per account
-- Rate limiting to prevent abuse
-- Audit trail of all AI interactions
-
-## Customization
-
-### Adding AI to Custom Models
-
-```python
-class MyCustomModel(models.Model):
-    _name = 'my.custom.model'
-    _inherit = ['my.custom.model', 'ai.llm.mixin']
-    
-    def _get_ai_context(self):
-        """Provide model-specific context for AI"""
-        context = super()._get_ai_context()
-        context_data = json.loads(context)
-        context_data.update({
-            'custom_field': self.custom_field,
-            'related_data': self.related_id.name,
-        })
-        return json.dumps(context_data)
-```
-
-### Custom Prompt Types
-
-Extend the wizard to add custom prompt types:
-
-```python
-class AiContentGenerator(models.TransientModel):
-    _inherit = 'ai.content.generator'
-    
-    prompt_type = fields.Selection(
-        selection_add=[
-            ('custom_type', 'My Custom Type'),
-        ]
-    )
-```
+### Usage Monitoring
+- Track API usage per account
+- Monitor costs and limits
+- Performance analytics
+- User activity reports
 
 ## Troubleshooting
 
 ### Common Issues
 
-1. **"No active AI account available"**
-   - Ensure at least one AI account is activated
-   - Check user permissions
-   - Verify API key is correct
+**AI Features Not Visible**
+- Check user security group assignments
+- Verify module installation and dependencies
+- Ensure AI accounts are properly configured
 
-2. **API Connection Errors**
-   - Verify API key is valid
-   - Check internet connectivity
-   - Ensure API endpoint is correct
+**API Connection Errors**
+- Verify API keys are correct and active
+- Check internet connectivity
+- Validate provider account status and limits
 
-3. **Permission Denied**
-   - Check user has appropriate AI group assigned
-   - Verify account user restrictions
+**Performance Issues**
+- Monitor API usage and rate limits
+- Optimize conversation history cleanup
+- Review system resources and database performance
 
-### Debug Mode
+### Support & Maintenance
 
-Enable developer mode to access:
-- Conversation metadata
-- API request/response details
-- Error logs
+**Regular Maintenance**
+- Monitor API usage and costs
+- Update provider configurations as needed
+- Review and clean conversation history
+- Update security permissions as organization changes
 
-## Support
+**Performance Optimization**
+- Implement caching for frequently accessed AI insights
+- Optimize database queries for large datasets
+- Consider API rate limiting for high-volume usage
 
-For issues and feature requests:
-1. Check the conversation logs in AI Assistant > Conversations
-2. Review Odoo logs for detailed error messages
-3. Verify API provider status and quotas
+## Extending the Module
+
+### Adding New AI Providers
+1. Extend the `ai.llm.provider` model
+2. Implement provider-specific API integration
+3. Add configuration fields and validation
+4. Update security and access controls
+
+### Custom AI Features
+1. Inherit from `ai.llm.mixin` for new models
+2. Implement context-specific AI methods
+3. Create custom wizards for specialized workflows
+4. Add appropriate security and permissions
+
+### Integration with Other Modules
+The module is designed for easy integration with custom Odoo modules:
+- Inherit from AI mixin classes
+- Implement model-specific context methods
+- Add AI-powered features to existing workflows
+
+## API Reference
+
+### Core Models
+- `ai.llm.provider`: LLM provider configuration
+- `ai.llm.account`: AI account management
+- `ai.llm.conversation`: Conversation tracking
+- `ai.llm.mixin`: Base AI functionality for models
+
+### Purchase-Specific Models
+- `ai.purchase.assistant`: Purchase analysis wizard
+- `ai.vendor.recommendation`: Vendor recommendation system
+
+### Key Methods
+- `_get_ai_context()`: Generate model-specific context
+- `action_ai_analyze_vendor()`: Launch vendor analysis
+- `_compute_ai_vendor_suggestions()`: Generate vendor recommendations
+- `_compute_ai_negotiation_tips()`: Create negotiation strategies
 
 ## License
 
-This module is licensed under LGPL-3.
+This module is licensed under LGPL-3. See LICENSE file for details.
 
-## Credits
+## Support
 
-Developed for Odoo 18 Community and Enterprise editions.
+For support and customization requests, contact your Odoo implementation partner or system administrator.
