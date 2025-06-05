@@ -27,13 +27,13 @@ class SolarProject(models.Model):
         default=lambda self: self.env.company
     )
     customer_id = fields.Many2one('res.partner', string='Customer', domain=[('is_company', '=', True)])
-    
+
     project_name = fields.Char(
         string="Project Name",
         required=True,
         tracking=True
     )
-
+    active_id = fields.Many2one('some.related.model', string="Active ID")  # Add the correct field type based on your requirements
     # Address and Location
     site_address = fields.Char(
         string="Site Address",

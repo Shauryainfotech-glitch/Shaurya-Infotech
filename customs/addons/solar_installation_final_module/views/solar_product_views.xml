@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
         <!-- Action for Solar Projects -->
@@ -42,7 +41,8 @@
 
                         <notebook>
                             <page string="Survey">
-                                <field name="survey_id" context="{'default_project_id': active_id}"/>
+                                <!-- Adjust the context or remove the reference to active_id -->
+                                <field name="survey_id"/>
                             </page>
                             <page string="Quotations">
                                 <field name="quote_ids">
