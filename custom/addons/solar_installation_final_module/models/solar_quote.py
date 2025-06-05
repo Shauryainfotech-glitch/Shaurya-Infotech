@@ -28,6 +28,13 @@ class SolarQuote(models.Model):
         required=True
     )
 
+    # Add discount_pct field (Float) for discount percentage
+    discount_pct = fields.Float(
+        string="Discount (%)",
+        default=0.0
+    )
+
+
     price_subtotal = fields.Monetary(
         string="Subtotal",
         compute='_compute_price_subtotal',
@@ -116,8 +123,8 @@ class SolarQuote(models.Model):
     @api.depends('unit_price', 'quantity')
     def _compute_price_subtotal(self):
         for line in self:
-            line.price_subtotal = line.unit_price * line.quantity
-
+            discounted_price = line.unit_price * (1 - (line.discount_pct / 100))
+            line.price_subtotal = discounted_price * line.quantity
     @api.depends('quote_date', 'validity_days')
     def _compute_expiration_date(self):
         """
