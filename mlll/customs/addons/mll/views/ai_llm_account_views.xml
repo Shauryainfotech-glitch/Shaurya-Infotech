@@ -6,7 +6,7 @@
         <field name="model">ai.llm.account</field>
         <field name="type">list</field>
         <field name="arch" type="xml">
-            <list string="AI Accounts" decoration-warning="state=='suspended'" decoration-muted="state=='draft'">
+            <list string="AI Accounts">
                 <field name="display_name"/>
                 <field name="provider_id"/>
                 <field name="company_id" groups="base.group_multi_company"/>

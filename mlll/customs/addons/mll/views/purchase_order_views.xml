@@ -12,7 +12,7 @@
                         string="AI Vendor Analysis" 
                         type="object" 
                         class="btn-primary"
-                        attrs="{'invisible': [('state', 'not in', ['draft', 'sent'])]}"
+                        invisible="state not in ['draft', 'sent']"
                         groups="mll.group_ai_user"/>
             </button>
             
@@ -44,14 +44,22 @@
         <field name="model">purchase.order</field>
         <field name="inherit_id" ref="purchase.purchase_order_tree"/>
         <field name="arch" type="xml">
-            <xpath expr="//tree" position="inside">
-                <header>
-                    <button name="action_ai_analyze_vendor" 
-                            string="AI Analysis" 
-                            type="object"
-                            groups="mll.group_ai_user"/>
-                </header>
-            </xpath>
+            <field name="state" position="after">
+                <field name="ai_vendor_suggestions" 
+                       string="AI Vendor Suggestions" 
+                       optional="show"
+                       groups="mll.group_ai_user"/>
+                <field name="ai_negotiation_tips" 
+                       string="AI Negotiation Tips" 
+                       optional="show"
+                       groups="mll.group_ai_user"/>
+                <!-- Quick Actions -->
+                <button name="action_ai_analyze_vendor" 
+                        string="AI Analysis" 
+                        type="object" 
+                        icon="fa-magic"
+                        groups="mll.group_ai_user"/>
+            </field>
         </field>
     </record>
 </odoo>
