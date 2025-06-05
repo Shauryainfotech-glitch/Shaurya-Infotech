@@ -59,13 +59,15 @@ class SolarProject(models.Model):
         ondelete="cascade",
         tracking=True
     )
+
     # Relationship to Site Survey
     survey_id = fields.Many2one(
         comodel_name="solar.site.survey",
         string="Site Survey",
         ondelete="set null",
         tracking=True,
-        help="Linked site survey for this project"
+        help="Linked site survey for this project",
+        context="{'default_project_id': project_id}"  # Corrected context for linking survey_id
     )
 
     # Relationship to Quotes/Proposals
@@ -187,14 +189,9 @@ class SolarProject(models.Model):
     notes = fields.Text(string="Internal Notes")
     description = fields.Html(string="Project Description")
 
+    # Method to compute the current active quote
     @api.depends('quote_ids', 'quote_ids.total_amount', 'quote_ids.state')
     def _compute_current_quote(self):
-        """
-        Compute the current active quote:
-          1. If any accepted, pick most recent accepted by quote_date.
-          2. Otherwise pick latest by quote_date.
-          3. If none exist, False.
-        """
         for rec in self:
             accepted = rec.quote_ids.filtered(lambda q: q.state == 'accepted')
             if accepted:
@@ -205,6 +202,7 @@ class SolarProject(models.Model):
                 else:
                     rec.current_quote_id = False
 
+    # Constraints
     @api.constrains('scheduled_start_date', 'scheduled_end_date')
     def _check_dates(self):
         for record in self:
@@ -220,47 +218,43 @@ class SolarProject(models.Model):
             if record.state == 'completed' and not record.actual_end_date:
                 raise ValidationError("Please set actual end date before marking project as completed!")
 
+    # Method to compute schedule dates
     @api.depends('schedule_ids.start_datetime', 'schedule_ids.end_datetime')
     def _compute_schedule_dates(self):
-        """
-        Earliest planned start and latest planned end from schedules.
-        """
         for rec in self:
             dates = rec.schedule_ids.mapped('start_datetime')
             ends = rec.schedule_ids.mapped('end_datetime')
             rec.scheduled_start_date = min(dates).date() if dates else False
             rec.scheduled_end_date = max(ends).date() if ends else False
 
+    # Method to compute the total quoted amount
     @api.depends('quote_ids', 'quote_ids.total_amount')
     def _compute_total_quote_amount(self):
-        """
-        Sum of all quote total_amounts (only accepted quotes).
-        """
         for rec in self:
             accepted_quotes = rec.quote_ids.filtered(lambda q: q.state == 'accepted')
             rec.total_quote_amount = sum(accepted_quotes.mapped('total_amount')) if accepted_quotes else 0.0
 
+    # Method to compute the total cost
     @api.depends('product_line_ids', 'product_line_ids.subtotal')
     def _compute_total_cost(self):
-        """
-        Sum of all BOM line subtotals (manual or standard cost).
-        """
         for rec in self:
             rec.total_cost = sum(rec.product_line_ids.mapped('subtotal')) if rec.product_line_ids else 0.0
 
+    # Method to compute product count
     @api.depends('product_line_ids')
     def _compute_product_count(self):
         for rec in self:
             rec.product_count = len(rec.product_line_ids)
 
+    # Method to compute schedule count
     @api.depends('schedule_ids')
     def _compute_schedule_count(self):
         for rec in self:
             rec.schedule_count = len(rec.schedule_ids)
 
+    # Method to compute project progress
     @api.depends('state', 'schedule_ids.state')
     def _compute_progress(self):
-        """Compute project progress based on state and schedule completion"""
         state_progress = {
             'draft': 0,
             'surveyed': 20,
@@ -281,9 +275,9 @@ class SolarProject(models.Model):
             else:
                 record.progress = state_progress.get(record.state, 0)
 
+    # Method to compute days to deadline
     @api.depends('scheduled_end_date')
     def _compute_days_to_deadline(self):
-        """Compute days remaining until project deadline"""
         today = fields.Date.context_today(self)
         for record in self:
             if record.scheduled_end_date:
@@ -294,9 +288,9 @@ class SolarProject(models.Model):
             else:
                 record.days_to_deadline = 0
 
+    # Method to update project info on customer change
     @api.onchange('customer_id')
     def _onchange_customer_id(self):
-        """Update project name and address when customer changes"""
         if self.customer_id:
             self.site_address = self.customer_id.street
             self.site_city = self.customer_id.city
@@ -306,27 +300,26 @@ class SolarProject(models.Model):
             if not self.project_name:
                 self.project_name = f"{self.customer_id.name}'s Solar Installation"
 
+    # Method to compute assigned teams
     @api.depends('schedule_ids.team_id')
     def _compute_assigned_teams(self):
         for rec in self:
             rec.team_ids = rec.schedule_ids.mapped('team_id')
 
+    # Action Methods
     def action_set_to_draft(self):
-        """Reset project to draft state"""
         self.ensure_one()
         if self.state not in ['cancelled', 'completed']:
             raise UserError("Only cancelled or completed projects can be reset to draft.")
         self.write({'state': 'draft'})
 
     def action_cancel_project(self):
-        """Cancel the project"""
         self.ensure_one()
         if self.state == 'completed':
             raise UserError("Cannot cancel a completed project.")
         self.write({'state': 'cancelled'})
 
     def action_mark_completed(self):
-        """Mark project as completed"""
         self.ensure_one()
         if not self.actual_end_date:
             self.actual_end_date = fields.Date.context_today(self)
