@@ -33,13 +33,15 @@ class AiAssistantWidget extends Component {
 }
 
 AiAssistantWidget.template = "ai_llm_integration.AiAssistantWidget";
+AiAssistantWidget.components = {};  // Define empty components object
 
-// Register the widget with error handling
-try {
-    registry.category("view_widgets").add("ai_assistant", AiAssistantWidget);
-} catch (error) {
-    console.error("Failed to register AI Assistant widget:", error);
-}
+// Register the widget with proper component definition
+registry.category("view_widgets").add("ai_assistant", {
+    component: AiAssistantWidget,
+    extractProps: ({ attrs, record }) => ({
+        record: record,
+    }),
+});
 
 class AiChatWidget extends Component {
     setup() {
@@ -113,13 +115,15 @@ class AiChatWidget extends Component {
 }
 
 AiChatWidget.template = "ai_llm_integration.AiChatWidget";
+AiChatWidget.components = {};  // Define empty components object
 
-// Register the chat widget with error handling
-try {
-    registry.category("view_widgets").add("ai_chat", AiChatWidget);
-} catch (error) {
-    console.error("Failed to register AI Chat widget:", error);
-}
+// Register the chat widget with proper component definition
+registry.category("view_widgets").add("ai_chat", {
+    component: AiChatWidget,
+    extractProps: ({ attrs, record }) => ({
+        record: record,
+    }),
+});
 
 // Export the widgets for potential external use
 export { AiAssistantWidget, AiChatWidget };

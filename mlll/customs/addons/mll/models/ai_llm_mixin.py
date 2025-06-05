@@ -7,13 +7,16 @@ class AiLlmMixin(models.AbstractModel):
     
     ai_conversation_ids = fields.One2many(
         'ai.llm.conversation',
+        'res_id',  # Missing relation field
         compute='_compute_ai_conversations',
-        string='AI Conversations'
+        string='AI Conversations',
+        groups='mll.group_ai_user'
     )
     
     ai_suggestions = fields.Text(
         string='AI Suggestions',
-        compute='_compute_ai_suggestions'
+        compute='_compute_ai_suggestions',
+        groups='mll.group_ai_user'
     )
     
     def _compute_ai_conversations(self):
