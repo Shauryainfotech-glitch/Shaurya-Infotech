@@ -21,6 +21,19 @@ class SolarQuote(models.Model):
     product_id = fields.Many2one('product.product', string="Product", required=True)
     quantity = fields.Float(string="Quantity", required=True)
     description = fields.Text(string="Description")
+
+    # Add unit_price field (Float) to store the unit price
+    unit_price = fields.Float(
+        string="Unit Price",
+        required=True
+    )
+
+    price_subtotal = fields.Monetary(
+        string="Subtotal",
+        compute='_compute_price_subtotal',
+        store=True
+    )
+
     project_id = fields.Many2one(
         comodel_name="solar.project",
         string="Related Project",
@@ -99,6 +112,11 @@ class SolarQuote(models.Model):
     )
     notes = fields.Text(string="Customer Notes")
     internal_notes = fields.Text(string="Internal Notes")
+
+    @api.depends('unit_price', 'quantity')
+    def _compute_price_subtotal(self):
+        for line in self:
+            line.price_subtotal = line.unit_price * line.quantity
 
     @api.depends('quote_date', 'validity_days')
     def _compute_expiration_date(self):
