@@ -1,4 +1,3 @@
-
 # -*- coding: utf-8 -*-
 
 from . import architect_project
@@ -13,5 +12,5 @@ from . import team_collaboration
 from . import client_portal
 from . import document_management
 from . import financial_tracking
-from . import res_partner
-from . import res_company
+# from . import res_partner  # Temporarily commented out
+# from . import res_company  # Temporarily commented out
