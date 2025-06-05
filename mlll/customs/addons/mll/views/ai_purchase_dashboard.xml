@@ -114,11 +114,4 @@
               parent="menu_ai_purchase_root" 
               action="action_ai_purchase_insights" 
               sequence="20"/>
-    
-    <!-- Add AI Assistant to Purchase Menu -->
-    <menuitem id="menu_ai_purchase_assistant" 
-              name="Purchase Assistant" 
-              parent="menu_ai_purchase_root" 
-              action="mll.action_ai_purchase_assistant" 
-              sequence="30"/>
 </odoo>
