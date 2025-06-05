@@ -58,7 +58,7 @@
         </record>
 
         <record id="fin_category_permits" model="architect.financial.category">
-            <field name="name">Permits & Approvals</field>
+            <field name="name">Permits &amp; Approvals</field>
             <field name="code">PRM</field>
             <field name="sequence">70</field>
             <field name="category_type">expense</field>
@@ -86,21 +86,21 @@
 
         <!-- Material Subcategories -->
         <record id="fin_subcat_concrete" model="architect.financial.subcategory">
-            <field name="name">Concrete & Cement</field>
+            <field name="name">Concrete &amp; Cement</field>
             <field name="category_id" ref="fin_category_materials"/>
             <field name="sequence">10</field>
             <field name="description">Concrete, cement, and related materials</field>
         </record>
 
         <record id="fin_subcat_steel" model="architect.financial.subcategory">
-            <field name="name">Steel & Reinforcement</field>
+            <field name="name">Steel &amp; Reinforcement</field>
             <field name="category_id" ref="fin_category_materials"/>
             <field name="sequence">20</field>
             <field name="description">Steel bars, structural steel, and reinforcement</field>
         </record>
 
         <record id="fin_subcat_bricks" model="architect.financial.subcategory">
-            <field name="name">Bricks & Blocks</field>
+            <field name="name">Bricks &amp; Blocks</field>
             <field name="category_id" ref="fin_category_materials"/>
             <field name="sequence">30</field>
             <field name="description">Bricks, blocks, and masonry materials</field>
@@ -144,7 +144,7 @@
         </record>
 
         <record id="fin_subcat_tools" model="architect.financial.subcategory">
-            <field name="name">Tools & Equipment</field>
+            <field name="name">Tools &amp; Equipment</field>
             <field name="category_id" ref="fin_category_equipment"/>
             <field name="sequence">20</field>
             <field name="description">Hand tools and small equipment</field>
