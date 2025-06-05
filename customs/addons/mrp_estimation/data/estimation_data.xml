@@ -67,8 +67,8 @@
             </field>
             <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="auto_delete" eval="True"/>
-            <field name="report_template" ref="action_report_estimation"/>
             <field name="report_name">Estimation_{{ (object.name or '').replace('/','_') }}</field>
+            <field name="report_template" eval="env.ref('mrp_estimation.action_report_estimation').id"/>
         </record>
 
         <!-- Activity Type for Estimation Approval -->
@@ -142,18 +142,21 @@
         <record id="cost_category_material" model="mrp.estimation.cost.category">
             <field name="name">Material Cost</field>
             <field name="code">MAT</field>
+            <field name="type">material</field>
             <field name="sequence">10</field>
         </record>
 
         <record id="cost_category_labor" model="mrp.estimation.cost.category">
             <field name="name">Labor Cost</field>
             <field name="code">LAB</field>
+            <field name="type">labor</field>
             <field name="sequence">20</field>
         </record>
 
         <record id="cost_category_overhead" model="mrp.estimation.cost.category">
             <field name="name">Overhead Cost</field>
             <field name="code">OVH</field>
+            <field name="type">overhead</field>
             <field name="sequence">30</field>
         </record>
 
@@ -161,6 +164,15 @@
             <field name="name">Other Cost</field>
             <field name="code">OTH</field>
             <field name="sequence">40</field>
+        </record>
+
+        <!-- Default Settings -->
+        <record id="default_estimation_settings" model="res.config.settings">
+            <field name="group_estimation_approver" eval="True"/>
+            <field name="estimation_auto_approve" eval="False"/>
+            <field name="estimation_approval_threshold" eval="1000.0"/>
+            <field name="estimation_default_validity" eval="30"/>
+            <field name="estimation_default_overhead" eval="10.0"/>
         </record>
 
     </data>

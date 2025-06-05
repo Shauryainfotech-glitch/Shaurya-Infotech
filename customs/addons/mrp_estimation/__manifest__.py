@@ -44,10 +44,11 @@
         # Data
         'data/estimation_sequence.xml',
         
-        # Reports
-        'reports/estimation_templates.xml',
+        # Reports (must be loaded before data)
         'report/estimation_report.xml',
+        'reports/estimation_templates.xml',
         
+        # Data (after reports)
         'data/estimation_data.xml',
         
         # Views
