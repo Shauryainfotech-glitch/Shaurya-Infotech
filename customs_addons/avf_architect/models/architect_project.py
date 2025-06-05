@@ -14,7 +14,12 @@ class ArchitectProject(models.Model):
     name = fields.Char(string='Project Name', required=True, tracking=True)
     code = fields.Char(string='Project Code', required=True, copy=False, tracking=True)
     description = fields.Text(string='Description')
-    
+    company_id = fields.Many2one(
+        'res.company',
+        string='Company',
+        default=lambda self: self.env.company,
+        index=True
+    )
     # Client Information
     partner_id = fields.Many2one('res.partner', string='Client', required=True, tracking=True)
     client_type = fields.Selection([
