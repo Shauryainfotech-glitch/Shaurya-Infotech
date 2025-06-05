@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Form View -->
+        <record id="view_create_estimation_version_wizard_form" model="ir.ui.view">
+            <field name="name">create.estimation.version.wizard.form</field>
+            <field name="model">create.estimation.version.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Create New Version">
+                    <sheet>
+                        <group>
+                            <field name="estimation_id" readonly="1"/>
+                            <field name="current_version" readonly="1"/>
+                            <field name="new_version" readonly="1"/>
+                            <field name="version_notes" required="1"/>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="action_create_version" string="Create Version" 
+                                type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_create_estimation_version_wizard" model="ir.actions.act_window">
+            <field name="name">Create New Version</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">create.estimation.version.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="binding_model_id" ref="model_mrp_estimation"/>
+            <field name="binding_view_types">form</field>
+        </record>
+
+    </data>
+</odoo>
