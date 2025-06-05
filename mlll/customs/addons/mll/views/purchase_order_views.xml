@@ -12,7 +12,7 @@
                         string="AI Vendor Analysis" 
                         type="object" 
                         class="btn-primary"
-                        attrs="{'invisible': [('state', 'not in', ['draft', 'sent'])]}"
+                        invisible="state not in ['draft', 'sent']"
                         groups="mll.group_ai_user"/>
             </button>
             

@@ -90,9 +90,7 @@
         <field name="name">purchase.order.tree.ai.enhanced</field>
         <field name="model">purchase.order</field>
         <field name="arch" type="xml">
-            <tree decoration-info="state == 'draft'" 
-                  decoration-warning="state == 'sent'" 
-                  decoration-success="state == 'purchase'">
+            <tree>
                 <field name="name"/>
                 <field name="partner_id"/>
                 <field name="date_order"/>

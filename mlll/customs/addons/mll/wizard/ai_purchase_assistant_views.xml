@@ -25,12 +25,12 @@
                         </group>
                     </group>
                     
-                    <notebook attrs="{'invisible': [('ai_response', '=', False)]}">
+                    <notebook invisible="not ai_response">
                         <page string="AI Analysis" name="ai_analysis">
                             <field name="ai_response" widget="text" readonly="1"/>
                         </page>
                         <page string="Vendor Recommendations" name="vendor_recommendations" 
-                              attrs="{'invisible': [('analysis_type', '!=', 'vendor_search')]}">
+                              invisible="analysis_type != 'vendor_search'">
                             <field name="vendor_recommendations">
                                 <tree>
                                     <field name="vendor_id"/>
@@ -76,7 +76,7 @@
                                 string="Analyze" 
                                 type="object" 
                                 class="btn-primary" 
-                                attrs="{'invisible': [('ai_response', '!=', False)]}"/>
+                                invisible="ai_response"/>
                         <button special="cancel" string="Close" class="btn-secondary"/>
                     </footer>
                 </sheet>
