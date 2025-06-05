@@ -11,6 +11,6 @@ try:
 except ImportError:
     _logger.debug("wizards.py not found, skipping import")
 
-def post_init_hook(cr, registry):
+def post_init_hook(registry):
     # Placeholder for post-init hook logic
     _logger.info("post_init_hook called for day_plan_work_report_ai module")
