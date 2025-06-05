@@ -22,7 +22,7 @@
                                nolabel="1" 
                                colspan="2"
                                style="min-height: 100px;"
-                               placeholder="What would you like AI to help you with?"/>
+                               help="What would you like AI to help you with?"/>
                     </group>
                     <group>
                         <field name="account_id" options="{'no_create': True}"/>
