@@ -35,7 +35,6 @@
         "web.assets_backend": [
             ("include", "https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"),
             "day_plan_work_report_ai/static/src/js/dashboard.js",
-            "day_plan_work_report_ai/static/src/js/new_dashboard_client_action.js",
             "day_plan_work_report_ai/static/src/views/day_plan_calendar/day_plan_calendar.js",
             "day_plan_work_report_ai/static/src/views/day_plan_calendar/day_plan_calendar.xml",
             "day_plan_work_report_ai/views/enhanced_dashboard_views.xml"
@@ -56,16 +55,3 @@
     * Comprehensive analysis types (daily, weekly, monthly)
     * Intelligent prompt engineering
     * Actionable metrics generation
-
-    AI Analysis Integration:
-    -----------------------
-    * Multiple AI Provider Support: Flexible integration with OpenAI (GPT-4),
-      Anthropic (Claude), and Google (Gemini) APIs, with a mock provider for testing.
-    * Comprehensive Analysis Types: Supports daily plan completion analysis,
-      work report insights, weekly summaries, monthly reviews, and productivity trend detection.
-    * Intelligent Prompt Engineering: Carefully crafted prompts extract meaningful
-      insights from AI providers based on structured work data.
-    * Actionable Metrics Generation: Produces productivity scores, efficiency ratings,
-      wellbeing assessments, and personalized improvement suggestions.
-    """
-}
