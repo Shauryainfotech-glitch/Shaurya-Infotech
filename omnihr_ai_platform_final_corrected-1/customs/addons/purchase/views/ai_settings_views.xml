@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- AI Settings Form View -->
+        <record id="view_purchase_ai_settings_form" model="ir.ui.view">
+            <field name="name">purchase.ai.settings.form</field>
+            <field name="model">purchase.ai.settings</field>
+            <field name="arch" type="xml">
+                <form string="AI Settings">
+                    <header>
+                        <button name="action_test_ai_connection" type="object" 
+                                string="Test AI Connection" class="btn-primary"/>
+                        <button name="action_reset_to_defaults" type="object" 
+                                string="Reset to Defaults" class="btn-secondary"
+                                confirm="Are you sure you want to reset all settings to defaults?"/>
+                    </header>
+                    
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+
+                        <notebook>
+                            <page string="Risk Assessment" name="risk_assessment">
+                                <group>
+                                    <group string="Risk Thresholds">
+                                        <field name="risk_threshold_low"/>
+                                        <field name="risk_threshold_medium"/>
+                                        <field name="risk_threshold_high"/>
+                                        <field name="risk_threshold_critical"/>
+                                    </group>
+                                    <group string="Approval Requirements">
+                                        <field name="auto_approve_low_risk"/>
+                                        <field name="require_approval_medium_risk"/>
+                                        <field name="require_approval_high_risk"/>
+                                        <field name="block_critical_risk"/>
+                                    </group>
+                                </group>
+                            </page>
+                            
+                            <page string="Vendor Suggestions" name="vendor_suggestions">
+                                <group>
+                                    <group string="Suggestion Limits">
+                                        <field name="max_vendor_suggestions"/>
+                                        <field name="min_confidence_score"/>
+                                        <field name="suggestion_refresh_interval"/>
+                                    </group>
+                                    <group string="Auto-Processing">
+                                        <field name="auto_generate_suggestions"/>
+                                        <field name="auto_accept_high_confidence"/>
+                                        <field name="high_confidence_threshold"/>
+                                    </group>
+                                </group>
+                            </page>
+                            
+                            <page string="Performance &amp; Caching" name="performance">
+                                <group>
+                                    <group string="Caching Settings">
+                                        <field name="enable_response_caching"/>
+                                        <field name="cache_expiry_hours"/>
+                                        <field name="max_cache_size_mb"/>
+                                    </group>
+                                    <group string="Performance Limits">
+                                        <field name="max_concurrent_requests"/>
+                                        <field name="request_timeout_seconds"/>
+                                        <field name="retry_attempts"/>
+                                    </group>
+                                </group>
+                            </page>
+                            
+                            <page string="Cost Management" name="cost_management">
+                                <group>
+                                    <group string="Budget Limits">
+                                        <field name="daily_budget_limit"/>
+                                        <field name="monthly_budget_limit"/>
+                                        <field name="cost_per_request_limit"/>
+                                    </group>
+                                    <group string="Usage Monitoring">
+                                        <field name="enable_cost_tracking"/>
+                                        <field name="cost_alert_threshold"/>
+                                        <field name="budget_alert_email"/>
+                                    </group>
+                                </group>
+                            </page>
+                            
+                            <page string="Data Retention" name="data_retention">
+                                <group>
+                                    <group string="Retention Periods (Days)">
+                                        <field name="request_log_retention_days"/>
+                                        <field name="cache_retention_days"/>
+                                        <field name="feedback_retention_days"/>
+                                    </group>
+                                    <group string="Cleanup Settings">
+                                        <field name="auto_cleanup_enabled"/>
+                                        <field name="cleanup_frequency_days"/>
+                                    </group>
+                                </group>
+                            </page>
+                            
+                            <page string="Vendor Scoring Weights" name="scoring_weights">
+                                <group>
+                                    <group string="Performance Weights">
+                                        <field name="weight_price_competitiveness"/>
+                                        <field name="weight_quality_history"/>
+                                        <field name="weight_delivery_reliability"/>
+                                    </group>
+                                    <group string="Relationship Weights">
+                                        <field name="weight_relationship_score"/>
+                                        <field name="weight_compliance_rating"/>
+                                        <field name="weight_capacity_match"/>
+                                    </group>
+                                </group>
+                                
+                                <group>
+                                    <group string="Additional Weights">
+                                        <field name="weight_geographic_proximity"/>
+                                        <field name="weight_payment_terms"/>
+                                    </group>
+                                    <group string="Weight Validation">
+                                        <field name="total_weight" readonly="1"/>
+                                        <button name="action_normalize_weights" type="object" 
+                                                string="Normalize Weights" class="btn-secondary"
+                                                help="Adjust weights to sum to 1.0"/>
+                                    </group>
+                                </group>
+                            </page>
+                            
+                            <page string="Advanced Settings" name="advanced">
+                                <group>
+                                    <group string="AI Model Settings">
+                                        <field name="default_ai_model"/>
+                                        <field name="fallback_ai_model"/>
+                                        <field name="ai_temperature"/>
+                                        <field name="max_tokens"/>
+                                    </group>
+                                    <group string="Integration Settings">
+                                        <field name="enable_external_data_sources"/>
+                                        <field name="external_api_timeout"/>
+                                        <field name="enable_webhook_notifications"/>
+                                    </group>
+                                </group>
+                                
+                                <group>
+                                    <group string="Debug Settings">
+                                        <field name="debug_mode"/>
+                                        <field name="log_ai_requests"/>
+                                        <field name="log_ai_responses"/>
+                                    </group>
+                                    <group string="Security">
+                                        <field name="encrypt_api_keys"/>
+                                        <field name="require_ssl"/>
+                                        <field name="ip_whitelist"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- AI Settings Tree View -->
+        <record id="view_purchase_ai_settings_tree" model="ir.ui.view">
+            <field name="name">purchase.ai.settings.tree</field>
+            <field name="model">purchase.ai.settings</field>
+            <field name="arch" type="xml">
+                <tree string="AI Settings" create="false" delete="false">
+                    <field name="name"/>
+                    <field name="risk_threshold_high"/>
+                    <field name="max_vendor_suggestions"/>
+                    <field name="enable_response_caching"/>
+                    <field name="daily_budget_limit"/>
+                    <field name="last_updated"/>
+                    <field name="updated_by"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- AI Settings Action -->
+        <record id="action_purchase_ai_settings" model="ir.actions.act_window">
+            <field name="name">AI Settings</field>
+            <field name="res_model">purchase.ai.settings</field>
+            <field name="view_mode">form,tree</field>
+            <field name="target">current</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Configure AI Settings
+                </p>
+                <p>
+                    Configure AI parameters, thresholds, and performance settings
+                    for the Purchase AI module.
+                </p>
+            </field>
+        </record>
+
+        <!-- Vendor Scoring Weights Form View -->
+        <record id="view_vendor_scoring_weights_form" model="ir.ui.view">
+            <field name="name">vendor.scoring.weights.form</field>
+            <field name="model">vendor.scoring.weights</field>
+            <field name="arch" type="xml">
+                <form string="Vendor Scoring Weights">
+                    <header>
+                        <button name="action_normalize_weights" type="object" 
+                                string="Normalize Weights" class="btn-primary"/>
+                        <button name="action_set_as_current" type="object" 
+                                string="Set as Current" class="btn-success"
+                                attrs="{'invisible': [('is_current', '=', True)]}"/>
+                        <field name="is_current" widget="statusbar"/>
+                    </header>
+                    
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+
+                        <group>
+                            <group string="Basic Information">
+                                <field name="version"/>
+                                <field name="description"/>
+                                <field name="effective_date"/>
+                            </group>
+                            <group string="Validation">
+                                <field name="total_weight" readonly="1"/>
+                                <field name="is_normalized" readonly="1"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Performance Factors" name="performance">
+                                <group>
+                                    <group string="Core Performance">
+                                        <field name="price_competitiveness"/>
+                                        <field name="quality_history"/>
+                                        <field name="delivery_reliability"/>
+                                    </group>
+                                    <group string="Operational">
+                                        <field name="capacity_match"/>
+                                        <field name="geographic_proximity"/>
+                                    </group>
+                                </group>
+                            </page>
+                            
+                            <page string="Relationship Factors" name="relationship">
+                                <group>
+                                    <group string="Business Relationship">
+                                        <field name="relationship_score"/>
+                                        <field name="payment_terms"/>
+                                    </group>
+                                    <group string="Compliance">
+                                        <field name="compliance_rating"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Vendor Scoring Weights Tree View -->
+        <record id="view_vendor_scoring_weights_tree" model="ir.ui.view">
+            <field name="name">vendor.scoring.weights.tree</field>
+            <field name="model">vendor.scoring.weights</field>
+            <field name="arch" type="xml">
+                <tree string="Vendor Scoring Weights" 
+                      decoration-success="is_current == True"
+                      decoration-muted="is_current == False">
+                    <field name="name"/>
+                    <field name="version"/>
+                    <field name="effective_date"/>
+                    <field name="total_weight"/>
+                    <field name="is_normalized"/>
+                    <field name="is_current"/>
+                    <button name="action_set_as_current" type="object" 
+                            string="Set Current" class="btn-sm btn-success"
+                            attrs="{'invisible': [('is_current', '=', True)]}"
+                            icon="fa-check"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Vendor Scoring Weights Action -->
+        <record id="action_vendor_scoring_weights" model="ir.actions.act_window">
+            <field name="name">Vendor Scoring Weights</field>
+            <field name="res_model">vendor.scoring.weights</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No scoring weights configured
+                </p>
+                <p>
+                    Create vendor scoring weight configurations to customize
+                    how AI evaluates and ranks vendors.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo> 

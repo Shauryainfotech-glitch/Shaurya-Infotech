@@ -1,0 +1,34 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_purchase_ai_service_manager,purchase.ai.service.manager,model_purchase_ai_service,purchase.group_purchase_manager,1,1,1,1
+access_purchase_ai_service_user,purchase.ai.service.user,model_purchase_ai_service,purchase.group_purchase_user,1,0,0,0
+access_purchase_ai_settings_manager,purchase.ai.settings.manager,model_purchase_ai_settings,purchase.group_purchase_manager,1,1,1,0
+access_purchase_ai_settings_user,purchase.ai.settings.user,model_purchase_ai_settings,purchase.group_purchase_user,1,0,0,0
+access_vendor_creation_request_manager,vendor.creation.request.manager,model_vendor_creation_request,purchase.group_purchase_manager,1,1,1,1
+access_vendor_creation_request_user,vendor.creation.request.user,model_vendor_creation_request,purchase.group_purchase_user,1,1,1,0
+access_purchase_vendor_suggestion_manager,purchase.vendor.suggestion.manager,model_purchase_vendor_suggestion,purchase.group_purchase_manager,1,1,1,1
+access_purchase_vendor_suggestion_user,purchase.vendor.suggestion.user,model_purchase_vendor_suggestion,purchase.group_purchase_user,1,1,1,0
+access_ai_cache_manager,ai.cache.manager,model_ai_cache,purchase.group_purchase_manager,1,1,1,1
+access_ai_cache_user,ai.cache.user,model_ai_cache,purchase.group_purchase_user,1,0,0,0
+access_ai_processing_queue_manager,ai.processing.queue.manager,model_ai_processing_queue,purchase.group_purchase_manager,1,1,1,1
+access_ai_processing_queue_user,ai.processing.queue.user,model_ai_processing_queue,purchase.group_purchase_user,1,0,0,0
+access_ai_audit_log_manager,ai.audit.log.manager,model_ai_audit_log,purchase.group_purchase_manager,1,1,1,1
+access_ai_audit_log_user,ai.audit.log.user,model_ai_audit_log,purchase.group_purchase_user,1,0,0,0
+access_vendor_suggestion_feedback_manager,vendor.suggestion.feedback.manager,model_vendor_suggestion_feedback,purchase.group_purchase_manager,1,1,1,1
+access_vendor_suggestion_feedback_user,vendor.suggestion.feedback.user,model_vendor_suggestion_feedback,purchase.group_purchase_user,1,1,1,0
+access_ai_performance_metrics_manager,ai.performance.metrics.manager,model_ai_performance_metrics,purchase.group_purchase_manager,1,1,1,1
+access_ai_performance_metrics_user,ai.performance.metrics.user,model_ai_performance_metrics,purchase.group_purchase_user,1,0,0,0
+access_vendor_scoring_weights_manager,vendor.scoring.weights.manager,model_vendor_scoring_weights,purchase.group_purchase_manager,1,1,1,1
+access_vendor_scoring_weights_user,vendor.scoring.weights.user,model_vendor_scoring_weights,purchase.group_purchase_user,1,0,0,0
+access_vendor_enrichment_manager,vendor.enrichment.manager,model_vendor_enrichment,purchase.group_purchase_manager,1,1,1,1
+access_vendor_enrichment_user,vendor.enrichment.user,model_vendor_enrichment,purchase.group_purchase_user,1,1,1,0
+access_risk_assessment_manager,risk.assessment.manager,model_risk_assessment,purchase.group_purchase_manager,1,1,1,1
+access_risk_assessment_user,risk.assessment.user,model_risk_assessment,purchase.group_purchase_user,1,1,1,0
+access_document_analysis_manager,document.analysis.manager,model_document_analysis,purchase.group_purchase_manager,1,1,1,1
+access_document_analysis_user,document.analysis.user,model_document_analysis,purchase.group_purchase_user,1,1,1,0
+access_vendor_rejection_wizard_manager,vendor.rejection.wizard manager,model_vendor_rejection_wizard,purchase.group_purchase_manager,1,1,1,1
+access_vendor_rejection_wizard_user,vendor.rejection.wizard user,model_vendor_rejection_wizard,purchase.group_purchase_user,1,1,1,1
+access_vendor_suggestion_feedback_wizard_manager,vendor.suggestion.feedback.wizard manager,model_vendor_suggestion_feedback_wizard,purchase.group_purchase_manager,1,1,1,1
+access_vendor_suggestion_feedback_wizard_user,vendor.suggestion.feedback.wizard user,model_vendor_suggestion_feedback_wizard,purchase.group_purchase_user,1,1,1,1
+access_purchase_ai_override_wizard_manager,purchase.ai.override.wizard manager,model_purchase_ai_override_wizard,purchase.group_purchase_manager,1,1,1,1
+access_purchase_ai_override_manager,purchase.ai.override.manager,model_purchase_ai_override,purchase.group_purchase_manager,1,1,1,1
+access_purchase_ai_override_user,purchase.ai.override.user,model_purchase_ai_override,purchase.group_purchase_user,1,1,1,0 

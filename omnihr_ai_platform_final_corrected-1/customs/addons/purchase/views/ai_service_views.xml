@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- AI Service Tree View -->
+        <record id="view_purchase_ai_service_tree" model="ir.ui.view">
+            <field name="name">purchase.ai.service.tree</field>
+            <field name="model">purchase.ai.service</field>
+            <field name="arch" type="xml">
+                <tree string="AI Services" decoration-muted="not active" decoration-success="active">
+                    <field name="name"/>
+                    <field name="provider"/>
+                    <field name="usage_type"/>
+                    <field name="priority"/>
+                    <field name="active"/>
+                    <field name="total_requests"/>
+                    <field name="successful_requests"/>
+                    <field name="avg_response_time"/>
+                    <field name="total_cost"/>
+                    <field name="last_used"/>
+                    <button name="action_test_connection" type="object" 
+                            string="Test" class="btn-primary" 
+                            icon="fa-play" title="Test Connection"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- AI Service Form View -->
+        <record id="view_purchase_ai_service_form" model="ir.ui.view">
+            <field name="name">purchase.ai.service.form</field>
+            <field name="model">purchase.ai.service</field>
+            <field name="arch" type="xml">
+                <form string="AI Service">
+                    <header>
+                        <button name="action_test_connection" type="object" 
+                                string="Test Connection" class="btn-primary"/>
+                        <button name="action_view_logs" type="object" 
+                                string="View Logs" class="btn-secondary"/>
+                        <field name="active" widget="boolean_toggle"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Service Name"/>
+                            </h1>
+                        </div>
+                        
+                        <group>
+                            <group name="basic_info" string="Basic Information">
+                                <field name="provider"/>
+                                <field name="usage_type"/>
+                                <field name="priority"/>
+                                <field name="model_name"/>
+                            </group>
+                            <group name="connection" string="Connection">
+                                <field name="api_key" password="True"/>
+                                <field name="api_endpoint"/>
+                                <field name="timeout"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Configuration" name="config">
+                                <group>
+                                    <group string="AI Parameters">
+                                        <field name="temperature"/>
+                                        <field name="max_tokens"/>
+                                    </group>
+                                    <group string="Rate Limiting">
+                                        <field name="rate_limit_per_minute"/>
+                                        <field name="rate_limit_per_hour"/>
+                                        <field name="max_retries"/>
+                                        <field name="retry_delay"/>
+                                    </group>
+                                </group>
+                            </page>
+                            
+                            <page string="Performance" name="performance">
+                                <group>
+                                    <group string="Usage Statistics">
+                                        <field name="total_requests" readonly="1"/>
+                                        <field name="successful_requests" readonly="1"/>
+                                        <field name="failed_requests" readonly="1"/>
+                                        <field name="avg_response_time" readonly="1"/>
+                                        <field name="last_used" readonly="1"/>
+                                    </group>
+                                    <group string="Cost Tracking">
+                                        <field name="cost_per_1k_tokens"/>
+                                        <field name="total_tokens_used" readonly="1"/>
+                                        <field name="total_cost" readonly="1"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- AI Service Kanban View -->
+        <record id="view_purchase_ai_service_kanban" model="ir.ui.view">
+            <field name="name">purchase.ai.service.kanban</field>
+            <field name="model">purchase.ai.service</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="name"/>
+                    <field name="provider"/>
+                    <field name="usage_type"/>
+                    <field name="active"/>
+                    <field name="total_requests"/>
+                    <field name="successful_requests"/>
+                    <field name="total_cost"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_card oe_kanban_global_click #{record.active.raw_value ? '' : 'o_kanban_color_2'}">
+                                <div class="o_kanban_content">
+                                    <div class="o_kanban_primary_left">
+                                        <div class="o_primary">
+                                            <span><t t-esc="record.name.value"/></span>
+                                        </div>
+                                        <div class="o_secondary">
+                                            <i class="fa fa-cog"/> <t t-esc="record.provider.value"/>
+                                            | <t t-esc="record.usage_type.value"/>
+                                        </div>
+                                    </div>
+                                    <div class="o_kanban_primary_right">
+                                        <div class="badge badge-pill badge-info">
+                                            <t t-esc="record.total_requests.value"/> calls
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_footer">
+                                    <div class="o_kanban_footer_left">
+                                        <span class="badge badge-success" t-if="record.active.raw_value">Active</span>
+                                        <span class="badge badge-secondary" t-if="!record.active.raw_value">Inactive</span>
+                                    </div>
+                                    <div class="o_kanban_footer_right">
+                                        <span>$<t t-esc="record.total_cost.value"/></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- AI Service Action -->
+        <record id="action_purchase_ai_service" model="ir.actions.act_window">
+            <field name="name">AI Services</field>
+            <field name="res_model">purchase.ai.service</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Configure AI Services for Purchase Management
+                </p>
+                <p>
+                    Set up AI providers like Claude, OpenAI, and Gemini to power
+                    vendor suggestions, risk assessment, and document analysis.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo> 

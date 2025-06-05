@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Vendor Creation Request Tree View -->
+        <record id="view_vendor_creation_request_tree" model="ir.ui.view">
+            <field name="name">vendor.creation.request.tree</field>
+            <field name="model">vendor.creation.request</field>
+            <field name="arch" type="xml">
+                <tree string="Vendor Creation Requests" 
+                      decoration-info="state == 'draft'" 
+                      decoration-warning="state == 'pending_approval'"
+                      decoration-success="state == 'approved'"
+                      decoration-danger="state == 'rejected'">
+                    <field name="name"/>
+                    <field name="vendor_name"/>
+                    <field name="requested_by"/>
+                    <field name="priority"/>
+                    <field name="state"/>
+                    <field name="ai_risk_score" widget="progressbar"/>
+                    <field name="enrichment_progress" widget="progressbar"/>
+                    <field name="create_date"/>
+                    <field name="approval_required"/>
+                    <button name="action_start_data_enrichment" type="object" 
+                            string="Start Enrichment" class="btn-primary" 
+                            attrs="{'invisible': [('state', '!=', 'draft')]}"
+                            icon="fa-play"/>
+                    <button name="action_approve" type="object" 
+                            string="Approve" class="btn-success" 
+                            attrs="{'invisible': [('state', '!=', 'pending_approval')]}"
+                            icon="fa-check"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Vendor Creation Request Form View -->
+        <record id="view_vendor_creation_request_form" model="ir.ui.view">
+            <field name="name">vendor.creation.request.form</field>
+            <field name="model">vendor.creation.request</field>
+            <field name="arch" type="xml">
+                <form string="Vendor Creation Request">
+                    <header>
+                        <button name="action_start_data_enrichment" type="object" 
+                                string="Start Data Enrichment" class="btn-primary"
+                                attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                        <button name="action_submit_to_ai_review" type="object" 
+                                string="Submit to AI Review" class="btn-primary"
+                                attrs="{'invisible': [('state', '!=', 'data_enrichment')]}"/>
+                        <button name="action_approve" type="object" 
+                                string="Approve" class="btn-success"
+                                attrs="{'invisible': [('state', '!=', 'pending_approval')]}"/>
+                        <button name="action_reject" type="object" 
+                                string="Reject" class="btn-danger"
+                                attrs="{'invisible': [('state', 'not in', ['pending_approval', 'ai_review'])]}"/>
+                        <button name="action_rerun_ai_analysis" type="object" 
+                                string="Rerun AI Analysis" class="btn-secondary"
+                                attrs="{'invisible': [('state', 'in', ['approved', 'rejected'])]}"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,data_enrichment,ai_review,pending_approval,approved"/>
+                    </header>
+                    
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_view_vendor" type="object" 
+                                    class="oe_stat_button" icon="fa-user"
+                                    attrs="{'invisible': [('approved_vendor_id', '=', False)]}">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_text">View</span>
+                                    <span class="o_stat_text">Vendor</span>
+                                </div>
+                            </button>
+                        </div>
+                        
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                            <h2>
+                                <field name="vendor_name" placeholder="Vendor Name"/>
+                            </h2>
+                        </div>
+
+                        <group>
+                            <group name="basic_info" string="Basic Information">
+                                <field name="requested_by" readonly="1"/>
+                                <field name="vendor_category"/>
+                                <field name="priority"/>
+                                <field name="expected_annual_spend"/>
+                                <field name="currency_id"/>
+                            </group>
+                            <group name="contact_info" string="Contact Information">
+                                <field name="vendor_email"/>
+                                <field name="vendor_phone"/>
+                                <field name="vendor_website"/>
+                            </group>
+                        </group>
+
+                        <group string="Address">
+                            <field name="vendor_address" nolabel="1"/>
+                        </group>
+
+                        <notebook>
+                            <page string="Vendor Details" name="details">
+                                <group>
+                                    <field name="raw_vendor_input" string="Raw Vendor Data"/>
+                                    <field name="additional_notes"/>
+                                </group>
+                            </page>
+                            
+                            <page string="AI Analysis" name="ai_analysis" 
+                                  attrs="{'invisible': [('state', '=', 'draft')]}">
+                                <group>
+                                    <group string="Risk Assessment">
+                                        <field name="ai_risk_score" widget="progressbar"/>
+                                        <field name="approval_required" readonly="1"/>
+                                        <field name="last_ai_analysis" readonly="1"/>
+                                    </group>
+                                    <group string="Enrichment Status">
+                                        <field name="enrichment_progress" widget="progressbar"/>
+                                        <field name="enrichment_status" readonly="1"/>
+                                    </group>
+                                </group>
+                                
+                                <group string="AI Recommendations" 
+                                       attrs="{'invisible': [('ai_recommendations', '=', False)]}">
+                                    <field name="ai_recommendations" nolabel="1" readonly="1"/>
+                                </group>
+                                
+                                <group string="Risk Components" 
+                                       attrs="{'invisible': [('risk_components', '=', False)]}">
+                                    <field name="risk_components" widget="json" readonly="1"/>
+                                </group>
+                            </page>
+                            
+                            <page string="Enriched Data" name="enriched_data" 
+                                  attrs="{'invisible': [('enriched_data', '=', False)]}">
+                                <group>
+                                    <field name="enriched_data" widget="json" readonly="1"/>
+                                </group>
+                            </page>
+                            
+                            <page string="Financial Data" name="financial_data" 
+                                  attrs="{'invisible': [('financial_data', '=', False)]}">
+                                <group>
+                                    <field name="financial_data" widget="json" readonly="1"/>
+                                </group>
+                            </page>
+                            
+                            <page string="Compliance Data" name="compliance_data" 
+                                  attrs="{'invisible': [('compliance_data', '=', False)]}">
+                                <group>
+                                    <field name="compliance_data" widget="json" readonly="1"/>
+                                </group>
+                            </page>
+                            
+                            <page string="Market Intelligence" name="market_data" 
+                                  attrs="{'invisible': [('market_data', '=', False)]}">
+                                <group>
+                                    <field name="market_data" widget="json" readonly="1"/>
+                                </group>
+                            </page>
+                            
+                            <page string="Documents" name="documents">
+                                <field name="document_ids">
+                                    <tree>
+                                        <field name="name"/>
+                                        <field name="mimetype"/>
+                                        <field name="file_size"/>
+                                        <field name="create_date"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            
+                            <page string="Approval" name="approval" 
+                                  attrs="{'invisible': [('state', 'not in', ['pending_approval', 'approved', 'rejected'])]}">
+                                <group>
+                                    <group string="Approval Details">
+                                        <field name="approved_by" readonly="1"/>
+                                        <field name="approval_date" readonly="1"/>
+                                        <field name="approved_vendor_id" readonly="1"/>
+                                    </group>
+                                    <group string="Rejection Details" 
+                                           attrs="{'invisible': [('state', '!=', 'rejected')]}">
+                                        <field name="rejection_reason" readonly="1"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Vendor Creation Request Kanban View -->
+        <record id="view_vendor_creation_request_kanban" model="ir.ui.view">
+            <field name="name">vendor.creation.request.kanban</field>
+            <field name="model">vendor.creation.request</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="state" class="o_kanban_small_column">
+                    <field name="name"/>
+                    <field name="vendor_name"/>
+                    <field name="state"/>
+                    <field name="priority"/>
+                    <field name="ai_risk_score"/>
+                    <field name="enrichment_progress"/>
+                    <field name="requested_by"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                <div class="o_kanban_content">
+                                    <div class="o_kanban_primary_left">
+                                        <div class="o_primary">
+                                            <span><t t-esc="record.vendor_name.value"/></span>
+                                        </div>
+                                        <div class="o_secondary">
+                                            <t t-esc="record.name.value"/>
+                                        </div>
+                                        <div class="o_secondary">
+                                            <i class="fa fa-user"/> <t t-esc="record.requested_by.value"/>
+                                        </div>
+                                    </div>
+                                    <div class="o_kanban_primary_right">
+                                        <div class="badge badge-pill" 
+                                             t-attf-class="badge-#{record.priority.raw_value == 'urgent' ? 'danger' : record.priority.raw_value == 'high' ? 'warning' : 'info'}">
+                                            <t t-esc="record.priority.value"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_footer">
+                                    <div class="o_kanban_footer_left">
+                                        <span t-if="record.ai_risk_score.raw_value > 0">
+                                            Risk: <t t-esc="Math.round(record.ai_risk_score.raw_value * 100)"/>%
+                                        </span>
+                                    </div>
+                                    <div class="o_kanban_footer_right">
+                                        <span t-if="record.enrichment_progress.raw_value > 0">
+                                            <t t-esc="Math.round(record.enrichment_progress.raw_value)"/>% enriched
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Vendor Creation Request Action -->
+        <record id="action_vendor_creation_request" model="ir.actions.act_window">
+            <field name="name">Vendor Creation Requests</field>
+            <field name="res_model">vendor.creation.request</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new vendor creation request
+                </p>
+                <p>
+                    Start the AI-powered vendor creation process with automated
+                    data enrichment, risk assessment, and approval workflows.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo> 

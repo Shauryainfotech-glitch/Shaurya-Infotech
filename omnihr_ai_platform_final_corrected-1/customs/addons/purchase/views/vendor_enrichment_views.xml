@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Vendor Enrichment Tree View -->
+        <record id="view_vendor_enrichment_tree" model="ir.ui.view">
+            <field name="name">vendor.enrichment.tree</field>
+            <field name="model">vendor.enrichment</field>
+            <field name="arch" type="xml">
+                <tree string="Vendor Enrichment" 
+                      decoration-success="state == 'completed'" 
+                      decoration-warning="state == 'in_progress'"
+                      decoration-danger="state == 'failed'">
+                    <field name="name"/>
+                    <field name="vendor_id"/>
+                    <field name="enrichment_type"/>
+                    <field name="data_sources"/>
+                    <field name="progress" widget="progressbar"/>
+                    <field name="state"/>
+                    <field name="started_date"/>
+                    <button name="action_start_enrichment" type="object" 
+                            string="Start" class="btn-primary" 
+                            attrs="{'invisible': [('state', '!=', 'draft')]}"
+                            icon="fa-play"/>
+                    <button name="action_retry_enrichment" type="object" 
+                            string="Retry" class="btn-warning" 
+                            attrs="{'invisible': [('state', '!=', 'failed')]}"
+                            icon="fa-refresh"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Vendor Enrichment Form View -->
+        <record id="view_vendor_enrichment_form" model="ir.ui.view">
+            <field name="name">vendor.enrichment.form</field>
+            <field name="model">vendor.enrichment</field>
+            <field name="arch" type="xml">
+                <form string="Vendor Enrichment">
+                    <header>
+                        <button name="action_start_enrichment" type="object" 
+                                string="Start Enrichment" class="btn-primary"
+                                attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                        <button name="action_retry_enrichment" type="object" 
+                                string="Retry" class="btn-warning"
+                                attrs="{'invisible': [('state', '!=', 'failed')]}"/>
+                        <button name="action_apply_enrichment" type="object" 
+                                string="Apply to Vendor" class="btn-success"
+                                attrs="{'invisible': [('state', '!=', 'completed')]}"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,completed"/>
+                    </header>
+                    
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_view_vendor" type="object" 
+                                    class="oe_stat_button" icon="fa-user">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_text">View</span>
+                                    <span class="o_stat_text">Vendor</span>
+                                </div>
+                            </button>
+                        </div>
+                        
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+
+                        <group>
+                            <group name="basic_info" string="Basic Information">
+                                <field name="vendor_id"/>
+                                <field name="enrichment_type"/>
+                                <field name="data_sources"/>
+                                <field name="started_date"/>
+                            </group>
+                            <group name="progress_info" string="Progress">
+                                <field name="progress" widget="progressbar"/>
+                                <field name="progress_message"/>
+                                <field name="completed_date"/>
+                                <field name="processing_time"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Enriched Data" name="enriched_data">
+                                <group string="Company Information" 
+                                       attrs="{'invisible': [('company_info', '=', False)]}">
+                                    <field name="company_info" widget="json" readonly="1"/>
+                                </group>
+                                
+                                <group string="Financial Information" 
+                                       attrs="{'invisible': [('financial_info', '=', False)]}">
+                                    <field name="financial_info" widget="json" readonly="1"/>
+                                </group>
+                                
+                                <group string="Contact Information" 
+                                       attrs="{'invisible': [('contact_info', '=', False)]}">
+                                    <field name="contact_info" widget="json" readonly="1"/>
+                                </group>
+                            </page>
+                            
+                            <page string="Market Intelligence" name="market_intelligence">
+                                <group string="Market Data" 
+                                       attrs="{'invisible': [('market_data', '=', False)]}">
+                                    <field name="market_data" widget="json" readonly="1"/>
+                                </group>
+                                
+                                <group string="Competitor Analysis" 
+                                       attrs="{'invisible': [('competitor_analysis', '=', False)]}">
+                                    <field name="competitor_analysis" widget="json" readonly="1"/>
+                                </group>
+                                
+                                <group string="Industry Insights" 
+                                       attrs="{'invisible': [('industry_insights', '=', False)]}">
+                                    <field name="industry_insights" widget="json" readonly="1"/>
+                                </group>
+                            </page>
+                            
+                            <page string="Risk &amp; Compliance" name="risk_compliance">
+                                <group string="Risk Indicators" 
+                                       attrs="{'invisible': [('risk_indicators', '=', False)]}">
+                                    <field name="risk_indicators" widget="json" readonly="1"/>
+                                </group>
+                                
+                                <group string="Compliance Status" 
+                                       attrs="{'invisible': [('compliance_status', '=', False)]}">
+                                    <field name="compliance_status" widget="json" readonly="1"/>
+                                </group>
+                                
+                                <group string="Certifications" 
+                                       attrs="{'invisible': [('certifications', '=', False)]}">
+                                    <field name="certifications" widget="json" readonly="1"/>
+                                </group>
+                            </page>
+                            
+                            <page string="Data Sources" name="data_sources">
+                                <group string="Source Details" 
+                                       attrs="{'invisible': [('source_details', '=', False)]}">
+                                    <field name="source_details" widget="json" readonly="1"/>
+                                </group>
+                                
+                                <group string="Data Quality">
+                                    <field name="data_quality_score" widget="progressbar"/>
+                                    <field name="confidence_score" widget="progressbar"/>
+                                </group>
+                            </page>
+                            
+                            <page string="Errors &amp; Logs" name="errors_logs" 
+                                  attrs="{'invisible': [('error_message', '=', False)]}">
+                                <group string="Error Information">
+                                    <field name="error_message" readonly="1"/>
+                                </group>
+                                
+                                <group string="Processing Log" 
+                                       attrs="{'invisible': [('processing_log', '=', False)]}">
+                                    <field name="processing_log" readonly="1"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Vendor Enrichment Kanban View -->
+        <record id="view_vendor_enrichment_kanban" model="ir.ui.view">
+            <field name="name">vendor.enrichment.kanban</field>
+            <field name="model">vendor.enrichment</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="state" class="o_kanban_small_column">
+                    <field name="name"/>
+                    <field name="vendor_id"/>
+                    <field name="enrichment_type"/>
+                    <field name="progress"/>
+                    <field name="state"/>
+                    <field name="data_quality_score"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                <div class="o_kanban_content">
+                                    <div class="o_kanban_primary_left">
+                                        <div class="o_primary">
+                                            <span><t t-esc="record.vendor_id.value"/></span>
+                                        </div>
+                                        <div class="o_secondary">
+                                            <i class="fa fa-cogs"/> <t t-esc="record.enrichment_type.value"/>
+                                        </div>
+                                        <div class="o_secondary">
+                                            Progress: <t t-esc="Math.round(record.progress.raw_value)"/>%
+                                        </div>
+                                    </div>
+                                    <div class="o_kanban_primary_right">
+                                        <div class="badge badge-pill" 
+                                             t-attf-class="badge-#{record.data_quality_score.raw_value >= 0.8 ? 'success' : record.data_quality_score.raw_value >= 0.6 ? 'warning' : 'secondary'}">
+                                            Quality: <t t-esc="Math.round(record.data_quality_score.raw_value * 100)"/>%
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_footer">
+                                    <div class="o_kanban_footer_left">
+                                        <span class="badge" 
+                                              t-attf-class="badge-#{record.state.raw_value == 'completed' ? 'success' : record.state.raw_value == 'failed' ? 'danger' : 'secondary'}">
+                                            <t t-esc="record.state.value"/>
+                                        </span>
+                                    </div>
+                                    <div class="o_kanban_footer_right">
+                                        <button name="action_start_enrichment" type="object" 
+                                                class="btn btn-sm btn-primary" 
+                                                t-if="record.state.raw_value == 'draft'">
+                                            Start
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Vendor Enrichment Search View -->
+        <record id="view_vendor_enrichment_search" model="ir.ui.view">
+            <field name="name">vendor.enrichment.search</field>
+            <field name="model">vendor.enrichment</field>
+            <field name="arch" type="xml">
+                <search string="Vendor Enrichment">
+                    <field name="name"/>
+                    <field name="vendor_id"/>
+                    <field name="enrichment_type"/>
+                    <field name="data_sources"/>
+                    
+                    <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                    <filter string="In Progress" name="in_progress" domain="[('state', '=', 'in_progress')]"/>
+                    <filter string="Completed" name="completed" domain="[('state', '=', 'completed')]"/>
+                    <filter string="Failed" name="failed" domain="[('state', '=', 'failed')]"/>
+                    
+                    <separator/>
+                    <filter string="High Quality" name="high_quality" domain="[('data_quality_score', '>=', 0.8)]"/>
+                    <filter string="Medium Quality" name="medium_quality" domain="[('data_quality_score', '>=', 0.6), ('data_quality_score', '&lt;', 0.8)]"/>
+                    
+                    <separator/>
+                    <filter string="Today" name="today" domain="[('started_date', '>=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="This Week" name="this_week" domain="[('started_date', '>=', (context_today() - datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                    
+                    <group expand="0" string="Group By">
+                        <filter string="Vendor" name="group_vendor" context="{'group_by': 'vendor_id'}"/>
+                        <filter string="Enrichment Type" name="group_type" context="{'group_by': 'enrichment_type'}"/>
+                        <filter string="State" name="group_state" context="{'group_by': 'state'}"/>
+                        <filter string="Data Sources" name="group_sources" context="{'group_by': 'data_sources'}"/>
+                        <filter string="Date" name="group_date" context="{'group_by': 'started_date'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Vendor Enrichment Action -->
+        <record id="action_vendor_enrichment" model="ir.actions.act_window">
+            <field name="name">Vendor Enrichment</field>
+            <field name="res_model">vendor.enrichment</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{'search_default_completed': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No vendor enrichment processes found
+                </p>
+                <p>
+                    Create vendor enrichment processes to automatically gather
+                    and enhance vendor data from multiple sources.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo> 
