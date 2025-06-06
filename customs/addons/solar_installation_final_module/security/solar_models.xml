@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <data>
+ <data>
     <record id="group_solar_user" model="res.groups">
         <field name="name">Solar Installation User</field>
         <field name="category_id" ref="base.module_category_services"/>
@@ -49,5 +49,5 @@
         <field name="name">solar.site.survey</field>
         <field name="model">solar.site.survey</field>
     </record>
-    </data>
+ </data>
 </odoo>

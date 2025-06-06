@@ -6,7 +6,7 @@
             <field name="res_model">solar.product.product</field>
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_solar_product_form"/>
-            <field name="help" type="html"/>
+            <!-- <field name="help" type="html"/> -->
         </record>
 
         <!-- Form View -->
