@@ -7,7 +7,8 @@
             <field name="name">Estimation Report</field>
             <field name="model">mrp.estimation</field>
             <field name="report_type">qweb-pdf</field>
-
+            <field name="report_name">mrp_estimation.report_estimation_document</field>
+            <field name="report_file">mrp_estimation.report_estimation_document</field>
             <field name="print_report_name">(object.name or 'Estimation')</field>
             <field name="attachment">(object.name or 'Estimation').replace('/','_')</field>
             <field name="binding_model_id" ref="model_mrp_estimation"/>
