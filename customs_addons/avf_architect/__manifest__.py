@@ -74,7 +74,7 @@
         'data/compliance_types.xml',
         'data/document_categories.xml',
         'data/financial_categories.xml',
-        'data/rate_schedule_data.xml',
+        #'data/rate_schedule_data.xml',
         'views/menus.xml',
         'views/drawing_management_views.xml',
         'views/survey_management_views.xml',
