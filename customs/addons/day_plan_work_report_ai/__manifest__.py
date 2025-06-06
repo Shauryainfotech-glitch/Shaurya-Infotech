@@ -45,7 +45,7 @@
     'assets': {
         'web.assets_backend': [
             # Include legacy web client JS files to ensure 'web.AbstractView' is available
-            'web/static/src/js/views/abstract_view.js',
+            # 'web/static/src/js/views/abstract_view.js',
             'web/static/src/js/views/list/list_view.js',
             'web/static/src/js/views/form/form_view.js',
             'web/static/src/js/views/kanban/kanban_view.js',
