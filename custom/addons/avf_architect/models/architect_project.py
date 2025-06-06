@@ -9,9 +9,14 @@ class ArchitectProject(models.Model):
     _description = 'Extended Project for AVF Architect'
 
     # Basic project information
-    project_type = fields.Selection(selection_add=[
+    project_type = fields.Selection([
+        ('government', 'Government Project'),
+        ('private', 'Private Project'),
+        ('institutional', 'Institutional Project'),
+        ('commercial', 'Commercial Project'),
+        ('residential', 'Residential Project'),
         ('ecotourism', 'Ecotourism')
-    ], ondelete={'ecotourism': 'set default'})
+    ], string='Project Type', default='government')
 
     project_category = fields.Selection([
         ('government', 'Government Project'),
