@@ -1,4 +1,3 @@
-
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api, _
@@ -73,7 +72,7 @@ class ArchitectDrawing(models.Model):
 
     # Related records
     comment_ids = fields.One2many('avf.drawing.comment', 'drawing_id', string='Comments')
-    comment_count = fields.Integer(string='Comments', compute='_compute_comment_count')
+    comment_count = fields.Integer(string='Comment Count', compute='_compute_comment_count')
 
     @api.depends('comment_ids')
     def _compute_comment_count(self):

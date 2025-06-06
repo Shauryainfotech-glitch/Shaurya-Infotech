@@ -1,8 +1,7 @@
-
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        
+
         <!-- Project Code Sequence -->
         <record id="seq_avf_architect_project" model="ir.sequence">
             <field name="name">AVF Architect Project</field>
@@ -39,16 +38,6 @@
             <field name="code">avf.dpr.management</field>
             <field name="prefix">DPR-</field>
             <field name="padding">3</field>
-            <field name="number_next">1</field>
-            <field name="number_increment">1</field>
-        </record>
-
-        <!-- DPR Number Sequence -->
-        <record id="seq_avf_dpr_number" model="ir.sequence">
-            <field name="name">DPR Number</field>
-            <field name="code">avf.dpr.number</field>
-            <field name="prefix">DPR-</field>
-            <field name="padding">4</field>
             <field name="number_next">1</field>
             <field name="number_increment">1</field>
         </record>
@@ -102,6 +91,47 @@
             <field name="number_next">1</field>
             <field name="number_increment">1</field>
         </record>
+
+            <!-- DPR Report Number Sequence -->
+    <record id="seq_dpr_number" model="ir.sequence">
+        <field name="name">DPR Number</field>
+        <field name="code">avf.dpr.number</field>
+        <field name="prefix">DPR-</field>
+        <field name="padding">3</field>
+        <field name="number_next">1</field>
+        <field name="number_increment">1</field>
+    </record>
+
+    <!-- Default Project Stages -->
+    <record id="stage_planning" model="avf.project.stage">
+        <field name="name">Planning</field>
+        <field name="sequence">1</field>
+        <field name="description">Initial planning and design phase</field>
+    </record>
+
+    <record id="stage_design" model="avf.project.stage">
+        <field name="name">Design</field>
+        <field name="sequence">2</field>
+        <field name="description">Design development phase</field>
+    </record>
+
+    <record id="stage_approval" model="avf.project.stage">
+        <field name="name">Approval</field>
+        <field name="sequence">3</field>
+        <field name="description">Approval and documentation phase</field>
+    </record>
+
+    <record id="stage_execution" model="avf.project.stage">
+        <field name="name">Execution</field>
+        <field name="sequence">4</field>
+        <field name="description">Project execution phase</field>
+    </record>
+
+    <record id="stage_completion" model="avf.project.stage">
+        <field name="name">Completion</field>
+        <field name="sequence">5</field>
+        <field name="description">Project completion and handover</field>
+    </record>
 
     </data>
 </odoo>

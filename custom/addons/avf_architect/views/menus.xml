@@ -43,5 +43,24 @@
         <menuitem id="menu_avf_survey" name="Survey Management" parent="menu_avf_project_management" action="action_avf_survey_management" sequence="50"/>
         <menuitem id="menu_avf_compliance" name="Compliance" parent="menu_avf_project_management" action="action_avf_compliance_tracking" sequence="60"/>
         <menuitem id="menu_avf_team_collaboration" name="Team Collaboration" parent="menu_avf_project_management" action="action_avf_team_collaboration" sequence="70"/>
+
+        <!-- Document Management Menu -->
+        <menuitem id="menu_avf_document_management"
+                  name="Document Management"
+                  parent="menu_avf_architect_root"
+                  sequence="70"/>
+
+        <!-- DPR Management Menu -->
+        <menuitem id="menu_avf_dpr_management"
+                  name="Daily Progress Reports"
+                  parent="menu_avf_architect_root"
+                  action="action_avf_dpr_management"
+                  sequence="75"/>
+
+        <!-- Financial Tracking Menu -->
+        <menuitem id="menu_avf_financial_tracking"
+                  name="Financial Tracking"
+                  parent="menu_avf_architect_root"
+                  sequence="80"/>
     </data>
 </odoo>

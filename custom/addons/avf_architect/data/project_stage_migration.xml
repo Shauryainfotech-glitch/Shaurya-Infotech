@@ -1,0 +1,48 @@
+
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Migration: Ensure required project stages exist with correct IDs -->
+        <record id="stage_id_1" model="avf.project.stage">
+            <field name="name">Initiation</field>
+            <field name="sequence">1</field>
+            <field name="description">Project initiation and setup</field>
+            <field name="stage_type">initiation</field>
+        </record>
+
+        <record id="stage_id_2" model="avf.project.stage">
+            <field name="name">Planning</field>
+            <field name="sequence">2</field>
+            <field name="description">Initial planning and design phase</field>
+            <field name="stage_type">planning</field>
+        </record>
+
+        <record id="stage_id_3" model="avf.project.stage">
+            <field name="name">Design</field>
+            <field name="sequence">3</field>
+            <field name="description">Design development phase</field>
+            <field name="stage_type">development</field>
+        </record>
+
+        <record id="stage_id_4" model="avf.project.stage">
+            <field name="name">Approval</field>
+            <field name="sequence">4</field>
+            <field name="description">Approval and documentation phase</field>
+            <field name="stage_type">monitoring</field>
+        </record>
+
+        <record id="stage_id_5" model="avf.project.stage">
+            <field name="name">Execution</field>
+            <field name="sequence">5</field>
+            <field name="description">Project execution phase</field>
+            <field name="stage_type">execution</field>
+        </record>
+
+        <record id="stage_id_6" model="avf.project.stage">
+            <field name="name">Completion</field>
+            <field name="sequence">6</field>
+            <field name="description">Project completion and handover</field>
+            <field name="stage_type">closure</field>
+        </record>
+    </data>
+</odoo>
