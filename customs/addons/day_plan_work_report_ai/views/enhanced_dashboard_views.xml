@@ -157,7 +157,7 @@
                                 <div class="btn-group" role="group">
                                     <!-- New Plan button removed as requested -->
                                     <div class="btn-group" role="group">
-                                        <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <button name="date_range_button" type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                                             <i class="fa fa-calendar"></i>
                                             <span class="ms-2">This Week</span>
                                         </button>
