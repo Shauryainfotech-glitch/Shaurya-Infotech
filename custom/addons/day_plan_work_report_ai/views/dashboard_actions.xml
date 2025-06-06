@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Keep the original window action for compatibility -->
+    <record id="action_consolidated_dashboard" model="ir.actions.act_window">
+        <field name="name">Basic Dashboard</field>
+        <field name="res_model">day.plan.dashboard.clean</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="day_plan_work_report_ai.view_consolidated_dashboard"/>
+        <field name="target">main</field>
+        <field name="context">{"hide_chatter": True, "hide_message": True, "no_breadcrumbs": True}</field>
+    </record>
+    
+    <!-- New client action for the advanced dashboard with charts -->
+    <record id="action_advanced_dashboard" model="ir.actions.client">
+        <field name="name">Advanced Dashboard</field>
+        <field name="tag">day_plan_work_report_ai.new_dashboard_action</field>
+        <field name="target">main</field>
+    </record>
+</odoo>
