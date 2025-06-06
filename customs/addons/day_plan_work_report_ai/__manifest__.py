@@ -6,69 +6,52 @@
     "author": "Viresh Dhasal / AVGC",
     "website": "https://www.avgc.com",
     "license": "LGPL-3",
-    "depends": ["base", "mail", "hr", "board", "web"],
+    "depends": ["base", "mail", "hr", "board", "web", "resource"],
     "data": [
-        # Security
+        "data/sequence.xml",
+        "data/ai_analysis_data.xml",
         "security/security_groups.xml",
         "security/ir.model.access.csv",
         "security/record_rules.xml",
-
-        # Data
-        "data/sequence.xml",
-        "data/ai_analysis_data.xml",
-
-        # Views
         "views/day_plan_views.xml",
         "views/day_plan_task_views.xml",
         "views/work_report_views.xml",
         "views/ai_analysis_views.xml",
-        "views/dashboard_views.xml",
         "views/dashboard_templates.xml",
+        "views/wizard_views.xml",
+        "views/plan_creation_views.xml",
+        "views/dashboard_views.xml",
+        "views/dynamic_dashboard_views.xml",
         "views/dashboard_actions.xml",
         "views/dashboard_menu.xml",
-        "views/wizard_views.xml",
-
-        # Reports
+        "views/enhanced_dashboard_views.xml",
         "report/dashboard_report.xml",
         "report/dashboard_report_templates.xml"
     ],
-    "assets": {
-        "web.assets_backend": [
-            # Chart.js library
-            "https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js",
-
-            # Dashboard JavaScript
-            "day_plan_work_report_ai/static/src/js/dashboard.js",
-
-            # Dashboard CSS
-            "day_plan_work_report_ai/static/src/css/dashboard.css",
-        ],
-    },
     "post_init_hook": "post_init_hook",
     "installable": True,
     "application": True,
-    "auto_install": False,
+    "assets": {
+        "web.assets_backend": [
+            ("include", "https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"),
+            "day_plan_work_report_ai/static/src/js/dashboard.js",
+            "day_plan_work_report_ai/static/src/views/day_plan_calendar/day_plan_calendar.js",
+            "day_plan_work_report_ai/static/src/views/day_plan_calendar/day_plan_calendar.xml",
+            "day_plan_work_report_ai/views/enhanced_dashboard_views.xml"
+        ],
+    },
     "description": """
-Day Plan & Work Report with AI Analysis
-======================================
+    Day Plan & Work Report with AI Analysis
+    ======================================
 
-A comprehensive productivity management system with AI-powered insights.
+    A comprehensive productivity management system with AI-powered insights.
 
-Key Features:
--------------
-* Daily planning with task management
-* End-of-day work reporting
-* AI-powered productivity analysis
-* Interactive dashboard with charts
-* Task tracking and completion metrics
-* Productivity scoring and analytics
-
-Technical Features:
-------------------
-* Chart.js integration for data visualization
-* OWL components for modern UI
-* Responsive dashboard design
-* Real-time data updates
-* PDF report generation
-""",
-}
+    Key Features:
+    -------------
+    * Daily planning with task management
+    * End-of-day work reporting
+    * AI-powered productivity analysis
+    * Multiple AI provider support (OpenAI, Anthropic, Google)
+    * Comprehensive analysis types (daily, weekly, monthly)
+    * Intelligent prompt engineering
+    * Actionable metrics generation
