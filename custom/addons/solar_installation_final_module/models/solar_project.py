@@ -2,6 +2,10 @@
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError, UserError
 from datetime import timedelta
+import logging
+
+_logger = logging.getLogger(__name__)
+
 
 class SolarProject(models.Model):
     _name = "solar.project"
@@ -190,6 +194,7 @@ class SolarProject(models.Model):
     notes = fields.Text(string="Internal Notes")
     description = fields.Html(string="Project Description")
     related_model = fields.Many2one('related.model', string='Related Model')
+
     partner_id = fields.Many2one(
         comodel_name="res.partner",
         string="Customer",
