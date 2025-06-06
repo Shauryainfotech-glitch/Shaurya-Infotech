@@ -1,0 +1,266 @@
+
+/* AVF Architect Module Styles */
+
+.architect_dashboard {
+    padding: 20px;
+}
+
+.architect_card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.architect_metric {
+    text-align: center;
+    padding: 15px;
+}
+
+.architect_metric .metric_value {
+    font-size: 2.5em;
+    font-weight: bold;
+    color: #875A7B;
+}
+
+.architect_metric .metric_label {
+    font-size: 1.1em;
+    color: #666;
+    margin-top: 5px;
+}
+
+.compliance_status_pending {
+    color: #ff9f43;
+}
+
+.compliance_status_approved {
+    color: #10ac84;
+}
+
+.compliance_status_rejected {
+    color: #ee5a52;
+}
+
+.project_progress_bar {
+    height: 20px;
+    background-color: #f1f1f1;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.project_progress_fill {
+    height: 100%;
+    background: linear-gradient(90deg, #875A7B, #a4708b);
+    transition: width 0.3s ease;
+}
+
+.ai_recommendation_box {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 10px 0;
+}
+
+.ai_recommendation_box .ai_icon {
+    font-size: 1.5em;
+    margin-right: 10px;
+}
+
+.compliance_checklist {
+    list-style: none;
+    padding: 0;
+}
+
+.compliance_checklist li {
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    align-items: center;
+}
+
+.compliance_checklist li.completed {
+    background-color: #f8f9fa;
+    text-decoration: line-through;
+    color: #6c757d;
+}
+
+.compliance_checklist .checkbox {
+    margin-right: 10px;
+    width: 18px;
+    height: 18px;
+}
+
+.rate_schedule_table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.rate_schedule_table th,
+.rate_schedule_table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+.rate_schedule_table th {
+    background-color: #875A7B;
+    color: white;
+    font-weight: bold;
+}
+
+.rate_schedule_table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.dpr_section {
+    margin: 20px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.dpr_section_header {
+    background-color: #875A7B;
+    color: white;
+    padding: 10px 15px;
+    font-weight: bold;
+    border-radius: 5px 5px 0 0;
+}
+
+.dpr_section_content {
+    padding: 15px;
+}
+
+.sustainability_gauge {
+    display: inline-block;
+    width: 150px;
+    height: 150px;
+    position: relative;
+    border-radius: 50%;
+    background: conic-gradient(
+        #10ac84 0deg,
+        #10ac84 calc(var(--score) * 3.6deg),
+        #f1f1f1 calc(var(--score) * 3.6deg),
+        #f1f1f1 360deg
+    );
+}
+
+.sustainability_gauge::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    background: white;
+    border-radius: 50%;
+}
+
+.sustainability_gauge_text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.2em;
+    font-weight: bold;
+    z-index: 1;
+}
+
+.kanban_priority_1 {
+    border-left: 4px solid #ffc107;
+}
+
+.kanban_priority_2 {
+    border-left: 4px solid #fd7e14;
+}
+
+.kanban_priority_3 {
+    border-left: 4px solid #dc3545;
+}
+
+.architect_toolbar {
+    background: #875A7B;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.architect_toolbar .toolbar_title {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.architect_toolbar .toolbar_actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn_ai {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn_ai:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.parivesh_integration {
+    background: #e8f5e8;
+    border: 1px solid #4caf50;
+    padding: 15px;
+    border-radius: 5px;
+    margin: 10px 0;
+}
+
+.parivesh_integration .parivesh_logo {
+    width: 32px;
+    height: 32px;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .architect_dashboard {
+        padding: 10px;
+    }
+    
+    .architect_card {
+        margin-bottom: 15px;
+        padding: 15px;
+    }
+    
+    .architect_metric .metric_value {
+        font-size: 2em;
+    }
+    
+    .architect_toolbar {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .architect_toolbar,
+    .oe_button_box,
+    .o_form_buttons_edit {
+        display: none !important;
+    }
+    
+    .architect_card {
+        break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #ccc;
+    }
+}
