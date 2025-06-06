@@ -1,8 +1,9 @@
 
 # -*- coding: utf-8 -*-
 
-# Base models first
-from . import res_company
+# Base models
+from . import architect_service_area
+from . import architect_specialization
 
 # Core business models
 from . import architect_project
@@ -18,6 +19,16 @@ from . import client_portal
 from . import document_management
 from . import document_attachment
 from . import financial_tracking
+
+# Company extensions
+from . import res_company
+
+# Reference data models
+from . import architect_service_area
+from . import architect_specialization
+
+# Add company extension
+from . import res_company
 
 # Partners should be imported last to avoid circular dependencies
 from . import res_partner
