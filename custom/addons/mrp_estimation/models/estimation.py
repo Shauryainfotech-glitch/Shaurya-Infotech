@@ -385,7 +385,6 @@ class MrpEstimation(models.Model):
     
     def action_send_estimation(self):
         """Send estimation to customer"""
-        import base64
         self.ensure_one()
         
         # Generate PDF report
@@ -396,7 +395,7 @@ class MrpEstimation(models.Model):
         attachment = self.env['ir.attachment'].create({
             'name': f'Estimation_{self.name}.pdf',
             'type': 'binary',
-            'datas': base64.b64encode(pdf_content),
+            'datas': pdf_content,
             'res_model': self._name,
             'res_id': self.id,
             'mimetype': 'application/pdf'
@@ -464,13 +463,10 @@ class MrpEstimation(models.Model):
             
             self.estimation_line_ids = lines
     
-    import base64
-
     def _notify_approvers(self):
         """Notify approvers about pending estimation"""
-        group = self.env.ref('mrp_estimation.group_estimation_manager')
         approvers = self.env['res.users'].search([
-            ('groups_id', 'in', group.ids)
+            ('groups_id', 'in', self.env.ref('mrp_estimation.group_estimation_manager').id)
         ])
         
         for approver in approvers:

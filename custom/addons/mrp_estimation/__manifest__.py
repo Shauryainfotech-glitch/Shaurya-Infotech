@@ -41,10 +41,6 @@
         'security/estimation_security.xml',
         'security/ir.model.access.csv',
         
-        # Reports
-        'reports/estimation_report_views.xml',
-        'reports/estimation_templates.xml',
-        
         # Data
         'data/estimation_sequence.xml',
         'data/estimation_data.xml',
@@ -56,6 +52,10 @@
         'views/estimation_version_views.xml',
         'views/mrp_costing_views.xml',
         'views/estimation_menus.xml',
+        
+        # Reports
+        'reports/estimation_report_views.xml',
+        'reports/estimation_templates.xml',
         
         # Wizards
         'wizard/estimation_wizard_views.xml',
