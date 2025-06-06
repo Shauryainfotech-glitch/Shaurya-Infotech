@@ -1,63 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
    <data>
-  <!-- Action for Site Surveys -->
-  <record id="action_solar_site_survey" model="ir.actions.act_window">
-    <field name="name">Site Surveys</field>
-    <field name="res_model">solar.site.survey</field>
-    <field name="view_mode">form</field>
-    <field name="help" type="html">
-      <p class="o_view_nocontent_smiling_face">
-        Create your first site survey
-      </p>
-    </field>
-  </record>
+      <!-- Action for Site Surveys -->
+      <record id="action_solar_site_survey" model="ir.actions.act_window">
+         <field name="name">Site Surveys</field>
+         <field name="res_model">solar.site.survey</field>
+         <field name="view_mode">form</field>
+         <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+               Create your first site survey
+            </p>
+         </field>
+      </record>
 
-  <!-- Form View -->
-  <record id="view_solar_site_survey_form" model="ir.ui.view">
-    <field name="name">solar.site.survey.form</field>
-    <field name="model">solar.site.survey</field>
-    <field name="arch" type="xml">
-      <form string="Site Survey" version="1.1">
-        <header>
-          <field name="state" widget="statusbar" statusbar_visible="draft,completed,cancelled"/>
-        </header>
-        <sheet>
-          <group>
-            <field name="name" readonly="1"/>
-            <field name="project_id"/>
-            <field name="survey_date"/>
-            <field name="surveyed_by"/>
-          </group>
-          <group string="Site Details">
-            <field name="site_type"/>
-            <field name="roof_area_sqft"/>
-            <field name="roof_orientation"/>
-            <field name="roof_pitch_degree"/>
-            <field name="nearby_shading_sources"/>
-          </group>
-          <group string="Electrical Infrastructure">
-            <field name="main_panel_capacity_kw"/>
-            <field name="conduit_conditions"/>
-            <field name="inverter_location"/>
-          </group>
-          <group string="Environmental Conditions">
-            <field name="avg_sun_hours"/>
-            <field name="soil_condition"/>
-            <field name="ground_mount_depth"/>
-          </group>
-          <group string="Recommendations">
-            <field name="recommended_capacity_kw" readonly="1"/>
-            <field name="estimated_install_cost" readonly="1"/>
-            <field name="recommended_products_ids" widget="many2many_tags"/>
-            <field name="survey_report" filename="%(name)s.pdf"/>
-          </group>
-          <group>
-            <field name="notes"/>
-          </group>
-        </sheet>
-      </form>
-    </field>
-  </record>
+      <!-- Form View for Solar Site Survey -->
+      <record id="view_solar_site_survey_form" model="ir.ui.view">
+         <field name="name">solar.site.survey.form</field>
+         <field name="model">solar.site.survey</field>
+         <field name="arch" type="xml">
+            <form string="Site Survey" version="1.1">
+               <header>
+                  <field name="state" widget="statusbar" statusbar_visible="draft,completed,cancelled"/>
+               </header>
+               <sheet>
+                  <group>
+                     <field name="name" readonly="1"/>
+                     <field name="project_id"/>
+                     <field name="survey_date"/>
+                     <field name="surveyed_by"/>
+                  </group>
+                  <group string="Site Details">
+                     <field name="site_type"/>
+                     <field name="roof_area_sqft"/>
+                     <field name="roof_orientation"/>
+                     <field name="roof_pitch_degree"/>
+                     <field name="nearby_shading_sources"/>
+                  </group>
+                  <group string="Electrical Infrastructure">
+                     <field name="main_panel_capacity_kw"/>
+                     <field name="conduit_conditions"/>
+                     <field name="inverter_location"/>
+                  </group>
+                  <group string="Environmental Conditions">
+                     <field name="avg_sun_hours"/>
+                     <field name="soil_condition"/>
+                     <field name="ground_mount_depth"/>
+                  </group>
+                  <group string="Recommendations">
+                     <field name="recommended_capacity_kw" readonly="1"/>
+                     <field name="estimated_install_cost" readonly="1"/>
+                     <field name="recommended_products_ids" widget="many2many_tags"/>
+                     <field name="survey_report" filename="%(name)s.pdf"/>
+                  </group>
+                  <group>
+                     <field name="notes"/>
+                  </group>
+               </sheet>
+            </form>
+         </field>
+      </record>
    </data>
 </odoo>
