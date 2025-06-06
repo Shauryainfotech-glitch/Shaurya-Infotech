@@ -1,4 +1,4 @@
-'''from . import estimation
+from . import estimation
 from . import estimation_line
 from . import estimation_cost
 from . import estimation_version
@@ -9,5 +9,4 @@ from . import calculation_engine
 from . import sale_integration
 from . import mrp_integration
 from . import automation
-from . import performance'''
-from . import mrp_estimation
+from . import performance
