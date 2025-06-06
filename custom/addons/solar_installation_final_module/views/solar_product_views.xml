@@ -1,15 +1,11 @@
 <odoo>
     <data>
         <!-- Action for Solar Projects -->
-        <record id="action_solar_project" model="ir.actions.act_window">
-            <field name="name">Solar Projects</field>
-            <field name="res_model">solar.project</field>
-            <field name="view_mode">form</field>
-            <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">
-                    Create your first solar project
-                </p>
-            </field>
+            <record id="action_solar_product_views" model="ir.actions.act_window">
+            <field name="name">Solar Products</field>
+            <field name="res_model">solar.product</field>
+            <field name="view_mode">form</field> <!-- Only form view -->
+            <field name="target">current</field>
         </record>
 
         <!-- Form View for Solar Projects -->
