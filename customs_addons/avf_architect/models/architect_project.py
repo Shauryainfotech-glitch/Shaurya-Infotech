@@ -300,3 +300,4 @@ class ProjectTask(models.Model):
             ('verified', 'Verified'),
             ('approved', 'Approved')
         ], string="Status", default='draft', tracking=True)
+
