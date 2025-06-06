@@ -14,7 +14,7 @@ class ArchitectDrawing(models.Model):
     project_id = fields.Many2one('architect.project', string='Project', required=True)
     company_id = fields.Many2one('res.company', string='Company', required=True, 
                                 default=lambda self: self.env.company)
-    
+    active = fields.Boolean(default=True)
     # Drawing Details
     drawing_type = fields.Selection([
         ('concept', 'Concept Drawing'),
