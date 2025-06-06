@@ -2,19 +2,19 @@
 <odoo>
     <data>
         
-        <!-- Tree View -->
-        <record id="view_estimation_version_tree" model="ir.ui.view">
-            <field name="name">mrp.estimation.version.tree</field>
+        <!-- List View -->
+        <record id="view_estimation_version_list" model="ir.ui.view">
+            <field name="name">mrp.estimation.version.list</field>
             <field name="model">mrp.estimation.version</field>
             <field name="arch" type="xml">
-                <tree string="Estimation Versions">
+                <list string="Estimation Versions">
                     <field name="parent_estimation_id"/>
                     <field name="version_number"/>
                     <field name="created_by"/>
                     <field name="creation_date"/>
                     <field name="is_active_version" widget="boolean_toggle"/>
                     <field name="version_notes"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -78,7 +78,7 @@
             <field name="name">Estimation Versions</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.estimation.version</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">list,form</field>
             <field name="search_view_id" ref="view_estimation_version_search"/>
             <field name="context">{}</field>
             <field name="help" type="html">
