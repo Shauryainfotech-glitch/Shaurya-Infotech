@@ -38,7 +38,7 @@
             "day_plan_work_report_ai/static/src/views/day_plan_calendar/day_plan_calendar.js",
             "day_plan_work_report_ai/static/src/views/day_plan_calendar/day_plan_calendar.xml",
             "day_plan_work_report_ai/views/enhanced_dashboard_views.xml"
-        ],
+        ]
     },
     "description": """
     Day Plan & Work Report with AI Analysis
@@ -55,3 +55,5 @@
     * Comprehensive analysis types (daily, weekly, monthly)
     * Intelligent prompt engineering
     * Actionable metrics generation
+    """
+}
