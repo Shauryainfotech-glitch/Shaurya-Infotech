@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Project Task Types for Architect Projects -->
+        <record id="stage_planning" model="project.task.type">
+            <field name="name">Planning</field>
+            <field name="sequence">10</field>
+            <field name="fold">False</field>
+        </record>
+
+        <record id="stage_design" model="project.task.type">
+            <field name="name">Design</field>
+            <field name="sequence">20</field>
+            <field name="fold">False</field>
+        </record>
+
+        <record id="stage_approval" model="project.task.type">
+            <field name="name">Approval</field>
+            <field name="sequence">30</field>
+            <field name="fold">False</field>
+        </record>
+
+        <record id="stage_execution" model="project.task.type">
+            <field name="name">Execution</field>
+            <field name="sequence">40</field>
+            <field name="fold">False</field>
+        </record>
+
+        <record id="stage_completed" model="project.task.type">
+            <field name="name">Completed</field>
+            <field name="sequence">50</field>
+            <field name="fold">True</field>
+        </record>
+    </data>
+</odoo>

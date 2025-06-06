@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Compliance Tracking Views -->
+        <record id="view_compliance_tracking_tree" model="ir.ui.view">
+            <field name="name">avf.compliance.tracking.tree</field>
+            <field name="model">avf.compliance.tracking</field>
+            <field name="arch" type="xml">
+                <tree string="Compliance Tracking">
+                    <field name="name"/>
+                    <field name="project_id"/>
+                    <field name="compliance_type"/>
+                    <field name="status" decoration-success="status=='compliant'" decoration-warning="status=='in_progress'" decoration-danger="status=='non_compliant'"/>
+                    <field name="due_date"/>
+                    <field name="responsible_user_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_compliance_tracking_form" model="ir.ui.view">
+            <field name="name">avf.compliance.tracking.form</field>
+            <field name="model">avf.compliance.tracking</field>
+            <field name="arch" type="xml">
+                <form string="Compliance Tracking">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="project_id"/>
+                                <field name="compliance_type"/>
+                                <field name="status"/>
+                            </group>
+                            <group>
+                                <field name="due_date"/>
+                                <field name="completed_date"/>
+                                <field name="responsible_user_id"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="description" placeholder="Compliance description..."/>
+                            <field name="notes" placeholder="Additional notes..."/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_compliance_tracking" model="ir.actions.act_window">
+            <field name="name">Compliance Tracking</field>
+            <field name="res_model">avf.compliance.tracking</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Track your first compliance item!
+                </p>
+                <p>
+                    Monitor project compliance requirements and deadlines.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Compliance Management Views -->
+        <record id="view_architect_compliance_tree" model="ir.ui.view">
+            <field name="name">architect.compliance.tree</field>
+            <field name="model">architect.compliance</field>
+            <field name="arch" type="xml">
+                <tree string="Compliance Tracking">
+                    <field name="compliance_number"/>
+                    <field name="project_id"/>
+                    <field name="compliance_type"/>
+                    <field name="state"/>
+                    <field name="submission_date"/>
+                    <field name="approval_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_architect_compliance_form" model="ir.ui.view">
+            <field name="name">architect.compliance.form</field>
+            <field name="model">architect.compliance</field>
+            <field name="arch" type="xml">
+                <form string="Compliance">
+                    <header>
+                        <button name="action_submit" string="Submit" type="object" class="btn-primary"/>
+                        <button name="action_approve" string="Approve" type="object" class="btn-success"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="compliance_number"/>
+                                <field name="project_id"/>
+                                <field name="compliance_type"/>
+                            </group>
+                            <group>
+                                <field name="submission_date"/>
+                                <field name="approval_date"/>
+                                <field name="expiry_date"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Description">
+                                <field name="description"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Compliance Tracking Views -->
+    <record id="view_compliance_tracking_tree" model="ir.ui.view">
+        <field name="name">avf.compliance.tracking.tree</field>
+        <field name="model">avf.compliance.tracking</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="compliance_type"/>
+                <field name="status"/>
+                <field name="due_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_compliance_tracking_form" model="ir.ui.view">
+        <field name="name">avf.compliance.tracking.form</field>
+        <field name="model">avf.compliance.tracking</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="project_id"/>
+                        <field name="compliance_type"/>
+                        <field name="status"/>
+                        <field name="due_date"/>
+                    </group>
+                    <group string="Details">
+                        <field name="description" colspan="2"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_compliance_tracking" model="ir.actions.act_window">
+        <field name="name">Compliance Tracking</field>
+        <field name="res_model">avf.compliance.tracking</field>
+        <field name="view_mode">kanban,list,form,calendar</field>
+    </record>
+</odoo>
