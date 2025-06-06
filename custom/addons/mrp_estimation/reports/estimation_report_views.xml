@@ -7,14 +7,14 @@
             <field name="model">mrp.estimation</field>
             <field name="type">list</field>
             <field name="arch" type="xml">
-                <tree string="Manufacturing Estimations">
+                <list string="Manufacturing Estimations">
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="product_id"/>
                     <field name="estimation_date"/>
                     <field name="state"/>
                     <field name="estimation_total"/>
-                </tree>
+                </list>
             </field>
         </record>
 
