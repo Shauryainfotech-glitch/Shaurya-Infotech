@@ -6,91 +6,12 @@ from datetime import datetime, timedelta
 
 class ArchitectProject(models.Model):
     _inherit = 'project.project'
-    
-    # Additional fields for architect projects
-    client_name = fields.Char(string='Client Name')
-    project_type = fields.Selection([
-        ('residential', 'Residential'),
-        ('commercial', 'Commercial'),
-        ('industrial', 'Industrial'),
-        ('infrastructure', 'Infrastructure'),
-        ('government', 'Government')
-    ], string='Project Type', default='residential')
-    
-    project_status = fields.Selection([
-        ('planning', 'Planning'),
-        ('design', 'Design'),
-        ('approval', 'Approval'),
-        ('construction', 'Construction'),
-        ('completed', 'Completed'),
-        ('on_hold', 'On Hold')
-    ], string='Project Status', default='planning')
-    
-    site_area = fields.Float(string='Site Area (sq.m)')
-    built_up_area = fields.Float(string='Built-up Area (sq.m)')
-    
-    # Project dates
-    project_start_date = fields.Date(string='Project Start Date', compute='_compute_project_dates', store=True)
-    expected_completion = fields.Date(string='Expected Completion')
-    actual_completion = fields.Date(string='Actual Completion')
-    
-    # Financial fields
-    estimated_cost = fields.Monetary(string='Estimated Cost', currency_field='currency_id')
-    actual_cost = fields.Monetary(string='Actual Cost', compute='_compute_actual_cost', store=True, currency_field='currency_id')
-    budget_variance = fields.Monetary(string='Budget Variance', compute='_compute_actual_cost', store=True, currency_field='currency_id')
-    
-    # Progress tracking
-    progress_percentage = fields.Float(string='Progress %', compute='_compute_progress', store=True)
-    
-    # Drawing management
-    architect_drawing_ids = fields.One2many('avf.drawing.management', 'project_id', string='Architect Drawings')
-    architect_drawing_count = fields.Integer(string='Architect Drawing Count', compute='_compute_drawing_count')
-    
-    # Currency for monetary fields
-    currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
-    
-    @api.depends('date_start')
-    def _compute_project_dates(self):
-        for project in self:
-            project.project_start_date = project.date_start
-    
-    @api.depends('task_ids', 'task_ids.effective_hours')
-    def _compute_actual_cost(self):
-        for project in self:
-            total_cost = 0.0
-            for task in project.task_ids:
-                # Use effective_hours instead of planned_hours
-                total_cost += task.effective_hours * 50.0  # Assuming 50 per hour rate
-            project.actual_cost = total_cost
-            project.budget_variance = project.estimated_cost - project.actual_cost
-    
-    @api.depends('task_ids', 'task_ids.stage_id')
-    def _compute_progress(self):
-        for project in self:
-            if project.task_ids:
-                completed_tasks = project.task_ids.filtered(lambda t: t.stage_id.fold)
-                project.progress_percentage = (len(completed_tasks) / len(project.task_ids)) * 100
-            else:
-                project.progress_percentage = 0.0
-    
-    @api.depends('architect_drawing_ids')
-    def _compute_drawing_count(self):
-        for project in self:
-            project.architect_drawing_count = len(project.architect_drawing_ids)
-
-class ArchitectProject(models.Model):
-    _inherit = 'project.project'
     _description = 'Extended Project for AVF Architect'
 
     # Basic project information
-    project_type = fields.Selection([
-        ('residential', 'Residential'),
-        ('commercial', 'Commercial'),
-        ('industrial', 'Industrial'),
-        ('institutional', 'Institutional'),
-        ('government', 'Government'),
+    project_type = fields.Selection(selection_add=[
         ('ecotourism', 'Ecotourism')
-    ], string='Project Type', required=True, default='residential')
+    ], ondelete={'ecotourism': 'set default'})
 
     project_category = fields.Selection([
         ('government', 'Government Project'),
@@ -124,7 +45,7 @@ class ArchitectProject(models.Model):
     actual_completion_date = fields.Date(string='Actual Completion Date')
 
     # Client and location information
-    client_name = fields.Char(string='Client Name', required=True)
+    client_name = fields.Char(string='Client Name')
     client_contact = fields.Char(string='Client Contact')
     client_email = fields.Char(string='Client Email')
     project_location = fields.Text(string='Project Location')
@@ -135,6 +56,7 @@ class ArchitectProject(models.Model):
     estimated_budget = fields.Monetary(string='Estimated Budget', currency_field='currency_id')
     approved_budget = fields.Monetary(string='Approved Budget', currency_field='currency_id')
     actual_cost = fields.Monetary(string='Actual Cost', currency_field='currency_id', compute='_compute_actual_cost')
+    budget_variance = fields.Monetary(string='Budget Variance', compute='_compute_actual_cost', store=True, currency_field='currency_id')
     currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
 
     # Progress tracking
@@ -167,13 +89,13 @@ class ArchitectProject(models.Model):
     environmental_clearance = fields.Boolean(string='Environmental Clearance Required', default=False)
 
     # Related records
-    drawing_ids = fields.One2many('avf.drawing.management', 'project_id', string='Drawings')
+    architect_drawing_ids = fields.One2many('avf.drawing.management', 'project_id', string='Architect Drawings')
     dpr_ids = fields.One2many('avf.dpr.management', 'project_id', string='Daily Progress Reports')
     survey_ids = fields.One2many('avf.survey.management', 'project_id', string='Survey Records')
     compliance_ids = fields.One2many('avf.compliance.tracking', 'project_id', string='Compliance Records')
 
     # Computed fields
-    drawing_count = fields.Integer(string='Drawings', compute='_compute_drawing_count')
+    architect_drawing_count = fields.Integer(string='Architect Drawings Count', compute='_compute_architect_drawing_count')
     dpr_count = fields.Integer(string='DPR Count', compute='_compute_dpr_count')
     survey_count = fields.Integer(string='Survey Count', compute='_compute_survey_count')
     compliance_count = fields.Integer(string='Compliance Count', compute='_compute_compliance_count')
@@ -205,7 +127,7 @@ class ArchitectProject(models.Model):
             else:
                 project.progress_percentage = 0.0
 
-    @api.depends('task_ids', 'task_ids.planned_hours')
+    @api.depends('task_ids', 'task_ids.allocated_hours')
     def _compute_actual_cost(self):
         """Compute actual cost based on timesheet entries"""
         for project in self:
@@ -214,11 +136,15 @@ class ArchitectProject(models.Model):
                 for timesheet in task.timesheet_ids:
                     if timesheet.employee_id and timesheet.employee_id.hourly_cost:
                         total_cost += timesheet.unit_amount * timesheet.employee_id.hourly_cost
+                    else:
+                        # Default hourly cost if not set
+                        total_cost += timesheet.unit_amount * 50.0
             project.actual_cost = total_cost
+            project.budget_variance = project.estimated_budget - project.actual_cost
 
-    def _compute_drawing_count(self):
+    def _compute_architect_drawing_count(self):
         for project in self:
-            project.drawing_count = len(project.drawing_ids)
+            project.architect_drawing_count = len(project.architect_drawing_ids)
 
     def _compute_dpr_count(self):
         for project in self:
@@ -241,18 +167,19 @@ class ArchitectProject(models.Model):
     @api.constrains('site_area', 'built_up_area')
     def _check_areas(self):
         for project in self:
-            if project.site_area < 0:
+            if project.site_area and project.site_area < 0:
                 raise ValidationError(_("Site area cannot be negative."))
-            if project.built_up_area < 0:
+            if project.built_up_area and project.built_up_area < 0:
                 raise ValidationError(_("Built-up area cannot be negative."))
-            if project.built_up_area > project.site_area:
+            if project.built_up_area and project.site_area and project.built_up_area > project.site_area:
                 raise ValidationError(_("Built-up area cannot exceed site area."))
 
-    @api.model
-    def create(self, vals):
-        if not vals.get('project_code'):
-            vals['project_code'] = self.env['ir.sequence'].next_by_code('architect.project') or 'ARCH-001'
-        return super(ArchitectProject, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if not vals.get('project_code'):
+                vals['project_code'] = self.env['ir.sequence'].next_by_code('architect.project') or 'ARCH-001'
+        return super(ArchitectProject, self).create(vals_list)
 
     def action_start_project(self):
         """Start the project"""
@@ -293,7 +220,7 @@ class ArchitectProject(models.Model):
         """View project drawings"""
         self.ensure_one()
         return {
-            'name': _('Project Drawings'),
+            'name': _('Architect Drawings'),
             'type': 'ir.actions.act_window',
             'res_model': 'avf.drawing.management',
             'view_mode': 'tree,form',
