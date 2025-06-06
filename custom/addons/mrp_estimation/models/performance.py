@@ -1,6 +1,17 @@
 from odoo import models, api
-from odoo.tools.profiler import profile
+import functools
+import time
 
+def profile(func):
+    """Custom profiler decorator replacement"""
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        start_time = time.time()
+        result = func(*args, **kwargs)
+        end_time = time.time()
+        print(f"Function {func.__name__} took {end_time - start_time:.4f} seconds")
+        return result
+    return wrapper
 
 class EstimationPerformance(models.AbstractModel):
     _name = 'mrp.estimation.performance'
@@ -13,35 +24,42 @@ class EstimationPerformance(models.AbstractModel):
         if partner_id:
             domain.append(('partner_id', '=', partner_id))
         if date_from:
-            domain.append(('date', '>=', date_from))
+            domain.append(('estimation_date', '>=', date_from))
         if date_to:
-            domain.append(('date', '<=', date_to))
+            domain.append(('estimation_date', '<=', date_to))
         return domain
 
     @api.model
     @profile
     def get_estimation_statistics(self, partner_id=None, date_from=None, date_to=None):
         """Optimized statistics calculation using SQL."""
-        domain = self._get_estimation_domain(partner_id, date_from, date_to)
-        
-        query = """
-            SELECT 
-                COUNT(*) as total_count,
-                AVG(total_amount) as avg_amount,
-                SUM(total_amount) as total_amount,
-                COUNT(CASE WHEN state = 'approved' THEN 1 END) as approved_count
-            FROM mrp_estimation
-            WHERE %s
-        """
-        
-        where_clause = "TRUE"
+        # Build WHERE clause properly
+        where_conditions = []
         params = []
         
-        if domain:
-            where_clause = " AND ".join(["%s" for _ in domain])
-            params = [d[2] for d in domain]
+        if partner_id:
+            where_conditions.append("partner_id = %s")
+            params.append(partner_id)
+        if date_from:
+            where_conditions.append("estimation_date >= %s")
+            params.append(date_from)
+        if date_to:
+            where_conditions.append("estimation_date <= %s")
+            params.append(date_to)
         
-        self.env.cr.execute(query % where_clause, params)
+        where_clause = " AND ".join(where_conditions) if where_conditions else "TRUE"
+        
+        query = f"""
+            SELECT 
+                COUNT(*) as total_count,
+                AVG(estimation_total) as avg_amount,
+                SUM(estimation_total) as total_amount,
+                COUNT(CASE WHEN state = 'approved' THEN 1 END) as approved_count
+            FROM mrp_estimation
+            WHERE {where_clause}
+        """
+        
+        self.env.cr.execute(query, params)
         return self.env.cr.dictfetchone()
 
     @api.model
@@ -52,8 +70,8 @@ class EstimationPerformance(models.AbstractModel):
             
         # Prefetch related records in a single query
         self.env['mrp.estimation'].browse(estimation_ids).read([
-            'name', 'partner_id', 'date', 'state', 'total_amount',
-            'line_ids', 'approver_id'
+            'name', 'partner_id', 'estimation_date', 'state', 'estimation_total',
+            'estimation_line_ids', 'user_id'
         ])
         
         # Prefetch line details
@@ -61,6 +79,6 @@ class EstimationPerformance(models.AbstractModel):
             ('estimation_id', 'in', estimation_ids)
         ])
         line_ids.read([
-            'product_id', 'quantity', 'unit_price',
-            'material_cost', 'labor_cost'
-        ]) 
+            'product_id', 'product_qty', 'product_cost',
+            'subtotal'
+        ])
