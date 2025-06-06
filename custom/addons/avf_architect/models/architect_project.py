@@ -2,47 +2,136 @@
 
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
-import json
+from datetime import datetime, timedelta
 
 class ArchitectProject(models.Model):
     _inherit = 'project.project'
 
+    # Mark as architect project
     is_architect_project = fields.Boolean(string='Is Architect Project', default=False)
+
+    # Project classification
     project_type = fields.Selection([
         ('government', 'Government Project'),
         ('private', 'Private Project'),
         ('dpr', 'DPR Project'),
-        ('survey', 'Survey Project')
+        ('survey', 'Survey Project'),
+        ('eco_tourism', 'Eco Tourism'),
+        ('infrastructure', 'Infrastructure')
     ], string='Project Type')
 
+    category = fields.Selection([
+        ('residential', 'Residential'),
+        ('commercial', 'Commercial'),
+        ('institutional', 'Institutional'),
+        ('infrastructure', 'Infrastructure'),
+        ('eco_tourism', 'Eco Tourism'),
+        ('mixed_use', 'Mixed Use')
+    ], string='Project Category')
+
+    # Client information
     client_name = fields.Char(string='Client Name')
+    client_contact = fields.Char(string='Client Contact')
+    client_email = fields.Char(string='Client Email')
+
+    # Project details
     project_location = fields.Text(string='Project Location')
     estimated_area = fields.Float(string='Estimated Area (sq ft)')
-    estimated_budget = fields.Monetary(string='Estimated Budget')
+    plot_area = fields.Float(string='Plot Area (sq ft)')
+    built_up_area = fields.Float(string='Built-up Area (sq ft)')
+
+    # Financial fields
+    estimated_budget = fields.Monetary(string='Estimated Budget', currency_field='currency_id')
+    estimated_cost = fields.Monetary(string='Estimated Cost', currency_field='currency_id')
+    budget = fields.Monetary(string='Approved Budget', currency_field='currency_id')
+    currency_id = fields.Many2one('res.currency', string='Currency', 
+                                  default=lambda self: self.env.company.currency_id)
+
+    # Timeline
+    start_date = fields.Date(string='Start Date')
+    deadline = fields.Date(string='Deadline')
+    completion_date = fields.Date(string='Completion Date')
+
+    # Progress tracking
+    progress = fields.Float(string='Progress (%)', default=0.0)
+
+    # Project state - this is the field that was missing
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('confirmed', 'Confirmed'),
+        ('in_progress', 'In Progress'),
+        ('review', 'Under Review'),
+        ('approved', 'Approved'),
+        ('completed', 'Completed'),
+        ('cancelled', 'Cancelled'),
+        ('on_hold', 'On Hold')
+    ], string='Project State', default='draft', tracking=True)
 
     # DPR related fields
     dpr_required = fields.Boolean(string='DPR Required')
     dpr_status = fields.Selection([
         ('not_started', 'Not Started'),
         ('in_progress', 'In Progress'),
-        ('completed', 'Completed')
+        ('completed', 'Completed'),
+        ('approved', 'Approved')
     ], string='DPR Status', default='not_started')
 
     # Compliance fields
     fca_compliance = fields.Boolean(string='FCA Compliance Required')
     ecotourism_compliance = fields.Boolean(string='Ecotourism Compliance')
+    environmental_clearance = fields.Boolean(string='Environmental Clearance Required')
 
+    # Relationships
     stage_id = fields.Many2one('avf.project.stage', string='Project Stage')
-    
-    # Project state field
-    state = fields.Selection([
-        ('draft', 'Draft'),
-        ('in_progress', 'In Progress'),
-        ('review', 'Under Review'),
-        ('approved', 'Approved'),
-        ('completed', 'Completed'),
-        ('cancelled', 'Cancelled')
-    ], string='State', default='draft', tracking=True)
+    team_ids = fields.Many2many('architect.team', string='Project Teams')
+    dpr_ids = fields.One2many('architect.dpr', 'project_id', string='DPR Records')
+    survey_ids = fields.One2many('architect.survey', 'project_id', string='Surveys')
+
+    # Computed fields
+    dpr_count = fields.Integer(string='DPR Count', compute='_compute_dpr_count')
+    survey_count = fields.Integer(string='Survey Count', compute='_compute_survey_count')
+
+    @api.depends('dpr_ids')
+    def _compute_dpr_count(self):
+        for project in self:
+            project.dpr_count = len(project.dpr_ids)
+
+    @api.depends('survey_ids')
+    def _compute_survey_count(self):
+        for project in self:
+            project.survey_count = len(project.survey_ids)
+
+    @api.constrains('estimated_budget', 'estimated_cost')
+    def _check_budget_cost(self):
+        for project in self:
+            if project.estimated_cost and project.estimated_budget:
+                if project.estimated_cost > project.estimated_budget * 1.2:  # 20% tolerance
+                    raise ValidationError(_('Estimated cost exceeds budget by more than 20%. Please review.'))
+
+    def action_confirm(self):
+        self.state = 'confirmed'
+
+    def action_start(self):
+        self.state = 'in_progress'
+        if not self.start_date:
+            self.start_date = fields.Date.today()
+
+    def action_review(self):
+        self.state = 'review'
+
+    def action_approve(self):
+        self.state = 'approved'
+
+    def action_complete(self):
+        self.state = 'completed'
+        self.completion_date = fields.Date.today()
+        self.progress = 100.0
+
+    def action_cancel(self):
+        self.state = 'cancelled'
+
+    def action_reset_to_draft(self):
+        self.state = 'draft'
 
 class ArchitectProject(models.Model):
     _name = 'architect.project'
@@ -83,11 +172,11 @@ class ArchitectProject(models.Model):
     # Financial
     budget = fields.Monetary(string='Budget', currency_field='currency_id')
     currency_id = fields.Many2one('res.currency', string='Currency', 
-                                  default=lambda self: self.env.company.currency_id)
+                                 default=lambda self: self.env.company.currency_id)
 
     # Status
     stage_id = fields.Many2one('architect.project.stage', string='Stage', 
-                               default=lambda self: self._get_default_stage())
+                              default=lambda self: self._get_default_stage())
     priority = fields.Selection([
         ('0', 'Low'),
         ('1', 'Normal'),
@@ -97,7 +186,7 @@ class ArchitectProject(models.Model):
 
     # Team
     user_id = fields.Many2one('res.users', string='Project Manager', 
-                              default=lambda self: self.env.user, tracking=True)
+                             default=lambda self: self.env.user, tracking=True)
     team_member_ids = fields.Many2many('res.users', string='Team Members')
 
     # Progress
@@ -115,7 +204,7 @@ class ArchitectProject(models.Model):
     cost_estimate_ids = fields.One2many('architect.cost.estimate', 'project_id', string='Cost Estimates')
 
     company_id = fields.Many2one('res.company', string='Company', 
-                                 default=lambda self: self.env.company)
+                                default=lambda self: self.env.company)
     active = fields.Boolean(string='Active', default=True)
 
     @api.model

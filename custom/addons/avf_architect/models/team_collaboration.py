@@ -4,269 +4,119 @@ from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 from datetime import datetime, timedelta
 
-class TeamCollaboration(models.Model):
-    _name = 'avf.team.collaboration'
-    _description = 'Team Collaboration'
-    _rec_name = 'name'
-
-    name = fields.Char(string='Collaboration Name', required=True)
-    project_id = fields.Many2one('project.project', string='Project', required=True)
-    
-    team_members = fields.Many2many('res.users', string='Team Members')
-    lead_architect = fields.Many2one('res.users', string='Lead Architect')
-    
-    meeting_date = fields.Datetime(string='Meeting Date')
-    meeting_location = fields.Char(string='Meeting Location')
-    meeting_type = fields.Selection([
-        ('planning', 'Planning Meeting'),
-        ('review', 'Review Meeting'),
-        ('coordination', 'Coordination Meeting'),
-        ('client', 'Client Meeting')
-    ], string='Meeting Type')
-    
-    agenda = fields.Text(string='Agenda')
-    minutes = fields.Text(string='Meeting Minutes')
-    action_items = fields.Text(string='Action Items')
-    
-    status = fields.Selection([
-        ('scheduled', 'Scheduled'),
-        ('completed', 'Completed'),
-        ('cancelled', 'Cancelled')
-    ], string='Status', default='scheduled')
-
-class TeamMember(models.Model):
-    _name = 'architect.team.member'
-    _description = 'Team Member'
-    
-    name = fields.Char(string='Member Name', required=True)
-    user_id = fields.Many2one('res.users', string='User')
-    role = fields.Char(string='Role')
-    
-    # Use different label to avoid conflict
-    team_skill_ids = fields.Many2many('hr.skill', string='Team Skills')
-    skill_ids = fields.Many2many('hr.skill', string='Member Skills')
-    
-    # Add compute fields that reference the correct state field
-    active_project_count = fields.Integer(string='Active Projects', compute='_compute_project_stats')
-    
-    @api.depends('user_id')
-    def _compute_project_stats(self):
-        for record in self:
-            if record.user_id:
-                projects = self.env['project.project'].search([
-                    ('user_id', '=', record.user_id.id),
-                    ('stage_id.is_closed', '=', False)
-                ])
-                record.active_project_count = len(projects)
-            else:
-                record.active_project_count = 0
-
 class ArchitectTeam(models.Model):
     _name = 'architect.team'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
-    _description = 'Project Team'
-    _order = 'name'
+    _description = 'Architect Team'
+    _rec_name = 'name'
 
-    name = fields.Char(string='Team Name', required=True, tracking=True)
-    code = fields.Char(string='Team Code', required=True, copy=False)
-    company_id = fields.Many2one('res.company', string='Company', 
-                                default=lambda self: self.env.company)
-    
-    # Team Members
-    leader_id = fields.Many2one('res.users', string='Team Leader', required=True, 
-                               tracking=True)
-    member_ids = fields.Many2many('res.users', string='Team Members')
-    
-    # Team Details
-    specialization = fields.Selection([
-        ('architectural', 'Architectural Design'),
-        ('structural', 'Structural Engineering'),
-        ('mep', 'MEP Engineering'),
-        ('interior', 'Interior Design'),
-        ('landscape', 'Landscape Design'),
-        ('urban', 'Urban Planning'),
-        ('project_management', 'Project Management')
-    ], string='Specialization')
-    
-    # Projects
-    project_ids = fields.Many2many('architect.project', string='Projects')
-    active_project_count = fields.Integer(compute='_compute_project_stats')
-    completed_project_count = fields.Integer(compute='_compute_project_stats')
-    
-    # Team Capacity
-    capacity_hours = fields.Float(string='Weekly Capacity (Hours)', default=40.0)
-    allocated_hours = fields.Float(string='Allocated Hours', compute='_compute_allocated_hours')
-    available_hours = fields.Float(string='Available Hours', compute='_compute_allocated_hours')
-    
-    # Performance Metrics
-    efficiency_rating = fields.Float(string='Efficiency Rating', compute='_compute_performance_metrics')
-    quality_rating = fields.Float(string='Quality Rating', compute='_compute_performance_metrics')
-    
-    # Status
-    active = fields.Boolean(default=True)
-    state = fields.Selection([
-        ('forming', 'Forming'),
-        ('active', 'Active'),
-        ('overallocated', 'Over Allocated'),
-        ('inactive', 'Inactive')
-    ], string='Status', default='forming', tracking=True)
-    
-    @api.depends('project_ids', 'project_ids.state')
+    name = fields.Char(string='Team Name', required=True)
+    project_id = fields.Many2one('architect.project', string='Project', required=True)
+    team_lead_id = fields.Many2one('res.users', string='Team Lead', required=True)
+    member_ids = fields.One2many('architect.team.member', 'team_id', string='Team Members')
+
+    description = fields.Text(string='Team Description')
+    active = fields.Boolean(string='Active', default=True)
+
+    # Computed fields for statistics
+    member_count = fields.Integer(string='Member Count', compute='_compute_member_count')
+    active_project_count = fields.Integer(string='Active Projects', compute='_compute_project_stats')
+
+    @api.depends('member_ids')
+    def _compute_member_count(self):
+        for team in self:
+            team.member_count = len(team.member_ids)
+
+    @api.depends('project_id', 'project_id.stage_id')
     def _compute_project_stats(self):
         for team in self:
-            team.active_project_count = len(team.project_ids.filtered(
-                lambda p: p.state in ['confirmed', 'in_progress', 'review']))
-            team.completed_project_count = len(team.project_ids.filtered(
-                lambda p: p.state == 'completed'))
-    
-    @api.depends('capacity_hours', 'project_ids', 'member_ids')
-    def _compute_allocated_hours(self):
-        for team in self:
-            allocated = sum(team.project_ids.mapped('allocated_hours'))
-            team.allocated_hours = allocated
-            team.available_hours = team.capacity_hours - allocated
-    
-    @api.depends('project_ids.progress', 'project_ids.quality_rating')
-    def _compute_performance_metrics(self):
-        for team in self:
-            completed_projects = team.project_ids.filtered(lambda p: p.state == 'completed')
-            if completed_projects:
-                team.efficiency_rating = sum(completed_projects.mapped('progress')) / len(completed_projects)
-                team.quality_rating = sum(completed_projects.mapped('quality_rating')) / len(completed_projects)
-            else:
-                team.efficiency_rating = 0.0
-                team.quality_rating = 0.0
-    
-    @api.model_create_multi
-    def create(self, vals_list):
-        for vals in vals_list:
-            if not vals.get('code'):
-                vals['code'] = self.env['ir.sequence'].next_by_code('architect.team')
-        return super().create(vals_list)
-    
-    def action_set_active(self):
-        self.state = 'active'
-    
-    def action_set_inactive(self):
-        self.state = 'inactive'
-    
-    def check_allocation(self):
-        self.ensure_one()
-        if self.available_hours < 0:
-            self.state = 'overallocated'
-        elif self.state == 'overallocated':
-            self.state = 'active'
-
-
-class ArchitectTeamAllocation(models.Model):
-    _name = 'architect.team.allocation'
-    _description = 'Team Allocation'
-    _order = 'start_date, id'
-
-    team_id = fields.Many2one('architect.team', string='Team', required=True)
-    project_id = fields.Many2one('architect.project', string='Project', required=True)
-    
-    # Allocation Details
-    start_date = fields.Date(string='Start Date', required=True)
-    end_date = fields.Date(string='End Date', required=True)
-    allocated_hours = fields.Float(string='Allocated Hours')
-    
-    # Members
-    member_ids = fields.Many2many('res.users', string='Allocated Members')
-    
-    # Status
-    state = fields.Selection([
-        ('draft', 'Draft'),
-        ('confirmed', 'Confirmed'),
-        ('in_progress', 'In Progress'),
-        ('completed', 'Completed'),
-        ('cancelled', 'Cancelled')
-    ], string='Status', default='draft')
-    
-    @api.constrains('start_date', 'end_date')
-    def _check_dates(self):
-        for record in self:
-            if record.start_date and record.end_date:
-                if record.start_date > record.end_date:
-                    raise ValidationError(_("End date cannot be before start date."))
-
+            # Count active projects for this team
+            active_projects = self.env['architect.project'].search_count([
+                ('team_ids', 'in', team.ids),
+                ('stage_id.name', '!=', 'Completed')
+            ])
+            team.active_project_count = active_projects
 
 class ArchitectTeamMember(models.Model):
     _name = 'architect.team.member'
-    _description = 'Team Member Details'
-    _inherits = {'res.users': 'user_id'}
-    _order = 'name'
+    _description = 'Architect Team Member'
+    _rec_name = 'user_id'
 
-    user_id = fields.Many2one('res.users', string='User', required=True, ondelete='cascade')
-    team_ids = fields.Many2many('architect.team', string='Teams')
-    
-    # Professional Details
-    designation = fields.Char(string='Designation')
-    specialization = fields.Selection([
+    team_id = fields.Many2one('architect.team', string='Team', required=True, ondelete='cascade')
+    user_id = fields.Many2one('res.users', string='User', required=True)
+
+    role = fields.Selection([
         ('architect', 'Architect'),
         ('engineer', 'Engineer'),
-        ('designer', 'Designer'),
         ('drafter', 'Drafter'),
-        ('manager', 'Project Manager'),
-        ('consultant', 'Consultant')
-    ], string='Specialization')
-    
-    # Skills and Certifications
-    skill_ids = fields.Many2many('architect.skill', string='Skills')
-    certification_ids = fields.One2many('architect.certification', 'member_id', 
-                                      string='Certifications')
-    
-    # Availability
-    available_hours = fields.Float(string='Available Hours/Week', default=40.0)
-    allocated_hours = fields.Float(string='Allocated Hours', compute='_compute_allocated_hours')
-    
-    # Performance
-    efficiency_rating = fields.Float(string='Efficiency Rating', default=0.0)
-    quality_rating = fields.Float(string='Quality Rating', default=0.0)
-    
-    @api.depends('team_ids.project_ids')
-    def _compute_allocated_hours(self):
-        for member in self:
-            allocated = sum(member.team_ids.mapped('project_ids').filtered(
-                lambda p: p.state in ['confirmed', 'in_progress']).mapped('allocated_hours'))
-            member.allocated_hours = allocated
+        ('surveyor', 'Surveyor'),
+        ('consultant', 'Consultant'),
+        ('coordinator', 'Project Coordinator')
+    ], string='Role', required=True)
 
+    # Rename to avoid conflict with hr module
+    member_skill_ids = fields.Many2many('architect.skill', string='Member Skills')
+
+    join_date = fields.Date(string='Join Date', default=fields.Date.today)
+    hourly_rate = fields.Float(string='Hourly Rate')
+
+    is_active = fields.Boolean(string='Active', default=True)
+    availability = fields.Selection([
+        ('full_time', 'Full Time'),
+        ('part_time', 'Part Time'),
+        ('contract', 'Contract'),
+        ('consultant', 'Consultant')
+    ], string='Availability', default='full_time')
 
 class ArchitectSkill(models.Model):
     _name = 'architect.skill'
-    _description = 'Professional Skill'
+    _description = 'Architect Skills'
+    _rec_name = 'name'
 
     name = fields.Char(string='Skill Name', required=True)
     category = fields.Selection([
         ('technical', 'Technical'),
-        ('software', 'Software'),
         ('design', 'Design'),
         ('management', 'Management'),
-        ('other', 'Other')
-    ], string='Category')
+        ('software', 'Software'),
+        ('compliance', 'Compliance')
+    ], string='Category', required=True)
+
     description = fields.Text(string='Description')
-    
-    _sql_constraints = [
-        ('name_uniq', 'unique (name)', "Skill name must be unique!")
-    ]
+    level_required = fields.Selection([
+        ('beginner', 'Beginner'),
+        ('intermediate', 'Intermediate'),
+        ('advanced', 'Advanced'),
+        ('expert', 'Expert')
+    ], string='Required Level', default='intermediate')
 
+class TeamCollaboration(models.Model):
+    _name = 'architect.team.collaboration'
+    _description = 'Team Collaboration'
+    _rec_name = 'name'
 
-class ArchitectCertification(models.Model):
-    _name = 'architect.certification'
-    _description = 'Professional Certification'
+    name = fields.Char(string='Collaboration Name', required=True)
+    project_id = fields.Many2one('architect.project', string='Project', required=True)
+    team_id = fields.Many2one('architect.team', string='Team', required=True)
 
-    name = fields.Char(string='Certification Name', required=True)
-    member_id = fields.Many2one('architect.team.member', string='Team Member')
-    issuing_body = fields.Char(string='Issuing Organization')
-    issue_date = fields.Date(string='Issue Date')
-    expiry_date = fields.Date(string='Expiry Date')
-    certification_number = fields.Char(string='Certification Number')
-    
-    # Status
-    active = fields.Boolean(string='Active', compute='_compute_active', store=True)
-    
-    @api.depends('expiry_date')
-    def _compute_active(self):
-        today = fields.Date.today()
-        for cert in self:
-            cert.active = not cert.expiry_date or cert.expiry_date >= today
+    collaboration_type = fields.Selection([
+        ('meeting', 'Team Meeting'),
+        ('review', 'Design Review'),
+        ('coordination', 'Coordination Session'),
+        ('training', 'Training Session')
+    ], string='Type', required=True)
+
+    scheduled_date = fields.Datetime(string='Scheduled Date')
+    duration = fields.Float(string='Duration (hours)')
+    location = fields.Char(string='Location')
+
+    participant_ids = fields.Many2many('res.users', string='Participants')
+    agenda = fields.Text(string='Agenda')
+    minutes = fields.Text(string='Minutes')
+    action_items = fields.Text(string='Action Items')
+
+    state = fields.Selection([
+        ('scheduled', 'Scheduled'),
+        ('in_progress', 'In Progress'),
+        ('completed', 'Completed'),
+        ('cancelled', 'Cancelled')
+    ], string='Status', default='scheduled')
