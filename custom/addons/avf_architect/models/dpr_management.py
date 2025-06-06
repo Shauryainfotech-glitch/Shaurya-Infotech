@@ -63,10 +63,10 @@ class AVFDPRManagement(models.Model):
     approved_by = fields.Many2one('res.users', string='Approved By')
 
     # Related records
-    activity_ids = fields.One2many('avf.dpr.activity', 'dpr_id', string='Activities')
+    dpr_activity_ids = fields.One2many('avf.dpr.activity', 'dpr_id', string='DPR Activities')
     resource_ids = fields.One2many('avf.dpr.resource', 'dpr_id', string='Resources')
 
-    # Files
+    # Files and attachments
     photos = fields.Binary(string='Progress Photos', attachment=True)
     photos_filename = fields.Char(string='Photos Filename')
     additional_documents = fields.Binary(string='Additional Documents', attachment=True)
@@ -146,14 +146,6 @@ class AVFDPRActivity(models.Model):
                 activity.duration = delta.total_seconds() / 3600
             else:
                 activity.duration = 0.0
-
-    def name_get(self):
-        """Custom name display for activities"""
-        result = []
-        for activity in self:
-            name = f"{activity.activity_name} ({dict(activity._fields['activity_type'].selection).get(activity.activity_type, activity.activity_type)})"
-            result.append((activity.id, name))
-        return result
 
 class AVFDPRResource(models.Model):
     _name = 'avf.dpr.resource'
