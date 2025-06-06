@@ -291,8 +291,8 @@
     </record>
 
     <!-- Task Tag Views -->
-    <record id="view_day_plan_task_tag_tree" model="ir.ui.view">
-        <field name="name">day.plan.task.tag.tree</field>
+    <record id="view_day_plan_task_tag_list" model="ir.ui.view">
+        <field name="name">day.plan.task.tag.list</field>
         <field name="model">day.plan.task.tag</field>
         <field name="type">list</field>
         <field name="arch" type="xml">

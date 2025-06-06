@@ -37,9 +37,12 @@ class DayPlanDashboardController(http.Controller):
                 start_date = today.replace(month=quarter_start_month, day=1)
             # For 'all', we don't set a start_date filter
 
-            # Get current user's employee if not specified
+            # Get current user's employee if not specified - safely handle missing employee
             if not employee_id:
-                employee_id = request.env.user.employee_id.id
+                if request.env.user.employee_id:
+                    employee_id = request.env.user.employee_id.id
+                else:
+                    _logger.info(f"User {request.env.user.name} (ID: {request.env.user.id}) has no associated employee record")
 
             # Build domain for day.plan records based on filters
             domain = []

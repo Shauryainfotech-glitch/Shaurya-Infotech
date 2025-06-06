@@ -30,22 +30,41 @@ class DashboardChart extends Component {
     
     renderChart() {
         const canvas = this.refs.chart;
+        if (!canvas) {
+            console.error('Canvas element not found');
+            return;
+        }
+        
         const ctx = canvas.getContext('2d');
+        if (!ctx) {
+            console.error('Could not get 2D context from canvas');
+            return;
+        }
+        
+        // Ensure Chart object exists
+        if (typeof Chart === 'undefined') {
+            console.error('Chart.js is not loaded');
+            return;
+        }
         
         // Destroy existing chart if any
         if (this.chart) {
             this.chart.destroy();
         }
         
-        // Create new chart with provided data
-        this.chart = new Chart(ctx, {
-            type: this.props.type.replace(/'/g, ''),
-            data: this.props.data,
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-            }
-        });
+        try {
+            // Create new chart with provided data
+            this.chart = new Chart(ctx, {
+                type: this.props.type.replace(/'/g, ''),
+                data: this.props.data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                }
+            });
+        } catch (error) {
+            console.error('Error creating chart:', error);
+        }
     }
     
     willUpdateProps(nextProps) {
