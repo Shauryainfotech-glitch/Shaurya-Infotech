@@ -15,7 +15,7 @@ class SolarQuote(models.Model):
         required=True,
         copy=False,
         readonly=True,
-        # default=lambda self: self.env['ir.sequence'].next_by_code('solar.quote') or "New"
+        default=lambda self: self.env['ir.sequence'].next_by_code('solar.quote') or "New"
     )
 
     product_id = fields.Many2one('product.product', string="Product", required=True)
