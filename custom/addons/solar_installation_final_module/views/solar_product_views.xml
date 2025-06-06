@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-        <!-- Action for Solar Products -->
+        <!-- Action for Solar Products (Form View Only) -->
         <record id="action_solar_product_views" model="ir.actions.act_window">
             <field name="name">Solar Products</field>
             <field name="res_model">solar.product.product</field>
-            <field name="view_mode">form</field>
+            <field name="view_mode">form</field> <!-- Only Form view is displayed -->
             <!-- <field name="view_id" ref="view_solar_product_form"/> -->
             <!-- <field name="help" type="html"/> -->
         </record>
 
-        <!-- Form View -->
+        <!-- Form View for Solar Products -->
         <record id="view_solar_product_form" model="ir.ui.view">
             <field name="name">solar.product.form</field>
             <field name="model">solar.product.product</field>

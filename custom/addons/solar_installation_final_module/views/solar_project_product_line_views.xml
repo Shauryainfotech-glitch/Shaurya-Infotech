@@ -1,40 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
    <data>
-  <!-- Tree View -->
-  <record id="view_solar_project_product_line_tree" model="ir.ui.view">
-    <field name="name">solar.project.product.line.tree</field>
-    <field name="model">solar.project.product.line</field>
-    <field name="arch" type="xml">
-      <tree string="Project Product Lines" editable="bottom">
-        <field name="sequence"/>
-        <field name="product_id"/>
-        <field name="quantity"/>
-        <field name="unit_cost"/>
-        <field name="manual_unit_cost"/>
-        <field name="subtotal"/>
-      </tree>
-    </field>
-  </record>
+      <!-- Form View for Project Product Line -->
+      <record id="view_solar_project_product_line_form" model="ir.ui.view">
+         <field name="name">solar.project.product.line.form</field>
+         <field name="model">solar.project.product.line</field>
+         <field name="arch" type="xml">
+            <form string="Project Product Line">
+               <sheet>
+                  <group>
+                     <field name="sequence"/>
+                     <field name="product_id"/>
+                     <field name="quantity"/>
+                     <field name="unit_cost"/>
+                     <field name="manual_unit_cost"/>
+                     <field name="subtotal"/>
+                  </group>
+               </sheet>
+            </form>
+         </field>
+      </record>
 
-  <!-- Form View -->
-  <record id="view_solar_project_product_line_form" model="ir.ui.view">
-    <field name="name">solar.project.product.line.form</field>
-    <field name="model">solar.project.product.line</field>
-    <field name="arch" type="xml">
-      <form string="Project Product Line">
-        <sheet>
-          <group>
-            <field name="sequence"/>
-            <field name="product_id"/>
-            <field name="quantity"/>
-            <field name="unit_cost"/>
-            <field name="manual_unit_cost"/>
-            <field name="subtotal"/>
-          </group>
-        </sheet>
-      </form>
-    </field>
-  </record>
+      <!-- Action for Project Product Line (No Tree View) -->
+      <record id="action_solar_project_product_line" model="ir.actions.act_window">
+         <field name="name">Project Product Lines</field>
+         <field name="res_model">solar.project.product.line</field>
+         <field name="view_mode">form</field> <!-- Only Form view is displayed -->
+         <field name="view_id" ref="view_solar_project_product_line_form"/>
+         <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+               Create your first project product line
+            </p>
+         </field>
+      </record>
    </data>
 </odoo>

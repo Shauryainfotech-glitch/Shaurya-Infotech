@@ -1,93 +1,67 @@
-
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
    <data>
-  <!-- Tree View -->
-  <record id="view_solar_quote_tree" model="ir.ui.view">
-    <field name="name">solar.quote.tree</field>
-    <field name="model">solar.quote</field>
-    <field name="arch" type="xml">
-      <tree string="Solar Quotations">
-        <field name="quote_number"/>
-        <field name="project_id"/>
-        <field name="partner_id"/>
-        <field name="quote_date"/>
-        <field name="total_amount"/>
-        <field name="state"/>
-      </tree>
-    </field>
-  </record>
-
-  <!-- Form View -->
-  <record id="view_solar_quote_form" model="ir.ui.view">
-    <field name="name">solar.quote.form</field>
-    <field name="model">solar.quote</field>
-    <field name="arch" type="xml">
-      <form string="Solar Quote" version="1.1">
-          <header>
-          <field name="state" widget="statusbar"
-                 statusbar_visible="draft,sent,accepted,refused,expired"/>
-          <button string="Send" type="object" name="action_send" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
-          <button string="Accept" type="object" name="action_accept" attrs="{'invisible': [('state', '!=', 'sent')]}"/>
-          <button string="Refuse" type="object" name="action_refuse" attrs="{'invisible': [('state', 'not in', ('draft', 'sent'))]}"/>
-        </header>
-        <sheet>
-          <group>
-            <field name="quote_number" readonly="1"/>
-            <field name="project_id"/>
-            <field name="quote_date"/>
-            <field name="validity_days"/>
-            <field name="expiration_date"/>
-            <field name="partner_id" readonly="1"/>
-          </group>
-          <group>
-            <field name="notes"/>
-            <field name="internal_notes"/>
-          </group>
-          <newline/>
-          <field name="quote_line_ids">
-            <tree editable="bottom">
-              <field name="sequence"/>
-              <field name="product_id"/>
-              <field name="description"/>
-              <field name="quantity"/>
-              <field name="unit_price"/>
-              <field name="discount_pct"/>
-              <field name="price_subtotal"/>
-            </tree>
-            <form string="Quote Lines">
-              <group>
-                <field name="sequence"/>
-                <field name="product_id"/>
-                <field name="description"/>
-                <field name="quantity"/>
-                <field name="unit_price"/>
-                <field name="discount_pct"/>
-                <field name="price_subtotal"/>
-              </group>
+      <!-- Form View for Solar Quote -->
+      <record id="view_solar_quote_form" model="ir.ui.view">
+         <field name="name">solar.quote.form</field>
+         <field name="model">solar.quote</field>
+         <field name="arch" type="xml">
+            <form string="Solar Quote" version="1.1">
+               <header>
+                  <field name="state" widget="statusbar"
+                         statusbar_visible="draft,sent,accepted,refused,expired"/>
+                  <button string="Send" type="object" name="action_send" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                  <button string="Accept" type="object" name="action_accept" attrs="{'invisible': [('state', '!=', 'sent')]}"/>
+                  <button string="Refuse" type="object" name="action_refuse" attrs="{'invisible': [('state', 'not in', ('draft', 'sent'))]}"/>
+               </header>
+               <sheet>
+                  <group>
+                     <field name="quote_number" readonly="1"/>
+                     <field name="project_id"/>
+                     <field name="quote_date"/>
+                     <field name="validity_days"/>
+                     <field name="expiration_date"/>
+                     <field name="partner_id" readonly="1"/>
+                  </group>
+                  <group>
+                     <field name="notes"/>
+                     <field name="internal_notes"/>
+                  </group>
+                  <newline/>
+                  <field name="quote_line_ids">
+                     <form string="Quote Lines">
+                        <group>
+                           <field name="sequence"/>
+                           <field name="product_id"/>
+                           <field name="description"/>
+                           <field name="quantity"/>
+                           <field name="unit_price"/>
+                           <field name="discount_pct"/>
+                           <field name="price_subtotal"/>
+                        </group>
+                     </form>
+                  </field>
+                  <group string="Totals">
+                     <field name="untaxed_amount" readonly="1"/>
+                     <field name="tax_amount" readonly="1"/>
+                     <field name="total_amount" readonly="1"/>
+                  </group>
+               </sheet>
             </form>
-          </field>
-          <group string="Totals">
-            <field name="untaxed_amount" readonly="1"/>
-            <field name="tax_amount" readonly="1"/>
-            <field name="total_amount" readonly="1"/>
-          </group>
-        </sheet>
-      </form>
-    </field>
-  </record>
+         </field>
+      </record>
 
-  <!-- Action for Solar Quotes -->
-  <record id="action_solar_quote" model="ir.actions.act_window">
-    <field name="name">Solar Quotations</field>
-    <field name="res_model">solar.quote</field>
-    <field name="view_mode">tree,form</field>
-    <field name="view_id" ref="view_solar_quote_tree"/>
-    <field name="help" type="html">
-      <p class="o_view_nocontent_smiling_face">
-        Create your first solar quotation
-      </p>
-    </field>
-  </record>
+      <!-- Action for Solar Quotes (No Tree View) -->
+      <record id="action_solar_quote" model="ir.actions.act_window">
+         <field name="name">Solar Quotations</field>
+         <field name="res_model">solar.quote</field>
+         <field name="view_mode">form</field> <!-- Only Form view is displayed -->
+         <field name="view_id" ref="view_solar_quote_form"/>
+         <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+               Create your first solar quotation
+            </p>
+         </field>
+      </record>
    </data>
 </odoo>

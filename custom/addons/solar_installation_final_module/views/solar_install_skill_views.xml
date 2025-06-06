@@ -1,36 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
    <data>
-  <!-- Action and Menu for Installation Skills -->
-  <record id="action_solar_install_skill" model="ir.actions.act_window">
-    <field name="name">Installation Skills</field>
-    <field name="res_model">solar.install.skill</field>
-    <field name="view_mode">form</field>
-    <field name="help" type="html">
-      <p class="o_view_nocontent_smiling_face">
-        Create your first installation skill
-      </p>
-    </field>
-  </record>
+      <!-- Action and Menu for Installation Skills -->
+      <record id="action_solar_install_skill" model="ir.actions.act_window">
+         <field name="name">Installation Skills</field>
+         <field name="res_model">solar.install.skill</field>
+         <field name="view_mode">form</field> <!-- Display only the form view -->
+         <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+               Create your first installation skill
+            </p>
+         </field>
+      </record>
 
-  <!-- Form View -->
-  <record id="view_solar_install_skill_form" model="ir.ui.view">
-    <field name="name">solar.install.skill.form</field>
-    <field name="model">solar.install.skill</field>
-    <field name="arch" type="xml">
-      <form string="Installation Skill">
-        <sheet>
-          <group>
-            <field name="name"/>
-            <field name="code"/>
-          </group>
-          <group>
-            <field name="description"/>
-            <field name="active"/>
-          </group>
-        </sheet>
-      </form>
-    </field>
-  </record>
+      <!-- Form View for Installation Skill -->
+      <record id="view_solar_install_skill_form" model="ir.ui.view">
+         <field name="name">solar.install.skill.form</field>
+         <field name="model">solar.install.skill</field>
+         <field name="arch" type="xml">
+            <form string="Installation Skill">
+               <sheet>
+                  <group>
+                     <field name="name"/>
+                     <field name="code"/>
+                  </group>
+                  <group>
+                     <field name="description"/>
+                     <field name="active"/>
+                  </group>
+               </sheet>
+            </form>
+         </field>
+      </record>
    </data>
 </odoo>

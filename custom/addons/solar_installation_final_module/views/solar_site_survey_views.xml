@@ -1,23 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
    <data>
-      <!-- Tree View -->
-      <record id="view_solar_site_survey_tree" model="ir.ui.view">
-         <field name="name">solar.site.survey.tree</field>
-         <field name="model">solar.site.survey</field>
-         <field name="arch" type="xml">
-            <tree string="Site Surveys">
-               <field name="name"/>
-               <field name="project_id"/>
-               <field name="survey_date"/>
-               <field name="surveyed_by"/>
-               <field name="site_type"/>
-               <field name="recommended_capacity_kw"/>
-               <field name="state"/>
-            </tree>
-         </field>
-      </record>
-
       <!-- Form View for Solar Site Survey -->
       <record id="view_solar_site_survey_form" model="ir.ui.view">
          <field name="name">solar.site.survey.form</field>
@@ -65,12 +48,12 @@
          </field>
       </record>
 
-      <!-- Action for Site Surveys -->
+      <!-- Action for Site Surveys (No Tree View) -->
       <record id="action_solar_site_survey" model="ir.actions.act_window">
          <field name="name">Site Surveys</field>
          <field name="res_model">solar.site.survey</field>
-         <field name="view_mode">tree,form</field>
-         <field name="view_id" ref="view_solar_site_survey_tree"/>
+         <field name="view_mode">form</field> <!-- Only Form view is displayed -->
+         <field name="view_id" ref="view_solar_site_survey_form"/>
          <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                Create your first site survey

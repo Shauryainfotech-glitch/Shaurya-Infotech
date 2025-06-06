@@ -1,69 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
    <data>
-  <!-- Tree View -->
-  <record id="view_solar_install_schedule_tree" model="ir.ui.view">
-    <field name="name">solar.install.schedule.tree</field>
-    <field name="model">solar.install.schedule</field>
-    <field name="arch" type="xml">
-      <tree string="Installation Schedules">
-        <field name="project_id"/>
-        <field name="team_id"/>
-        <field name="start_datetime"/>
-        <field name="duration_hours"/>
-        <field name="end_datetime"/>
-        <field name="state"/>
-      </tree>
-    </field>
-  </record>
+      <!-- Form View for Installation Schedule -->
+      <record id="view_solar_install_schedule_form" model="ir.ui.view">
+         <field name="name">solar.install.schedule.form</field>
+         <field name="model">solar.install.schedule</field>
+         <field name="arch" type="xml">
+            <form string="Installation Schedule" version="1.1">
+               <header>
+                  <field name="state" widget="statusbar"
+                         statusbar_visible="planned,in_progress,done,cancelled"/>
+                  <button string="Start" type="object" name="action_start" attrs="{'invisible': [('state', '!=', 'planned')]}"/>
+                  <button string="Done" type="object" name="action_done" attrs="{'invisible': [('state', '!=', 'in_progress')]}"/>
+                  <button string="Cancel" type="object" name="action_cancel" attrs="{'invisible': [('state', 'not in', ('planned', 'in_progress'))]}"/>
+               </header>
+               <sheet>
+                  <group>
+                     <field name="project_id"/>
+                     <field name="team_id"/>
+                     <field name="scheduled_by" readonly="1"/>
+                  </group>
+                  <group>
+                     <field name="start_datetime"/>
+                     <field name="duration_hours"/>
+                     <field name="end_datetime" readonly="1"/>
+                  </group>
+                  <group>
+                     <field name="assigned_employee_ids" widget="many2many_tags"/>
+                     <field name="state"/>
+                  </group>
+                  <group>
+                     <field name="notes"/>
+                  </group>
+               </sheet>
+            </form>
+         </field>
+      </record>
 
-  <!-- Form View -->
-  <record id="view_solar_install_schedule_form" model="ir.ui.view">
-    <field name="name">solar.install.schedule.form</field>
-    <field name="model">solar.install.schedule</field>
-    <field name="arch" type="xml">
-      <form string="Installation Schedule" version="1.1">
-        <header>
-          <field name="state" widget="statusbar"
-                 statusbar_visible="planned,in_progress,done,cancelled"/>
-          <button string="Start" type="object" name="action_start" attrs="{'invisible': [('state', '!=', 'planned')]}"/>
-          <button string="Done" type="object" name="action_done" attrs="{'invisible': [('state', '!=', 'in_progress')]}"/>
-          <button string="Cancel" type="object" name="action_cancel" attrs="{'invisible': [('state', 'not in', ('planned', 'in_progress'))]}"/>
-        </header>
-        <sheet>
-          <group>
-            <field name="project_id"/>
-            <field name="team_id"/>
-            <field name="scheduled_by" readonly="1"/>
-          </group>
-          <group>
-            <field name="start_datetime"/>
-            <field name="duration_hours"/>
-            <field name="end_datetime" readonly="1"/>
-          </group>
-          <group>
-            <field name="assigned_employee_ids" widget="many2many_tags"/>
-            <field name="state"/>
-          </group>
-          <group>
-            <field name="notes"/>
-          </group>
-        </sheet>
-      </form>
-    </field>
-  </record>
-
-  <!-- Action for Installation Schedules -->
-  <record id="action_solar_install_schedule" model="ir.actions.act_window">
-    <field name="name">Installation Schedules</field>
-    <field name="res_model">solar.install.schedule</field>
-    <field name="view_mode">tree,form</field>
-    <field name="view_id" ref="view_solar_install_schedule_tree"/>
-    <field name="help" type="html">
-      <p class="o_view_nocontent_smiling_face">
-        Create your first installation schedule
-      </p>
-    </field>
-  </record>
+      <!-- Action for Installation Schedules -->
+      <record id="action_solar_install_schedule" model="ir.actions.act_window">
+         <field name="name">Installation Schedules</field>
+         <field name="res_model">solar.install.schedule</field>
+         <field name="view_mode">form</field> <!-- Changed to display only the form view -->
+         <field name="view_id" ref="view_solar_install_schedule_form"/>
+         <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+               Create your first installation schedule
+            </p>
+         </field>
+      </record>
    </data>
 </odoo>
