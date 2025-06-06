@@ -6,7 +6,7 @@ from . import mrp_costing
 from . import res_config_settings
 from . import portal_mixin
 from . import calculation_engine
-from . import sale_integration
+#from . import sale_integration
 from . import mrp_integration
 from . import automation
 from . import performance
