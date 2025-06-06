@@ -1,4 +1,3 @@
-
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api, _
@@ -20,7 +19,6 @@ class ArchitectProject(models.Model):
         default=lambda self: self.env.company,
         index=True
     )
-    # Client Information
     partner_id = fields.Many2one('res.partner', string='Client', required=True, tracking=True)
     client_type = fields.Selection([
         ('government', 'Government'),
@@ -28,8 +26,7 @@ class ArchitectProject(models.Model):
         ('public_sector', 'Public Sector'),
         ('ngo', 'NGO')
     ], string='Client Type', required=True, default='government')
-    
-    # Project Details
+
     project_type = fields.Selection([
         ('architectural', 'Architectural Design'),
         ('urban_planning', 'Urban Planning'),
@@ -39,7 +36,7 @@ class ArchitectProject(models.Model):
         ('survey', 'Survey & Assessment'),
         ('ecotourism', 'Ecotourism Development')
     ], string='Project Type', required=True, default='architectural')
-    
+
     category = fields.Selection([
         ('residential', 'Residential'),
         ('commercial', 'Commercial'),
@@ -49,50 +46,42 @@ class ArchitectProject(models.Model):
         ('heritage', 'Heritage'),
         ('eco_tourism', 'Eco-Tourism')
     ], string='Category', required=True)
-    
-    # Location Information
+
     location = fields.Text(string='Project Location', required=True)
     state_id = fields.Many2one('res.country.state', string='State')
     district = fields.Char(string='District')
     pin_code = fields.Char(string='PIN Code')
     gps_coordinates = fields.Char(string='GPS Coordinates')
-    
-    # Project Management
-    stage_id = fields.Many2one('architect.project.stage', string='Stage', 
-                              default=lambda self: self._get_default_stage(), tracking=True)
-    user_id = fields.Many2one('res.users', string='Project Manager', 
-                             default=lambda self: self.env.user, tracking=True)
+
+    stage_id = fields.Many2one('architect.project.stage', string='Stage',
+                               default=lambda self: self._get_default_stage(), tracking=True)
+    user_id = fields.Many2one('res.users', string='Project Manager',
+                              default=lambda self: self.env.user, tracking=True)
     team_ids = fields.Many2many('res.users', string='Team Members')
-    
-    # Dates
+
     start_date = fields.Date(string='Start Date', required=True, default=fields.Date.today)
     deadline = fields.Date(string='Deadline', tracking=True)
     completion_date = fields.Date(string='Completion Date')
-    
-    # Financial
+
     budget = fields.Monetary(string='Budget', currency_field='currency_id')
     estimated_cost = fields.Monetary(string='Estimated Cost', currency_field='currency_id')
     actual_cost = fields.Monetary(string='Actual Cost', compute='_compute_actual_cost', store=True)
-    currency_id = fields.Many2one('res.currency', string='Currency', 
-                                 default=lambda self: self.env.company.currency_id)
-    
-    # Progress Tracking
+    currency_id = fields.Many2one('res.currency', string='Currency',
+                                  default=lambda self: self.env.company.currency_id)
+
     progress = fields.Float(string='Progress (%)', compute='_compute_progress', store=True)
     task_count = fields.Integer(string='Task Count', compute='_compute_task_count')
-    
-    # Documents & Compliance
     drawing_count = fields.Integer(string='Drawings', compute='_compute_drawing_count')
     dpr_count = fields.Integer(string='DPR Count', compute='_compute_dpr_count')
     compliance_count = fields.Integer(string='Compliance Items', compute='_compute_compliance_count')
-    
-    # Status & Priority
+
     priority = fields.Selection([
         ('0', 'Low'),
         ('1', 'Normal'),
         ('2', 'High'),
         ('3', 'Very High')
     ], string='Priority', default='1')
-    
+
     state = fields.Selection([
         ('draft', 'Draft'),
         ('confirmed', 'Confirmed'),
@@ -102,94 +91,87 @@ class ArchitectProject(models.Model):
         ('completed', 'Completed'),
         ('cancelled', 'Cancelled')
     ], string='Status', default='draft', tracking=True)
-    
-    # Additional Information
+
     notes = fields.Html(string='Notes')
     tags = fields.Text(string='Tags')
-    
-    # Government Specific
+
     tender_reference = fields.Char(string='Tender Reference')
     department = fields.Char(string='Government Department')
     approval_authority = fields.Char(string='Approval Authority')
-    
-    # AI & Analytics
+
     ai_recommendations = fields.Text(string='AI Recommendations')
     risk_analysis = fields.Text(string='Risk Analysis')
     sustainability_score = fields.Float(string='Sustainability Score')
-    
+
     @api.model
     def _get_default_stage(self):
         return self.env['architect.project.stage'].search([('sequence', '=', 1)], limit=1)
-    
+
     @api.depends('stage_id')
     def _compute_progress(self):
         for project in self:
-            if project.stage_id:
-                project.progress = project.stage_id.progress
-            else:
-                project.progress = 0.0
-    
+            project.progress = project.stage_id.progress if project.stage_id else 0.0
+
     def _compute_task_count(self):
         for project in self:
             project.task_count = self.env['project.task'].search_count([
                 ('architect_project_id', '=', project.id)
             ])
-    
+
     def _compute_drawing_count(self):
         for project in self:
             project.drawing_count = self.env['architect.drawing'].search_count([
                 ('project_id', '=', project.id)
             ])
-    
+
     def _compute_dpr_count(self):
         for project in self:
             project.dpr_count = self.env['architect.dpr'].search_count([
                 ('project_id', '=', project.id)
             ])
-    
+
     def _compute_compliance_count(self):
         for project in self:
             project.compliance_count = self.env['architect.compliance'].search_count([
                 ('project_id', '=', project.id)
             ])
-    
+
     @api.depends('estimated_cost')
     def _compute_actual_cost(self):
-        # This would be computed from actual expenses
         for project in self:
-            project.actual_cost = project.estimated_cost * 0.85  # Placeholder calculation
-    
+            project.actual_cost = project.estimated_cost * 0.85
+
     @api.model
     def create(self, vals):
         if 'code' not in vals or not vals['code']:
             vals['code'] = self.env['ir.sequence'].next_by_code('architect.project') or 'New'
         return super().create(vals)
-    
+
     def action_confirm(self):
         self.state = 'confirmed'
         self.message_post(body=_("Project confirmed and ready to start."))
-    
+
     def action_start(self):
         self.state = 'in_progress'
         self.message_post(body=_("Project started."))
-    
+
     def action_review(self):
         self.state = 'review'
         self.message_post(body=_("Project submitted for review."))
-    
+
     def action_approve(self):
         self.state = 'approved'
         self.message_post(body=_("Project approved."))
-    
+
     def action_complete(self):
         self.state = 'completed'
         self.completion_date = fields.Date.today()
         self.message_post(body=_("Project completed successfully."))
-    
+
     def action_cancel(self):
         self.state = 'cancelled'
         self.message_post(body=_("Project cancelled."))
-    
+
     def action_view_tasks(self):
         return {
             'type': 'ir.actions.act_window',
@@ -199,7 +181,7 @@ class ArchitectProject(models.Model):
             'domain': [('architect_project_id', '=', self.id)],
             'context': {'default_architect_project_id': self.id}
         }
-    
+
     def action_view_drawings(self):
         return {
             'type': 'ir.actions.act_window',
@@ -209,7 +191,7 @@ class ArchitectProject(models.Model):
             'domain': [('project_id', '=', self.id)],
             'context': {'default_project_id': self.id}
         }
-    
+
     def action_view_dpr(self):
         return {
             'type': 'ir.actions.act_window',
@@ -219,7 +201,7 @@ class ArchitectProject(models.Model):
             'domain': [('project_id', '=', self.id)],
             'context': {'default_project_id': self.id}
         }
-    
+
     def action_view_compliance(self):
         return {
             'type': 'ir.actions.act_window',
@@ -229,9 +211,8 @@ class ArchitectProject(models.Model):
             'domain': [('project_id', '=', self.id)],
             'context': {'default_project_id': self.id}
         }
-    
+
     def generate_ai_recommendations(self):
-        # Placeholder for AI integration
         recommendations = [
             "Consider sustainable materials for better environmental compliance",
             "Review local building codes for this region",
@@ -259,21 +240,16 @@ class ArchitectProjectStage(models.Model):
         default=lambda self: self.env.company,
         index=True
     )
-    # Stage Requirements
     requirements = fields.Text(string='Stage Requirements')
     deliverables = fields.Text(string='Expected Deliverables')
-    
-    # Approval Settings
     requires_approval = fields.Boolean(string='Requires Approval')
     approval_users = fields.Many2many('res.users', string='Approval Users')
-    
-    # Color coding
     color = fields.Integer(string='Color')
 
 
 class ProjectTask(models.Model):
     _inherit = 'project.task'
-    
+
     architect_project_id = fields.Many2one('architect.project', string='Architect Project')
     task_type = fields.Selection([
         ('design', 'Design'),
@@ -284,20 +260,20 @@ class ProjectTask(models.Model):
         ('approval', 'Approval'),
         ('coordination', 'Coordination')
     ], string='Task Type')
-    
+
     drawing_ids = fields.Many2many('architect.drawing', string='Related Drawings')
     requires_site_visit = fields.Boolean(string='Requires Site Visit')
     site_visit_date = fields.Datetime(string='Site Visit Date')
 
 
-    class ArchitectProjectChecklist(models.Model):
-        _name = 'architect.project.checklist'
-        _description = 'Project Checklist'
-        _inherit = ['mail.thread', 'mail.activity.mixin']
-        # Add this line:
-        state = fields.Selection([
-            ('draft', 'Draft'),
-            ('verified', 'Verified'),
-            ('approved', 'Approved')
-        ], string="Status", default='draft', tracking=True)
+class ArchitectProjectChecklist(models.Model):
+    _name = 'architect.project.checklist'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _description = 'Project Checklist'
 
+    name = fields.Char(string="Checklist Item", required=True)
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('verified', 'Verified'),
+        ('approved', 'Approved')
+    ], string="Status", default='draft', tracking=True)
