@@ -28,9 +28,11 @@ class ArchitectDPR(models.Model):
         ('draft', 'Draft'),
         ('under_review', 'Under Review'),
         ('approved', 'Approved'),
-        ('rejected', 'Rejected'),
-        ('cancelled', 'Cancelled')
-    ], string='Status', default='draft', tracking=True)
+        ('rejected', 'Rejected')
+    ], string='Status', default='draft', required=True, tracking=True)
+
+    def _valid_field_parameter(self, field, name):
+        return name == 'tracking' or super()._valid_field_parameter(field, name)
 
     department = fields.Char(string='Department')
     estimated_cost = fields.Monetary(string='Estimated Cost', currency_field='currency_id')
@@ -56,11 +58,12 @@ class ArchitectDPR(models.Model):
     user_id = fields.Many2one('res.users', string='Responsible User', 
                               default=lambda self: self.env.user)
 
-    @api.model
-    def create(self, vals):
-        if vals.get('code', _('New')) == _('New'):
-            vals['code'] = self.env['ir.sequence'].next_by_code('architect.dpr') or _('New')
-        return super(ArchitectDPR, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if 'dpr_code' not in vals or not vals['dpr_code']:
+                vals['dpr_code'] = self.env['ir.sequence'].next_by_code('architect.dpr') or 'New'
+        return super(ArchitectDPR, self).create(vals_list)
 
     @api.depends('land_cost', 'construction_cost', 'equipment_cost', 'contingency_cost')
     def _compute_total_cost(self):

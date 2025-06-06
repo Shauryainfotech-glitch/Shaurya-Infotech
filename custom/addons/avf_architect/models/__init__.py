@@ -12,4 +12,4 @@ from . import rate_schedule
 from . import team_collaboration
 from . import client_portal
 from . import ai_assistant
-from . import project_stages
+# project_stages removed - using standard project.task.type

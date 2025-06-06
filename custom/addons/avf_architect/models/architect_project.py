@@ -165,7 +165,7 @@ class ArchitectProject(models.Model):
     district = fields.Char(string='District')
 
     # Dates
-    start_date = fields.Date(string='Start Date', tracking=True)
+    date_start = fields.Date(string='Project Start Date')
     expected_end_date = fields.Date(string='Expected End Date')
     actual_end_date = fields.Date(string='Actual End Date')
 
@@ -175,8 +175,8 @@ class ArchitectProject(models.Model):
                                  default=lambda self: self.env.company.currency_id)
 
     # Status
-    stage_id = fields.Many2one('architect.project.stage', string='Stage', 
-                              default=lambda self: self._get_default_stage())
+    # Using project.task.type for stages instead of custom stage model
+    project_stage_id = fields.Many2one('project.task.type', string='Project Stage', tracking=True)
     priority = fields.Selection([
         ('0', 'Low'),
         ('1', 'Normal'),

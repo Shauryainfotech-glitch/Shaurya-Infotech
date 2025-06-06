@@ -61,14 +61,15 @@ class ArchitectSurvey(models.Model):
     equipment_used = fields.Text(string='Equipment Used')
     weather_conditions = fields.Char(string='Weather Conditions')
 
-    user_id = fields.Many2one('res.users', string='Responsible User', 
+    user_id = fields.Many2one('res.users', string='Survey Responsible', 
                               default=lambda self: self.env.user)
 
-    @api.model
-    def create(self, vals):
-        if vals.get('survey_code', _('New')) == _('New'):
-            vals['survey_code'] = self.env['ir.sequence'].next_by_code('architect.survey') or _('New')
-        return super(ArchitectSurvey, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if 'survey_code' not in vals or not vals['survey_code']:
+                vals['survey_code'] = self.env['ir.sequence'].next_by_code('architect.survey') or 'New'
+        return super(ArchitectSurvey, self).create(vals_list)
 
     @api.depends('message_ids.attachment_ids')
     def _compute_survey_attachment_count(self):
@@ -88,7 +89,7 @@ class ArchitectSurvey(models.Model):
 
     def action_reset_to_draft(self):
         self.state = 'draft'
-        
+
 class SurveyManagement(models.Model):
     _name = 'avf.survey.management'
     _description = 'Survey Management'
