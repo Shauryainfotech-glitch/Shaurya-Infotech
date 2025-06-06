@@ -23,12 +23,20 @@
     </record>
 
     <!-- Multi-Company Rules -->
+<!--    <record id="architect_project_company_rule" model="ir.rule">-->
+<!--        <field name="name">Architect Project: Multi-Company Rule</field>-->
+<!--        <field name="model_id" ref="model_architect_project"/>-->
+<!--        <field name="domain_force">[('company_id', 'in', company_ids)]</field>-->
+<!--        <field name="global" eval="True"/>-->
+<!--    </record>-->
+
     <record id="architect_project_company_rule" model="ir.rule">
         <field name="name">Architect Project: Multi-Company Rule</field>
         <field name="model_id" ref="model_architect_project"/>
-        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', [user.company_id.id])]</field>
         <field name="global" eval="True"/>
     </record>
+
 
     <record id="architect_drawing_company_rule" model="ir.rule">
         <field name="name">Architect Drawing: Multi-Company Rule</field>
