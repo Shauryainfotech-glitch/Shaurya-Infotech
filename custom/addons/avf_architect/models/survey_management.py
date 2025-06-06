@@ -16,22 +16,22 @@ class SurveyManagement(models.Model):
         ('condition', 'Condition Survey'),
         ('soil', 'Soil Survey')
     ], string='Survey Type', required=True)
-    
+
     survey_date = fields.Date(string='Survey Date')
     surveyor_name = fields.Char(string='Surveyor Name')
     location = fields.Text(string='Survey Location')
-    
+
     status = fields.Selection([
         ('planned', 'Planned'),
         ('in_progress', 'In Progress'),
         ('completed', 'Completed'),
         ('cancelled', 'Cancelled')
     ], string='Status', default='planned')
-    
+
     survey_data = fields.Text(string='Survey Data')
     coordinates = fields.Text(string='Coordinates')
     area_measured = fields.Float(string='Area Measured (sq ft)')
-    
+
     attachments = fields.Many2many('ir.attachment', string='Survey Documents')
 
 class ArchitectSurvey(models.Model):
@@ -44,7 +44,7 @@ class ArchitectSurvey(models.Model):
     project_id = fields.Many2one('architect.project', string='Project', required=True)
     company_id = fields.Many2one('res.company', string='Company', required=True, 
                                 default=lambda self: self.env.company)
-    
+
     # Survey Details
     survey_type = fields.Selection([
         ('preliminary', 'Preliminary Survey'),
@@ -55,19 +55,19 @@ class ArchitectSurvey(models.Model):
         ('structural', 'Structural Assessment'),
         ('utilities', 'Utilities Survey')
     ], string='Survey Type', required=True)
-    
+
     survey_date = fields.Date(string='Survey Date', required=True, default=fields.Date.today)
     location = fields.Text(string='Survey Location', required=True)
     area_surveyed = fields.Float(string='Area Surveyed (sq.m)')
-    
+
     # Survey Team
     surveyor_id = fields.Many2one('res.users', string='Lead Surveyor', 
                                  default=lambda self: self.env.user)
     team_member_ids = fields.Many2many('res.users', string='Survey Team')
-    
+
     # Equipment Used
     equipment_ids = fields.Many2many('architect.survey.equipment', string='Equipment Used')
-    
+
     # Weather Conditions
     weather_condition = fields.Selection([
         ('sunny', 'Sunny'),
@@ -78,31 +78,31 @@ class ArchitectSurvey(models.Model):
     ], string='Weather Condition')
     temperature = fields.Float(string='Temperature (°C)')
     humidity = fields.Float(string='Humidity (%)')
-    
+
     # Survey Data
     site_features = fields.Html(string='Site Features')
     observations = fields.Html(string='Observations')
     measurements = fields.Html(string='Key Measurements')
     constraints = fields.Html(string='Site Constraints')
     recommendations = fields.Html(string='Recommendations')
-    
+
     # Technical Data
     elevation_data = fields.Text(string='Elevation Data')
     soil_conditions = fields.Text(string='Soil Conditions')
     ground_water = fields.Text(string='Ground Water Details')
     existing_structures = fields.Text(string='Existing Structures')
-    
+
     # Utilities Information
     water_supply = fields.Text(string='Water Supply')
     electricity = fields.Text(string='Electricity')
     drainage = fields.Text(string='Drainage')
     telecom = fields.Text(string='Telecommunications')
-    
+
     # Environmental Factors
     vegetation = fields.Text(string='Vegetation')
     water_bodies = fields.Text(string='Water Bodies')
     special_features = fields.Text(string='Special Features')
-    
+
     # Status
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -111,40 +111,40 @@ class ArchitectSurvey(models.Model):
         ('reviewed', 'Reviewed'),
         ('approved', 'Approved')
     ], string='Status', default='draft', tracking=True)
-    
-    # Attachments
-    attachment_count = fields.Integer(compute='_compute_attachment_count', store=True)
-    
+
+    # Use different label to avoid conflict with mail module
+    survey_attachment_count = fields.Integer(string='Survey Attachments', compute='_compute_attachment_count')
+
     # Coordinates
     latitude = fields.Float(string='Latitude', digits=(16, 8))
     longitude = fields.Float(string='Longitude', digits=(16, 8))
-    
+
     # Survey Report
     report_generated = fields.Boolean(string='Report Generated', default=False)
     report_date = fields.Date(string='Report Date')
-    
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
             if not vals.get('name'):
                 vals['name'] = self.env['ir.sequence'].next_by_code('architect.survey')
         return super().create(vals_list)
-    
+
     @api.depends('message_attachment_count')
     def _compute_attachment_count(self):
         for record in self:
-            record.attachment_count = self.env['ir.attachment'].search_count([
+            record.survey_attachment_count = self.env['ir.attachment'].search_count([
                 ('res_model', '=', 'architect.survey'),
                 ('res_id', '=', record.id)
             ])
-    
+
     def action_start_survey(self):
         self.ensure_one()
         if not self.surveyor_id:
             raise ValidationError(_("Please assign a lead surveyor before starting."))
         self.write({'state': 'in_progress'})
         self.message_post(body=_("Survey started."))
-    
+
     def action_complete_survey(self):
         self.ensure_one()
         self.write({
@@ -153,17 +153,17 @@ class ArchitectSurvey(models.Model):
             'report_date': fields.Date.today()
         })
         self.message_post(body=_("Survey completed."))
-    
+
     def action_review_survey(self):
         self.ensure_one()
         self.write({'state': 'reviewed'})
         self.message_post(body=_("Survey reviewed."))
-    
+
     def action_approve_survey(self):
         self.ensure_one()
         self.write({'state': 'approved'})
         self.message_post(body=_("Survey approved."))
-    
+
     def action_generate_report(self):
         self.ensure_one()
         return {
@@ -190,7 +190,7 @@ class ArchitectSurveyEquipment(models.Model):
     specifications = fields.Text(string='Specifications')
     calibration_date = fields.Date(string='Last Calibration')
     next_calibration = fields.Date(string='Next Calibration Due')
-    
+
     active = fields.Boolean(default=True)
     notes = fields.Text(string='Notes')
 
@@ -203,12 +203,12 @@ class ArchitectSurveyPoint(models.Model):
     name = fields.Char(string='Point Reference', required=True)
     survey_id = fields.Many2one('architect.survey', string='Survey', required=True)
     sequence = fields.Integer(string='Sequence', default=10)
-    
+
     # Coordinates
     latitude = fields.Float(string='Latitude', digits=(16, 8))
     longitude = fields.Float(string='Longitude', digits=(16, 8))
     elevation = fields.Float(string='Elevation')
-    
+
     # Point Details
     point_type = fields.Selection([
         ('boundary', 'Boundary Point'),
@@ -217,10 +217,10 @@ class ArchitectSurveyPoint(models.Model):
         ('elevation', 'Elevation Point'),
         ('reference', 'Reference Point')
     ], string='Point Type')
-    
+
     description = fields.Text(string='Description')
     remarks = fields.Text(string='Remarks')
-    
+
     _sql_constraints = [
         ('unique_point_ref', 'unique(name, survey_id)', 
          'Point reference must be unique per survey!')

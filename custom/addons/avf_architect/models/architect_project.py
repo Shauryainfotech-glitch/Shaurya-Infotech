@@ -33,6 +33,16 @@ class ArchitectProject(models.Model):
     ecotourism_compliance = fields.Boolean(string='Ecotourism Compliance')
 
     stage_id = fields.Many2one('avf.project.stage', string='Project Stage')
+    
+    # Project state field
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('in_progress', 'In Progress'),
+        ('review', 'Under Review'),
+        ('approved', 'Approved'),
+        ('completed', 'Completed'),
+        ('cancelled', 'Cancelled')
+    ], string='State', default='draft', tracking=True)
 
 class ArchitectProject(models.Model):
     _name = 'architect.project'

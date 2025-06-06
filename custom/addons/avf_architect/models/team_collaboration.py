@@ -34,6 +34,33 @@ class TeamCollaboration(models.Model):
         ('cancelled', 'Cancelled')
     ], string='Status', default='scheduled')
 
+class TeamMember(models.Model):
+    _name = 'architect.team.member'
+    _description = 'Team Member'
+    
+    name = fields.Char(string='Member Name', required=True)
+    user_id = fields.Many2one('res.users', string='User')
+    role = fields.Char(string='Role')
+    
+    # Use different label to avoid conflict
+    team_skill_ids = fields.Many2many('hr.skill', string='Team Skills')
+    skill_ids = fields.Many2many('hr.skill', string='Member Skills')
+    
+    # Add compute fields that reference the correct state field
+    active_project_count = fields.Integer(string='Active Projects', compute='_compute_project_stats')
+    
+    @api.depends('user_id')
+    def _compute_project_stats(self):
+        for record in self:
+            if record.user_id:
+                projects = self.env['project.project'].search([
+                    ('user_id', '=', record.user_id.id),
+                    ('stage_id.is_closed', '=', False)
+                ])
+                record.active_project_count = len(projects)
+            else:
+                record.active_project_count = 0
+
 class ArchitectTeam(models.Model):
     _name = 'architect.team'
     _inherit = ['mail.thread', 'mail.activity.mixin']

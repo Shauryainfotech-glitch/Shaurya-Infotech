@@ -32,6 +32,10 @@ class DPRManagement(models.Model):
 
     content = fields.Html(string='DPR Content')
     attachments = fields.Many2many('ir.attachment', string='Attachments')
+    
+    # Add unique field labels to avoid conflicts
+    dpr_code = fields.Char(string='DPR Reference', help="Unique DPR reference code")
+    code = fields.Char(string='DPR Code', help="Internal DPR code")
 
 class ArchitectDPR(models.Model):
     _name = 'architect.dpr'
