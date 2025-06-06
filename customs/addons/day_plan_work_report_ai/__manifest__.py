@@ -54,9 +54,9 @@
             # Add frontend assets if needed
         ]
     },
-    'external_dependencies': {
-        'python': ['requests', 'openai'],  # Add AI library dependencies
-    },
+    # 'external_dependencies': {
+    #     'python': ['requests', 'openai'],  # Add AI library dependencies when needed
+    # },
     'post_init_hook': 'post_init_hook',
     'installable': True,
     'application': True,
