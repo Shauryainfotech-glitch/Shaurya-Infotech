@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- All views except tree views -->
+    <!-- Removed <tree> view definitions as requested -->
+
     <!-- Drawing Form View -->
     <record id="view_architect_drawing_form" model="ir.ui.view">
         <field name="name">architect.drawing.form</field>
@@ -96,32 +99,6 @@
         </field>
     </record>
 
-    <!-- Drawing Tree View -->
-    <record id="view_architect_drawing_tree" model="ir.ui.view">
-    <field name="name">architect.drawing.tree</field>
-    <field name="model">architect.drawing</field>
-    <field name="type">tree</field>
-    <field name="arch" type="xml">
-        <tree string="Architectural Drawings"
-              decoration-info="state=='draft'"
-              decoration-warning="state=='review'"
-              decoration-success="state=='approved'"
-              decoration-danger="state=='revision'"
-              decoration-muted="state=='obsolete'">
-            <field name="code"/>
-            <field name="name"/>
-            <field name="project_id"/>
-            <field name="drawing_type"/>
-            <field name="designer_id"/>
-            <field name="revision"/>
-            <field name="version"/>
-            <field name="state"/>
-            <field name="website_published"/>
-        </tree>
-    </field>
-</record>
-
-
     <!-- Drawing Search View -->
     <record id="view_architect_drawing_search" model="ir.ui.view">
         <field name="name">architect.drawing.search</field>
@@ -202,7 +179,7 @@
         </field>
     </record>
 
-    <!-- Drawing Set Views -->
+    <!-- Drawing Set Form View -->
     <record id="view_architect_drawing_set_form" model="ir.ui.view">
         <field name="name">architect.drawing.set.form</field>
         <field name="model">architect.drawing.set</field>
@@ -219,15 +196,7 @@
                     </group>
                     <notebook>
                         <page string="Drawings" name="drawings">
-                            <field name="drawing_ids">
-                                <tree>
-                                    <field name="code"/>
-                                    <field name="name"/>
-                                    <field name="drawing_type"/>
-                                    <field name="sequence_in_set"/>
-                                    <field name="state"/>
-                                </tree>
-                            </field>
+                            <field name="drawing_ids" widget="many2many_tags"/>
                         </page>
                     </notebook>
                 </sheet>
@@ -239,42 +208,20 @@
         </field>
     </record>
 
-    <!-- Drawing Set Tree View -->
-    <record id="view_architect_drawing_set_tree" model="ir.ui.view">
-        <field name="name">architect.drawing.set.tree</field>
-        <field name="model">architect.drawing.set</field>
-        <field name="arch" type="xml">
-            <tree string="Drawing Sets">
-                <field name="name"/>
-                <field name="project_id"/>
-                <field name="drawing_count"/>
-            </tree>
-        </field>
-    </record>
-
-    <!-- Menu Actions -->
+    <!-- Menu Actions and Items -->
     <record id="action_architect_drawing" model="ir.actions.act_window">
         <field name="name">Drawings</field>
         <field name="res_model">architect.drawing</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">kanban,form</field>
         <field name="context">{'search_default_my_drawings': 1}</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">Create your first architectural drawing</p>
-            <p>Organize and manage all your project drawings efficiently.</p>
-        </field>
     </record>
 
     <record id="action_architect_drawing_set" model="ir.actions.act_window">
         <field name="name">Drawing Sets</field>
         <field name="res_model">architect.drawing.set</field>
-        <field name="view_mode">tree,form</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">Create your first drawing set</p>
-            <p>Organize related drawings into sets for better management.</p>
-        </field>
+        <field name="view_mode">form</field>
     </record>
 
-    <!-- Menu Items -->
     <menuitem id="menu_drawing_root" name="Drawings" parent="menu_architect_root" sequence="30"/>
     <menuitem id="menu_drawing" name="Drawings" parent="menu_drawing_root" action="action_architect_drawing" sequence="10"/>
     <menuitem id="menu_drawing_set" name="Drawing Sets" parent="menu_drawing_root" action="action_architect_drawing_set" sequence="20"/>
