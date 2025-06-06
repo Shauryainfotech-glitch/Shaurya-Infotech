@@ -97,16 +97,16 @@
         </template>
 
         <!-- Report Action -->
-        <record id="action_report_mrp_estimation" model="ir.actions.report">
-            <field name="name">Manufacturing Estimation</field>
-            <field name="model">mrp.estimation</field>
-            <field name="report_type">qweb-pdf</field>
-            <field name="report_name">mrp_estimation.report_mrp_estimation</field>
-            <field name="report_file">mrp_estimation.report_mrp_estimation</field>
-            <field name="print_report_name">'Manufacturing Estimation - %s' % (object.name)</field>
-            <field name="attachment">(object.state == 'approved') and 'Manufacturing Estimation - %s' % (object.name)</field>
-            <field name="binding_model_id" ref="model_mrp_estimation"/>
-            <field name="binding_type">report</field>
-        </record>
+       <record id="action_report_estimation" model="ir.actions.report">
+    <field name="name">Manufacturing Estimation</field>
+    <field name="model">mrp.estimation</field>
+    <field name="report_type">qweb-pdf</field>
+    <field name="report_name">mrp_estimation.report_mrp_estimation</field>
+    <field name="report_file">mrp_estimation.report_mrp_estimation</field>
+    <field name="print_report_name">'Manufacturing Estimation - %s' % (object.name)</field>
+    <field name="attachment">(object.state == 'approved') and 'Manufacturing Estimation - %s' % (object.name)</field>
+    <field name="binding_model_id" ref="model_mrp_estimation"/>
+    <field name="binding_type">report</field>
+</record>
     </data>
 </odoo>
