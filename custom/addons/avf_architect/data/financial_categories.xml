@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Income Categories -->
+        <record id="fin_category_project_fees" model="architect.financial.category">
+            <field name="name">Professional Fees</field>
+            <field name="code">PROF_FEES</field>
+            <field name="sequence">10</field>
+            <field name="category_type">income</field>
+            <field name="color">10</field>
+            <field name="description">Architectural and consulting fees</field>
+        </record>
+
+        <record id="fin_category_consultation" model="architect.financial.category">
+            <field name="name">Consultation Fees</field>
+            <field name="code">CONSULT</field>
+            <field name="sequence">20</field>
+            <field name="category_type">income</field>
+            <field name="color">9</field>
+            <field name="description">Specialized consultation and advisory fees</field>
+        </record>
+
+        <record id="fin_category_supervision" model="architect.financial.category">
+            <field name="name">Supervision Fees</field>
+            <field name="code">SUPER</field>
+            <field name="sequence">30</field>
+            <field name="category_type">income</field>
+            <field name="color">8</field>
+            <field name="description">Construction supervision and monitoring fees</field>
+        </record>
+
+        <!-- Expense Categories -->
+        <record id="fin_category_materials" model="architect.financial.category">
+            <field name="name">Materials</field>
+            <field name="code">MAT</field>
+            <field name="sequence">40</field>
+            <field name="category_type">expense</field>
+            <field name="color">1</field>
+            <field name="description">Construction materials and supplies</field>
+        </record>
+
+        <record id="fin_category_labor" model="architect.financial.category">
+            <field name="name">Labor</field>
+            <field name="code">LAB</field>
+            <field name="sequence">50</field>
+            <field name="category_type">expense</field>
+            <field name="color">2</field>
+            <field name="description">Labor costs and wages</field>
+        </record>
+
+        <record id="fin_category_equipment" model="architect.financial.category">
+            <field name="name">Equipment</field>
+            <field name="code">EQP</field>
+            <field name="sequence">60</field>
+            <field name="category_type">expense</field>
+            <field name="color">3</field>
+            <field name="description">Equipment rental and purchase</field>
+        </record>
+
+        <record id="fin_category_permits" model="architect.financial.category">
+            <field name="name">Permits & Approvals</field>
+            <field name="code">PRM</field>
+            <field name="sequence">70</field>
+            <field name="category_type">expense</field>
+            <field name="color">4</field>
+            <field name="description">Regulatory permits and approval fees</field>
+        </record>
+
+        <record id="fin_category_professional" model="architect.financial.category">
+            <field name="name">Professional Services</field>
+            <field name="code">PROF_SERV</field>
+            <field name="sequence">80</field>
+            <field name="category_type">expense</field>
+            <field name="color">5</field>
+            <field name="description">External professional and consulting services</field>
+        </record>
+
+        <record id="fin_category_overhead" model="architect.financial.category">
+            <field name="name">Overhead</field>
+            <field name="code">OH</field>
+            <field name="sequence">90</field>
+            <field name="category_type">expense</field>
+            <field name="color">6</field>
+            <field name="description">General overhead and administrative costs</field>
+        </record>
+
+        <!-- Material Subcategories -->
+        <record id="fin_subcat_concrete" model="architect.financial.subcategory">
+            <field name="name">Concrete & Cement</field>
+            <field name="category_id" ref="fin_category_materials"/>
+            <field name="sequence">10</field>
+            <field name="description">Concrete, cement, and related materials</field>
+        </record>
+
+        <record id="fin_subcat_steel" model="architect.financial.subcategory">
+            <field name="name">Steel & Reinforcement</field>
+            <field name="category_id" ref="fin_category_materials"/>
+            <field name="sequence">20</field>
+            <field name="description">Steel bars, structural steel, and reinforcement</field>
+        </record>
+
+        <record id="fin_subcat_bricks" model="architect.financial.subcategory">
+            <field name="name">Bricks & Blocks</field>
+            <field name="category_id" ref="fin_category_materials"/>
+            <field name="sequence">30</field>
+            <field name="description">Bricks, blocks, and masonry materials</field>
+        </record>
+
+        <record id="fin_subcat_finishing" model="architect.financial.subcategory">
+            <field name="name">Finishing Materials</field>
+            <field name="category_id" ref="fin_category_materials"/>
+            <field name="sequence">40</field>
+            <field name="description">Tiles, paint, flooring, and finishing materials</field>
+        </record>
+
+        <!-- Labor Subcategories -->
+        <record id="fin_subcat_skilled" model="architect.financial.subcategory">
+            <field name="name">Skilled Labor</field>
+            <field name="category_id" ref="fin_category_labor"/>
+            <field name="sequence">10</field>
+            <field name="description">Skilled craftsmen and specialized workers</field>
+        </record>
+
+        <record id="fin_subcat_unskilled" model="architect.financial.subcategory">
+            <field name="name">Unskilled Labor</field>
+            <field name="category_id" ref="fin_category_labor"/>
+            <field name="sequence">20</field>
+            <field name="description">General laborers and helpers</field>
+        </record>
+
+        <record id="fin_subcat_supervision" model="architect.financial.subcategory">
+            <field name="name">Supervision</field>
+            <field name="category_id" ref="fin_category_labor"/>
+            <field name="sequence">30</field>
+            <field name="description">Site supervisors and foremen</field>
+        </record>
+
+        <!-- Equipment Subcategories -->
+        <record id="fin_subcat_machinery" model="architect.financial.subcategory">
+            <field name="name">Heavy Machinery</field>
+            <field name="category_id" ref="fin_category_equipment"/>
+            <field name="sequence">10</field>
+            <field name="description">Excavators, cranes, and heavy equipment</field>
+        </record>
+
+        <record id="fin_subcat_tools" model="architect.financial.subcategory">
+            <field name="name">Tools & Equipment</field>
+            <field name="category_id" ref="fin_category_equipment"/>
+            <field name="sequence">20</field>
+            <field name="description">Hand tools and small equipment</field>
+        </record>
+
+        <record id="fin_subcat_safety" model="architect.financial.subcategory">
+            <field name="name">Safety Equipment</field>
+            <field name="category_id" ref="fin_category_equipment"/>
+            <field name="sequence">30</field>
+            <field name="description">Safety gear and protective equipment</field>
+        </record>
+
+        <!-- Professional Services Subcategories -->
+        <record id="fin_subcat_structural" model="architect.financial.subcategory">
+            <field name="name">Structural Engineering</field>
+            <field name="category_id" ref="fin_category_professional"/>
+            <field name="sequence">10</field>
+            <field name="description">Structural engineering services</field>
+        </record>
+
+        <record id="fin_subcat_mep" model="architect.financial.subcategory">
+            <field name="name">MEP Engineering</field>
+            <field name="category_id" ref="fin_category_professional"/>
+            <field name="sequence">20</field>
+            <field name="description">Mechanical, electrical, and plumbing services</field>
+        </record>
+
+        <record id="fin_subcat_survey" model="architect.financial.subcategory">
+            <field name="name">Survey Services</field>
+            <field name="category_id" ref="fin_category_professional"/>
+            <field name="sequence">30</field>
+            <field name="description">Land surveying and mapping services</field>
+        </record>
+
+        <record id="fin_subcat_legal" model="architect.financial.subcategory">
+            <field name="name">Legal Services</field>
+            <field name="category_id" ref="fin_category_professional"/>
+            <field name="sequence">40</field>
+            <field name="description">Legal consultation and documentation</field>
+        </record>
+
+        <!-- Permit Subcategories -->
+        <record id="fin_subcat_building_permit" model="architect.financial.subcategory">
+            <field name="name">Building Permits</field>
+            <field name="category_id" ref="fin_category_permits"/>
+            <field name="sequence">10</field>
+            <field name="description">Building construction permits</field>
+        </record>
+
+        <record id="fin_subcat_environmental" model="architect.financial.subcategory">
+            <field name="name">Environmental Clearances</field>
+            <field name="category_id" ref="fin_category_permits"/>
+            <field name="sequence">20</field>
+            <field name="description">Environmental impact and forest clearances</field>
+        </record>
+
+        <record id="fin_subcat_utility" model="architect.financial.subcategory">
+            <field name="name">Utility Connections</field>
+            <field name="category_id" ref="fin_category_permits"/>
+            <field name="sequence">30</field>
+            <field name="description">Water, electricity, and sewage connections</field>
+        </record>
+
+        <!-- Overhead Subcategories -->
+        <record id="fin_subcat_office" model="architect.financial.subcategory">
+            <field name="name">Office Expenses</field>
+            <field name="category_id" ref="fin_category_overhead"/>
+            <field name="sequence">10</field>
+            <field name="description">Office rent, utilities, and supplies</field>
+        </record>
+
+        <record id="fin_subcat_transport" model="architect.financial.subcategory">
+            <field name="name">Transportation</field>
+            <field name="category_id" ref="fin_category_overhead"/>
+            <field name="sequence">20</field>
+            <field name="description">Vehicle expenses and transportation costs</field>
+        </record>
+
+        <record id="fin_subcat_insurance" model="architect.financial.subcategory">
+            <field name="name">Insurance</field>
+            <field name="category_id" ref="fin_category_overhead"/>
+            <field name="sequence">30</field>
+            <field name="description">Project and professional insurance</field>
+        </record>
+
+        <record id="fin_subcat_communication" model="architect.financial.subcategory">
+            <field name="name">Communication</field>
+            <field name="category_id" ref="fin_category_overhead"/>
+            <field name="sequence">40</field>
+            <field name="description">Phone, internet, and communication expenses</field>
+        </record>
+    </data>
+</odoo>

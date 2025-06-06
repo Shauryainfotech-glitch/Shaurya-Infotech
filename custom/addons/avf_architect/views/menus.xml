@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Main Menu Root -->
+    <menuitem id="menu_architect_root" name="AVF Architect" sequence="10" web_icon="avf_architect,static/description/icon.png"/>
+
+    <!-- Configuration Menu -->
+    <menuitem id="menu_architect_config" name="Configuration" 
+              parent="menu_architect_root" sequence="90"/>
+
+    <!-- Reports Menu -->
+    <menuitem id="menu_architect_reports" name="Reports" 
+              parent="menu_architect_root" sequence="85"/>
+
+    <!-- Dashboard Menu -->
+    <menuitem id="menu_architect_dashboard" name="Dashboard" 
+              parent="menu_architect_root" sequence="5"/>
+</odoo>

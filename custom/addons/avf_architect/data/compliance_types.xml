@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Environmental Compliance Types -->
+        <record id="compliance_type_eia" model="architect.compliance.type">
+            <field name="name">Environmental Impact Assessment</field>
+            <field name="code">EIA</field>
+            <field name="category">environmental</field>
+            <field name="regulatory_authority">State Environmental Impact Assessment Authority</field>
+            <field name="validity_period">1825</field>
+            <field name="requirements">
+                <![CDATA[
+                <ul>
+                    <li>Form 1 and Pre-feasibility Report</li>
+                    <li>Environmental Impact Assessment Report</li>
+                    <li>Risk Assessment Study</li>
+                    <li>Disaster Management Plan</li>
+                    <li>Public Hearing Documentation</li>
+                </ul>
+                ]]>
+            </field>
+            <field name="submission_process">
+                <![CDATA[
+                <ol>
+                    <li>Submit Form 1 and PFR to SEIAA</li>
+                    <li>Obtain Terms of Reference</li>
+                    <li>Conduct EIA Study</li>
+                    <li>Public Consultation</li>
+                    <li>Final EIA Submission</li>
+                </ol>
+                ]]>
+            </field>
+        </record>
+
+        <!-- Forest Clearance Types -->
+        <record id="compliance_type_forest" model="architect.compliance.type">
+            <field name="name">Forest Clearance</field>
+            <field name="code">FC</field>
+            <field name="category">environmental</field>
+            <field name="regulatory_authority">Ministry of Environment, Forest and Climate Change</field>
+            <field name="validity_period">730</field>
+            <field name="requirements">
+                <![CDATA[
+                <ul>
+                    <li>Form A Application</li>
+                    <li>Forest Land Details</li>
+                    <li>Compensatory Afforestation Plan</li>
+                    <li>Cost-Benefit Analysis</li>
+                    <li>Wildlife Conservation Plan</li>
+                </ul>
+                ]]>
+            </field>
+            <field name="submission_process">
+                <![CDATA[
+                <ol>
+                    <li>Online Application through PARIVESH Portal</li>
+                    <li>State Forest Department Review</li>
+                    <li>Regional Office Inspection</li>
+                    <li>Forest Advisory Committee Review</li>
+                    <li>Final Approval from MoEFCC</li>
+                </ol>
+                ]]>
+            </field>
+        </record>
+
+        <!-- Building Code Compliance -->
+        <record id="compliance_type_building" model="architect.compliance.type">
+            <field name="name">Building Code Compliance</field>
+            <field name="code">BCC</field>
+            <field name="category">building_code</field>
+            <field name="regulatory_authority">Local Building Authority</field>
+            <field name="validity_period">365</field>
+            <field name="requirements">
+                <![CDATA[
+                <ul>
+                    <li>Architectural Drawings</li>
+                    <li>Structural Calculations</li>
+                    <li>MEP Drawings</li>
+                    <li>Fire Safety Plan</li>
+                    <li>Accessibility Compliance</li>
+                </ul>
+                ]]>
+            </field>
+            <field name="submission_process">
+                <![CDATA[
+                <ol>
+                    <li>Pre-application Consultation</li>
+                    <li>Drawing Submission</li>
+                    <li>Technical Review</li>
+                    <li>Compliance Verification</li>
+                    <li>Building Permit Issuance</li>
+                </ol>
+                ]]>
+            </field>
+        </record>
+
+        <!-- Fire Safety Compliance -->
+        <record id="compliance_type_fire" model="architect.compliance.type">
+            <field name="name">Fire Safety Compliance</field>
+            <field name="code">FSC</field>
+            <field name="category">safety</field>
+            <field name="regulatory_authority">Fire Services Department</field>
+            <field name="validity_period">365</field>
+            <field name="requirements">
+                <![CDATA[
+                <ul>
+                    <li>Fire Safety Drawings</li>
+                    <li>Emergency Evacuation Plan</li>
+                    <li>Fire Fighting System Details</li>
+                    <li>Fire Alarm System Layout</li>
+                    <li>Emergency Response Plan</li>
+                </ul>
+                ]]>
+            </field>
+            <field name="submission_process">
+                <![CDATA[
+                <ol>
+                    <li>Fire Safety Plan Submission</li>
+                    <li>Technical Review</li>
+                    <li>Site Inspection</li>
+                    <li>Compliance Verification</li>
+                    <li>NOC Issuance</li>
+                </ol>
+                ]]>
+            </field>
+        </record>
+
+        <!-- Heritage Conservation -->
+        <record id="compliance_type_heritage" model="architect.compliance.type">
+            <field name="name">Heritage Conservation</field>
+            <field name="code">HC</field>
+            <field name="category">heritage</field>
+            <field name="regulatory_authority">Heritage Conservation Committee</field>
+            <field name="validity_period">730</field>
+            <field name="requirements">
+                <![CDATA[
+                <ul>
+                    <li>Heritage Impact Assessment</li>
+                    <li>Conservation Plan</li>
+                    <li>Historical Documentation</li>
+                    <li>Material Conservation Strategy</li>
+                    <li>Restoration Methodology</li>
+                </ul>
+                ]]>
+            </field>
+            <field name="submission_process">
+                <![CDATA[
+                <ol>
+                    <li>Initial Assessment</li>
+                    <li>Documentation Submission</li>
+                    <li>Expert Committee Review</li>
+                    <li>Site Inspection</li>
+                    <li>Final Approval</li>
+                </ol>
+                ]]>
+            </field>
+        </record>
+
+        <!-- Checklist Templates -->
+        <record id="eia_checklist_1" model="architect.compliance.checklist.template">
+            <field name="name">Form 1 Submission</field>
+            <field name="compliance_type_id" ref="compliance_type_eia"/>
+            <field name="sequence">10</field>
+            <field name="is_mandatory">1</field>
+            <field name="document_required">1</field>
+            <field name="description">Complete Form 1 with project details and environmental sensitivity information</field>
+        </record>
+
+        <record id="forest_checklist_1" model="architect.compliance.checklist.template">
+            <field name="name">Forest Land Details</field>
+            <field name="compliance_type_id" ref="compliance_type_forest"/>
+            <field name="sequence">10</field>
+            <field name="is_mandatory">1</field>
+            <field name="document_required">1</field>
+            <field name="description">Detailed information about forest land proposed for diversion</field>
+        </record>
+
+        <record id="building_checklist_1" model="architect.compliance.checklist.template">
+            <field name="name">Architectural Drawings</field>
+            <field name="compliance_type_id" ref="compliance_type_building"/>
+            <field name="sequence">10</field>
+            <field name="is_mandatory">1</field>
+            <field name="document_required">1</field>
+            <field name="description">Complete set of architectural drawings as per local building bylaws</field>
+        </record>
+
+        <record id="fire_checklist_1" model="architect.compliance.checklist.template">
+            <field name="name">Fire Safety Plan</field>
+            <field name="compliance_type_id" ref="compliance_type_fire"/>
+            <field name="sequence">10</field>
+            <field name="is_mandatory">1</field>
+            <field name="document_required">1</field>
+            <field name="description">Comprehensive fire safety plan including evacuation routes and fire fighting systems</field>
+        </record>
+    </data>
+</odoo>
