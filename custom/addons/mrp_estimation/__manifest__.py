@@ -40,7 +40,8 @@
         # Security
         'security/estimation_security.xml',
         'security/ir.model.access.csv',
-        
+'security/estimation_security.xml',  # This should be after the model is defined
+
         # Data
         'data/estimation_sequence.xml',
         
