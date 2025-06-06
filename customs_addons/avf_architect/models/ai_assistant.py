@@ -13,7 +13,7 @@ class ArchitectAIAssistant(models.Model):
     project_id = fields.Many2one('architect.project', string='Project')
     user_id = fields.Many2one('res.users', string='User', 
                              default=lambda self: self.env.user, required=True)
-    
+    temp_message = fields.Text(string="Temporary Message")
     # AI Session Details
     session_type = fields.Selection([
         ('design_assistance', 'Design Assistance'),
