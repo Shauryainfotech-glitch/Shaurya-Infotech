@@ -1,4 +1,4 @@
-{
+var = {
     "name": "Day Plan & Work Report with AI Analysis",
     "version": "18.0.1.0.1",
     "summary": "Daily planning, work reporting, and AI productivity insights",
@@ -34,9 +34,11 @@
     "assets": {
         "web.assets_backend": [
             ("include", "https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"),
-            "day_plan_work_report_ai/static/src/js/dashboard.js",
-            "day_plan_work_report_ai/static/src/views/day_plan_calendar/day_plan_calendar.js",
-            "day_plan_work_report_ai/static/src/views/day_plan_calendar/day_plan_calendar.xml"
+            "@day_plan_work_report_ai/static/src/js/dashboard.js",
+            "@day_plan_work_report_ai/static/src/views/day_plan_calendar/day_plan_calendar.js",
+            "@day_plan_work_report_ai/static/src/views/day_plan_calendar/day_plan_calendar.xml",
+            "@day_plan_work_report_ai/static/src/new_dashboard_client_action.js",
+            "@day_plan_work_report_ai/static/src/dashboard_client_action.js"
         ]
     },
     "description": """
