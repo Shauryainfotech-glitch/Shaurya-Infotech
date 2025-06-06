@@ -60,8 +60,8 @@ class ArchitectProject(models.Model):
     # Budget and financial tracking
     estimated_budget = fields.Monetary(string='Estimated Budget', currency_field='currency_id')
     approved_budget = fields.Monetary(string='Approved Budget', currency_field='currency_id')
-    actual_cost = fields.Monetary(string='Actual Cost', currency_field='currency_id', compute='_compute_actual_cost')
-    budget_variance = fields.Monetary(string='Budget Variance', compute='_compute_actual_cost', store=True, currency_field='currency_id')
+    actual_cost = fields.Monetary(string='Actual Cost', currency_field='currency_id', compute='_compute_actual_cost', store=True)
+    budget_variance = fields.Monetary(string='Budget Variance', compute='_compute_budget_variance', store=True, currency_field='currency_id')
     currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
 
     # Progress tracking
@@ -145,6 +145,11 @@ class ArchitectProject(models.Model):
                         # Default hourly cost if not set
                         total_cost += timesheet.unit_amount * 50.0
             project.actual_cost = total_cost
+
+    @api.depends('estimated_budget', 'actual_cost')
+    def _compute_budget_variance(self):
+        """Compute budget variance"""
+        for project in self:
             project.budget_variance = project.estimated_budget - project.actual_cost
 
     def _compute_architect_drawing_count(self):
