@@ -1,4 +1,3 @@
-
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api, _
@@ -38,7 +37,7 @@ class AVFDPRManagement(models.Model):
     total_workers = fields.Integer(string='Total Workers')
     skilled_workers = fields.Integer(string='Skilled Workers')
     unskilled_workers = fields.Integer(string='Unskilled Workers')
-    
+
     # Equipment and Materials
     equipment_used = fields.Text(string='Equipment Used')
     materials_consumed = fields.Text(string='Materials Consumed')
@@ -48,7 +47,7 @@ class AVFDPRManagement(models.Model):
     issues_faced = fields.Text(string='Issues Faced')
     safety_incidents = fields.Text(string='Safety Incidents')
     quality_issues = fields.Text(string='Quality Issues')
-    
+
     # Status
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -71,6 +70,8 @@ class AVFDPRManagement(models.Model):
     photos_filename = fields.Char(string='Photos Filename')
     additional_documents = fields.Binary(string='Additional Documents', attachment=True)
     documents_filename = fields.Char(string='Documents Filename')
+
+    # Related fields for easy access - removed problematic activity_type_id field
 
     @api.model_create_multi
     def create(self, vals_list):

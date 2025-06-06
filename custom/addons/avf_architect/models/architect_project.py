@@ -91,12 +91,6 @@ class ArchitectProject(models.Model):
         self.progress_percentage = 100.0
 
 
-class ProjectProject(models.Model):
-    _inherit = 'project.project'
-    
-    # Add compliance tracking to standard project model
-    compliance_ids = fields.One2many('avf.compliance.tracking', 'project_id', string='Compliance Records')
-
 class ArchitectProject(models.Model):
     _inherit = 'project.project'
     _description = 'Extended Project for AVF Architect'
