@@ -7,14 +7,14 @@
             <field name="name">mrp.estimation.version.tree</field>
             <field name="model">mrp.estimation.version</field>
             <field name="arch" type="xml">
-                <tree string="Estimation Versions">
+                <list string="Estimation Versions">
                     <field name="parent_estimation_id"/>
                     <field name="version_number"/>
                     <field name="created_by"/>
                     <field name="creation_date"/>
                     <field name="is_active_version" widget="boolean_toggle"/>
                     <field name="version_notes"/>
-                </tree>
+                </list>
             </field>
         </record>
 

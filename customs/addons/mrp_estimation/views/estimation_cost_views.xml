@@ -7,7 +7,7 @@
             <field name="name">mrp.estimation.cost.tree</field>
             <field name="model">mrp.estimation.cost</field>
             <field name="arch" type="xml">
-                <tree string="Estimation Costs" editable="bottom">
+                <list string="Estimation Costs" editable="bottom">
                     <field name="sequence" widget="handle"/>
                     <field name="estimation_id"/>
                     <field name="name"/>
@@ -23,7 +23,7 @@
                     <field name="quantity"/>
                     <field name="total_cost" widget="monetary"/>
                     <field name="currency_id" invisible="1"/>
-                </tree>
+                </list>
             </field>
         </record>
 
