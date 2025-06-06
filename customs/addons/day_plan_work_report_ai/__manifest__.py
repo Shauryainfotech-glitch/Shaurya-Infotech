@@ -44,6 +44,15 @@
     ],
     'assets': {
         'web.assets_backend': [
+            # Include legacy web client JS files to ensure 'web.AbstractView' is available
+            'web/static/src/js/views/abstract_view.js',
+            'web/static/src/js/views/list/list_view.js',
+            'web/static/src/js/views/form/form_view.js',
+            'web/static/src/js/views/kanban/kanban_view.js',
+            'web/static/src/js/views/search/search_view.js',
+            'web/static/src/js/views/control_panel.js',
+            'web/static/src/js/views/basic/basic_view.js',
+            # Custom addon JS files
             'day_plan_work_report_ai/static/src/js/dashboard.js',
             'day_plan_work_report_ai/static/src/views/day_plan_calendar/day_plan_calendar.js',
             'day_plan_work_report_ai/static/src/views/day_plan_calendar/day_plan_calendar.xml',
