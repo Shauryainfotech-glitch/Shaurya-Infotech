@@ -6,6 +6,7 @@
         <record id="view_estimation_cost_tree" model="ir.ui.view">
             <field name="name">mrp.estimation.cost.tree</field>
             <field name="model">mrp.estimation.cost</field>
+            <field name="type">list</field>
             <field name="arch" type="xml">
                 <list string="Estimation Costs" editable="bottom">
                     <field name="sequence" widget="handle"/>

@@ -6,6 +6,7 @@
         <record id="view_estimation_tree" model="ir.ui.view">
             <field name="name">mrp.estimation.tree</field>
             <field name="model">mrp.estimation</field>
+            <field name="type">list</field>
             <field name="arch" type="xml">
                 <tree string="Manufacturing Estimations" sample="1">
                     <field name="name" decoration-bf="1"/>

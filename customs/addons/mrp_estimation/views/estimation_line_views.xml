@@ -6,6 +6,7 @@
         <record id="view_estimation_line_tree" model="ir.ui.view">
             <field name="name">mrp.estimation.line.tree</field>
             <field name="model">mrp.estimation.line</field>
+            <field name="type">list</field>
             <field name="arch" type="xml">
                 <list string="Estimation Lines" editable="bottom">
                     <field name="sequence" widget="handle"/>
