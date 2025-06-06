@@ -178,23 +178,23 @@
                                         <field name="name"/>
                                         <field name="cost_type"/>
                                         <field name="operation_id" 
-                                               column_invisible="parent.cost_type != 'operation'"/>
+                                               attrs="{'invisible': [('cost_type', '!=', 'operation')], 'required': [('cost_type', '=', 'operation')]}"/>
                                         <field name="workcenter_id" 
-                                               column_invisible="parent.cost_type != 'operation'"/>
+                                               attrs="{'invisible': [('cost_type', '!=', 'operation')]}"/>
                                         <field name="operation_time" 
-                                               column_invisible="parent.cost_type != 'operation'"/>
+                                               attrs="{'invisible': [('cost_type', '!=', 'operation')], 'required': [('cost_type', '=', 'operation')]}"/>
                                         <field name="hourly_rate" widget="monetary" 
-                                               column_invisible="parent.cost_type != 'operation'"/>
+                                               attrs="{'invisible': [('cost_type', '!=', 'operation')], 'required': [('cost_type', '=', 'operation')]}"/>
                                         <field name="labor_hours" 
-                                               column_invisible="parent.cost_type != 'labor'"/>
+                                               attrs="{'invisible': [('cost_type', '!=', 'labor')], 'required': [('cost_type', '=', 'labor')]}"/>
                                         <field name="labor_rate" widget="monetary" 
-                                               column_invisible="parent.cost_type != 'labor'"/>
+                                               attrs="{'invisible': [('cost_type', '!=', 'labor')], 'required': [('cost_type', '=', 'labor')]}"/>
                                         <field name="labor_overhead" 
-                                               column_invisible="parent.cost_type != 'labor'"/>
+                                               attrs="{'invisible': [('cost_type', '!=', 'labor')]}"/>
                                         <field name="unit_cost" widget="monetary" 
-                                               column_invisible="parent.cost_type in ['operation', 'labor']"/>
+                                               attrs="{'invisible': [('cost_type', 'in', ['operation', 'labor'])], 'required': [('cost_type', 'not in', ['operation', 'labor'])]}"/>
                                         <field name="quantity" 
-                                               column_invisible="parent.cost_type in ['operation', 'labor']"/>
+                                               attrs="{'invisible': [('cost_type', 'in', ['operation', 'labor'])], 'required': [('cost_type', 'not in', ['operation', 'labor'])]}"/>
                                         <field name="total_cost" widget="monetary"/>
                                         <field name="currency_id" column_invisible="1"/>
                                     </list>
