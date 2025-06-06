@@ -21,7 +21,7 @@ class SolarProject(models.Model):
         comodel_name="res.partner",
         string="Customer",
         required=True,
-        domain="[('customer_rank', '>', 0)]",
+        # domain="[('customer_rank', '>', 0)]",
         tracking=True
     )
     project_name = fields.Char(
