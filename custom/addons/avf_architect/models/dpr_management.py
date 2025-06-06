@@ -72,7 +72,7 @@ class AVFDPRManagement(models.Model):
     additional_documents = fields.Binary(string='Additional Documents', attachment=True)
     documents_filename = fields.Char(string='Documents Filename')
 
-    # Simple computed fields
+    # Computed fields
     total_activities = fields.Integer(string='Total Activities', compute='_compute_activity_stats', store=True)
     completed_activities = fields.Integer(string='Completed Activities', compute='_compute_activity_stats', store=True)
     
