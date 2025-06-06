@@ -146,7 +146,7 @@
         <field name="name">architect.document.tree</field>
         <field name="model">architect.document</field>
         <field name="arch" type="xml">
-            <tree string="Project Documents" decoration-info="state=='draft'" 
+            <list string="Project Documents" decoration-info="state=='draft'"
                   decoration-warning="state=='review'" decoration-success="state=='approved'" 
                   decoration-danger="state=='rejected'" decoration-muted="state=='archived'">
                 <field name="code"/>
@@ -159,7 +159,7 @@
                 <field name="state"/>
                 <field name="portal_visible"/>
                 <field name="download_count"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -323,7 +323,7 @@
         <field name="name">architect.document.category.tree</field>
         <field name="model">architect.document.category</field>
         <field name="arch" type="xml">
-            <tree string="Document Categories">
+            <list string="Document Categories">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="code"/>
@@ -331,7 +331,7 @@
                 <field name="max_file_size"/>
                 <field name="requires_approval"/>
                 <field name="active"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -387,13 +387,13 @@
         <field name="name">architect.document.template.tree</field>
         <field name="model">architect.document.template</field>
         <field name="arch" type="xml">
-            <tree string="Document Templates">
+            <list string="Document Templates">
                 <field name="name"/>
                 <field name="document_type"/>
                 <field name="default_category_id"/>
                 <field name="usage_count"/>
                 <button name="use_template" type="object" string="Use" class="btn-link"/>
-            </tree>
+            </list>
         </field>
     </record>
 

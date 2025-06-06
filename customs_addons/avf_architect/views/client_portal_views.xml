@@ -100,7 +100,7 @@
         <field name="name">architect.client.portal.tree</field>
         <field name="model">architect.client.portal</field>
         <field name="arch" type="xml">
-            <tree string="Client Portals" decoration-success="active==True" 
+            <list string="Client Portals" decoration-success="active==True"
                   decoration-muted="active==False">
                 <field name="name"/>
                 <field name="partner_id"/>
@@ -109,7 +109,7 @@
                 <field name="login_count"/>
                 <field name="visit_count"/>
                 <field name="active"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -191,13 +191,13 @@
         <field name="name">architect.client.dashboard.tree</field>
         <field name="model">architect.client.dashboard</field>
         <field name="arch" type="xml">
-            <tree string="Client Dashboards">
+            <list string="Client Dashboards">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="portal_id"/>
                 <field name="layout"/>
                 <field name="is_default"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -297,7 +297,7 @@
         <field name="name">architect.client.message.tree</field>
         <field name="model">architect.client.message</field>
         <field name="arch" type="xml">
-            <tree string="Client Messages" decoration-info="state=='draft'" 
+            <list string="Client Messages" decoration-info="state=='draft'"
                   decoration-success="state=='read'" decoration-warning="state=='sent'">
                 <field name="name"/>
                 <field name="portal_id"/>
@@ -306,7 +306,7 @@
                 <field name="sender_id"/>
                 <field name="date"/>
                 <field name="state"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -315,14 +315,14 @@
         <field name="name">architect.client.activity.tree</field>
         <field name="model">architect.client.activity</field>
         <field name="arch" type="xml">
-            <tree string="Client Activities" create="false" edit="false">
+            <list string="Client Activities" create="false" edit="false">
                 <field name="portal_id"/>
                 <field name="date"/>
                 <field name="activity_type"/>
                 <field name="description"/>
                 <field name="project_id"/>
                 <field name="ip_address"/>
-            </tree>
+            </list>
         </field>
     </record>
 
