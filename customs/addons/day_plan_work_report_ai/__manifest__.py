@@ -45,13 +45,13 @@
     'assets': {
         'web.assets_backend': [
             # Include legacy web client JS files to ensure 'web.AbstractView' is available
-            # 'web/static/src/js/views/abstract_view.js',
-            # 'web/static/src/js/views/list/list_view.js',
-            # 'web/static/src/js/views/form/form_view.js',
-            # 'web/static/src/js/views/kanban/kanban_view.js',
-            # 'web/static/src/js/views/search/search_view.js',
-            # 'web/static/src/js/views/control_panel.js',
-            # 'web/static/src/js/views/basic/basic_view.js',
+            'web/static/src/js/views/abstract_view.js',
+            'web/static/src/js/views/list/list_view.js',
+            'web/static/src/js/views/form/form_view.js',
+            'web/static/src/js/views/kanban/kanban_view.js',
+            'web/static/src/js/views/search/search_view.js',
+            'web/static/src/js/views/control_panel.js',
+            'web/static/src/js/views/basic/basic_view.js',
             # Custom addon JS files
             'day_plan_work_report_ai/static/src/js/dashboard.js',
             'day_plan_work_report_ai/static/src/views/day_plan_calendar/day_plan_calendar.js',
@@ -66,28 +66,4 @@
     # 'external_dependencies': {
     #     'python': ['requests', 'openai'],  # Add AI library dependencies when needed
     # },
-    'post_init_hook': 'post_init_hook',
-    'installable': True,
-    'application': True,
-    'auto_install': False,
-    'description': """
-Day Plan & Work Report with AI Analysis
-========================================
-
-A comprehensive productivity management system with AI-powered insights.
-
-Key Features:
--------------
-* Daily planning with task management
-* End-of-day work reporting
-* AI-powered productivity analysis
-* Multiple AI provider support (OpenAI, Anthropic, Google)
-* Comprehensive analysis types (daily, weekly, monthly)
-* Intelligent prompt engineering
-* Actionable metrics generation
-
-This module helps teams and individuals track their daily activities,
-analyze productivity patterns, and receive AI-generated insights to
-improve work efficiency and goal achievement.
-    """,
 }
