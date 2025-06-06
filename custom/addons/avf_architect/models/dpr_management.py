@@ -147,6 +147,14 @@ class AVFDPRActivity(models.Model):
             else:
                 activity.duration = 0.0
 
+    def name_get(self):
+        """Custom name display for activities"""
+        result = []
+        for activity in self:
+            name = f"{activity.activity_name} ({dict(activity._fields['activity_type'].selection).get(activity.activity_type, activity.activity_type)})"
+            result.append((activity.id, name))
+        return result
+
 class AVFDPRResource(models.Model):
     _name = 'avf.dpr.resource'
     _description = 'DPR Resource'

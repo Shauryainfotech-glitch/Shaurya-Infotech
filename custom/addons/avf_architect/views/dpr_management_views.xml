@@ -1,4 +1,3 @@
-
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!-- DPR Management Tree View -->
@@ -50,7 +49,7 @@
                             <field name="approved_by" readonly="1"/>
                         </group>
                     </group>
-                    
+
                     <notebook>
                         <page string="Weather &amp; Conditions">
                             <group>
@@ -63,7 +62,7 @@
                                 </group>
                             </group>
                         </page>
-                        
+
                         <page string="Work Progress">
                             <group>
                                 <field name="work_description"/>
@@ -72,7 +71,7 @@
                                 <field name="planned_activities"/>
                             </group>
                         </page>
-                        
+
                         <page string="Resources">
                             <group>
                                 <group>
@@ -89,7 +88,7 @@
                                 <field name="materials_received"/>
                             </group>
                         </page>
-                        
+
                         <page string="Activities">
                             <field name="activity_ids">
                                 <tree string="Activities" editable="bottom">
@@ -105,7 +104,7 @@
                                 </tree>
                             </field>
                         </page>
-                        
+
                         <page string="Resource Details">
                             <field name="resource_ids">
                                 <tree string="Resources" editable="bottom">
@@ -119,7 +118,7 @@
                                 </tree>
                             </field>
                         </page>
-                        
+
                         <page string="Issues &amp; Safety">
                             <group>
                                 <field name="issues_faced"/>
@@ -127,7 +126,7 @@
                                 <field name="quality_issues"/>
                             </group>
                         </page>
-                        
+
                         <page string="Attachments">
                             <group>
                                 <group>
