@@ -46,7 +46,7 @@
                     <sheet>
                         <div class="oe_title">
                             <h1>
-                                <field name="quote_number" readonly="1"/>
+                                <field name="quote_number"/>
                             </h1>
                         </div>
                         <group>
