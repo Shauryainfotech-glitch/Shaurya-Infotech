@@ -6,6 +6,9 @@ access_architect_project_admin,architect.project.admin,model_project_project,gro
 access_avf_ai_assistant_user,avf.ai.assistant.user,model_avf_ai_assistant,group_avf_architect_user,1,1,1,0
 access_avf_ai_assistant_manager,avf.ai.assistant.manager,model_avf_ai_assistant,group_avf_architect_manager,1,1,1,1
 access_avf_ai_assistant_admin,avf.ai.assistant.admin,model_avf_ai_assistant,group_avf_architect_admin,1,1,1,1
+access_architect_ai_assistant_user,architect.ai.assistant.user,model_architect_ai_assistant,group_avf_architect_user,1,1,1,0
+access_architect_ai_assistant_manager,architect.ai.assistant.manager,model_architect_ai_assistant,group_avf_architect_manager,1,1,1,1
+access_architect_ai_assistant_admin,architect.ai.assistant.admin,model_architect_ai_assistant,group_avf_architect_admin,1,1,1,1
 access_architect_ai_template_user,architect.ai.template.user,model_architect_ai_template,group_avf_architect_user,1,0,0,0
 access_architect_ai_template_manager,architect.ai.template.manager,model_architect_ai_template,group_avf_architect_manager,1,1,1,1
 access_architect_ai_template_admin,architect.ai.template.admin,model_architect_ai_template,group_avf_architect_admin,1,1,1,1
