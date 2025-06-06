@@ -19,12 +19,12 @@
     <field name="model">solar.quote</field>
     <field name="arch" type="xml">
       <form string="Solar Quote" version="1.1">
-        <header>
+          <header>
           <field name="state" widget="statusbar"
                  statusbar_visible="draft,sent,accepted,refused,expired"/>
-          <button string="Send" type="object" name="action_send" states="draft"/>
-          <button string="Accept" type="object" name="action_accept" states="sent"/>
-          <button string="Refuse" type="object" name="action_refuse" states="draft,sent"/>
+          <button string="Send" type="object" name="action_send" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+          <button string="Accept" type="object" name="action_accept" attrs="{'invisible': [('state', '!=', 'sent')]}"/>
+          <button string="Refuse" type="object" name="action_refuse" attrs="{'invisible': [('state', 'not in', ('draft', 'sent'))]}"/>
         </header>
         <sheet>
           <group>
