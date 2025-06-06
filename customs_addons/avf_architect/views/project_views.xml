@@ -84,7 +84,7 @@
                                         <field name="actual_cost"/>
                                     </group>
                                 </group>
-                                <group string="Government Specific" attrs="{'invisible': [('client_type', '!=', 'government')]}">
+                                <group string="Government Specific" modifiers="{'invisible': [('client_type', '!=', 'government')]}">
                                     <field name="tender_reference"/>
                                     <field name="department"/>
                                     <field name="approval_authority"/>
@@ -221,7 +221,7 @@
                             <group>
                                 <field name="requires_approval"/>
                                 <field name="approval_users" widget="many2many_tags"
-                                       attrs="{'invisible': [('requires_approval', '=', False)]}"/>
+                                       modifiers="{'invisible': [('requires_approval', '=', False)]}"/>
                             </group>
                         </group>
                         <notebook>

@@ -8,9 +8,9 @@
             <form string="Project Team">
                 <header>
                     <button name="action_set_active" string="Activate" type="object" 
-                            class="oe_highlight" attrs="{'invisible': [('state', '=', 'active')]}"/>
+                            class="oe_highlight" modifiers="{'invisible': [('state', '=', 'active')]}"/>
                     <button name="action_set_inactive" string="Deactivate" type="object" 
-                            class="btn-warning" attrs="{'invisible': [('state', '=', 'inactive')]}"/>
+                            class="btn-warning" modifiers="{'invisible': [('state', '=', 'inactive')]}"/>
                     <button name="check_allocation" string="Check Allocation" type="object" 
                             class="btn-secondary"/>
                     <field name="state" widget="statusbar" 

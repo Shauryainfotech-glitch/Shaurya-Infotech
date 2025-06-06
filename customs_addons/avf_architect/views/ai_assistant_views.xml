@@ -44,7 +44,7 @@
                                         <field name="timestamp"/>
                                         <field name="message_type"/>
                                         <field name="message"/>
-                                        <field name="response_time" attrs="{'invisible': [('message_type', '!=', 'assistant')]}"/>
+                                        <field name="response_time" modifiers="{'invisible': [('message_type', '!=', 'assistant')]}"/>
                                     </list>
                                 </field>
                             </div>

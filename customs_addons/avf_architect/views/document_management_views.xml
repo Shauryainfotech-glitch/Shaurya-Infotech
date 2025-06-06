@@ -9,19 +9,19 @@
                 <header>
                     <button name="action_submit_for_review" string="Submit for Review" 
                             type="object" class="oe_highlight"
-                            attrs="{'invisible': [('state', 'not in', ['draft'])]}"/>
+                            modifiers="{'invisible': [('state', 'not in', ['draft'])]}"/>
                     <button name="action_approve" string="Approve" 
                             type="object" class="oe_highlight"
-                            attrs="{'invisible': [('state', 'not in', ['review'])]}"/>
+                            modifiers="{'invisible': [('state', 'not in', ['review'])]}"/>
                     <button name="action_reject" string="Reject" 
                             type="object" class="btn-warning"
-                            attrs="{'invisible': [('state', 'not in', ['review'])]}"/>
+                            modifiers="{'invisible': [('state', 'not in', ['review'])]}"/>
                     <button name="action_archive" string="Archive" 
                             type="object" class="btn-secondary"
-                            attrs="{'invisible': [('state', 'in', ['draft', 'review'])]}"/>
+                            modifiers="{'invisible': [('state', 'in', ['draft', 'review'])]}"/>
                     <button name="create_new_version" string="New Version" 
                             type="object" class="btn-primary"
-                            attrs="{'invisible': [('state', 'not in', ['approved'])]}"/>
+                            modifiers="{'invisible': [('state', 'not in', ['approved'])]}"/>
                     <field name="state" widget="statusbar" 
                            statusbar_visible="draft,review,approved,rejected,archived"/>
                 </header>
@@ -101,9 +101,9 @@
                                 </group>
                                 <group>
                                     <field name="authorized_user_ids" widget="many2many_tags"
-                                           attrs="{'invisible': [('access_level', 'in', ['public', 'internal'])]}"/>
+                                           modifiers="{'invisible': [('access_level', 'in', ['public', 'internal'])]}"/>
                                     <field name="authorized_group_ids" widget="many2many_tags"
-                                           attrs="{'invisible': [('access_level', 'in', ['public', 'internal'])]}"/>
+                                           modifiers="{'invisible': [('access_level', 'in', ['public', 'internal'])]}"/>
                                 </group>
                             </group>
                         </page>
@@ -296,7 +296,7 @@
                             <field name="requires_approval"/>
                             <field name="auto_expire"/>
                             <field name="default_expiry_days" 
-                                   attrs="{'invisible': [('auto_expire', '=', False)]}"/>
+                                   modifiers="{'invisible': [('auto_expire', '=', False)]}"/>
                         </group>
                     </group>
                     <notebook>

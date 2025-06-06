@@ -53,7 +53,7 @@
                             <field name="theme"/>
                             <field name="email_notifications"/>
                             <field name="notification_frequency" 
-                                   attrs="{'invisible': [('email_notifications', '=', False)]}"/>
+                                   modifiers="{'invisible': [('email_notifications', '=', False)]}"/>
                             <field name="access_token" readonly="1" password="True"/>
                         </group>
                     </group>
@@ -225,7 +225,7 @@
                             <field name="collapsible"/>
                             <field name="auto_refresh"/>
                             <field name="refresh_interval" 
-                                   attrs="{'invisible': [('auto_refresh', '=', False)]}"/>
+                                   modifiers="{'invisible': [('auto_refresh', '=', False)]}"/>
                         </group>
                     </group>
                     <notebook>
@@ -252,7 +252,7 @@
             <form string="Client Message">
                 <header>
                     <button name="action_send" string="Send" type="object" 
-                            class="oe_highlight" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                            class="oe_highlight" modifiers="{'invisible': [('state', '!=', 'draft')]}"/>
                     <field name="state" widget="statusbar" 
                            statusbar_visible="draft,sent,delivered,read"/>
                 </header>
@@ -272,7 +272,7 @@
                         <group>
                             <field name="sender_id"/>
                             <field name="recipient_ids" widget="many2many_tags"/>
-                            <field name="read_date" attrs="{'invisible': [('state', 'not in', ['read'])]}"/>
+                            <field name="read_date" modifiers="{'invisible': [('state', 'not in', ['read'])]}"/>
                         </group>
                     </group>
                     <notebook>
