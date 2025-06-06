@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api, _
@@ -71,11 +72,11 @@ class AVFDPRManagement(models.Model):
     additional_documents = fields.Binary(string='Additional Documents', attachment=True)
     documents_filename = fields.Char(string='Documents Filename')
 
-    # Computed fields for dashboard
-    total_activities = fields.Integer(string='Total Activities', compute='_compute_activity_stats')
-    completed_activities = fields.Integer(string='Completed Activities', compute='_compute_activity_stats')
+    # Simple computed fields
+    total_activities = fields.Integer(string='Total Activities', compute='_compute_activity_stats', store=True)
+    completed_activities = fields.Integer(string='Completed Activities', compute='_compute_activity_stats', store=True)
     
-    @api.depends('activity_ids', 'activity_ids.progress_percentage')
+    @api.depends('activity_ids')
     def _compute_activity_stats(self):
         for record in self:
             record.total_activities = len(record.activity_ids)
