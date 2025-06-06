@@ -1,16 +1,27 @@
+
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
-        <!-- Security Groups -->
-        <record id="group_avf_architect_user" model="res.groups">
-            <field name="name">AVF Architect User</field>
-            <field name="category_id" ref="base.module_category_project"/>
+    <data noupdate="1">
+
+        <!-- Categories -->
+        <record id="module_category_architect" model="ir.module.category">
+            <field name="name">AVF Architect</field>
+            <field name="description">User access rights for AVF Architect module</field>
+            <field name="sequence">10</field>
         </record>
 
-        <record id="group_avf_architect_manager" model="res.groups">
-            <field name="name">AVF Architect Manager</field>
-            <field name="category_id" ref="base.module_category_project"/>
-            <field name="implied_ids" eval="[(4, ref('group_avf_architect_user'))]"/>
+        <!-- Groups -->
+        <record id="group_architect_user" model="res.groups">
+            <field name="name">Architect User</field>
+            <field name="category_id" ref="module_category_architect"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
         </record>
+
+        <record id="group_architect_manager" model="res.groups">
+            <field name="name">Architect Manager</field>
+            <field name="category_id" ref="module_category_architect"/>
+            <field name="implied_ids" eval="[(4, ref('group_architect_user'))]"/>
+        </record>
+
     </data>
 </odoo>

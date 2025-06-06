@@ -1,4 +1,3 @@
-
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
@@ -94,7 +93,7 @@
                                     <field name="description" nolabel="1"/>
                                 </group>
                             </page>
-                            <page string="AI & Analytics">
+                            <page string="AI &amp; Analytics">
                                 <group>
                                     <field name="sustainability_score" widget="gauge"/>
                                 </group>
@@ -105,7 +104,7 @@
                                     <field name="risk_analysis" nolabel="1"/>
                                 </group>
                             </page>
-                            <page string="Notes & Tags">
+                            <page string="Notes &amp; Tags">
                                 <group>
                                     <field name="tags"/>
                                 </group>
@@ -310,6 +309,68 @@
             <field name="name">Project Stages</field>
             <field name="res_model">architect.project.stage</field>
             <field name="view_mode">tree,form</field>
+        </record>
+
+    </data>
+
+    <data>
+
+        <!-- Extend Project Form View -->
+        <record id="view_project_form_inherit_architect" model="ir.ui.view">
+            <field name="name">project.project.form.inherit.architect</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="project_type"/>
+                    <field name="project_category"/>
+                    <field name="project_status"/>
+                    <field name="project_code"/>
+                </xpath>
+                <xpath expr="//field[@name='partner_id']" position="before">
+                    <group string="Client Information">
+                        <field name="client_name"/>
+                        <field name="client_contact"/>
+                        <field name="client_email"/>
+                    </group>
+                </xpath>
+                <notebook position="inside">
+                    <page string="Location &amp; Budget">
+                        <group>
+                            <group string="Location Details">
+                                <field name="city"/>
+                                <field name="state"/>
+                                <field name="site_address"/>
+                                <field name="site_area"/>
+                                <field name="built_up_area"/>
+                            </group>
+                            <group string="Budget Information">
+                                <field name="estimated_budget"/>
+                                <field name="approved_budget"/>
+                                <field name="actual_cost"/>
+                                <field name="currency_id"/>
+                            </group>
+                        </group>
+                    </page>
+                    <page string="Government Project">
+                        <group>
+                            <field name="is_government_project"/>
+                            <field name="tender_number"/>
+                            <field name="contract_value"/>
+                            <field name="project_authority"/>
+                        </group>
+                    </page>
+                    <page string="Compliance">
+                        <group>
+                            <field name="compliance_status"/>
+                            <field name="dpr_required"/>
+                            <field name="dpr_status"/>
+                            <field name="fca_required"/>
+                            <field name="environmental_clearance"/>
+                        </group>
+                    </page>
+                </notebook>
+            </field>
         </record>
 
     </data>

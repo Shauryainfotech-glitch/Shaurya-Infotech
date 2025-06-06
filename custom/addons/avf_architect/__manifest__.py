@@ -19,34 +19,6 @@
         * Real-time Progress Tracking
         * Document Management System
         * Automated Reporting
-
-        DPR & Survey Management:
-        * DPR (Detailed Project Report) Creation
-        * SSR/DSR Survey Report Integration
-        * State/Department Specific Guidelines
-        * AI-Enhanced DPR Generation
-        * Survey Data Analysis & Recommendations
-        * Compliance Checklist Automation
-
-        FCA & Ecotourism Compliance:
-        * Forest Conservation Act (FCA) Compliance
-        * PARIVESH Portal Integration
-        * Biodiversity Impact Assessment
-        * Ecotourism Design Optimization
-        * Compensatory Afforestation Planning
-        * Community Engagement Strategies
-        * Carbon Footprint Analysis
-        * Wildlife-Friendly Design Features
-
-        Rate Schedule & Estimation:
-        * DSR (District Schedule of Rates)
-        * SSR (State Schedule of Rates)
-        * Government-Compliant Estimates
-        * Rate Analysis & Validation
-        * Market Rate Comparison
-        * Approval Workflow Management
-        * Audit-Ready Documentation
-        * GST & Statutory Compliance
     """,
     'author': 'AVF Creative Solutions',
     'website': 'https://avfcreative.com',
@@ -57,33 +29,25 @@
         'account',
         'sale',
         'purchase',
-        'stock',
         'mail',
         'calendar',
         'hr_timesheet',
-        'website',
         'portal',
-        'website_sale',  # Added for Odoo 18 ecommerce features
     ],
     'data': [
         'security/security.xml',
         'security/ir.model.access.csv',
         'data/sequences.xml',
-        'data/project_stages.xml',
-        'data/compliance_types.xml',
-        'data/document_categories.xml',
-        'data/financial_categories.xml',
-        'data/rate_schedule_data.xml',
         'views/menus.xml',
+        'views/project_views.xml',
+        'views/team_collaboration_views.xml',
         'views/drawing_management_views.xml',
         'views/survey_management_views.xml',
         'views/ai_assistant_views.xml',
         'views/project_stages_views.xml',
-        'views/team_collaboration_views.xml',
         'views/client_portal_views.xml',
         'views/document_management_views.xml',
         'views/financial_tracking_views.xml',
-        'views/project_views.xml',
         'reports/dpr_report.xml',
         'reports/compliance_report.xml',
         'reports/estimation_report.xml',

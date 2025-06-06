@@ -2,14 +2,14 @@
 # -*- coding: utf-8 -*-
 
 from . import architect_project
-from . import dpr_management
-from . import survey_management
-from . import drawing_management
-from . import document_management
 from . import team_collaboration
 from . import ai_assistant
-from . import financial_tracking
 from . import client_portal
 from . import compliance_tracking
-from . import rate_schedule
+from . import document_management
+from . import dpr_management
+from . import drawing_management
+from . import financial_tracking
 from . import project_stages
+from . import rate_schedule
+from . import survey_management

@@ -1,17 +1,36 @@
+
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Main Menu Root -->
-    <menuitem id="menu_architect_root" name="AVF Architect" sequence="10" web_icon="avf_architect,static/description/icon.png"/>
+    <data>
 
-    <!-- Configuration Menu -->
-    <menuitem id="menu_architect_config" name="Configuration" 
-              parent="menu_architect_root" sequence="90"/>
+        <!-- Main Menu -->
+        <menuitem id="menu_architect_main"
+                  name="AVF Architect"
+                  sequence="10"/>
 
-    <!-- Reports Menu -->
-    <menuitem id="menu_architect_reports" name="Reports" 
-              parent="menu_architect_root" sequence="85"/>
+        <!-- Projects Menu -->
+        <menuitem id="menu_architect_projects"
+                  name="Projects"
+                  parent="menu_architect_main"
+                  sequence="10"/>
 
-    <!-- Dashboard Menu -->
-    <menuitem id="menu_architect_dashboard" name="Dashboard" 
-              parent="menu_architect_root" sequence="5"/>
+        <menuitem id="menu_architect_project_list"
+                  name="Projects"
+                  parent="menu_architect_projects"
+                  action="project.open_view_project_all"
+                  sequence="10"/>
+
+        <!-- Teams Menu -->
+        <menuitem id="menu_architect_teams"
+                  name="Teams"
+                  parent="menu_architect_main"
+                  sequence="20"/>
+
+        <menuitem id="menu_architect_team_list"
+                  name="Teams"
+                  parent="menu_architect_teams"
+                  action="action_architect_team"
+                  sequence="10"/>
+
+    </data>
 </odoo>

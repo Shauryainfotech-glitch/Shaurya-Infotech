@@ -84,7 +84,7 @@ class TeamCollaboration(models.Model):
 
     name = fields.Char(string='Collaboration Name', required=True)
     project_id = fields.Many2one('project.project', string='Project', required=True)
-    team_id = fields.Many2one('architect.team', string='Team', required=True)
+    team_id = fields.Many2one('architect.team', string='Team', required=True, ondelete='cascade')
 
     collaboration_type = fields.Selection([
         ('meeting', 'Team Meeting'),

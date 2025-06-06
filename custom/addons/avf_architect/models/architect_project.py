@@ -1,9 +1,4 @@
-tags.
 
-Here's the complete code:
-
-```
-<replit_final_file>
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api, _
