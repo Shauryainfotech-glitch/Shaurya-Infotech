@@ -1,3 +1,4 @@
+
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_architect_project_user,architect.project.user,model_project_project,group_avf_architect_user,1,1,1,0
 access_architect_project_manager,architect.project.manager,model_project_project,group_avf_architect_manager,1,1,1,1
@@ -5,12 +6,12 @@ access_architect_project_admin,architect.project.admin,model_project_project,gro
 access_avf_ai_assistant_user,avf.ai.assistant.user,model_avf_ai_assistant,group_avf_architect_user,1,1,1,0
 access_avf_ai_assistant_manager,avf.ai.assistant.manager,model_avf_ai_assistant,group_avf_architect_manager,1,1,1,1
 access_avf_ai_assistant_admin,avf.ai.assistant.admin,model_avf_ai_assistant,group_avf_architect_admin,1,1,1,1
-access_avf_ai_template_user,avf.ai.template.user,model_avf_ai_template,group_avf_architect_user,1,0,0,0
-access_avf_ai_template_manager,avf.ai.template.manager,model_avf_ai_template,group_avf_architect_manager,1,1,1,1
-access_avf_ai_template_admin,avf.ai.template.admin,model_avf_ai_template,group_avf_architect_admin,1,1,1,1
-access_avf_ai_knowledge_user,avf.ai.knowledge.user,model_avf_ai_knowledge,group_avf_architect_user,1,0,0,0
-access_avf_ai_knowledge_manager,avf.ai.knowledge.manager,model_avf_ai_knowledge,group_avf_architect_manager,1,1,1,1
-access_avf_ai_knowledge_admin,avf.ai.knowledge.admin,model_avf_ai_knowledge,group_avf_architect_admin,1,1,1,1
-access_avf_ai_conversation_user,avf.ai.conversation.user,model_avf_ai_conversation,group_avf_architect_user,1,1,1,0
-access_avf_ai_conversation_manager,avf.ai.conversation.manager,model_avf_ai_conversation,group_avf_architect_manager,1,1,1,1
-access_avf_ai_conversation_admin,avf.ai.conversation.admin,model_avf_ai_conversation,group_avf_architect_admin,1,1,1,1
+access_architect_ai_template_user,architect.ai.template.user,model_architect_ai_template,group_avf_architect_user,1,0,0,0
+access_architect_ai_template_manager,architect.ai.template.manager,model_architect_ai_template,group_avf_architect_manager,1,1,1,1
+access_architect_ai_template_admin,architect.ai.template.admin,model_architect_ai_template,group_avf_architect_admin,1,1,1,1
+access_architect_ai_knowledge_user,architect.ai.knowledge.user,model_architect_ai_knowledge,group_avf_architect_user,1,0,0,0
+access_architect_ai_knowledge_manager,architect.ai.knowledge.manager,model_architect_ai_knowledge,group_avf_architect_manager,1,1,1,1
+access_architect_ai_knowledge_admin,architect.ai.knowledge.admin,model_architect_ai_knowledge,group_avf_architect_admin,1,1,1,1
+access_architect_ai_conversation_user,architect.ai.conversation.user,model_architect_ai_conversation,group_avf_architect_user,1,1,1,0
+access_architect_ai_conversation_manager,architect.ai.conversation.manager,model_architect_ai_conversation,group_avf_architect_manager,1,1,1,1
+access_architect_ai_conversation_admin,architect.ai.conversation.admin,model_architect_ai_conversation,group_avf_architect_admin,1,1,1,1
