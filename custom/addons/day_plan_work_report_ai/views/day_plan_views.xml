@@ -183,7 +183,7 @@
     </record>
 
     <!-- Menu Item for Day Plan -->
-    <menuitem id="menu_day_plan_root" name="Day Planning" sequence="10" groups="day_plan_work_report_ai.group_user,day_plan_work_report_ai.group_manager,day_plan_work_report_ai.group_admin"/>
+    <menuitem id="menu_day_plan_root" name="Day Planning" sequence="10"/>
     <menuitem id="menu_day_plan" name="Day Plans" parent="menu_day_plan_root" action="action_day_plan" groups="day_plan_work_report_ai.group_user,day_plan_work_report_ai.group_manager,day_plan_work_report_ai.group_admin"/>
     <menuitem id="menu_day_plan_configuration" name="Configuration" parent="menu_day_plan_root" sequence="100" groups="day_plan_work_report_ai.group_manager,day_plan_work_report_ai.group_admin"/>
 </odoo>
