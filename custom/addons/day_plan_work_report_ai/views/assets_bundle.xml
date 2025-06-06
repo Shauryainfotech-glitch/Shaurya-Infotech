@@ -11,6 +11,10 @@
                 <script type="text/javascript" src="/day_plan_work_report_ai/static/src/new_dashboard_client_action.js"/>
                 <script type="text/javascript" src="/day_plan_work_report_ai/static/src/components/dashboard_chart.js"/>
                 
+                <!-- Include productivity dashboard components -->
+                <script type="text/javascript" src="/day_plan_work_report_ai/static/src/components/dashboard/productivity_dashboard_action.js"/>
+                <script type="text/javascript" src="/day_plan_work_report_ai/static/src/components/dashboard/productivity_dashboard.js"/>
+                
                 <!-- Include calendar view components -->
                 <script type="text/javascript" src="/day_plan_work_report_ai/static/src/views/day_plan_calendar/day_plan_calendar_view.js"/>
                 <script type="text/javascript" src="/day_plan_work_report_ai/static/src/views/day_plan_calendar/day_plan_calendar_controller.js"/>
@@ -38,6 +42,10 @@
                         <canvas t-ref="chart"></canvas>
                     </div>
                 </t>
+                
+                <!-- Include productivity dashboard XML template -->
+                <t t-call="day_plan_work_report_ai.ProductivityDashboard"/>
+                
                 
                 <!-- Main Dashboard Template -->
                 <t t-name="day_plan_work_report_ai.NewProductivityDashboard">
