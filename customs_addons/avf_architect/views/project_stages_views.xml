@@ -44,14 +44,14 @@
                         </page>
                         <page string="Checklists" name="checklists">
                             <field name="checklist_template_ids">
-                                <tree editable="bottom">
+                                <kanban editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="name"/>
                                     <field name="item_type"/>
                                     <field name="responsible_role"/>
                                     <field name="verification_method"/>
                                     <field name="is_mandatory"/>
-                                </tree>
+                                </kanban>
                             </field>
                         </page>
                     </notebook>
@@ -60,12 +60,12 @@
         </field>
     </record>
 
-    <!-- Project Stage Tree View -->
+    <!-- Project Stage Kanban View -->
     <record id="view_architect_project_stage_tree" model="ir.ui.view">
         <field name="name">architect.project.stage.tree</field>
         <field name="model">architect.project.stage</field>
         <field name="arch" type="xml">
-            <tree string="Project Stages">
+            <kanban string="Project Stages">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="stage_type"/>
@@ -73,7 +73,7 @@
                 <field name="expected_duration"/>
                 <field name="requires_approval"/>
                 <field name="active"/>
-            </tree>
+            </kanban>
         </field>
     </record>
 
@@ -85,11 +85,11 @@
             <search string="Search Stages">
                 <field name="name"/>
                 <field name="stage_type"/>
-                <filter string="Requires Approval" name="requires_approval" 
+                <filter string="Requires Approval" name="requires_approval"
                         domain="[('requires_approval', '=', True)]"/>
                 <filter string="Active" name="active" domain="[('active', '=', True)]"/>
                 <group expand="0" string="Group By">
-                    <filter string="Stage Type" name="group_type" 
+                    <filter string="Stage Type" name="group_type"
                             context="{'group_by': 'stage_type'}"/>
                 </group>
             </search>
@@ -141,19 +141,19 @@
         </field>
     </record>
 
-    <!-- Project Checklist Template Tree View -->
+    <!-- Project Checklist Template Kanban View -->
     <record id="view_architect_stage_checklist_template_tree" model="ir.ui.view">
         <field name="name">architect.stage.checklist.template.tree</field>
         <field name="model">architect.stage.checklist.template</field>
         <field name="arch" type="xml">
-            <tree string="Checklist Templates">
+            <kanban string="Checklist Templates">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="stage_id"/>
                 <field name="item_type"/>
                 <field name="responsible_role"/>
                 <field name="is_mandatory"/>
-            </tree>
+            </kanban>
         </field>
     </record>
 
@@ -164,7 +164,7 @@
         <field name="arch" type="xml">
             <form string="Project Checklist">
                 <header>
-                    <button name="action_verify" string="Verify" type="object" 
+                    <button name="action_verify" string="Verify" type="object"
                             class="oe_highlight" attrs="{'invisible': ['|', ('completed', '=', False), ('verified', '=', True)]}"/>
                     <field name="state" widget="statusbar"/>
                 </header>
@@ -210,12 +210,12 @@
         </field>
     </record>
 
-    <!-- Project Checklist Tree View -->
+    <!-- Project Checklist Kanban View -->
     <record id="view_architect_project_checklist_tree" model="ir.ui.view">
         <field name="name">architect.project.checklist.tree</field>
         <field name="model">architect.project.checklist</field>
         <field name="arch" type="xml">
-            <tree string="Project Checklists" decoration-success="completed and verified" 
+            <kanban string="Project Checklists" decoration-success="completed and verified"
                   decoration-info="completed and not verified" decoration-muted="not completed">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
@@ -224,7 +224,7 @@
                 <field name="completed"/>
                 <field name="verified"/>
                 <field name="completion_date"/>
-            </tree>
+            </kanban>
         </field>
     </record>
 
@@ -232,7 +232,7 @@
     <record id="action_architect_project_stage" model="ir.actions.act_window">
         <field name="name">Project Stages</field>
         <field name="res_model">architect.project.stage</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">kanban,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create your first project stage
@@ -246,7 +246,7 @@
     <record id="action_architect_stage_checklist_template" model="ir.actions.act_window">
         <field name="name">Checklist Templates</field>
         <field name="res_model">architect.stage.checklist.template</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">kanban,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create your first checklist template

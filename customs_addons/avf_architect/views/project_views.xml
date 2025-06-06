@@ -1,4 +1,3 @@
-
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
@@ -10,21 +9,21 @@
             <field name="arch" type="xml">
                 <form string="Architectural Project">
                     <header>
-                        <button name="action_confirm" string="Confirm" type="object" 
+                        <button name="action_confirm" string="Confirm" type="object"
                                class="oe_highlight" states="draft"/>
-                        <button name="action_start" string="Start" type="object" 
+                        <button name="action_start" string="Start" type="object"
                                class="oe_highlight" states="confirmed"/>
-                        <button name="action_review" string="Submit for Review" type="object" 
+                        <button name="action_review" string="Submit for Review" type="object"
                                class="oe_highlight" states="in_progress"/>
-                        <button name="action_approve" string="Approve" type="object" 
+                        <button name="action_approve" string="Approve" type="object"
                                class="oe_highlight" states="review"/>
-                        <button name="action_complete" string="Complete" type="object" 
+                        <button name="action_complete" string="Complete" type="object"
                                class="oe_highlight" states="approved"/>
-                        <button name="action_cancel" string="Cancel" type="object" 
+                        <button name="action_cancel" string="Cancel" type="object"
                                states="draft,confirmed,in_progress"/>
-                        <button name="generate_ai_recommendations" string="Generate AI Recommendations" 
+                        <button name="generate_ai_recommendations" string="Generate AI Recommendations"
                                type="object" class="btn-secondary"/>
-                        <field name="state" widget="statusbar" 
+                        <field name="state" widget="statusbar"
                                statusbar_visible="draft,confirmed,in_progress,review,approved,completed"/>
                     </header>
                     <sheet>
@@ -94,7 +93,7 @@
                                     <field name="description" nolabel="1"/>
                                 </group>
                             </page>
-                            <page string="AI & Analytics">
+                            <page string="AI &amp; Analytics">
                                 <group>
                                     <field name="sustainability_score" widget="gauge"/>
                                 </group>
@@ -105,7 +104,7 @@
                                     <field name="risk_analysis" nolabel="1"/>
                                 </group>
                             </page>
-                            <page string="Notes & Tags">
+                            <page string="Notes &amp; Tags">
                                 <group>
                                     <field name="tags"/>
                                 </group>
@@ -124,32 +123,7 @@
             </field>
         </record>
 
-        <!-- Project Tree View -->
-        <record id="view_architect_project_tree" model="ir.ui.view">
-            <field name="name">architect.project.tree</field>
-            <field name="model">architect.project</field>
-            <field name="arch" type="xml">
-                <tree string="Architectural Projects" decoration-info="state=='draft'" 
-                      decoration-warning="state=='in_progress'" decoration-success="state=='completed'">
-                    <field name="code"/>
-                    <field name="name"/>
-                    <field name="partner_id"/>
-                    <field name="project_type"/>
-                    <field name="user_id"/>
-                    <field name="start_date"/>
-                    <field name="deadline"/>
-                    <field name="progress" widget="progressbar"/>
-                    <field name="stage_id"/>
-                    <field name="state" widget="badge" 
-                           decoration-info="state=='draft'" 
-                           decoration-warning="state in ('confirmed','in_progress')"
-                           decoration-success="state=='completed'"/>
-                    <field name="priority" widget="priority"/>
-                    <field name="currency_id" invisible="1"/>
-                    <field name="budget" sum="Total Budget"/>
-                </tree>
-            </field>
-        </record>
+        <!-- Removed Project Tree View -->
 
         <!-- Project Kanban View -->
         <record id="view_architect_project_kanban" model="ir.ui.view">
@@ -246,7 +220,7 @@
                             </group>
                             <group>
                                 <field name="requires_approval"/>
-                                <field name="approval_users" widget="many2many_tags" 
+                                <field name="approval_users" widget="many2many_tags"
                                        attrs="{'invisible': [('requires_approval', '=', False)]}"/>
                             </group>
                         </group>
@@ -266,26 +240,13 @@
             </field>
         </record>
 
-        <!-- Project Stage Tree View -->
-        <record id="view_architect_project_stage_tree" model="ir.ui.view">
-            <field name="name">architect.project.stage.tree</field>
-            <field name="model">architect.project.stage</field>
-            <field name="arch" type="xml">
-                <tree string="Project Stages" editable="bottom">
-                    <field name="sequence" widget="handle"/>
-                    <field name="name"/>
-                    <field name="progress"/>
-                    <field name="requires_approval"/>
-                    <field name="fold"/>
-                </tree>
-            </field>
-        </record>
+        <!-- Removed Project Stage Tree View -->
 
         <!-- Actions -->
         <record id="action_architect_project" model="ir.actions.act_window">
             <field name="name">Architectural Projects</field>
             <field name="res_model">architect.project</field>
-            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_mode">kanban,form</field> <!-- removed tree from view_mode -->
             <field name="context">{}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
@@ -301,7 +262,7 @@
         <record id="action_architect_project_my" model="ir.actions.act_window">
             <field name="name">My Projects</field>
             <field name="res_model">architect.project</field>
-            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_mode">kanban,form</field> <!-- removed tree from view_mode -->
             <field name="domain">[('user_id', '=', uid)]</field>
             <field name="context">{'default_user_id': uid}</field>
         </record>
@@ -309,7 +270,7 @@
         <record id="action_architect_project_stage" model="ir.actions.act_window">
             <field name="name">Project Stages</field>
             <field name="res_model">architect.project.stage</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">form</field> <!-- removed tree from view_mode -->
         </record>
 
     </data>
