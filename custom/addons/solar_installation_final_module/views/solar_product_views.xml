@@ -3,7 +3,7 @@
         <!-- Action for Solar Projects -->
             <record id="action_solar_product_views" model="ir.actions.act_window">
             <field name="name">Solar Products</field>
-            <field name="res_model">solar.product</field>
+            <field name="res_model">solar.product.product</field>
             <field name="view_mode">form</field> <!-- Only form view -->
             <field name="target">current</field>
         </record>
