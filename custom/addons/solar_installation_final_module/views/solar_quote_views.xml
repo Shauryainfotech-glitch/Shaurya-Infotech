@@ -71,7 +71,6 @@
                                             <field name="quantity"/>
                                             <field name="unit_price"/>
                                             <field name="discount_pct"/>
-                                            <field name="discount_pct"/>
                                             <field name="price_subtotal"/>
                                         </group>
                                     </form>
