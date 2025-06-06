@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data noupdate="1">
-        
+    <data>
+
+        <!-- Report Action for Estimation -->
+        <record id="action_report_estimation" model="ir.actions.report">
+            <field name="name">Estimation Report</field>
+            <field name="model">mrp.estimation</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">mrp_estimation.estimation_report_template</field>
+            <field name="report_file">mrp_estimation.estimation_report_template</field>
+            <field name="binding_model_id" ref="model_mrp_estimation"/>
+            <field name="binding_type">report</field>
+        </record>
+
         <!-- Email Template for Estimation Approval Request -->
         <record id="email_template_estimation_approval" model="mail.template">
             <field name="name">Manufacturing Estimation: Approval Request</field>
@@ -9,26 +20,26 @@
             <field name="subject">Estimation Approval Required: {{ object.name }}</field>
             <field name="email_from">{{ user.email_formatted }}</field>
             <field name="partner_to">{{ object.user_id.partner_id.id }}</field>
-            <field name="body_html" type="html">
-                <div style="margin: 0px; padding: 0px;">
-                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
-                        Dear {{ object.user_id.name }},
-                        <br/><br/>
-                        A new manufacturing estimation requires your approval:
-                        <br/><br/>
-                        <strong>Estimation Reference:</strong> {{ object.name }}<br/>
-                        <strong>Customer:</strong> {{ object.partner_id.name }}<br/>
-                        <strong>Product:</strong> {{ object.product_id.name }}<br/>
-                        <strong>Quantity:</strong> {{ object.product_qty }} {{ object.product_uom_id.name }}<br/>
-                        <strong>Total Amount:</strong> {{ format_amount(object.estimation_total, object.currency_id) }}
-                        <br/><br/>
-                        Please review and take appropriate action.
-                        <br/><br/>
-                        Best regards,<br/>
-                        {{ user.name }}
-                    </p>
-                </div>
-            </field>
+            <field name="body_html" type="html"><![CDATA[
+<div style="margin: 0px; padding: 0px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        Dear {{ object.user_id.name }},
+        <br/><br/>
+        A new manufacturing estimation requires your approval:
+        <br/><br/>
+        <strong>Estimation Reference:</strong> {{ object.name }}<br/>
+        <strong>Customer:</strong> {{ object.partner_id.name }}<br/>
+        <strong>Product:</strong> {{ object.product_id.name }}<br/>
+        <strong>Quantity:</strong> {{ object.product_qty }} {{ object.product_uom_id.name }}<br/>
+        <strong>Total Amount:</strong> {{ format_amount(object.estimation_total, object.currency_id) }}
+        <br/><br/>
+        Please review and take appropriate action.
+        <br/><br/>
+        Best regards,<br/>
+        {{ user.name }}
+    </p>
+</div>
+            ]]></field>
             <field name="lang">{{ object.user_id.lang }}</field>
             <field name="auto_delete" eval="True"/>
         </record>
@@ -40,47 +51,35 @@
             <field name="subject">Manufacturing Estimation {{ object.name }}</field>
             <field name="email_from">{{ user.email_formatted }}</field>
             <field name="partner_to">{{ object.partner_id.id }}</field>
-            <field name="body_html" type="html">
-                <div style="margin: 0px; padding: 0px;">
-                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
-                        Dear {{ object.partner_id.name }},
-                        <br/><br/>
-                        Please find attached our manufacturing estimation for your review:
-                        <br/><br/>
-                        <strong>Reference:</strong> {{ object.name }}<br/>
-                        <strong>Product:</strong> {{ object.product_id.name }}<br/>
-                        <strong>Quantity:</strong> {{ object.product_qty }} {{ object.product_uom_id.name }}<br/>
-                        <strong>Total Amount:</strong> {{ format_amount(object.estimation_total, object.currency_id) }}<br/>
-                        <strong>Valid Until:</strong> {{ object.validity_date }}
-                        <br/><br/>
-                        {% if object.customer_notes %}
-                        <strong>Additional Notes:</strong><br/>
-                        {{ object.customer_notes | safe }}
-                        <br/><br/>
-                        {% endif %}
-                        Please don't hesitate to contact us if you have any questions.
-                        <br/><br/>
-                        Best regards,<br/>
-                        {{ user.name }}
-                    </p>
-                </div>
-            </field>
+            <field name="body_html" type="html"><![CDATA[
+<div style="margin: 0px; padding: 0px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        Dear {{ object.partner_id.name }},
+        <br/><br/>
+        Please find attached our manufacturing estimation for your review:
+        <br/><br/>
+        <strong>Reference:</strong> {{ object.name }}<br/>
+        <strong>Product:</strong> {{ object.product_id.name }}<br/>
+        <strong>Quantity:</strong> {{ object.product_qty }} {{ object.product_uom_id.name }}<br/>
+        <strong>Total Amount:</strong> {{ format_amount(object.estimation_total, object.currency_id) }}<br/>
+        <strong>Valid Until:</strong> {{ object.validity_date }}
+        <br/><br/>
+        {% if object.customer_notes %}
+        <strong>Additional Notes:</strong><br/>
+        {{ object.customer_notes | safe }}
+        <br/><br/>
+        {% endif %}
+        Please don't hesitate to contact us if you have any questions.
+        <br/><br/>
+        Best regards,<br/>
+        {{ user.name }}
+    </p>
+</div>
+            ]]></field>
             <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="auto_delete" eval="True"/>
-            <field name="report_name">Estimation_{{ (object.name or '').replace('/','_') }}</field>
-            <!-- Temporarily comment out report template reference -->
-            <!-- <field name="report_template" ref="action_report_estimation"/> -->
-        </record>
-
-        <!-- Define the missing report action -->
-        <record id="action_report_estimation" model="ir.actions.report">
-            <field name="name">Manufacturing Estimation Report</field>
-            <field name="model">mrp.estimation</field>
-            <field name="report_type">qweb-pdf</field>
-            <field name="report_name">report_estimation_document</field> <!-- This should be the report template ID -->
-          <field name="report_file">mrp_estimation/report/report_estimation_template</field> <!-- Report file path -->
-            <field name="binding_model_id" ref="model_mrp_estimation"/>
-            <field name="binding_type">record</field>
+            <field name="report_template" ref="action_report_estimation"/>
+            <field name="report_filename">Estimation_{{ (object.name or '').replace('/','_') }}</field>
         </record>
 
         <!-- Activity Type for Estimation Approval -->
@@ -123,68 +122,6 @@
         <record id="default_cost_markup" model="ir.config_parameter">
             <field name="key">mrp_estimation.default_cost_markup</field>
             <field name="value">15.0</field>
-        </record>
-
-        <!-- Estimation Stages -->
-        <record id="estimation_stage_draft" model="mrp.estimation.stage">
-            <field name="name">Draft</field>
-            <field name="sequence">10</field>
-            <field name="is_done" eval="False"/>
-        </record>
-
-        <record id="estimation_stage_waiting_approval" model="mrp.estimation.stage">
-            <field name="name">Waiting Approval</field>
-            <field name="sequence">20</field>
-            <field name="is_done" eval="False"/>
-        </record>
-
-        <record id="estimation_stage_approved" model="mrp.estimation.stage">
-            <field name="name">Approved</field>
-            <field name="sequence">30</field>
-            <field name="is_done" eval="True"/>
-        </record>
-
-        <record id="estimation_stage_rejected" model="mrp.estimation.stage">
-            <field name="name">Rejected</field>
-            <field name="sequence">40</field>
-            <field name="is_done" eval="True"/>
-        </record>
-
-        <!-- Cost Categories -->
-        <record id="cost_category_material" model="mrp.estimation.cost.category">
-            <field name="name">Material Cost</field>
-            <field name="code">MAT</field>
-            <field name="type">material</field>
-            <field name="sequence">10</field>
-        </record>
-
-        <record id="cost_category_labor" model="mrp.estimation.cost.category">
-            <field name="name">Labor Cost</field>
-            <field name="code">LAB</field>
-            <field name="type">labor</field>
-            <field name="sequence">20</field>
-        </record>
-
-        <record id="cost_category_overhead" model="mrp.estimation.cost.category">
-            <field name="name">Overhead Cost</field>
-            <field name="code">OVH</field>
-            <field name="type">overhead</field>
-            <field name="sequence">30</field>
-        </record>
-
-        <record id="cost_category_other" model="mrp.estimation.cost.category">
-            <field name="name">Other Cost</field>
-            <field name="code">OTH</field>
-            <field name="sequence">40</field>
-        </record>
-
-        <!-- Default Settings -->
-        <record id="default_estimation_settings" model="res.config.settings">
-            <field name="group_estimation_approver" eval="True"/>
-            <field name="estimation_auto_approve" eval="False"/>
-            <field name="estimation_approval_threshold" eval="1000.0"/>
-            <field name="estimation_default_validity" eval="30"/>
-            <field name="estimation_default_overhead" eval="10.0"/>
         </record>
 
     </data>
