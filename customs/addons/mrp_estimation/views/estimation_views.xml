@@ -296,7 +296,7 @@
                     <filter string="Valid Estimations" name="valid" 
                             domain="['|', ('validity_date', '=', False), ('validity_date', '>=', context_today())]"/>
                     <filter string="Expired Estimations" name="expired" 
-                            domain="[('validity_date', '!=', False), ('validity_date', '<', context_today())]"/>
+                            domain="[('validity_date', '!=', False), ('validity_date', '&lt;', context_today())]"/>
                     
                     <separator/>
                     
