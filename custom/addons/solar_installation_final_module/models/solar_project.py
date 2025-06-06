@@ -190,7 +190,7 @@ class SolarProject(models.Model):
     notes = fields.Text(string="Internal Notes")
     description = fields.Html(string="Project Description")
     related_model = fields.Many2one('related.model', string='Related Model')
-    partner_id = fields.Many2one('res.partner', string="Customer", default=False)
+    partner_id = fields.Many2one('res.partner', string="Customer")
 
     # Method to compute the current active quote
     @api.depends('quote_ids', 'quote_ids.total_amount', 'quote_ids.state')
