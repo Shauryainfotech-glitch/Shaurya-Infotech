@@ -36,8 +36,7 @@
             ("include", "https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"),
             "day_plan_work_report_ai/static/src/js/dashboard.js",
             "day_plan_work_report_ai/static/src/views/day_plan_calendar/day_plan_calendar.js",
-            "day_plan_work_report_ai/static/src/views/day_plan_calendar/day_plan_calendar.xml",
-            "day_plan_work_report_ai/views/enhanced_dashboard_views.xml"
+            "day_plan_work_report_ai/static/src/views/day_plan_calendar/day_plan_calendar.xml"
         ]
     },
     "description": """
