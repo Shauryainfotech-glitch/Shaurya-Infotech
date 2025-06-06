@@ -76,12 +76,12 @@
                         </page>
                         <page string="Dashboards" name="dashboards">
                             <field name="dashboard_ids">
-                                <tree>
+                                <list>
                                     <field name="name"/>
                                     <field name="layout"/>
                                     <field name="is_default"/>
                                     <field name="sequence"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                     </notebook>
@@ -163,7 +163,7 @@
                     <notebook>
                         <page string="Widgets" name="widgets">
                             <field name="widget_ids">
-                                <tree editable="bottom">
+                                <list editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="name"/>
                                     <field name="widget_type"/>
@@ -171,7 +171,7 @@
                                     <field name="show_title"/>
                                     <field name="collapsible"/>
                                     <field name="auto_refresh"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                         <page string="Customization" name="customization">
