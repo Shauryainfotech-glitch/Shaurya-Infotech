@@ -1,4 +1,3 @@
-
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api, _
@@ -95,7 +94,7 @@ class ArchitectProject(models.Model):
 
     # Related records
     drawing_ids = fields.One2many('avf.drawing.management', 'project_id', string='Drawings')
-    dpr_ids = fields.One2many('avf.dpr.management', 'project_id', string='DPR Records')
+    dpr_ids = fields.One2many('avf.dpr.management', 'project_id', string='Daily Progress Reports')
     survey_ids = fields.One2many('avf.survey.management', 'project_id', string='Survey Records')
     compliance_ids = fields.One2many('avf.compliance.tracking', 'project_id', string='Compliance Records')
 
