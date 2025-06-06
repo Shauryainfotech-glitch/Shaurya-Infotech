@@ -13,7 +13,7 @@ class ArchitectSurvey(models.Model):
     project_id = fields.Many2one('architect.project', string='Project', required=True)
     company_id = fields.Many2one('res.company', string='Company', required=True, 
                                 default=lambda self: self.env.company)
-    
+    active = fields.Boolean(default=True)
     # Survey Details
     survey_type = fields.Selection([
         ('preliminary', 'Preliminary Survey'),
