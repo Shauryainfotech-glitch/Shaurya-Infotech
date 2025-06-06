@@ -107,6 +107,13 @@ class MrpEstimation(models.Model):
         default=lambda self: self.env.user,
         tracking=True
     )
+
+    # Portal access token for sharing
+    access_token = fields.Char(
+        string='Access Token',
+        default=lambda self: self._generate_access_token(),
+        copy=False
+    )
     
     # ======================
     # ONE2MANY RELATIONS
@@ -225,7 +232,33 @@ class MrpEstimation(models.Model):
         string='Customer Notes',
         help="Notes visible to customer"
     )
-    
+
+    # ======================
+    # PORTAL METHODS
+    # ======================
+
+    def _generate_access_token(self):
+        """Generate a unique access token for portal sharing"""
+        return str(self.env['res.partner']._generate_access_token())
+
+    def _get_portal_url(self, suffix=None, report_type=None, download=None, query_string=None, anchor=None):
+        """Get portal URL for this estimation"""
+        self.ensure_one()
+        url = f'/my/estimation/{self.id}'
+        if suffix:
+            url += f'/{suffix}'
+        if download:
+            url += '/download'
+        if query_string:
+            url += f'?{query_string}'
+        if anchor:
+            url += f'#{anchor}'
+        return url
+
+    def get_portal_url(self, suffix=None, report_type=None, download=None, query_string=None, anchor=None):
+        """Public method to get portal URL"""
+        return self._get_portal_url(suffix, report_type, download, query_string, anchor)
+
     # ======================
     # CONSTRAINTS & VALIDATION
     # ======================
@@ -354,6 +387,7 @@ class MrpEstimation(models.Model):
             'name': _('Copy of %s') % self.name,
             'state': 'draft',
             'version': 1.0,
+            'access_token': self._generate_access_token(),
         })
         return super().copy(default)
     
@@ -557,144 +591,13 @@ class MrpEstimation(models.Model):
     # INTEGRATION METHODS
     # ======================
     
-    def action_create_bom(self):
-        """Create BOM from estimation"""
-        self.ensure_one()
-        
-        if not self.estimation_line_ids:
-            raise UserError(_("Cannot create BOM without material lines."))
-        
-        # Check if BOM already exists
-        existing_bom = self.env['mrp.bom'].search([
-            ('product_tmpl_id', '=', self.product_id.product_tmpl_id.id),
-            ('company_id', '=', self.company_id.id)
-        ], limit=1)
-        
-        if existing_bom:
-            raise UserError(_("BOM already exists for this product."))
-        
-        # Create BOM
-        bom_vals = {
-            'product_tmpl_id': self.product_id.product_tmpl_id.id,
-            'product_qty': self.product_qty,
-            'product_uom_id': self.product_uom_id.id,
-            'type': 'normal',
-            'company_id': self.company_id.id,
-        }
-        
-        bom_lines = []
-        for line in self.estimation_line_ids:
-            bom_lines.append((0, 0, {
-                'product_id': line.product_id.id,
-                'product_qty': line.product_qty,
-                'product_uom_id': line.product_uom_id.id,
-            }))
-        
-        bom_vals['bom_line_ids'] = bom_lines
-        
-        bom = self.env['mrp.bom'].create(bom_vals)
-        
-        return {
-            'type': 'ir.actions.act_window',
-            'name': _('Bill of Materials'),
-            'res_model': 'mrp.bom',
-            'res_id': bom.id,
-            'view_mode': 'form',
-            'target': 'current'
-        }
-    
-    def action_create_sale_order(self):
-        """Create sales order from estimation"""
-        self.ensure_one()
-        
-        sale_order_vals = {
-            'partner_id': self.partner_id.id,
-            'origin': self.name,
-            'currency_id': self.currency_id.id,
-            'company_id': self.company_id.id,
-            'user_id': self.user_id.id,
-        }
-        
-        order_lines = [(0, 0, {
-            'product_id': self.product_id.id,
-            'product_uom_qty': self.product_qty,
-            'product_uom': self.product_uom_id.id,
-            'price_unit': self.estimation_total / self.product_qty,
-            'name': self.product_id.display_name,
-        })]
-        
-        sale_order_vals['order_line'] = order_lines
-        
-        sale_order = self.env['sale.order'].create(sale_order_vals)
-        
-        return {
-            'type': 'ir.actions.act_window',
-            'name': _('Sales Order'),
-            'res_model': 'sale.order',
-            'res_id': sale_order.id,
-            'view_mode': 'form',
-            'target': 'current'
-        }
-    
-    def action_create_manufacturing_order(self):
-        """Create manufacturing order from estimation"""
-        self.ensure_one()
-        
-        # Check if BOM exists
-        bom = self.env['mrp.bom']._bom_find(
-            product=self.product_id,
-            company_id=self.company_id.id
-        )
-        
-        if not bom:
-            raise UserError(_("Please create a BOM first before creating manufacturing order."))
-        
-        mo_vals = {
-            'product_id': self.product_id.id,
-            'product_qty': self.product_qty,
-            'product_uom_id': self.product_uom_id.id,
-            'bom_id': bom.id,
-            'origin': self.name,
-            'company_id': self.company_id.id,
-        }
-        
-        mo = self.env['mrp.production'].create(mo_vals)
-        
-        return {
-            'type': 'ir.actions.act_window',
-            'name': _('Manufacturing Order'),
-            'res_model': 'mrp.production',
-            'res_id': mo.id,
-            'view_mode': 'form',
-            'target': 'current'
-        }
-    
-    def action_create_version(self):
-        """Create new version of estimation"""
-        self.ensure_one()
-        
-        # Create version record
-        version_vals = {
-            'parent_estimation_id': self.id,
-            'version_number': self.version,
-            'version_notes': 'Version created from estimation',
-            'created_by': self.env.user.id,
-            'creation_date': fields.Datetime.now(),
-        }
-        
-        self.env['mrp.estimation.version'].create(version_vals)
-        
-        # Copy estimation with new version
-        new_estimation = self.copy({
-            'version': self.version + 0.1,
-            'state': 'draft',
-        })
-        
-        return {
-            'type': 'ir.actions.act_window',
-            'name': _('New Version'),
-            'res_model': 'mrp.estimation',
-            'res_id': new_estimation.id,
-            'view_mode': 'form',
-            'target': 'current'
-        }
+    # def action_view_versions(self):
+    #     """View estimation versions"""
+    #     self.ensure_one()
+    #     action = {
+    #         'name': _('Estimation Versions'),
+    #         'type': 'ir.actions.act_window',
+    #         'res_model': 'mrp.estimation.version',
+    #         'view_mode': 'tree,form',
+    #         'domain': [('parent_estimation_id', '=', self.id)],
+    #     }

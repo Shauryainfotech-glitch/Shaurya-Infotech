@@ -50,7 +50,7 @@
                         <notebook>
                             <!-- Operation Costs -->
                             <page string="Operation Details" name="operation_details"
-                                  attrs="{'invisible': [('cost_type', '!=', 'operation')]}">
+                                  invisible="cost_type != 'operation'">
                                 <group>
                                     <group>
                                         <field name="operation_id"/>
@@ -63,7 +63,7 @@
 
                             <!-- Labor Costs -->
                             <page string="Labor Details" name="labor_details"
-                                  attrs="{'invisible': [('cost_type', '!=', 'labor')]}">
+                                  invisible="cost_type != 'labor'">
                                 <group>
                                     <group>
                                         <field name="labor_hours"/>
@@ -75,7 +75,7 @@
 
                             <!-- Other Costs -->
                             <page string="Cost Details" name="cost_details"
-                                  attrs="{'invisible': [('cost_type', 'in', ['operation', 'labor'])]}">
+                                  invisible="cost_type in ['operation', 'labor']">
                                 <group>
                                     <group>
                                         <field name="unit_cost" widget="monetary"/>

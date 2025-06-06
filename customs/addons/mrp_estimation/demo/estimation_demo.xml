@@ -2,145 +2,94 @@
 <odoo>
     <data noupdate="1">
         
-        <!-- Demo Products -->
-        <record id="product_demo_chair" model="product.product">
-            <field name="name">Office Chair</field>
+        <!-- Demo Product for Manufacturing -->
+        <record id="demo_product_manufacturing" model="product.product">
+            <field name="name">Demo Manufacturing Product</field>
             <field name="type">product</field>
-            <field name="standard_price">150.00</field>
-            <field name="list_price">300.00</field>
+            <field name="standard_price">100.0</field>
+            <field name="list_price">150.0</field>
             <field name="categ_id" ref="product.product_category_all"/>
         </record>
 
-        <record id="product_demo_steel" model="product.product">
-            <field name="name">Steel Frame</field>
+        <!-- Demo Materials -->
+        <record id="demo_material_steel" model="product.product">
+            <field name="name">Steel Plate</field>
             <field name="type">product</field>
-            <field name="standard_price">50.00</field>
-            <field name="list_price">75.00</field>
+            <field name="standard_price">25.0</field>
+            <field name="list_price">30.0</field>
             <field name="categ_id" ref="product.product_category_all"/>
         </record>
 
-        <record id="product_demo_fabric" model="product.product">
-            <field name="name">Chair Fabric</field>
+        <record id="demo_material_bolt" model="product.product">
+            <field name="name">Bolt M8x20</field>
             <field name="type">product</field>
-            <field name="standard_price">25.00</field>
-            <field name="list_price">40.00</field>
-            <field name="categ_id" ref="product.product_category_all"/>
-        </record>
-
-        <record id="product_demo_wheels" model="product.product">
-            <field name="name">Chair Wheels (Set)</field>
-            <field name="type">product</field>
-            <field name="standard_price">15.00</field>
-            <field name="list_price">25.00</field>
+            <field name="standard_price">0.5</field>
+            <field name="list_price">0.8</field>
             <field name="categ_id" ref="product.product_category_all"/>
         </record>
 
         <!-- Demo Customer -->
-        <record id="partner_demo_customer" model="res.partner">
-            <field name="name">Furniture Corp</field>
+        <record id="demo_customer_manufacturing" model="res.partner">
+            <field name="name">Manufacturing Corp</field>
             <field name="is_company">True</field>
             <field name="customer_rank">1</field>
-            <field name="email">contact@furniturecorp.com</field>
+            <field name="email">contact@manufacturingcorp.com</field>
             <field name="phone">+1-555-0123</field>
-            <field name="street">123 Business Ave</field>
-            <field name="city">New York</field>
-            <field name="zip">10001</field>
-            <field name="country_id" ref="base.us"/>
         </record>
 
         <!-- Demo Estimation -->
-        <record id="estimation_demo_001" model="mrp.estimation">
-            <field name="name">EST/2024/00001</field>
-            <field name="partner_id" ref="partner_demo_customer"/>
-            <field name="product_id" ref="product_demo_chair"/>
-            <field name="product_qty">100</field>
+        <record id="demo_estimation_1" model="mrp.estimation">
+            <field name="name">EST/2025/00001</field>
+            <field name="partner_id" ref="demo_customer_manufacturing"/>
+            <field name="product_id" ref="demo_product_manufacturing"/>
+            <field name="product_qty">10.0</field>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
-            <field name="estimation_date" eval="(DateTime.now() - timedelta(days=5)).strftime('%Y-%m-%d')"/>
-            <field name="validity_date" eval="(DateTime.now() + timedelta(days=30)).strftime('%Y-%m-%d')"/>
-            <field name="state">approved</field>
-            <field name="version">1.0</field>
+            <field name="estimation_date" eval="datetime.now().date()"/>
+            <field name="validity_date" eval="(datetime.now() + timedelta(days=30)).date()"/>
+            <field name="state">draft</field>
             <field name="material_markup_type">percentage</field>
             <field name="material_markup_value">10.0</field>
             <field name="cost_markup_type">percentage</field>
             <field name="cost_markup_value">15.0</field>
-            <field name="notes">Demo estimation for office chair manufacturing</field>
-            <field name="customer_notes">High-quality office chairs with ergonomic design</field>
         </record>
 
         <!-- Demo Estimation Lines -->
-        <record id="estimation_line_demo_001" model="mrp.estimation.line">
-            <field name="estimation_id" ref="estimation_demo_001"/>
-            <field name="sequence">10</field>
-            <field name="product_id" ref="product_demo_steel"/>
-            <field name="product_qty">100</field>
+        <record id="demo_estimation_line_1" model="mrp.estimation.line">
+            <field name="estimation_id" ref="demo_estimation_1"/>
+            <field name="product_id" ref="demo_material_steel"/>
+            <field name="product_qty">2.0</field>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
-            <field name="product_cost">50.00</field>
-            <field name="markup_percentage">10.0</field>
+            <field name="product_cost">25.0</field>
+            <field name="markup_percentage">5.0</field>
             <field name="existing_material">True</field>
-            <field name="lead_time">5</field>
         </record>
 
-        <record id="estimation_line_demo_002" model="mrp.estimation.line">
-            <field name="estimation_id" ref="estimation_demo_001"/>
-            <field name="sequence">20</field>
-            <field name="product_id" ref="product_demo_fabric"/>
-            <field name="product_qty">200</field>
-            <field name="product_uom_id" ref="uom.product_uom_meter"/>
-            <field name="product_cost">25.00</field>
+        <record id="demo_estimation_line_2" model="mrp.estimation.line">
+            <field name="estimation_id" ref="demo_estimation_1"/>
+            <field name="product_id" ref="demo_material_bolt"/>
+            <field name="product_qty">20.0</field>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="product_cost">0.5</field>
             <field name="markup_percentage">10.0</field>
             <field name="existing_material">False</field>
-            <field name="lead_time">10</field>
-        </record>
-
-        <record id="estimation_line_demo_003" model="mrp.estimation.line">
-            <field name="estimation_id" ref="estimation_demo_001"/>
-            <field name="sequence">30</field>
-            <field name="product_id" ref="product_demo_wheels"/>
-            <field name="product_qty">100</field>
-            <field name="product_uom_id" ref="uom.product_uom_unit"/>
-            <field name="product_cost">15.00</field>
-            <field name="markup_percentage">10.0</field>
-            <field name="existing_material">True</field>
-            <field name="lead_time">7</field>
         </record>
 
         <!-- Demo Estimation Costs -->
-        <record id="estimation_cost_demo_001" model="mrp.estimation.cost">
-            <field name="estimation_id" ref="estimation_demo_001"/>
-            <field name="sequence">10</field>
-            <field name="name">Assembly Labor</field>
+        <record id="demo_estimation_cost_1" model="mrp.estimation.cost">
+            <field name="estimation_id" ref="demo_estimation_1"/>
+            <field name="name">Welding Operation</field>
             <field name="cost_type">labor</field>
-            <field name="labor_hours">200</field>
-            <field name="labor_rate">25.00</field>
+            <field name="labor_hours">5.0</field>
+            <field name="labor_rate">25.0</field>
             <field name="labor_overhead">20.0</field>
         </record>
 
-        <record id="estimation_cost_demo_002" model="mrp.estimation.cost">
-            <field name="estimation_id" ref="estimation_demo_001"/>
-            <field name="sequence">20</field>
+        <record id="demo_estimation_cost_2" model="mrp.estimation.cost">
+            <field name="estimation_id" ref="demo_estimation_1"/>
             <field name="name">Quality Control</field>
             <field name="cost_type">misc</field>
-            <field name="unit_cost">500.00</field>
-            <field name="quantity">1</field>
-        </record>
-
-        <record id="estimation_cost_demo_003" model="mrp.estimation.cost">
-            <field name="estimation_id" ref="estimation_demo_001"/>
-            <field name="sequence">30</field>
-            <field name="name">Packaging</field>
-            <field name="cost_type">misc</field>
-            <field name="unit_cost">2.00</field>
-            <field name="quantity">100</field>
-        </record>
-
-        <!-- Demo Version -->
-        <record id="estimation_version_demo_001" model="mrp.estimation.version">
-            <field name="parent_estimation_id" ref="estimation_demo_001"/>
-            <field name="version_number">1.0</field>
-            <field name="version_notes">Initial version of office chair estimation</field>
-            <field name="created_by" ref="base.user_admin"/>
-            <field name="creation_date" eval="DateTime.now()"/>
-            <field name="is_active_version">True</field>
+            <field name="unit_cost">50.0</field>
+            <field name="quantity">1.0</field>
         </record>
 
     </data>

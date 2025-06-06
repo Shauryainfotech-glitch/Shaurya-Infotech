@@ -39,7 +39,7 @@
                                     <div class="text-muted">
                                         Automatically apply default markup percentages
                                     </div>
-                                    <div class="content-group" attrs="{'invisible': [('auto_markup_enabled', '=', False)]}">
+                                    <div class="content-group" invisible="not auto_markup_enabled">
                                         <div class="mt16 row">
                                             <label class="col-lg-4" for="default_material_markup"/>
                                             <field name="default_material_markup" class="col-lg-8"/>

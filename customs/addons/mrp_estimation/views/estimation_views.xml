@@ -178,23 +178,30 @@
                                         <field name="name"/>
                                         <field name="cost_type"/>
                                         <field name="operation_id" 
-                                               attrs="{'invisible': [('cost_type', '!=', 'operation')], 'required': [('cost_type', '=', 'operation')]}"/>
+                                               invisible="cost_type != 'operation'"
+                                               required="cost_type == 'operation'"/>
                                         <field name="workcenter_id" 
-                                               attrs="{'invisible': [('cost_type', '!=', 'operation')]}"/>
+                                               invisible="cost_type != 'operation'"/>
                                         <field name="operation_time" 
-                                               attrs="{'invisible': [('cost_type', '!=', 'operation')], 'required': [('cost_type', '=', 'operation')]}"/>
+                                               invisible="cost_type != 'operation'"
+                                               required="cost_type == 'operation'"/>
                                         <field name="hourly_rate" widget="monetary" 
-                                               attrs="{'invisible': [('cost_type', '!=', 'operation')], 'required': [('cost_type', '=', 'operation')]}"/>
+                                               invisible="cost_type != 'operation'"
+                                               required="cost_type == 'operation'"/>
                                         <field name="labor_hours" 
-                                               attrs="{'invisible': [('cost_type', '!=', 'labor')], 'required': [('cost_type', '=', 'labor')]}"/>
+                                               invisible="cost_type != 'labor'"
+                                               required="cost_type == 'labor'"/>
                                         <field name="labor_rate" widget="monetary" 
-                                               attrs="{'invisible': [('cost_type', '!=', 'labor')], 'required': [('cost_type', '=', 'labor')]}"/>
+                                               invisible="cost_type != 'labor'"
+                                               required="cost_type == 'labor'"/>
                                         <field name="labor_overhead" 
-                                               attrs="{'invisible': [('cost_type', '!=', 'labor')]}"/>
+                                               invisible="cost_type != 'labor'"/>
                                         <field name="unit_cost" widget="monetary" 
-                                               attrs="{'invisible': [('cost_type', 'in', ['operation', 'labor'])], 'required': [('cost_type', 'not in', ['operation', 'labor'])]}"/>
+                                               invisible="cost_type in ['operation', 'labor']"
+                                               required="cost_type not in ['operation', 'labor']"/>
                                         <field name="quantity" 
-                                               attrs="{'invisible': [('cost_type', 'in', ['operation', 'labor'])], 'required': [('cost_type', 'not in', ['operation', 'labor'])]}"/>
+                                               invisible="cost_type in ['operation', 'labor']"
+                                               required="cost_type not in ['operation', 'labor']"/>
                                         <field name="total_cost" widget="monetary"/>
                                         <field name="currency_id" column_invisible="1"/>
                                     </list>
