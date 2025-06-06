@@ -43,7 +43,9 @@
         
         # Data
         'data/estimation_sequence.xml',
-        'data/estimation_data.xml',
+        
+        # Report Templates
+        'reports/estimation_templates.xml',
         
         # Views
         'views/estimation_views.xml',
@@ -53,12 +55,8 @@
         'views/mrp_costing_views.xml',
         'views/estimation_menus.xml',
         
-        # Reports
-        'reports/estimation_report_views.xml',
-        'reports/estimation_templates.xml',
-        
-        # Wizards
-        'wizard/estimation_wizard_views.xml',
+        # Data that depends on views/reports
+        'data/estimation_data.xml',
     ],
     'demo': [
         'demo/estimation_demo.xml',
