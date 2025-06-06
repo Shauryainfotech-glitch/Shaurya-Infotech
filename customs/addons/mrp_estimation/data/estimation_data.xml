@@ -68,7 +68,8 @@
             <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="auto_delete" eval="True"/>
             <field name="report_name">Estimation_{{ (object.name or '').replace('/','_') }}</field>
-            <field name="report_template" ref="mrp_estimation.action_report_estimation"/>
+            <!-- Temporarily comment out report template reference -->
+            <!-- <field name="report_template" ref="action_report_estimation"/> -->
         </record>
 
         <!-- Activity Type for Estimation Approval -->
