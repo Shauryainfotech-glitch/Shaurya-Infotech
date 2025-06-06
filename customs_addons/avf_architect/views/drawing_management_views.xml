@@ -6,38 +6,23 @@
         <field name="model">architect.drawing</field>
         <field name="arch" type="xml">
             <form string="Architectural Drawing">
-<!--                <header>-->
-<!--                    <button name="action_submit_for_review" string="Submit for Review" -->
-<!--                            type="object" class="oe_highlight"-->
-<!--                            attrs="{'invisible': [('state', 'not in', ['draft'])]}"/>-->
-<!--                    <button name="action_approve" string="Approve" -->
-<!--                            type="object" class="oe_highlight"-->
-<!--                            attrs="{'invisible': [('state', 'not in', ['review'])]}"/>-->
-<!--                    <button name="action_request_revision" string="Request Revision" -->
-<!--                            type="object" class="btn-warning"-->
-<!--                            attrs="{'invisible': [('state', 'not in', ['review'])]}"/>-->
-<!--                    <button name="create_new_version" string="Create New Version" -->
-<!--                            type="object" class="btn-primary"-->
-<!--                            attrs="{'invisible': [('state', 'not in', ['approved'])]}"/>-->
-<!--                    <field name="state" widget="statusbar" -->
-<!--                           statusbar_visible="draft,review,approved,revision,obsolete"/>-->
-<!--                </header>-->
                 <header>
                     <button name="action_submit_for_review" string="Submit for Review"
                             type="object" class="oe_highlight"
-                            t-if="record.state.raw_value == 'draft'"/>
+                            modifiers="{'invisible': [('state', 'not in', ['draft'])]}"/>
                     <button name="action_approve" string="Approve"
                             type="object" class="oe_highlight"
-                            t-if="record.state.raw_value == 'review'"/>
+                            modifiers="{'invisible': [('state', 'not in', ['review'])]}"/>
                     <button name="action_request_revision" string="Request Revision"
                             type="object" class="btn-warning"
-                            t-if="record.state.raw_value == 'review'"/>
+                            modifiers="{'invisible': [('state', 'not in', ['review'])]}"/>
                     <button name="create_new_version" string="Create New Version"
                             type="object" class="btn-primary"
-                            t-if="record.state.raw_value == 'approved'"/>
+                            modifiers="{'invisible': [('state', 'not in', ['approved'])]}"/>
                     <field name="state" widget="statusbar"
                            statusbar_visible="draft,review,approved,revision,obsolete"/>
                 </header>
+
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
