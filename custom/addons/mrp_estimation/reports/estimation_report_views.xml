@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Estimation Report Action Views -->
+        <record id="view_estimation_report_tree" model="ir.ui.view">
+            <field name="name">mrp.estimation.report.tree</field>
+            <field name="model">mrp.estimation</field>
+            <field name="type">list</field>
+            <field name="arch" type="xml">
+                <tree string="Manufacturing Estimations">
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="product_id"/>
+                    <field name="estimation_date"/>
+                    <field name="state"/>
+                    <field name="estimation_total"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_estimation_report_form" model="ir.ui.view">
+            <field name="name">mrp.estimation.report.form</field>
+            <field name="model">mrp.estimation</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Manufacturing Estimation Report">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="partner_id"/>
+                            <field name="product_id"/>
+                            <field name="estimation_date"/>
+                            <field name="state"/>
+                            <field name="estimation_total"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

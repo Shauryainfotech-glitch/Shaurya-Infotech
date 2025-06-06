@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Email Template for Estimation Approval Request -->
+        <record id="email_template_estimation_approval" model="mail.template">
+            <field name="name">Manufacturing Estimation: Approval Request</field>
+            <field name="model_id" ref="model_mrp_estimation"/>
+            <field name="subject">Estimation Approval Required: {{ object.name }}</field>
+            <field name="email_from">{{ user.email_formatted }}</field>
+            <field name="partner_to">{{ object.user_id.partner_id.id }}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Dear {{ object.user_id.name }},
+                        <br/><br/>
+                        A new manufacturing estimation requires your approval:
+                        <br/><br/>
+                        <strong>Estimation Reference:</strong> {{ object.name }}<br/>
+                        <strong>Customer:</strong> {{ object.partner_id.name }}<br/>
+                        <strong>Product:</strong> {{ object.product_id.name }}<br/>
+                        <strong>Quantity:</strong> {{ object.product_qty }} {{ object.product_uom_id.name }}<br/>
+                        <strong>Total Amount:</strong> {{ format_amount(object.estimation_total, object.currency_id) }}
+                        <br/><br/>
+                        Please review and take appropriate action.
+                        <br/><br/>
+                        Best regards,<br/>
+                        {{ user.name }}
+                    </p>
+                </div>
+            </field>
+            <field name="lang">{{ object.user_id.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <!-- Email Template for Sending Estimation to Customer -->
+        <record id="email_template_estimation" model="mail.template">
+            <field name="name">Manufacturing Estimation: Send to Customer</field>
+            <field name="model_id" ref="model_mrp_estimation"/>
+            <field name="subject">Manufacturing Estimation {{ object.name }}</field>
+            <field name="email_from">{{ user.email_formatted }}</field>
+            <field name="partner_to">{{ object.partner_id.id }}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Dear {{ object.partner_id.name }},
+                        <br/><br/>
+                        Please find attached our manufacturing estimation for your review:
+                        <br/><br/>
+                        <strong>Reference:</strong> {{ object.name }}<br/>
+                        <strong>Product:</strong> {{ object.product_id.name }}<br/>
+                        <strong>Quantity:</strong> {{ object.product_qty }} {{ object.product_uom_id.name }}<br/>
+                        <strong>Total Amount:</strong> {{ format_amount(object.estimation_total, object.currency_id) }}<br/>
+                        <strong>Valid Until:</strong> {{ object.validity_date }}
+                        <br/><br/>
+                        {% if object.customer_notes %}
+                        <strong>Additional Notes:</strong><br/>
+                        {{ object.customer_notes | safe }}
+                        <br/><br/>
+                        {% endif %}
+                        Please don't hesitate to contact us if you have any questions.
+                        <br/><br/>
+                        Best regards,<br/>
+                        {{ user.name }}
+                    </p>
+                </div>
+            </field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+            <field name="report_template" ref="action_report_estimation"/>
+            <field name="report_name">Estimation_{{ (object.name or '').replace('/','_') }}</field>
+        </record>
+
+        <!-- Activity Type for Estimation Approval -->
+        <record id="mail_activity_estimation_approval" model="mail.activity.type">
+            <field name="name">Estimation Approval</field>
+            <field name="summary">Review and approve manufacturing estimation</field>
+            <field name="category">default</field>
+            <field name="res_model">mrp.estimation</field>
+            <field name="icon">fa-check-square-o</field>
+            <field name="delay_count">1</field>
+            <field name="delay_unit">days</field>
+        </record>
+
+        <!-- Default Configuration Parameters -->
+        <record id="default_estimation_sequence_prefix" model="ir.config_parameter">
+            <field name="key">mrp_estimation.sequence_prefix</field>
+            <field name="value">EST</field>
+        </record>
+
+        <record id="default_auto_markup" model="ir.config_parameter">
+            <field name="key">mrp_estimation.auto_markup</field>
+            <field name="value">False</field>
+        </record>
+
+        <record id="default_approval_required" model="ir.config_parameter">
+            <field name="key">mrp_estimation.approval_required</field>
+            <field name="value">True</field>
+        </record>
+
+        <record id="default_version_increment" model="ir.config_parameter">
+            <field name="key">mrp_estimation.version_increment</field>
+            <field name="value">0.1</field>
+        </record>
+
+        <record id="default_material_markup" model="ir.config_parameter">
+            <field name="key">mrp_estimation.default_material_markup</field>
+            <field name="value">10.0</field>
+        </record>
+
+        <record id="default_cost_markup" model="ir.config_parameter">
+            <field name="key">mrp_estimation.default_cost_markup</field>
+            <field name="value">15.0</field>
+        </record>
+
+    </data>
+</odoo>
