@@ -22,9 +22,9 @@
           <header>
           <field name="state" widget="statusbar"
                  statusbar_visible="draft,sent,accepted,refused,expired"/>
-          <button string="Send" type="object" name="action_send" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
-          <button string="Accept" type="object" name="action_accept" attrs="{'invisible': [('state', '!=', 'sent')]}"/>
-          <button string="Refuse" type="object" name="action_refuse" attrs="{'invisible': [('state', 'not in', ('draft', 'sent'))]}"/>
+          <button string="Send" type="object" name="action_send" modifiers="{'invisible': [('state', '!=', 'draft')]}"/>
+          <button string="Accept" type="object" name="action_accept" modifiers="{'invisible': [('state', '!=', 'sent')]}"/>
+          <button string="Refuse" type="object" name="action_refuse" modifiers="{'invisible': [('state', 'not in', ('draft', 'sent'))]}"/>
         </header>
         <sheet>
           <group>

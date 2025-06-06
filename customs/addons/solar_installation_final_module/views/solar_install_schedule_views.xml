@@ -22,9 +22,9 @@
         <header>
           <field name="state" widget="statusbar"
                  statusbar_visible="planned,in_progress,done,cancelled"/>
-          <button string="Start" type="object" name="action_start" states="planned"/>
-          <button string="Done" type="object" name="action_done" states="in_progress"/>
-          <button string="Cancel" type="object" name="action_cancel" states="planned,in_progress"/>
+          <button string="Start" type="object" name="action_start" modifiers="{'invisible': [('state', '!=', 'planned')]}"/>
+          <button string="Done" type="object" name="action_done" modifiers="{'invisible': [('state', '!=', 'in_progress')]}"/>
+          <button string="Cancel" type="object" name="action_cancel" modifiers="{'invisible': [('state', 'not in', ('planned', 'in_progress'))]}"/>
         </header>
         <sheet>
           <group>
