@@ -59,13 +59,14 @@ class DPRManagement(models.Model):
     submission_date = fields.Datetime(string='Submission Date')
     approval_date = fields.Datetime(string='Approval Date')
 
-    @api.model
-    def create(self, vals):
-        if vals.get('name', _('New')) == _('New'):
-            vals['name'] = self.env['ir.sequence'].next_by_code('avf.dpr.management') or _('New')
-        if not vals.get('report_number'):
-            vals['report_number'] = self.env['ir.sequence'].next_by_code('avf.dpr.management.number') or _('DPR001')
-        return super(DPRManagement, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('name', _('New')) == _('New'):
+                vals['name'] = self.env['ir.sequence'].next_by_code('avf.dpr.management') or _('New')
+            if not vals.get('report_number'):
+                vals['report_number'] = self.env['ir.sequence'].next_by_code('avf.dpr.management.number') or _('DPR001')
+        return super(DPRManagement, self).create(vals_list)
 
     def action_submit(self):
         """Submit DPR for approval"""

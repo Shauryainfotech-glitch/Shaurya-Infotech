@@ -35,7 +35,7 @@ class ArchitectAIAssistant(models.Model):
     name = fields.Char(string='Query Title', required=True)
     query = fields.Text(string='User Query', required=True)
     response = fields.Text(string='AI Response')
-    project_id = fields.Many2one('architect.project', string='Related Project')
+    project_id = fields.Many2one('project.project', string='Project')
     user_id = fields.Many2one('res.users', string='User', default=lambda self: self.env.user)
 
     # AI Context

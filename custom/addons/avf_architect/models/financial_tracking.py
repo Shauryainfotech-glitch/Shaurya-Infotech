@@ -153,7 +153,7 @@ class ArchitectFinancialTracking(models.Model):
     _order = 'project_id, date desc'
 
     name = fields.Char(string='Reference', required=True, tracking=True)
-    project_id = fields.Many2one('architect.project', string='Project', required=True)
+    project_id = fields.Many2one('project.project', string='Project', required=True)
     company_id = fields.Many2one('res.company', string='Company', 
                                 default=lambda self: self.env.company)
 
@@ -264,7 +264,7 @@ class ArchitectBudget(models.Model):
     _order = 'project_id, version desc'
 
     name = fields.Char(string='Budget Name', required=True, tracking=True)
-    project_id = fields.Many2one('architect.project', string='Project', required=True)
+    project_id = fields.Many2one('project.project', string='Project', required=True)
     version = fields.Integer(string='Version', default=1)
 
     # Budget Details
@@ -398,7 +398,7 @@ class ArchitectCostEstimate(models.Model):
     _order = 'project_id, version desc'
 
     name = fields.Char(string='Estimate Name', required=True, tracking=True)
-    project_id = fields.Many2one('architect.project', string='Project', required=True)
+    project_id = fields.Many2one('project.project', string='Project', required=True)
     version = fields.Integer(string='Version', default=1)
 
     # Estimate Details

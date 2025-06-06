@@ -6,6 +6,80 @@ from datetime import datetime, timedelta
 
 class ArchitectProject(models.Model):
     _inherit = 'project.project'
+    
+    # Additional fields for architect projects
+    client_name = fields.Char(string='Client Name')
+    project_type = fields.Selection([
+        ('residential', 'Residential'),
+        ('commercial', 'Commercial'),
+        ('industrial', 'Industrial'),
+        ('infrastructure', 'Infrastructure'),
+        ('government', 'Government')
+    ], string='Project Type', default='residential')
+    
+    project_status = fields.Selection([
+        ('planning', 'Planning'),
+        ('design', 'Design'),
+        ('approval', 'Approval'),
+        ('construction', 'Construction'),
+        ('completed', 'Completed'),
+        ('on_hold', 'On Hold')
+    ], string='Project Status', default='planning')
+    
+    site_area = fields.Float(string='Site Area (sq.m)')
+    built_up_area = fields.Float(string='Built-up Area (sq.m)')
+    
+    # Project dates
+    project_start_date = fields.Date(string='Project Start Date', compute='_compute_project_dates', store=True)
+    expected_completion = fields.Date(string='Expected Completion')
+    actual_completion = fields.Date(string='Actual Completion')
+    
+    # Financial fields
+    estimated_cost = fields.Monetary(string='Estimated Cost', currency_field='currency_id')
+    actual_cost = fields.Monetary(string='Actual Cost', compute='_compute_actual_cost', store=True, currency_field='currency_id')
+    budget_variance = fields.Monetary(string='Budget Variance', compute='_compute_actual_cost', store=True, currency_field='currency_id')
+    
+    # Progress tracking
+    progress_percentage = fields.Float(string='Progress %', compute='_compute_progress', store=True)
+    
+    # Drawing management
+    architect_drawing_ids = fields.One2many('avf.drawing.management', 'project_id', string='Architect Drawings')
+    architect_drawing_count = fields.Integer(string='Architect Drawing Count', compute='_compute_drawing_count')
+    
+    # Currency for monetary fields
+    currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
+    
+    @api.depends('date_start')
+    def _compute_project_dates(self):
+        for project in self:
+            project.project_start_date = project.date_start
+    
+    @api.depends('task_ids', 'task_ids.effective_hours')
+    def _compute_actual_cost(self):
+        for project in self:
+            total_cost = 0.0
+            for task in project.task_ids:
+                # Use effective_hours instead of planned_hours
+                total_cost += task.effective_hours * 50.0  # Assuming 50 per hour rate
+            project.actual_cost = total_cost
+            project.budget_variance = project.estimated_cost - project.actual_cost
+    
+    @api.depends('task_ids', 'task_ids.stage_id')
+    def _compute_progress(self):
+        for project in self:
+            if project.task_ids:
+                completed_tasks = project.task_ids.filtered(lambda t: t.stage_id.fold)
+                project.progress_percentage = (len(completed_tasks) / len(project.task_ids)) * 100
+            else:
+                project.progress_percentage = 0.0
+    
+    @api.depends('architect_drawing_ids')
+    def _compute_drawing_count(self):
+        for project in self:
+            project.architect_drawing_count = len(project.architect_drawing_ids)
+
+class ArchitectProject(models.Model):
+    _inherit = 'project.project'
     _description = 'Extended Project for AVF Architect'
 
     # Basic project information

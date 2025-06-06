@@ -40,7 +40,7 @@ class ArchitectCompliance(models.Model):
     _order = 'priority desc, deadline'
 
     name = fields.Char(string='Compliance Item', required=True, tracking=True)
-    project_id = fields.Many2one('architect.project', string='Project', required=True)
+    project_id = fields.Many2one('project.project', string='Project', required=True)
 
     # Compliance Type
     compliance_type_id = fields.Many2one('architect.compliance.type', string='Compliance Type', required=True)

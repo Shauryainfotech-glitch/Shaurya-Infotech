@@ -15,7 +15,7 @@ class ArchitectSurvey(models.Model):
     survey_code = fields.Char(string='Survey Code', required=True, copy=False, readonly=True,
                               default=lambda self: _('New'))
 
-    project_id = fields.Many2one('architect.project', string='Project', required=True)
+    project_id = fields.Many2one('project.project', string='Project', required=True)
 
     survey_type = fields.Selection([
         ('topographical', 'Topographical Survey'),
