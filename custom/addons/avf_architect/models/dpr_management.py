@@ -71,7 +71,15 @@ class AVFDPRManagement(models.Model):
     additional_documents = fields.Binary(string='Additional Documents', attachment=True)
     documents_filename = fields.Char(string='Documents Filename')
 
-    # Related fields for easy access - removed problematic activity_type_id field
+    # Computed fields for dashboard
+    total_activities = fields.Integer(string='Total Activities', compute='_compute_activity_stats')
+    completed_activities = fields.Integer(string='Completed Activities', compute='_compute_activity_stats')
+    
+    @api.depends('activity_ids', 'activity_ids.progress_percentage')
+    def _compute_activity_stats(self):
+        for record in self:
+            record.total_activities = len(record.activity_ids)
+            record.completed_activities = len(record.activity_ids.filtered(lambda a: a.progress_percentage >= 100))
 
     @api.model_create_multi
     def create(self, vals_list):
