@@ -70,11 +70,12 @@ class ArchitectRateSchedule(models.Model):
         for schedule in self:
             schedule.item_count = len(schedule.rate_item_ids)
     
-    @api.model
-    def create(self, vals):
-        if 'code' not in vals or not vals['code']:
-            vals['code'] = self.env['ir.sequence'].next_by_code('architect.rate.schedule') or 'New'
-        return super().create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if 'code' not in vals or not vals['code']:
+                vals['code'] = self.env['ir.sequence'].next_by_code('architect.rate.schedule') or 'New'
+        return super().create(vals_list)
     
     def action_publish(self):
         self.state = 'published'

@@ -23,12 +23,5 @@ from . import financial_tracking
 # Company extensions
 from . import res_company
 
-# Reference data models
-from . import architect_service_area
-from . import architect_specialization
-
-# Add company extension
-from . import res_company
-
 # Partners should be imported last to avoid circular dependencies
 from . import res_partner

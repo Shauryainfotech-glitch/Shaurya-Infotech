@@ -153,20 +153,21 @@ class ArchitectCompliance(models.Model):
                 ('res_id', '=', compliance.id)
             ])
     
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         # Auto-create checklist based on compliance type
-        result = super().create(vals)
-        if result.compliance_type_id and result.compliance_type_id.checklist_template_ids:
-            for template_item in result.compliance_type_id.checklist_template_ids:
-                self.env['architect.compliance.checklist'].create({
-                    'compliance_id': result.id,
-                    'name': template_item.name,
-                    'description': template_item.description,
-                    'sequence': template_item.sequence,
-                    'is_mandatory': template_item.is_mandatory
-                })
-        return result
+        results = super().create(vals_list)
+        for result in results:
+            if result.compliance_type_id and result.compliance_type_id.checklist_template_ids:
+                for template_item in result.compliance_type_id.checklist_template_ids:
+                    self.env['architect.compliance.checklist'].create({
+                        'compliance_id': result.id,
+                        'name': template_item.name,
+                        'description': template_item.description,
+                        'sequence': template_item.sequence,
+                        'is_mandatory': template_item.is_mandatory
+                    })
+        return results
     
     def action_start_compliance(self):
         self.state = 'in_progress'
