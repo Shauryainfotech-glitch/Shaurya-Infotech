@@ -42,7 +42,7 @@
 
           <notebook>
             <page string="Survey">
-              <field name="survey_id" context="{'default_project_id': active_id}"/>
+              <field name="survey_id"/>
             </page>
             <page string="Quotations">
               <field name="quote_ids">
