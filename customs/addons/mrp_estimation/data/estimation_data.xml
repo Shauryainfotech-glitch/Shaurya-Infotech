@@ -72,6 +72,17 @@
             <!-- <field name="report_template" ref="action_report_estimation"/> -->
         </record>
 
+        <!-- Define the missing report action -->
+        <record id="action_report_estimation" model="ir.actions.report">
+            <field name="name">Manufacturing Estimation Report</field>
+            <field name="model">mrp.estimation</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">your_module_name.report_estimation_template</field> <!-- This should be the report template ID -->
+            <field name="report_file">your_module_name.report_estimation_file</field> <!-- Report file path -->
+            <field name="binding_model_id" ref="model_mrp_estimation"/>
+            <field name="binding_type">record</field>
+        </record>
+
         <!-- Activity Type for Estimation Approval -->
         <record id="mail_activity_estimation_approval" model="mail.activity.type">
             <field name="name">Estimation Approval</field>
