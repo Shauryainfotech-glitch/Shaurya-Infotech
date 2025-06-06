@@ -2,14 +2,14 @@
 # -*- coding: utf-8 -*-
 
 from . import architect_project
-from . import financial_tracking
-from . import compliance_tracking
-from . import document_management
-from . import drawing_management
 from . import dpr_management
 from . import survey_management
-from . import rate_schedule
+from . import drawing_management
+from . import document_management
 from . import team_collaboration
-from . import client_portal
 from . import ai_assistant
-# project_stages removed - using standard project.task.type
+from . import financial_tracking
+from . import client_portal
+from . import compliance_tracking
+from . import rate_schedule
+from . import project_stages
