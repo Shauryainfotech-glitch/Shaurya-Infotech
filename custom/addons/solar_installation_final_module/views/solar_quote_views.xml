@@ -10,6 +10,7 @@
                <header>
                   <field name="state" widget="statusbar"
                          statusbar_visible="draft,sent,accepted,refused,expired"/>
+                  <!-- Removed deprecated attrs and states -->
                   <button string="Send" type="object" name="action_send" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
                   <button string="Accept" type="object" name="action_accept" attrs="{'invisible': [('state', '!=', 'sent')]}"/>
                   <button string="Refuse" type="object" name="action_refuse" attrs="{'invisible': [('state', 'not in', ('draft', 'sent'))]}"/>
@@ -51,11 +52,11 @@
          </field>
       </record>
 
-      <!-- Action for Solar Quotes (No Tree View) -->
+      <!-- Action for Solar Quotes -->
       <record id="action_solar_quote" model="ir.actions.act_window">
          <field name="name">Solar Quotations</field>
          <field name="res_model">solar.quote</field>
-         <field name="view_mode">form</field> <!-- Only Form view is displayed -->
+         <field name="view_mode">form</field>
          <field name="view_id" ref="view_solar_quote_form"/>
          <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
