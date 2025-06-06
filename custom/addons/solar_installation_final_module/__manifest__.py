@@ -31,18 +31,17 @@
         'product'
     ],
     'data': [
-        'data/ir_sequence_data.xml',  # Ensure this path is correct
         'security/solar_security.xml',
         'security/ir.model.access.csv',
+        'data/ir_sequence_data.xml',
         'views/solar_install_skill_views.xml',
         'views/solar_product_views.xml',
+        'views/solar_project_product_line_views.xml',
         'views/solar_project_views.xml',
         'views/solar_quote_views.xml',
         'views/solar_install_schedule_views.xml',
+        'views/solar_install_team_views.xml',
         'views/solar_site_survey_views.xml',
         'views/solar_install_menu.xml',
-        'views/solar_product_action.xml',
-        'views/solar_install_team_views.xml',
-        'views/solar_project_product_line_views.xml',
     ],
 }

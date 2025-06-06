@@ -97,16 +97,10 @@ class SolarQuote(models.Model):
 
     @api.depends('quote_date', 'validity_days')
     def _compute_expiration_date(self):
-        """
-        expiration_date = quote_date + validity_days
-        """
         for rec in self:
             rec.expiration_date = rec.quote_date + timedelta(days=rec.validity_days)
 
     def _inverse_expiration_date(self):
-        """
-        validity_days = expiration_date - quote_date
-        """
         for rec in self:
             if rec.expiration_date and rec.quote_date:
                 delta = rec.expiration_date - rec.quote_date
@@ -114,9 +108,6 @@ class SolarQuote(models.Model):
 
     @api.depends('quote_line_ids.price_subtotal')
     def _compute_amounts(self):
-        """
-        Calculate untaxed_amount, tax_amount (18%), and total_amount.
-        """
         TAX_RATE = 0.18  # 18% GST placeholder
         for rec in self:
             untaxed = sum(rec.quote_line_ids.mapped('price_subtotal'))
@@ -136,7 +127,6 @@ class SolarQuote(models.Model):
             if not rec.quote_line_ids:
                 raise models.UserError("Cannot send a quote without any line items.")
             rec.state = 'sent'
-            # Optionally: send email template here
 
     def action_accept(self):
         for rec in self:

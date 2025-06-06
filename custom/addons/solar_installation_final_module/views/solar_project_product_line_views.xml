@@ -1,7 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
    <data>
-  <!-- View for Project Product Lines embedded in project form -->
+  <!-- Tree View -->
+  <record id="view_solar_project_product_line_tree" model="ir.ui.view">
+    <field name="name">solar.project.product.line.tree</field>
+    <field name="model">solar.project.product.line</field>
+    <field name="arch" type="xml">
+      <tree string="Project Product Lines" editable="bottom">
+        <field name="sequence"/>
+        <field name="product_id"/>
+        <field name="quantity"/>
+        <field name="unit_cost"/>
+        <field name="manual_unit_cost"/>
+        <field name="subtotal"/>
+      </tree>
+    </field>
+  </record>
+
+  <!-- Form View -->
   <record id="view_solar_project_product_line_form" model="ir.ui.view">
     <field name="name">solar.project.product.line.form</field>
     <field name="model">solar.project.product.line</field>

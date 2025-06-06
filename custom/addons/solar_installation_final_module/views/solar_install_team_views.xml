@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
    <data>
-  <!-- Action for Installation Teams -->
-  <record id="action_solar_install_team" model="ir.actions.act_window">
-    <field name="name">Installation Teams</field>
-    <field name="res_model">solar.install.team</field>
-    <field name="view_mode">form</field>
-    <field name="help" type="html">
-      <p class="o_view_nocontent_smiling_face">
-        Create your first installation team
-      </p>
+  <!-- Tree View -->
+  <record id="view_solar_install_team_tree" model="ir.ui.view">
+    <field name="name">solar.install.team.tree</field>
+    <field name="model">solar.install.team</field>
+    <field name="arch" type="xml">
+      <tree string="Installation Teams">
+        <field name="name"/>
+        <field name="code"/>
+        <field name="capacity"/>
+        <field name="current_workload"/>
+        <field name="available_capacity"/>
+      </tree>
     </field>
   </record>
 
@@ -41,6 +44,19 @@
           </group>
         </sheet>
       </form>
+    </field>
+  </record>
+
+  <!-- Action for Installation Teams -->
+  <record id="action_solar_install_team" model="ir.actions.act_window">
+    <field name="name">Installation Teams</field>
+    <field name="res_model">solar.install.team</field>
+    <field name="view_mode">tree,form</field>
+    <field name="view_id" ref="view_solar_install_team_tree"/>
+    <field name="help" type="html">
+      <p class="o_view_nocontent_smiling_face">
+        Create your first installation team
+      </p>
     </field>
   </record>
    </data>

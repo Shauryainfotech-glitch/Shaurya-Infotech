@@ -21,7 +21,6 @@ class SolarProject(models.Model):
         comodel_name="res.partner",
         string="Customer",
         required=True,
-        # domain="[('customer_rank', '>', 0)]",
         tracking=True
     )
     project_name = fields.Char(
@@ -162,12 +161,6 @@ class SolarProject(models.Model):
 
     @api.depends('quote_ids', 'quote_ids.total_amount', 'quote_ids.state')
     def _compute_current_quote(self):
-        """
-        Compute the current active quote:
-          1. If any accepted, pick most recent accepted by quote_date.
-          2. Otherwise pick latest by quote_date.
-          3. If none exist, False.
-        """
         for rec in self:
             accepted = rec.quote_ids.filtered(lambda q: q.state == 'accepted')
             if accepted:
@@ -180,9 +173,6 @@ class SolarProject(models.Model):
 
     @api.depends('schedule_ids.start_datetime', 'schedule_ids.end_datetime')
     def _compute_schedule_dates(self):
-        """
-        Earliest planned start and latest planned end from schedules.
-        """
         for rec in self:
             dates = rec.schedule_ids.mapped('start_datetime')
             ends = rec.schedule_ids.mapped('end_datetime')
@@ -191,17 +181,11 @@ class SolarProject(models.Model):
 
     @api.depends('quote_ids', 'quote_ids.total_amount')
     def _compute_total_quote_amount(self):
-        """
-        Sum of all quote total_amounts (including drafts, sent, accepted).
-        """
         for rec in self:
             rec.total_quote_amount = sum(rec.quote_ids.mapped('total_amount')) if rec.quote_ids else 0.0
 
     @api.depends('product_line_ids', 'product_line_ids.subtotal')
     def _compute_total_cost(self):
-        """
-        Sum of all BOM line subtotals (manual or standard cost).
-        """
         for rec in self:
             rec.total_cost = sum(rec.product_line_ids.mapped('subtotal')) if rec.product_line_ids else 0.0
 

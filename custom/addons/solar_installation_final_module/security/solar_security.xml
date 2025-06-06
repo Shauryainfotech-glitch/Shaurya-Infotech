@@ -1,0 +1,67 @@
+<odoo>
+    <data>
+        <!-- Define Solar Category -->
+        <record id="module_category_solar" model="ir.module.category">
+            <field name="name">Solar</field>
+        </record>
+
+        <!-- Solar User Group -->
+        <record id="group_solar_user" model="res.groups">
+            <field name="name">Solar User</field>
+            <field name="category_id" ref="module_category_solar"/>
+        </record>
+
+        <!-- Solar Manager Group -->
+        <record id="group_solar_manager" model="res.groups">
+            <field name="name">Solar Manager</field>
+            <field name="category_id" ref="module_category_solar"/>
+            <field name="implied_ids" eval="[(4, ref('group_solar_user'))]"/>
+        </record>
+
+        <!-- Model Definitions -->
+        <record id="model_solar_install_skill" model="ir.model">
+            <field name="name">solar.install.skill</field>
+            <field name="model">solar.install.skill</field>
+        </record>
+
+        <record id="model_solar_product_product" model="ir.model">
+            <field name="name">solar.product.product</field>
+            <field name="model">solar.product.product</field>
+        </record>
+
+        <record id="model_solar_project" model="ir.model">
+            <field name="name">solar.project</field>
+            <field name="model">solar.project</field>
+        </record>
+
+        <record id="model_solar_project_product_line" model="ir.model">
+            <field name="name">solar.project.product.line</field>
+            <field name="model">solar.project.product.line</field>
+        </record>
+
+        <record id="model_solar_quote" model="ir.model">
+            <field name="name">solar.quote</field>
+            <field name="model">solar.quote</field>
+        </record>
+
+        <record id="model_solar_quote_line" model="ir.model">
+            <field name="name">solar.quote.line</field>
+            <field name="model">solar.quote.line</field>
+        </record>
+
+        <record id="model_solar_install_schedule" model="ir.model">
+            <field name="name">solar.install.schedule</field>
+            <field name="model">solar.install.schedule</field>
+        </record>
+
+        <record id="model_solar_install_team" model="ir.model">
+            <field name="name">solar.install.team</field>
+            <field name="model">solar.install.team</field>
+        </record>
+
+        <record id="model_solar_site_survey" model="ir.model">
+            <field name="name">solar.site.survey</field>
+            <field name="model">solar.site.survey</field>
+        </record>
+    </data>
+</odoo>

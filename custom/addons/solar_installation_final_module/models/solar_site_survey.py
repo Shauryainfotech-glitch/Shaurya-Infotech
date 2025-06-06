@@ -87,13 +87,12 @@ class SolarSiteSurvey(models.Model):
         store=True
     )
     recommended_products_ids = fields.Many2many(
-        comodel_name="solar.product",
+        comodel_name="solar.product.product",
         string="Recommended Products",
         domain="[('product_type', 'in', ['panel','inverter','battery'])]",
         help="Based on sizing and site conditions"
     )
 
-    # Added currency_id field (required for Monetary fields)
     currency_id = fields.Many2one(
         'res.currency',
         string='Currency',
@@ -106,7 +105,7 @@ class SolarSiteSurvey(models.Model):
         string="Estimated Installation Cost",
         compute="_compute_estimated_install_cost",
         store=True,
-        currency_field='currency_id',  # Link monetary to currency field
+        currency_field='currency_id',
     )
     survey_report = fields.Binary(
         string="Survey Report (PDF)",
@@ -126,9 +125,6 @@ class SolarSiteSurvey(models.Model):
 
     @api.depends('roof_area_sqft', 'avg_sun_hours')
     def _compute_recommended_capacity(self):
-        """
-        Simple sizing: 1 kW per 15 sq.ft.
-        """
         for rec in self:
             if rec.roof_area_sqft and rec.avg_sun_hours:
                 installable_kw = rec.roof_area_sqft / 15.0
@@ -138,9 +134,6 @@ class SolarSiteSurvey(models.Model):
 
     @api.depends('recommended_capacity_kw')
     def _compute_estimated_install_cost(self):
-        """
-        Estimate cost at $1000 per kW (placeholder).
-        """
         RATE_PER_KW = 1000.0
         for rec in self:
             rec.estimated_install_cost = rec.recommended_capacity_kw * RATE_PER_KW

@@ -47,7 +47,6 @@ class SolarInstallSchedule(models.Model):
     assigned_employee_ids = fields.Many2many(
         comodel_name="hr.employee",
         string="Assigned Employees",
-        domain="[('id', 'in', team_id.member_ids)]",
         help="Specific employees from the team to assign to this shift"
     )
     state = fields.Selection(
