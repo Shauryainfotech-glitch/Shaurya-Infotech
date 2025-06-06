@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api, _
@@ -6,93 +7,172 @@ from datetime import datetime, timedelta
 
 class ArchitectProject(models.Model):
     _inherit = 'project.project'
-    _description = 'Architect Project Extension'
+    _description = 'Extended Project for Architect Module'
 
     # Project Classification
     project_category = fields.Selection([
-        ('residential', 'Residential'),
-        ('commercial', 'Commercial'),
-        ('industrial', 'Industrial'),
-        ('institutional', 'Institutional'),
-        ('infrastructure', 'Infrastructure')
-    ], string='Project Category', required=True)
+        ('government', 'Government Project'),
+        ('private', 'Private Project'),
+        ('institutional', 'Institutional Project'),
+        ('commercial', 'Commercial Project'),
+        ('residential', 'Residential Project')
+    ], string='Project Category', default='government')
 
     project_type = fields.Selection([
         ('new_construction', 'New Construction'),
         ('renovation', 'Renovation'),
         ('restoration', 'Restoration'),
-        ('extension', 'Extension')
-    ], string='Project Type', required=True)
+        ('extension', 'Extension'),
+        ('maintenance', 'Maintenance')
+    ], string='Project Type', default='new_construction')
 
-    # Government Specific Fields
-    government_project = fields.Boolean(string='Government Project', default=False)
-    tender_number = fields.Char(string='Tender Number')
-    department = fields.Char(string='Department/Ministry')
-    project_code = fields.Char(string='Project Code', required=True)
-
+    project_code = fields.Char(string='Project Code', copy=False)
+    
     # Location Details
-    site_address = fields.Text(string='Site Address', required=True)
-    city = fields.Char(string='City', required=True)
-    state = fields.Char(string='State', required=True)
-    pincode = fields.Char(string='PIN Code')
-    gps_coordinates = fields.Char(string='GPS Coordinates')
-
-    # Project Scope
-    built_up_area = fields.Float(string='Built-up Area (Sq.Ft)', digits=(12, 2))
-    plot_area = fields.Float(string='Plot Area (Sq.Ft)', digits=(12, 2))
-    floors = fields.Integer(string='Number of Floors')
-    basement = fields.Boolean(string='Basement', default=False)
-
-    # Financial Information
-    estimated_cost = fields.Monetary(string='Estimated Cost', currency_field='currency_id')
-    approved_budget = fields.Monetary(string='Approved Budget', currency_field='currency_id')
-    actual_cost = fields.Monetary(string='Actual Cost', currency_field='currency_id')
-    currency_id = fields.Many2one('res.currency', string='Currency', 
-                                 default=lambda self: self.env.company.currency_id)
-
-    # Timeline - Using different field names to avoid conflicts
-    project_start_date = fields.Date(string='Project Start Date', required=True)
-    expected_completion_date = fields.Date(string='Expected Completion Date', required=True)
+    city = fields.Char(string='City')
+    state = fields.Char(string='State')
+    site_address = fields.Text(string='Site Address')
+    
+    # Project Timeline
+    project_start_date = fields.Date(string='Project Start Date', default=fields.Date.today)
+    expected_completion_date = fields.Date(string='Expected Completion Date')
     actual_completion_date = fields.Date(string='Actual Completion Date')
-
-    # Status and Progress
+    
+    # Project Status
     project_status = fields.Selection([
         ('planning', 'Planning'),
         ('design', 'Design Phase'),
         ('approval', 'Approval Process'),
-        ('construction', 'Under Construction'),
+        ('construction', 'Construction'),
         ('completed', 'Completed'),
         ('on_hold', 'On Hold'),
         ('cancelled', 'Cancelled')
-    ], string='Project Status', default='planning', required=True)
+    ], string='Project Status', default='planning', tracking=True)
 
-    progress_percentage = fields.Float(string='Progress %', compute='_compute_progress_percentage', store=True)
+    # Financial Information
+    estimated_budget = fields.Monetary(string='Estimated Budget', currency_field='currency_id')
+    approved_budget = fields.Monetary(string='Approved Budget', currency_field='currency_id')
+    actual_cost = fields.Monetary(string='Actual Cost', currency_field='currency_id')
+    currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
 
-    # Team Information
-    project_manager_id = fields.Many2one('hr.employee', string='Project Manager')
-    architect_id = fields.Many2one('hr.employee', string='Lead Architect')
-    team_members = fields.Many2many('hr.employee', string='Team Members')
+    # Compliance and Documentation
+    compliance_status = fields.Selection([
+        ('pending', 'Pending'),
+        ('in_progress', 'In Progress'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected')
+    ], string='Compliance Status', default='pending')
 
-    # Compliance and Approvals
-    environmental_clearance = fields.Boolean(string='Environmental Clearance Required')
-    fire_clearance = fields.Boolean(string='Fire Safety Clearance Required')
-    building_permit = fields.Boolean(string='Building Permit Required')
-
-    # Documents and Drawings
-    drawing_count = fields.Integer(string='Drawings', compute='_compute_drawing_count')
-    document_count = fields.Integer(string='Documents', compute='_compute_document_count')
-
-    # AI Integration
-    ai_recommendations = fields.Text(string='AI Recommendations')
-    design_optimization = fields.Text(string='Design Optimization Suggestions')
-
-    # Relations
-    dpr_ids = fields.One2many('architect.dpr', 'project_id', string='DPR Reports')
-    survey_ids = fields.One2many('architect.survey', 'project_id', string='Surveys')
+    # Relationships
     drawing_ids = fields.One2many('avf.drawing.management', 'project_id', string='Drawings')
-    document_ids = fields.One2many('avf.document.management', 'project_id', string='Documents')
+    dpr_ids = fields.One2many('avf.dpr.management', 'project_id', string='DPR Records')
+    survey_ids = fields.One2many('avf.survey.management', 'project_id', string='Survey Records')
+    
+    # Computed Fields
+    drawing_count = fields.Integer(string='Drawing Count', compute='_compute_drawing_count')
+    dpr_count = fields.Integer(string='DPR Count', compute='_compute_dpr_count')
+    progress_percentage = fields.Float(string='Progress %', compute='_compute_progress_percentage')
 
-    @api.depends('project_status', 'task_ids.stage_id')
+    @api.depends('drawing_ids')
+    def _compute_drawing_count(self):
+        for project in self:
+            project.drawing_count = len(project.drawing_ids)
+
+    @api.depends('dpr_ids')
+    def _compute_dpr_count(self):
+        for project in self:
+            project.dpr_count = len(project.dpr_ids)
+
+    @api.depends('project_status', 'tasks')
+    def _compute_progress_percentage(self):
+        for project in self:
+            if project.tasks:
+                completed_tasks = project.tasks.filtered(lambda t: t.stage_id.name in ['Done', 'Completed'])
+                total_tasks = len(project.tasks)
+                project.progress_percentage = (len(completed_tasks) / total_tasks) * 100 if total_tasks > 0 else 0.0
+            else:
+                project.progress_percentage = 0.0
+
+    @api.model
+    def create(self, vals):
+        if not vals.get('project_code'):
+            vals['project_code'] = self.env['ir.sequence'].next_by_code('architect.project') or 'ARCH-001'
+        return super(ArchitectProject, self).create(vals)
+
+class ArchitectProject(models.Model):
+    _inherit = 'project.project'
+    _description = 'Extended Project for AVF Architect'
+
+    # Basic project information
+    project_type = fields.Selection([
+        ('residential', 'Residential'),
+        ('commercial', 'Commercial'),
+        ('industrial', 'Industrial'),
+        ('institutional', 'Institutional'),
+        ('government', 'Government'),
+        ('ecotourism', 'Ecotourism')
+    ], string='Project Type', required=True, default='residential')
+    
+    project_status = fields.Selection([
+        ('planning', 'Planning'),
+        ('design', 'Design Phase'),
+        ('approval', 'Approval Phase'),
+        ('construction', 'Construction'),
+        ('completed', 'Completed'),
+        ('on_hold', 'On Hold'),
+        ('cancelled', 'Cancelled')
+    ], string='Project Status', default='planning', tracking=True)
+    
+    # Remove conflicting date field - use only date_start from project.project
+    end_date = fields.Date(string='End Date', tracking=True)
+    
+    # Client and location information
+    client_name = fields.Char(string='Client Name', required=True)
+    client_contact = fields.Char(string='Client Contact')
+    client_email = fields.Char(string='Client Email')
+    project_location = fields.Text(string='Project Location')
+    site_area = fields.Float(string='Site Area (sq ft)')
+    built_up_area = fields.Float(string='Built-up Area (sq ft)')
+    
+    # Budget and financial tracking
+    estimated_budget = fields.Monetary(string='Estimated Budget', currency_field='currency_id')
+    actual_cost = fields.Monetary(string='Actual Cost', currency_field='currency_id', compute='_compute_actual_cost')
+    currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
+    
+    # Progress tracking
+    progress_percentage = fields.Float(string='Progress %', compute='_compute_progress_percentage', store=True)
+    
+    # Government project specific fields
+    is_government_project = fields.Boolean(string='Government Project', default=False)
+    tender_number = fields.Char(string='Tender Number')
+    contract_value = fields.Monetary(string='Contract Value', currency_field='currency_id')
+    project_authority = fields.Char(string='Project Authority')
+    
+    # DPR and compliance
+    dpr_required = fields.Boolean(string='DPR Required', default=False)
+    dpr_status = fields.Selection([
+        ('not_started', 'Not Started'),
+        ('in_progress', 'In Progress'),
+        ('completed', 'Completed'),
+        ('approved', 'Approved')
+    ], string='DPR Status', default='not_started')
+    
+    fca_required = fields.Boolean(string='FCA Clearance Required', default=False)
+    environmental_clearance = fields.Boolean(string='Environmental Clearance Required', default=False)
+    
+    # Related records
+    drawing_ids = fields.One2many('avf.drawing.management', 'project_id', string='Drawings')
+    dpr_ids = fields.One2many('avf.dpr.management', 'project_id', string='DPR Records')
+    survey_ids = fields.One2many('avf.survey.management', 'project_id', string='Survey Records')
+    compliance_ids = fields.One2many('avf.compliance.tracking', 'project_id', string='Compliance Records')
+    
+    # Computed fields
+    drawing_count = fields.Integer(string='Drawings', compute='_compute_drawing_count')
+    dpr_count = fields.Integer(string='DPR Count', compute='_compute_dpr_count')
+    survey_count = fields.Integer(string='Survey Count', compute='_compute_survey_count')
+    compliance_count = fields.Integer(string='Compliance Count', compute='_compute_compliance_count')
+
+    @api.depends('task_ids', 'task_ids.stage_id')
     def _compute_progress_percentage(self):
         """Compute progress based on project status and tasks"""
         for project in self:
@@ -105,84 +185,136 @@ class ArchitectProject(models.Model):
             elif project.project_status == 'construction':
                 # Calculate based on completed tasks
                 if project.task_ids:
-                    completed_tasks = project.task_ids.filtered(lambda t: t.stage_id.is_closed)
+                    completed_tasks = project.task_ids.filtered(lambda t: t.stage_id.is_closed if t.stage_id else False)
                     total_tasks = len(project.task_ids)
                     if total_tasks > 0:
-                        task_progress = (len(completed_tasks) / total_tasks) * 100
-                        project.progress_percentage = 50.0 + (task_progress * 0.4)  # 50% + up to 40% from tasks
+                        task_progress = (len(completed_tasks) / total_tasks) * 50
+                        project.progress_percentage = 50.0 + task_progress
                     else:
-                        project.progress_percentage = 70.0
+                        project.progress_percentage = 50.0
                 else:
-                    project.progress_percentage = 70.0
+                    project.progress_percentage = 50.0
             elif project.project_status == 'completed':
                 project.progress_percentage = 100.0
             else:
                 project.progress_percentage = 0.0
 
-    @api.depends('drawing_ids')
+    @api.depends('task_ids', 'task_ids.planned_hours')
+    def _compute_actual_cost(self):
+        """Compute actual cost based on timesheet entries"""
+        for project in self:
+            total_cost = 0.0
+            for task in project.task_ids:
+                for timesheet in task.timesheet_ids:
+                    if timesheet.employee_id and timesheet.employee_id.hourly_cost:
+                        total_cost += timesheet.unit_amount * timesheet.employee_id.hourly_cost
+            project.actual_cost = total_cost
+
     def _compute_drawing_count(self):
         for project in self:
             project.drawing_count = len(project.drawing_ids)
 
-    @api.depends('document_ids')
-    def _compute_document_count(self):
+    def _compute_dpr_count(self):
         for project in self:
-            project.document_count = len(project.document_ids)
+            project.dpr_count = len(project.dpr_ids)
 
-    @api.constrains('project_start_date', 'expected_completion_date')
-    def _check_dates(self):
-        for record in self:
-            if record.project_start_date and record.expected_completion_date:
-                if record.project_start_date >= record.expected_completion_date:
-                    raise ValidationError(_('Expected completion date must be after start date.'))
+    def _compute_survey_count(self):
+        for project in self:
+            project.survey_count = len(project.survey_ids)
 
-    @api.constrains('built_up_area', 'plot_area')
+    def _compute_compliance_count(self):
+        for project in self:
+            project.compliance_count = len(project.compliance_ids)
+
+    @api.constrains('date_start', 'end_date')
+    def _check_project_dates(self):
+        for project in self:
+            if project.date_start and project.end_date and project.date_start > project.end_date:
+                raise ValidationError(_("End date cannot be earlier than start date."))
+
+    @api.constrains('site_area', 'built_up_area')
     def _check_areas(self):
-        for record in self:
-            if record.built_up_area and record.plot_area:
-                if record.built_up_area > record.plot_area:
-                    raise ValidationError(_('Built-up area cannot be greater than plot area.'))
+        for project in self:
+            if project.site_area < 0:
+                raise ValidationError(_("Site area cannot be negative."))
+            if project.built_up_area < 0:
+                raise ValidationError(_("Built-up area cannot be negative."))
+            if project.built_up_area > project.site_area:
+                raise ValidationError(_("Built-up area cannot exceed site area."))
 
-    @api.model
-    def create(self, vals):
-        if not vals.get('project_code'):
-            vals['project_code'] = self.env['ir.sequence'].next_by_code('architect.project') or '/'
-        return super(ArchitectProject, self).create(vals)
+    def action_start_project(self):
+        """Start the project"""
+        self.ensure_one()
+        self.project_status = 'design'
+        self.message_post(body=_("Project started and moved to design phase."))
+
+    def action_submit_for_approval(self):
+        """Submit project for approval"""
+        self.ensure_one()
+        if self.project_status != 'design':
+            raise ValidationError(_("Project must be in design phase to submit for approval."))
+        self.project_status = 'approval'
+        self.message_post(body=_("Project submitted for approval."))
+
+    def action_approve_project(self):
+        """Approve the project"""
+        self.ensure_one()
+        if self.project_status != 'approval':
+            raise ValidationError(_("Project must be in approval phase to approve."))
+        self.project_status = 'construction'
+        self.message_post(body=_("Project approved and moved to construction phase."))
+
+    def action_complete_project(self):
+        """Complete the project"""
+        self.ensure_one()
+        self.project_status = 'completed'
+        self.end_date = fields.Date.today()
+        self.message_post(body=_("Project completed successfully."))
+
+    def action_put_on_hold(self):
+        """Put project on hold"""
+        self.ensure_one()
+        self.project_status = 'on_hold'
+        self.message_post(body=_("Project put on hold."))
 
     def action_view_drawings(self):
+        """View project drawings"""
+        self.ensure_one()
         return {
+            'name': _('Project Drawings'),
             'type': 'ir.actions.act_window',
-            'name': 'Project Drawings',
             'res_model': 'avf.drawing.management',
             'view_mode': 'tree,form',
             'domain': [('project_id', '=', self.id)],
-            'context': {'default_project_id': self.id}
+            'context': {'default_project_id': self.id},
         }
 
-    def action_view_documents(self):
+    def action_view_dpr(self):
+        """View DPR records"""
+        self.ensure_one()
         return {
+            'name': _('DPR Records'),
             'type': 'ir.actions.act_window',
-            'name': 'Project Documents',
-            'res_model': 'avf.document.management',
+            'res_model': 'avf.dpr.management',
             'view_mode': 'tree,form',
             'domain': [('project_id', '=', self.id)],
-            'context': {'default_project_id': self.id}
+            'context': {'default_project_id': self.id},
         }
 
-    def generate_ai_recommendations(self):
-        """Generate AI-powered project recommendations"""
-        # Placeholder for AI integration
-        recommendations = []
+    def action_generate_project_report(self):
+        """Generate comprehensive project report"""
+        return self.env.ref('avf_architect.report_project_summary').report_action(self)
 
-        if self.built_up_area and self.plot_area:
-            far = self.built_up_area / self.plot_area
-            if far > 0.8:
-                recommendations.append("Consider optimizing the Floor Area Ratio (FAR) for better compliance.")
-
-        if not self.environmental_clearance and self.built_up_area > 5000:
-            recommendations.append("Environmental clearance may be required for projects above 5000 sq.ft.")
-
-        if self.project_status == 'planning' and not self.architect_id:
-            recommendations.append("Assign a lead architect to begin the design phase.")
-
-        self.ai_recommendations = '\n'.join(recommendations) if recommendations else "No specific recommendations at this time."
+    def action_ai_recommendations(self):
+        """Get AI recommendations for the project"""
+        return {
+            'name': _('AI Recommendations'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'avf.ai.assistant',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_project_id': self.id,
+                'default_recommendation_type': 'project_optimization'
+            },
+        }
