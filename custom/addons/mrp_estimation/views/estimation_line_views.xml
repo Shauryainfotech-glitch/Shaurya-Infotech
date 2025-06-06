@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- List View -->
+        <record id="view_estimation_line_list" model="ir.ui.view">
+            <field name="name">mrp.estimation.line.list</field>
+            <field name="model">mrp.estimation.line</field>
+            <field name="arch" type="xml">
+                <list string="Estimation Lines" editable="bottom">
+                    <field name="sequence" widget="handle"/>
+                    <field name="estimation_id"/>
+                    <field name="product_id"/>
+                    <field name="product_qty"/>
+                    <field name="product_uom_id"/>
+                    <field name="product_uom_id"/>
+                    <field name="product_cost" widget="monetary"/>
+                    <field name="markup_percentage"/>
+                    <field name="marked_up_cost" widget="monetary"/>
+                    <field name="subtotal" widget="monetary"/>
+                    <field name="existing_material" widget="boolean_toggle"/>
+                    <field name="supplier_id"/>
+                    <field name="lead_time"/>
+                    <field name="currency_id" invisible="1"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="view_estimation_line_form" model="ir.ui.view">
+            <field name="name">mrp.estimation.line.form</field>
+            <field name="model">mrp.estimation.line</field>
+            <field name="arch" type="xml">
+                <form string="Estimation Line">
+                    <sheet>
+                        <group>
+                            <group name="main_info">
+                                <field name="estimation_id"/>
+                                <field name="product_id"/>
+                                <field name="product_qty"/>
+                                <field name="product_uom_id"/>
+                            </group>
+                            <group name="cost_info">
+                                <field name="product_cost" widget="monetary"/>
+                                <field name="markup_percentage"/>
+                                <field name="marked_up_cost" widget="monetary"/>
+                                <field name="subtotal" widget="monetary"/>
+                                <field name="currency_id" invisible="1"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group name="supplier_info">
+                                <field name="existing_material"/>
+                                <field name="supplier_id"/>
+                                <field name="lead_time"/>
+                            </group>
+                            <group name="notes">
+                                <field name="notes" nolabel="1" placeholder="Add notes here..."/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Search View -->
+        <record id="view_estimation_line_search" model="ir.ui.view">
+            <field name="name">mrp.estimation.line.search</field>
+            <field name="model">mrp.estimation.line</field>
+            <field name="arch" type="xml">
+                <search string="Search Estimation Lines">
+                    <field name="estimation_id"/>
+                    <field name="product_id"/>
+                    <field name="supplier_id"/>
+
+                    <filter string="Available Materials" name="available"
+                            domain="[('existing_material', '=', True)]"/>
+                    <filter string="To Purchase" name="to_purchase"
+                            domain="[('existing_material', '=', False)]"/>
+
+                    <group expand="0" string="Group By">
+                        <filter string="Estimation" name="group_estimation"
+                                context="{'group_by': 'estimation_id'}"/>
+                        <filter string="Product" name="group_product"
+                                context="{'group_by': 'product_id'}"/>
+                        <filter string="Supplier" name="group_supplier"
+                                context="{'group_by': 'supplier_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_estimation_line" model="ir.actions.act_window">
+            <field name="name">Estimation Lines</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mrp.estimation.line</field>
+            <field name="view_mode">list,form</field>
+            <field name="search_view_id" ref="view_estimation_line_search"/>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No estimation lines found!
+                </p>
+                <p>
+                    Estimation lines represent the materials and components
+                    needed for manufacturing estimations.
+                </p>
+            </field>
+        </record>
+
+        <!-- Material Line Form View -->
+        <record id="view_mrp_estimation_material_line_form" model="ir.ui.view">
+            <field name="name">mrp.estimation.material.line.form</field>
+            <field name="model">mrp.estimation.material.line</field>
+            <field name="arch" type="xml">
+                <form string="Material Line">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="estimation_id"/>
+                                <field name="product_id"/>
+                                <field name="product_qty"/>
+                                <field name="product_uom_id"/>
+                            </group>
+                            <group>
+                                <field name="unit_cost"/>
+                                <field name="total_cost"/>
+                                <field name="sequence" widget="handle"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Material Line List View -->
+        <record id="view_mrp_estimation_material_line_list" model="ir.ui.view">
+            <field name="name">mrp.estimation.material.line.list</field>
+            <field name="model">mrp.estimation.material.line</field>
+            <field name="arch" type="xml">
+                <list string="Material Lines" editable="bottom">
+                    <field name="sequence" widget="handle"/>
+                    <field name="product_id"/>
+                    <field name="product_qty"/>
+                    <field name="product_uom_id"/>
+                    <field name="unit_cost"/>
+                    <field name="total_cost" sum="Total"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Labor Line Form View -->
+        <record id="view_mrp_estimation_labor_line_form" model="ir.ui.view">
+            <field name="name">mrp.estimation.labor.line.form</field>
+            <field name="model">mrp.estimation.labor.line</field>
+            <field name="arch" type="xml">
+                <form string="Labor Line">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="estimation_id"/>
+                                <field name="operation_id"/>
+                                <field name="hours"/>
+                            </group>
+                            <group>
+                                <field name="rate"/>
+                                <field name="total_cost"/>
+                                <field name="sequence" widget="handle"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Labor Line List View -->
+        <record id="view_mrp_estimation_labor_line_list" model="ir.ui.view">
+            <field name="name">mrp.estimation.labor.line.list</field>
+            <field name="model">mrp.estimation.labor.line</field>
+            <field name="arch" type="xml">
+                <list string="Labor Lines" editable="bottom">
+                    <field name="sequence" widget="handle"/>
+                    <field name="operation_id"/>
+                    <field name="hours"/>
+                    <field name="rate"/>
+                    <field name="total_cost" sum="Total"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Actions -->
+        <record id="action_mrp_estimation_material_line" model="ir.actions.act_window">
+            <field name="name">Material Lines</field>
+            <field name="res_model">mrp.estimation.material.line</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+        <record id="action_mrp_estimation_labor_line" model="ir.actions.act_window">
+            <field name="name">Labor Lines</field>
+            <field name="res_model">mrp.estimation.labor.line</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+    </data>
+</odoo>

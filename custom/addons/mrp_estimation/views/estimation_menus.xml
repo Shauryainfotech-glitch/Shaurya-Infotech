@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Main Menu -->
+        <menuitem id="menu_mrp_estimation_root"
+                  name="Manufacturing Estimation"
+                  parent="mrp.menu_mrp_root"
+                  sequence="5"/>
+
+        <!-- Operations Menu -->
+        <menuitem id="menu_mrp_estimation_operations"
+                  name="Operations"
+                  parent="menu_mrp_estimation_root"
+                  sequence="10"/>
+
+        <menuitem id="menu_mrp_estimation"
+                  name="Estimations"
+                  parent="menu_mrp_estimation_operations"
+                  action="action_mrp_estimation"
+                  sequence="10"/>
+
+        <menuitem id="menu_mrp_costing"
+                  name="Costings"
+                  parent="menu_mrp_estimation_operations"
+                  action="action_mrp_costing"
+                  sequence="20"/>
+
+        <menuitem id="menu_mrp_estimation_version"
+                  name="Versions"
+                  parent="menu_mrp_estimation_operations"
+                  action="action_mrp_estimation_version"
+                  sequence="30"/>
+
+        <!-- Reporting Menu -->
+        <menuitem id="menu_mrp_estimation_reporting"
+                  name="Reporting"
+                  parent="menu_mrp_estimation_root"
+                  sequence="20"/>
+
+        <menuitem id="menu_mrp_estimation_dashboard"
+                  name="Dashboard"
+                  parent="menu_mrp_estimation_reporting"
+                  action="action_estimation_dashboard"
+                  sequence="10"/>
+
+        <!-- Configuration Menu -->
+        <menuitem id="menu_mrp_estimation_configuration"
+                  name="Configuration"
+                  parent="menu_mrp_estimation_root"
+                  sequence="100"/>
+
+        <menuitem id="menu_mrp_estimation_cost_category"
+                  name="Cost Categories"
+                  parent="menu_mrp_estimation_configuration"
+                  action="action_mrp_estimation_cost_category"
+                  sequence="10"/>
+    </data>
+</odoo>

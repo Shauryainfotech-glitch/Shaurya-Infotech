@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Report Template -->
+        <template id="report_estimation_document">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <h2>Manufacturing Estimation</h2>
+                            <div class="row mt32 mb32">
+                                <div class="col-6">
+                                    <strong>Estimation Reference:</strong>
+                                    <span t-field="o.name"/>
+                                    <br/>
+                                    <strong>Date:</strong>
+                                    <span t-field="o.create_date"/>
+                                    <br/>
+                                    <strong>Valid Until:</strong>
+                                    <span t-field="o.validity_date"/>
+                                </div>
+                                <div class="col-6">
+                                    <strong>Customer:</strong>
+                                    <span t-field="o.partner_id"/>
+                                    <br/>
+                                    <strong>Product:</strong>
+                                    <span t-field="o.product_id"/>
+                                    <br/>
+                                    <strong>Quantity:</strong>
+                                    <span t-field="o.product_qty"/>
+                                    <span t-field="o.product_uom_id"/>
+                                </div>
+                            </div>
+
+                            <!-- Materials Section -->
+                            <h3>Materials</h3>
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Description</th>
+                                        <th>Quantity</th>
+                                        <th>Unit Price</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="o.material_ids" t-as="line">
+                                        <tr>
+                                            <td><span t-field="line.product_id"/></td>
+                                            <td><span t-field="line.name"/></td>
+                                            <td><span t-field="line.product_qty"/></td>
+                                            <td><span t-field="line.cost_price"/></td>
+                                            <td><span t-field="line.total_cost"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+
+                            <!-- Operations Section -->
+                            <h3>Operations</h3>
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Operation</th>
+                                        <th>Work Center</th>
+                                        <th>Time (Hours)</th>
+                                        <th>Cost/Hour</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="o.operation_ids" t-as="line">
+                                        <tr>
+                                            <td><span t-field="line.name"/></td>
+                                            <td><span t-field="line.workcenter_id"/></td>
+                                            <td><span t-field="line.time_cycle"/></td>
+                                            <td><span t-field="line.cost_per_hour"/></td>
+                                            <td><span t-field="line.total_cost"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+
+                            <!-- Overhead Section -->
+                            <h3>Overhead</h3>
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Description</th>
+                                        <th>Type</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="o.overhead_ids" t-as="line">
+                                        <tr>
+                                            <td><span t-field="line.name"/></td>
+                                            <td><span t-field="line.type"/></td>
+                                            <td><span t-field="line.amount"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+
+                            <!-- Totals Section -->
+                            <div class="row mt32">
+                                <div class="col-6">
+                                    <t t-if="o.customer_notes">
+                                        <strong>Notes:</strong>
+                                        <p t-field="o.customer_notes"/>
+                                    </t>
+                                </div>
+                                <div class="col-6">
+                                    <table class="table table-sm">
+                                        <tr>
+                                            <td><strong>Material Cost:</strong></td>
+                                            <td><span t-field="o.material_cost"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Operation Cost:</strong></td>
+                                            <td><span t-field="o.operation_cost"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Overhead Cost:</strong></td>
+                                            <td><span t-field="o.overhead_cost"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Total Cost:</strong></td>
+                                            <td><span t-field="o.total_cost"/></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <!-- Report Action -->
+        <record id="action_report_estimation" model="ir.actions.report">
+            <field name="name">Manufacturing Estimation</field>
+            <field name="model">mrp.estimation</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">mrp_estimation.report_estimation_document</field>
+            <field name="report_file">mrp_estimation.report_estimation_document</field>
+            <field name="print_report_name">(object.name or 'Estimation')</field>
+            <field name="attachment">(object.name or 'Estimation').replace('/','_')</field>
+            <field name="binding_model_id" ref="model_mrp_estimation"/>
+            <field name="binding_type">report</field>
+        </record>
+    </data>
+</odoo> 

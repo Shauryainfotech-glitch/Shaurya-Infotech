@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Form View -->
+        <record id="view_create_estimation_version_wizard_form" model="ir.ui.view">
+            <field name="name">create.estimation.version.wizard.form</field>
+            <field name="model">create.estimation.version.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Create New Version">
+                    <sheet>
+                        <group>
+                            <field name="estimation_id" readonly="1"/>
+                            <field name="current_version" readonly="1"/>
+                            <field name="new_version" readonly="1"/>
+                            <field name="version_notes" required="1"/>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="action_create_version" string="Create Version" 
+                                type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_create_estimation_version_wizard" model="ir.actions.act_window">
+            <field name="name">Create New Version</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">create.estimation.version.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="binding_model_id" ref="model_mrp_estimation"/>
+            <field name="binding_view_types">form</field>
+        </record>
+
+        <!-- Create Estimation from BOM Wizard -->
+        <record id="view_create_estimation_from_bom_wizard_form" model="ir.ui.view">
+            <field name="name">create.estimation.from.bom.wizard.form</field>
+            <field name="model">create.estimation.from.bom.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Create Estimation from BOM">
+                    <group>
+                        <field name="bom_id"/>
+                        <field name="product_id"/>
+                        <field name="product_qty"/>
+                        <field name="product_uom_id"/>
+                        <field name="partner_id"/>
+                    </group>
+                    <footer>
+                        <button name="action_create_estimation" string="Create" type="object" 
+                                class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Create Estimation from BOM Action -->
+        <record id="action_create_estimation_from_bom_wizard" model="ir.actions.act_window">
+            <field name="name">Create Estimation from BOM</field>
+            <field name="res_model">create.estimation.from.bom.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <!-- Create Estimation from BOM Menu -->
+        <menuitem id="menu_create_estimation_from_bom"
+                  name="Create from BOM"
+                  parent="menu_mrp_estimation"
+                  action="action_create_estimation_from_bom_wizard"
+                  sequence="10"/>
+
+        <!-- Create Manufacturing Order from Estimation Wizard -->
+        <record id="view_create_mo_from_estimation_wizard_form" model="ir.ui.view">
+            <field name="name">create.mo.from.estimation.wizard.form</field>
+            <field name="model">create.mo.from.estimation.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Create Manufacturing Order">
+                    <group>
+                        <field name="estimation_id"/>
+                        <field name="product_id"/>
+                        <field name="product_qty"/>
+                        <field name="product_uom_id"/>
+                        <field name="date_planned_start"/>
+                        <field name="date_planned_finished"/>
+                    </group>
+                    <footer>
+                        <button name="action_create_mo" string="Create" type="object" 
+                                class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Create Manufacturing Order from Estimation Action -->
+        <record id="action_create_mo_from_estimation_wizard" model="ir.actions.act_window">
+            <field name="name">Create Manufacturing Order</field>
+            <field name="res_model">create.mo.from.estimation.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <!-- Create Manufacturing Order from Estimation Menu -->
+        <menuitem id="menu_create_mo_from_estimation"
+                  name="Create Manufacturing Order"
+                  parent="menu_mrp_estimation"
+                  action="action_create_mo_from_estimation_wizard"
+                  sequence="20"/>
+
+        <!-- Create Sale Order from Estimation Wizard -->
+        <record id="view_create_so_from_estimation_wizard_form" model="ir.ui.view">
+            <field name="name">create.so.from.estimation.wizard.form</field>
+            <field name="model">create.so.from.estimation.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Create Sale Order">
+                    <group>
+                        <field name="estimation_id"/>
+                        <field name="partner_id"/>
+                        <field name="pricelist_id"/>
+                        <field name="payment_term_id"/>
+                        <field name="date_order"/>
+                    </group>
+                    <footer>
+                        <button name="action_create_so" string="Create" type="object" 
+                                class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Create Sale Order from Estimation Action -->
+        <record id="action_create_so_from_estimation_wizard" model="ir.actions.act_window">
+            <field name="name">Create Sale Order</field>
+            <field name="res_model">create.so.from.estimation.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <!-- Create Sale Order from Estimation Menu -->
+        <menuitem id="menu_create_so_from_estimation"
+                  name="Create Sale Order"
+                  parent="menu_mrp_estimation"
+                  action="action_create_so_from_estimation_wizard"
+                  sequence="30"/>
+    </data>
+</odoo>

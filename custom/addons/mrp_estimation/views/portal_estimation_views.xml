@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_my_estimations" name="My Estimations">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Estimations</t>
+            </t>
+            <t t-if="not estimations">
+                <div class="alert alert-info" role="alert">
+                    There are currently no estimations for your account.
+                </div>
+            </t>
+            <t t-if="estimations" t-call="portal.portal_table">
+                <thead>
+                    <tr class="active">
+                        <th>Estimation</th>
+                        <th>Date</th>
+                        <th>Total Cost</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="estimations" t-as="estimation">
+                        <tr>
+                            <td><span t-field="estimation.name"/></td>
+                            <td><span t-field="estimation.create_date"/></td>
+                            <td><span t-field="estimation.total_cost"/></td>
+                            <td><span t-field="estimation.state"/></td>
+                        </tr>
+                    </t>
+                </tbody>
+            </t>
+        </t>
+    </template>
+</odoo> 

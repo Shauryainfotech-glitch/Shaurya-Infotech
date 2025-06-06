@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Tree View -->
+        <record id="view_mrp_costing_tree" model="ir.ui.view">
+            <field name="name">mrp.costing.tree</field>
+            <field name="model">mrp.costing</field>
+            <field name="arch" type="xml">
+                <tree string="Manufacturing Costings" decoration-info="state == 'draft'" 
+                      decoration-success="state == 'validated'">
+                    <field name="name"/>
+                    <field name="date"/>
+                    <field name="product_id"/>
+                    <field name="product_qty"/>
+                    <field name="total_cost" sum="Total"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="view_mrp_costing_form" model="ir.ui.view">
+            <field name="name">mrp.costing.form</field>
+            <field name="model">mrp.costing</field>
+            <field name="arch" type="xml">
+                <form string="Manufacturing Costing">
+                    <header>
+                        <button name="action_validate" string="Validate" type="object" 
+                                class="oe_highlight" states="draft"/>
+                        <button name="action_cancel" string="Cancel" type="object" 
+                                states="draft"/>
+                        <field name="state" widget="statusbar" 
+                               statusbar_visible="draft,validated"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="product_id"/>
+                                <field name="product_qty"/>
+                                <field name="product_uom_id"/>
+                            </group>
+                            <group>
+                                <field name="date"/>
+                                <field name="user_id"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Material Costs" name="material_costs">
+                                <field name="material_cost_ids">
+                                    <tree editable="bottom">
+                                        <field name="product_id"/>
+                                        <field name="product_qty"/>
+                                        <field name="product_uom_id"/>
+                                        <field name="unit_cost"/>
+                                        <field name="total_cost" sum="Total"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Operation Costs" name="operation_costs">
+                                <field name="operation_cost_ids">
+                                    <tree editable="bottom">
+                                        <field name="operation_id"/>
+                                        <field name="workcenter_id"/>
+                                        <field name="duration"/>
+                                        <field name="hourly_cost"/>
+                                        <field name="total_cost" sum="Total"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Overhead" name="overhead">
+                                <group>
+                                    <field name="overhead_percentage"/>
+                                    <field name="overhead_cost"/>
+                                </group>
+                            </page>
+                            <page string="Notes" name="notes">
+                                <field name="notes"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Search View -->
+        <record id="view_mrp_costing_search" model="ir.ui.view">
+            <field name="name">mrp.costing.search</field>
+            <field name="model">mrp.costing</field>
+            <field name="arch" type="xml">
+                <search string="Manufacturing Costings">
+                    <field name="name"/>
+                    <field name="product_id"/>
+                    <separator/>
+                    <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                    <filter string="Validated" name="validated" 
+                            domain="[('state', '=', 'validated')]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Product" name="product" 
+                                context="{'group_by': 'product_id'}"/>
+                        <filter string="Status" name="state" 
+                                context="{'group_by': 'state'}"/>
+                        <filter string="Date" name="date" 
+                                context="{'group_by': 'date'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_mrp_costing" model="ir.actions.act_window">
+            <field name="name">Manufacturing Costings</field>
+            <field name="res_model">mrp.costing</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_mrp_costing_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first manufacturing costing!
+                </p>
+            </field>
+        </record>
+
+        <!-- MRP Costing Menu -->
+        <menuitem id="menu_mrp_costing"
+                  name="Costings"
+                  parent="menu_mrp_estimation_root"
+                  action="action_mrp_costing"
+                  sequence="20"/>
+
+    </data>
+</odoo>

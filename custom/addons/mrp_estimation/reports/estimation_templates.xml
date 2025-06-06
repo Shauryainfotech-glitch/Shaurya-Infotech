@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Estimation Report Template -->
+        <template id="report_mrp_estimation">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <h2>Manufacturing Estimation</h2>
+                            <div class="row mt32 mb32">
+                                <div class="col-6">
+                                    <strong>Estimation:</strong>
+                                    <span t-field="o.name"/>
+                                    <br/>
+                                    <strong>Date:</strong>
+                                    <span t-field="o.date"/>
+                                    <br/>
+                                    <strong>Status:</strong>
+                                    <span t-field="o.state"/>
+                                </div>
+                                <div class="col-6">
+                                    <strong>Customer:</strong>
+                                    <span t-field="o.partner_id"/>
+                                    <br/>
+                                    <strong>Product:</strong>
+                                    <span t-field="o.product_id"/>
+                                    <br/>
+                                    <strong>Quantity:</strong>
+                                    <span t-field="o.product_qty"/>
+                                </div>
+                            </div>
+
+                            <h3>Material Costs</h3>
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Quantity</th>
+                                        <th>Unit Cost</th>
+                                        <th>Total Cost</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="o.material_line_ids" t-as="line">
+                                        <tr>
+                                            <td><span t-field="line.product_id"/></td>
+                                            <td><span t-field="line.product_qty"/></td>
+                                            <td><span t-field="line.unit_cost"/></td>
+                                            <td><span t-field="line.total_cost"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+
+                            <h3>Labor Costs</h3>
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Operation</th>
+                                        <th>Hours</th>
+                                        <th>Rate</th>
+                                        <th>Total Cost</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="o.labor_line_ids" t-as="line">
+                                        <tr>
+                                            <td><span t-field="line.operation_id"/></td>
+                                            <td><span t-field="line.hours"/></td>
+                                            <td><span t-field="line.rate"/></td>
+                                            <td><span t-field="line.total_cost"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+
+                            <div class="row mt32">
+                                <div class="col-6">
+                                    <strong>Total Material Cost:</strong>
+                                    <span t-field="o.total_material_cost"/>
+                                    <br/>
+                                    <strong>Total Labor Cost:</strong>
+                                    <span t-field="o.total_labor_cost"/>
+                                    <br/>
+                                    <strong>Overhead Cost:</strong>
+                                    <span t-field="o.overhead_cost"/>
+                                    <br/>
+                                    <strong>Total Cost:</strong>
+                                    <span t-field="o.total_cost"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <!-- Report Action -->
+       <record id="action_report_estimation" model="ir.actions.report">
+    <field name="name">Manufacturing Estimation</field>
+    <field name="model">mrp.estimation</field>
+    <field name="report_type">qweb-pdf</field>
+    <field name="report_name">mrp_estimation.report_mrp_estimation</field>
+    <field name="report_file">mrp_estimation.report_mrp_estimation</field>
+    <field name="print_report_name">'Manufacturing Estimation - %s' % (object.name)</field>
+    <field name="attachment">(object.state == 'approved') and 'Manufacturing Estimation - %s' % (object.name)</field>
+    <field name="binding_model_id" ref="model_mrp_estimation"/>
+    <field name="binding_type">report</field>
+</record>
+    </data>
+</odoo>

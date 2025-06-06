@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Version Form View -->
+        <record id="view_mrp_estimation_version_form" model="ir.ui.view">
+            <field name="name">mrp.estimation.version.form</field>
+            <field name="model">mrp.estimation.version</field>
+            <field name="arch" type="xml">
+                <form string="Estimation Version">
+                    <header>
+                        <button name="action_activate" string="Activate" type="object" 
+                                class="oe_highlight" 
+                                attrs="{'invisible': [('is_active', '=', True)]}"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="estimation_id"/>
+                                <field name="version_number"/>
+                                <field name="is_active"/>
+                            </group>
+                            <group>
+                                <field name="created_by"/>
+                                <field name="creation_date"/>
+                                <field name="last_modified"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Changes" name="changes">
+                                <field name="changes" nolabel="1"/>
+                            </page>
+                            <page string="Notes" name="notes">
+                                <field name="notes" nolabel="1"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Version Tree View -->
+        <record id="view_mrp_estimation_version_tree" model="ir.ui.view">
+            <field name="name">mrp.estimation.version.tree</field>
+            <field name="model">mrp.estimation.version</field>
+            <field name="arch" type="xml">
+                <tree string="Estimation Versions" decoration-success="is_active">
+                    <field name="name"/>
+                    <field name="version_number"/>
+                    <field name="created_by"/>
+                    <field name="creation_date"/>
+                    <field name="last_modified"/>
+                    <field name="is_active"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Version Search View -->
+        <record id="view_mrp_estimation_version_search" model="ir.ui.view">
+            <field name="name">mrp.estimation.version.search</field>
+            <field name="model">mrp.estimation.version</field>
+            <field name="arch" type="xml">
+                <search string="Estimation Versions">
+                    <field name="name"/>
+                    <field name="version_number"/>
+                    <field name="created_by"/>
+                    <separator/>
+                    <filter string="Active" name="active" domain="[('is_active', '=', True)]"/>
+                    <filter string="Inactive" name="inactive" domain="[('is_active', '=', False)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Estimation" name="estimation" 
+                                context="{'group_by': 'estimation_id'}"/>
+                        <filter string="Created By" name="created_by" 
+                                context="{'group_by': 'created_by'}"/>
+                        <filter string="Creation Date" name="creation_date" 
+                                context="{'group_by': 'creation_date:month'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Version Action -->
+        <record id="action_mrp_estimation_version" model="ir.actions.act_window">
+            <field name="name">Estimation Versions</field>
+            <field name="res_model">mrp.estimation.version</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_mrp_estimation_version_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No versions found!
+                </p>
+            </field>
+        </record>
+
+        <!-- Version Menu -->
+        <menuitem id="menu_mrp_estimation_version"
+                  name="Versions"
+                  parent="menu_mrp_estimation_root"
+                  action="action_mrp_estimation_version"
+                  sequence="30"/>
+    </data>
+</odoo>

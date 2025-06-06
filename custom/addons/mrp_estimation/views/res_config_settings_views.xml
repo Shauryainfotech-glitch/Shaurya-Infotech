@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Configuration Settings Form View -->
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.mrp.estimation</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="mrp.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('settings')]" position="inside">
+                    <div class="app_settings_block" data-string="Manufacturing Estimation" 
+                         data-key="mrp_estimation" id="mrp_estimation_settings">
+                        <h2>Manufacturing Estimation</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="group_estimation_approver"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="group_estimation_approver"/>
+                                    <div class="text-muted">
+                                        Allow specific users to approve estimations
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="estimation_auto_approve"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="estimation_auto_approve"/>
+                                    <div class="text-muted">
+                                        Automatically approve estimations below threshold
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="estimation_approval_threshold"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="estimation_approval_threshold"/>
+                                    <div class="text-muted">
+                                        Maximum amount for auto-approval
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="estimation_default_validity"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="estimation_default_validity"/>
+                                    <div class="text-muted">
+                                        Default validity period (days)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="estimation_default_overhead"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="estimation_default_overhead"/>
+                                    <div class="text-muted">
+                                        Default overhead percentage
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Settings Action -->
+        <record id="action_mrp_estimation_config_settings" model="ir.actions.act_window">
+            <field name="name">Settings</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+            <field name="context">{'module' : 'mrp_estimation', 'bin_size': False}</field>
+        </record>
+
+    </data>
+</odoo>

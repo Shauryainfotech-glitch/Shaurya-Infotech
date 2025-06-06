@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Tree View -->
+        <record id="view_estimation_cost_tree" model="ir.ui.view">
+            <field name="name">mrp.estimation.cost.tree</field>
+            <field name="model">mrp.estimation.cost</field>
+            <field name="arch" type="xml">
+                <tree string="Estimation Costs" editable="bottom">
+                    <field name="sequence" widget="handle"/>
+                    <field name="estimation_id"/>
+                    <field name="name"/>
+                    <field name="cost_type"/>
+                    <field name="operation_id" optional="show"/>
+                    <field name="workcenter_id" optional="show"/>
+                    <field name="operation_time"/>
+                    <field name="hourly_rate" widget="monetary"/>
+                    <field name="labor_hours"/>
+                    <field name="labor_rate" widget="monetary"/>
+                    <field name="labor_overhead"/>
+                    <field name="unit_cost" widget="monetary"/>
+                    <field name="quantity"/>
+                    <field name="total_cost" widget="monetary"/>
+                    <field name="currency_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="view_estimation_cost_form" model="ir.ui.view">
+            <field name="name">mrp.estimation.cost.form</field>
+            <field name="model">mrp.estimation.cost</field>
+            <field name="arch" type="xml">
+                <form string="Estimation Cost">
+                    <sheet>
+                        <group>
+                            <group name="main_info">
+                                <field name="estimation_id"/>
+                                <field name="name"/>
+                                <field name="cost_type"/>
+                            </group>
+                            <group name="cost_info">
+                                <field name="total_cost" widget="monetary"/>
+                                <field name="currency_id" invisible="1"/>
+                            </group>
+                        </group>
+                        
+                        <notebook>
+                            <!-- Operation Costs -->
+                            <page string="Operation Details" name="operation_details"
+                                  attrs="{'invisible': [('cost_type', '!=', 'operation')]}">
+                                <group>
+                                    <group>
+                                        <field name="operation_id"/>
+                                        <field name="workcenter_id"/>
+                                        <field name="operation_time"/>
+                                        <field name="hourly_rate" widget="monetary"/>
+                                    </group>
+                                </group>
+                            </page>
+
+                            <!-- Labor Costs -->
+                            <page string="Labor Details" name="labor_details"
+                                  attrs="{'invisible': [('cost_type', '!=', 'labor')]}">
+                                <group>
+                                    <group>
+                                        <field name="labor_hours"/>
+                                        <field name="labor_rate" widget="monetary"/>
+                                        <field name="labor_overhead"/>
+                                    </group>
+                                </group>
+                            </page>
+
+                            <!-- Other Costs -->
+                            <page string="Cost Details" name="cost_details"
+                                  attrs="{'invisible': [('cost_type', 'in', ['operation', 'labor'])]}">
+                                <group>
+                                    <group>
+                                        <field name="unit_cost" widget="monetary"/>
+                                        <field name="quantity"/>
+                                    </group>
+                                </group>
+                            </page>
+
+                            <!-- Notes -->
+                            <page string="Notes" name="notes">
+                                <field name="notes" nolabel="1" placeholder="Add notes here..."/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Search View -->
+        <record id="view_estimation_cost_search" model="ir.ui.view">
+            <field name="name">mrp.estimation.cost.search</field>
+            <field name="model">mrp.estimation.cost</field>
+            <field name="arch" type="xml">
+                <search string="Search Estimation Costs">
+                    <field name="name"/>
+                    <field name="estimation_id"/>
+                    <field name="cost_type"/>
+                    <field name="operation_id"/>
+                    <field name="workcenter_id"/>
+                    
+                    <filter string="Operation Costs" name="operation_costs" 
+                            domain="[('cost_type', '=', 'operation')]"/>
+                    <filter string="Labor Costs" name="labor_costs" 
+                            domain="[('cost_type', '=', 'labor')]"/>
+                    <filter string="Overhead Costs" name="overhead_costs" 
+                            domain="[('cost_type', '=', 'overhead')]"/>
+                    
+                    <group expand="0" string="Group By">
+                        <filter string="Estimation" name="group_estimation" 
+                                context="{'group_by': 'estimation_id'}"/>
+                        <filter string="Cost Type" name="group_cost_type" 
+                                context="{'group_by': 'cost_type'}"/>
+                        <filter string="Work Center" name="group_workcenter" 
+                                context="{'group_by': 'workcenter_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_estimation_cost" model="ir.actions.act_window">
+            <field name="name">Estimation Costs</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mrp.estimation.cost</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_estimation_cost_search"/>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No estimation costs found!
+                </p>
+                <p>
+                    Estimation costs represent various costs involved in manufacturing
+                    such as operations, labor, overhead, and other costs.
+                </p>
+            </field>
+        </record>
+
+        <!-- Cost Category Form View -->
+        <record id="view_mrp_estimation_cost_category_form" model="ir.ui.view">
+            <field name="name">mrp.estimation.cost.category.form</field>
+            <field name="model">mrp.estimation.cost.category</field>
+            <field name="arch" type="xml">
+                <form string="Cost Category">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="code"/>
+                            </group>
+                            <group>
+                                <field name="sequence" widget="handle"/>
+                                <field name="active"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Cost Category Tree View -->
+        <record id="view_mrp_estimation_cost_category_tree" model="ir.ui.view">
+            <field name="name">mrp.estimation.cost.category.tree</field>
+            <field name="model">mrp.estimation.cost.category</field>
+            <field name="arch" type="xml">
+                <tree string="Cost Categories" editable="bottom">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Cost Category Search View -->
+        <record id="view_mrp_estimation_cost_category_search" model="ir.ui.view">
+            <field name="name">mrp.estimation.cost.category.search</field>
+            <field name="model">mrp.estimation.cost.category</field>
+            <field name="arch" type="xml">
+                <search string="Cost Categories">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Cost Category Action -->
+        <record id="action_mrp_estimation_cost_category" model="ir.actions.act_window">
+            <field name="name">Cost Categories</field>
+            <field name="res_model">mrp.estimation.cost.category</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_mrp_estimation_cost_category_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first cost category!
+                </p>
+            </field>
+        </record>
+
+        <!-- Cost Category Menu -->
+        <menuitem id="menu_mrp_estimation_cost_category"
+                  name="Cost Categories"
+                  parent="menu_mrp_estimation_configuration"
+                  action="action_mrp_estimation_cost_category"
+                  sequence="20"/>
+
+    </data>
+</odoo>
