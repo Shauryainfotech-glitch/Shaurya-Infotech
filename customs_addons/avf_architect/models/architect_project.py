@@ -288,3 +288,15 @@ class ProjectTask(models.Model):
     drawing_ids = fields.Many2many('architect.drawing', string='Related Drawings')
     requires_site_visit = fields.Boolean(string='Requires Site Visit')
     site_visit_date = fields.Datetime(string='Site Visit Date')
+
+
+    class ArchitectProjectChecklist(models.Model):
+        _name = 'architect.project.checklist'
+        _description = 'Project Checklist'
+
+        # Add this line:
+        state = fields.Selection([
+            ('draft', 'Draft'),
+            ('verified', 'Verified'),
+            ('approved', 'Approved')
+        ], string="Status", default='draft', tracking=True)
