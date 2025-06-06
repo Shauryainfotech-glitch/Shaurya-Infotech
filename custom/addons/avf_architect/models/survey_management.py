@@ -68,7 +68,7 @@ class SurveyManagement(models.Model):
                 vals['name'] = self.env['ir.sequence'].next_by_code('avf.survey.management') or _('New')
             if not vals.get('survey_number'):
                 vals['survey_number'] = self.env['ir.sequence'].next_by_code('avf.survey.number') or 'SUR-001'
-        return super(SurveyManagement, self).create(vals_list)
+        return super().create(vals_list)
 
     def action_start_survey(self):
         """Start the survey"""
@@ -121,7 +121,7 @@ class SurveyPoint(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        return super(SurveyPoint, self).create(vals_list)
+        return super().create(vals_list)
 
 class SurveyEquipment(models.Model):
     _name = 'avf.survey.equipment'
@@ -154,4 +154,4 @@ class SurveyEquipment(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        return super(SurveyEquipment, self).create(vals_list)
+        return super().create(vals_list)
