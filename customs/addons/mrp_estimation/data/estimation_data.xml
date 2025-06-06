@@ -3,12 +3,13 @@
     <data>
 
         <!-- Report Action for Estimation -->
-        <record id="action_report_estimation" model="ir.actions.report">
+        <record id="mrp_estimation.report_estimation_document" model="ir.actions.report">
             <field name="name">Estimation Report</field>
             <field name="model">mrp.estimation</field>
             <field name="report_type">qweb-pdf</field>
-            <field name="report_name">mrp_estimation.estimation_report_template</field>
-            <field name="report_file">mrp_estimation.estimation_report_template</field>
+
+            <field name="print_report_name">(object.name or 'Estimation')</field>
+            <field name="attachment">(object.name or 'Estimation').replace('/','_')</field>
             <field name="binding_model_id" ref="model_mrp_estimation"/>
             <field name="binding_type">report</field>
         </record>
@@ -17,34 +18,39 @@
         <record id="email_template_estimation_approval" model="mail.template">
             <field name="name">Manufacturing Estimation: Approval Request</field>
             <field name="model_id" ref="model_mrp_estimation"/>
-            <field name="subject">Estimation Approval Required: {{ object.name }}</field>
+            <field name="subject">Manufacturing Estimation Approval Required: {{ object.name }}</field>
             <field name="email_from">{{ user.email_formatted }}</field>
             <field name="partner_to">{{ object.user_id.partner_id.id }}</field>
             <field name="body_html" type="html"><![CDATA[
-<div style="margin: 0px; padding: 0px;">
-    <p style="margin: 0px; padding: 0px; font-size: 13px;">
-        Dear {{ object.user_id.name }},
-        <br/><br/>
-        A new manufacturing estimation requires your approval:
-        <br/><br/>
-        <strong>Estimation Reference:</strong> {{ object.name }}<br/>
-        <strong>Customer:</strong> {{ object.partner_id.name }}<br/>
-        <strong>Product:</strong> {{ object.product_id.name }}<br/>
-        <strong>Quantity:</strong> {{ object.product_qty }} {{ object.product_uom_id.name }}<br/>
-        <strong>Total Amount:</strong> {{ format_amount(object.estimation_total, object.currency_id) }}
-        <br/><br/>
-        Please review and take appropriate action.
-        <br/><br/>
-        Best regards,<br/>
-        {{ user.name }}
-    </p>
-</div>
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Dear {{ object.user_id.name }},
+                        <br/><br/>
+                        A new manufacturing estimation requires your approval:
+                        <br/><br/>
+                        <strong>Reference:</strong> {{ object.name }}<br/>
+                        <strong>Product:</strong> {{ object.product_id.name }}<br/>
+                        <strong>Quantity:</strong> {{ object.product_qty }} {{ object.product_uom_id.name }}<br/>
+                        <strong>Total Amount:</strong> {{ format_amount(object.estimation_total, object.currency_id) }}<br/>
+                        <strong>Valid Until:</strong> {{ object.validity_date }}
+                        <br/><br/>
+                        {% if object.customer_notes %}
+                        <strong>Additional Notes:</strong><br/>
+                        {{ object.customer_notes | safe }}
+                        <br/><br/>
+                        {% endif %}
+                        Please review and approve this estimation at your earliest convenience.
+                        <br/><br/>
+                        Best regards,<br/>
+                        {{ user.name }}
+                    </p>
+                </div>
             ]]></field>
             <field name="lang">{{ object.user_id.lang }}</field>
             <field name="auto_delete" eval="True"/>
         </record>
 
-        <!-- Email Template for Sending Estimation to Customer -->
+        <!-- Email Template for Estimation -->
         <record id="email_template_estimation" model="mail.template">
             <field name="name">Manufacturing Estimation: Send to Customer</field>
             <field name="model_id" ref="model_mrp_estimation"/>
@@ -52,33 +58,33 @@
             <field name="email_from">{{ user.email_formatted }}</field>
             <field name="partner_to">{{ object.partner_id.id }}</field>
             <field name="body_html" type="html"><![CDATA[
-<div style="margin: 0px; padding: 0px;">
-    <p style="margin: 0px; padding: 0px; font-size: 13px;">
-        Dear {{ object.partner_id.name }},
-        <br/><br/>
-        Please find attached our manufacturing estimation for your review:
-        <br/><br/>
-        <strong>Reference:</strong> {{ object.name }}<br/>
-        <strong>Product:</strong> {{ object.product_id.name }}<br/>
-        <strong>Quantity:</strong> {{ object.product_qty }} {{ object.product_uom_id.name }}<br/>
-        <strong>Total Amount:</strong> {{ format_amount(object.estimation_total, object.currency_id) }}<br/>
-        <strong>Valid Until:</strong> {{ object.validity_date }}
-        <br/><br/>
-        {% if object.customer_notes %}
-        <strong>Additional Notes:</strong><br/>
-        {{ object.customer_notes | safe }}
-        <br/><br/>
-        {% endif %}
-        Please don't hesitate to contact us if you have any questions.
-        <br/><br/>
-        Best regards,<br/>
-        {{ user.name }}
-    </p>
-</div>
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Dear {{ object.partner_id.name }},
+                        <br/><br/>
+                        Please find attached our manufacturing estimation for your review:
+                        <br/><br/>
+                        <strong>Reference:</strong> {{ object.name }}<br/>
+                        <strong>Product:</strong> {{ object.product_id.name }}<br/>
+                        <strong>Quantity:</strong> {{ object.product_qty }} {{ object.product_uom_id.name }}<br/>
+                        <strong>Total Amount:</strong> {{ format_amount(object.estimation_total, object.currency_id) }}<br/>
+                        <strong>Valid Until:</strong> {{ object.validity_date }}
+                        <br/><br/>
+                        {% if object.customer_notes %}
+                        <strong>Additional Notes:</strong><br/>
+                        {{ object.customer_notes | safe }}
+                        <br/><br/>
+                        {% endif %}
+                        Please don't hesitate to contact us if you have any questions.
+                        <br/><br/>
+                        Best regards,<br/>
+                        {{ user.name }}
+                    </p>
+                </div>
             ]]></field>
             <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="auto_delete" eval="True"/>
-            <field name="report_template" ref="action_report_estimation"/>
+            <field name="report_template" ref="mrp_estimation.report_estimation_document"/>
             <field name="report_filename">Estimation_{{ (object.name or '').replace('/','_') }}</field>
         </record>
 
