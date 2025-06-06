@@ -6,13 +6,16 @@
          <field name="name">solar.install.schedule.form</field>
          <field name="model">solar.install.schedule</field>
          <field name="arch" type="xml">
-            <form string="Installation Schedule" version="1.1">
+            <form string="Installation Schedule">
                <header>
                   <field name="state" widget="statusbar"
                          statusbar_visible="planned,in_progress,done,cancelled"/>
-                  <button string="Start" type="object" name="action_start" attrs="{'invisible': [('state', '!=', 'planned')]}"/>
-                  <button string="Done" type="object" name="action_done" attrs="{'invisible': [('state', '!=', 'in_progress')]}"/>
-                  <button string="Cancel" type="object" name="action_cancel" attrs="{'invisible': [('state', 'not in', ('planned', 'in_progress'))]}"/>
+                  <button string="Start" type="object" name="action_start" 
+                          invisible="state != 'planned'"/>
+                  <button string="Done" type="object" name="action_done" 
+                          invisible="state != 'in_progress'"/>
+                  <button string="Cancel" type="object" name="action_cancel" 
+                          invisible="state not in ('planned', 'in_progress')"/>
                </header>
                <sheet>
                   <group>
@@ -41,7 +44,7 @@
       <record id="action_solar_install_schedule" model="ir.actions.act_window">
          <field name="name">Installation Schedules</field>
          <field name="res_model">solar.install.schedule</field>
-         <field name="view_mode">form</field> <!-- Changed to display only the form view -->
+         <field name="view_mode">form</field>
          <field name="view_id" ref="view_solar_install_schedule_form"/>
          <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
