@@ -1,4 +1,3 @@
-
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
@@ -157,6 +156,6 @@
     <record id="action_compliance_tracking" model="ir.actions.act_window">
         <field name="name">Compliance Tracking</field>
         <field name="res_model">avf.compliance.tracking</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">kanban,list,form,calendar</field>
     </record>
 </odoo>

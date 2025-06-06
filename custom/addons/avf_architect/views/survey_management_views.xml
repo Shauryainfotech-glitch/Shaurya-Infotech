@@ -224,7 +224,7 @@
     <record id="action_architect_survey" model="ir.actions.act_window">
         <field name="name">Site Surveys</field>
         <field name="res_model">architect.survey</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">kanban,list,form</field>
         <field name="context">{'search_default_my_surveys': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -253,11 +253,11 @@
     <!-- Menu Items -->
     <menuitem id="menu_survey_root" name="Surveys" 
               parent="menu_architect_root" sequence="40"/>
-    
+
     <menuitem id="menu_survey" name="Site Surveys" 
               parent="menu_survey_root" 
               action="action_architect_survey" sequence="10"/>
-    
+
     <menuitem id="menu_survey_equipment" name="Equipment" 
               parent="menu_survey_root" 
               action="action_architect_survey_equipment" sequence="20"/>

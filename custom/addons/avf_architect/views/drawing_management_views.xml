@@ -305,11 +305,11 @@
     <!-- Menu Items -->
     <menuitem id="menu_drawing_root" name="Drawings" 
               parent="menu_architect_root" sequence="30"/>
-    
+
     <menuitem id="menu_drawing" name="Drawings" 
               parent="menu_drawing_root" 
               action="action_architect_drawing" sequence="10"/>
-    
+
     <menuitem id="menu_drawing_set" name="Drawing Sets" 
               parent="menu_drawing_root" 
               action="action_architect_drawing_set" sequence="20"/>
@@ -317,23 +317,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <!-- Drawing Management Tree View -->
-        <record id="view_drawing_management_tree" model="ir.ui.view">
-            <field name="name">avf.drawing.management.tree</field>
+        <!-- Drawing List View -->
+        <record id="view_drawing_management_list" model="ir.ui.view">
+            <field name="name">avf.drawing.management.list</field>
             <field name="model">avf.drawing.management</field>
             <field name="arch" type="xml">
-                <tree string="Drawing Management">
-                    <field name="sequence" widget="handle"/>
-                    <field name="drawing_number"/>
-                    <field name="name"/>
-                    <field name="project_id"/>
-                    <field name="drawing_type"/>
-                    <field name="version"/>
-                    <field name="status"/>
-                    <field name="creation_date"/>
-                </tree>
-            </field>
-        </record>
+                <list string="Drawings" decoration-success="status=='approved'" 
+                  decoration-warning="status=='under_review'" decoration-danger="status=='rejected'">
+                <field name="drawing_number"/>
+                <field name="title"/>
+                <field name="project_id"/>
+                <field name="drawing_type"/>
+                <field name="revision"/>
+                <field name="status"/>
+                <field name="prepared_by"/>
+                <field name="creation_date"/>
+                <field name="last_revision_date"/>
+            </list>
+        </field>
+    </record>
 
         <!-- Drawing Management Form View -->
         <record id="view_drawing_management_form" model="ir.ui.view">
@@ -366,7 +368,7 @@
                                 <field name="is_latest_version"/>
                             </group>
                         </group>
-                        
+
                         <notebook>
                             <page string="Drawing File">
                                 <group>
@@ -376,14 +378,14 @@
                                     <field name="file_size"/>
                                 </group>
                             </page>
-                            
+
                             <page string="Details">
                                 <group>
                                     <field name="description"/>
                                     <field name="notes"/>
                                 </group>
                             </page>
-                            
+
                             <page string="Review Information">
                                 <group>
                                     <group>
@@ -435,7 +437,7 @@
         <record id="action_drawing_management" model="ir.actions.act_window">
             <field name="name">Drawing Management</field>
             <field name="res_model">avf.drawing.management</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">kanban,list,form</field>
             <field name="search_view_id" ref="view_drawing_management_search"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">

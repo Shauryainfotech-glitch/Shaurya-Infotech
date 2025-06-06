@@ -3,7 +3,7 @@
     <!-- AI Assistant Form View -->
     <record id="view_architect_ai_assistant_form" model="ir.ui.view">
         <field name="name">architect.ai.assistant.form</field>
-        <field name="model">architect.ai.assistant</field>
+        <field name="model">avf.ai.assistant</field>
         <field name="arch" type="xml">
             <form string="AI Assistant Session">
                 <header>
@@ -59,12 +59,39 @@
                         <page string="Conversation" name="conversation">
                             <div class="o_ai_chat_container" style="height: 400px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; background: #f9f9f9;">
                                 <field name="conversation_ids" nolabel="1" readonly="1">
-                                    <tree create="false" edit="false" delete="false">
+                                    <kanban create="false" edit="false" delete="false">
                                         <field name="timestamp"/>
                                         <field name="message_type"/>
                                         <field name="message"/>
-                                        <field name="response_time" attrs="{'invisible': [('message_type', '!=', 'assistant')]}"/>
-                                    </tree>
+                                        <field name="response_time"/>
+                                        <templates>
+                                            <t t-name="kanban-box">
+                                                <div class="oe_kanban_card">
+                                                    <div class="oe_kanban_content">
+                                                        <div class="o_kanban_record_top mb8">
+                                                            <div class="o_kanban_record_headings">
+                                                                <strong t-if="record.message_type.raw_value == 'user'" class="text-primary">
+                                                                    <i class="fa fa-user"/> User
+                                                                </strong>
+                                                                <strong t-else="" class="text-success">
+                                                                    <i class="fa fa-robot"/> AI Assistant
+                                                                </strong>
+                                                            </div>
+                                                            <div class="o_kanban_record_top_right">
+                                                                <field name="timestamp" widget="datetime"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="o_kanban_record_body">
+                                                            <field name="message"/>
+                                                            <div t-if="record.message_type.raw_value == 'assistant' and record.response_time.raw_value" class="text-muted mt8">
+                                                                Response time: <field name="response_time"/>s
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </t>
+                                        </templates>
+                                    </kanban>
                                 </field>
                             </div>
                             <div class="o_ai_input_container mt-3">
@@ -94,13 +121,12 @@
         </field>
     </record>
 
-    <!-- AI Assistant Tree View -->
-    <record id="view_architect_ai_assistant_tree" model="ir.ui.view">
-        <field name="name">architect.ai.assistant.tree</field>
-        <field name="model">architect.ai.assistant</field>
+    <!-- AI Assistant Kanban View -->
+    <record id="view_architect_ai_assistant_kanban" model="ir.ui.view">
+        <field name="name">architect.ai.assistant.kanban</field>
+        <field name="model">avf.ai.assistant</field>
         <field name="arch" type="xml">
-            <tree string="AI Assistant Sessions" decoration-success="active==True" 
-                  decoration-muted="active==False">
+            <kanban string="AI Assistant Sessions">
                 <field name="name"/>
                 <field name="project_id"/>
                 <field name="session_type"/>
@@ -108,14 +134,96 @@
                 <field name="total_queries"/>
                 <field name="last_activity"/>
                 <field name="active"/>
-            </tree>
+                <field name="satisfaction_rating"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="oe_kanban_content">
+                                <div class="o_kanban_record_top mb8">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title">
+                                            <field name="name"/>
+                                        </strong>
+                                    </div>
+                                    <div class="o_kanban_record_top_right">
+                                        <div class="o_dropdown_kanban dropdown" t-if="widget.editable">
+                                            <a class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" role="button" aria-label="Dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <span class="fa fa-ellipsis-v"/>
+                                            </a>
+                                            <div class="dropdown-menu" role="menu">
+                                                <a t-if="widget.editable" role="menuitem" type="edit" class="dropdown-item">Edit</a>
+                                                <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_record_body">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <span class="text-muted">Project:</span><br/>
+                                            <field name="project_id"/>
+                                        </div>
+                                        <div class="col-6">
+                                            <span class="text-muted">Type:</span><br/>
+                                            <field name="session_type"/>
+                                        </div>
+                                    </div>
+                                    <div class="row mt8">
+                                        <div class="col-6">
+                                            <span class="text-muted">Queries:</span>
+                                            <field name="total_queries"/>
+                                        </div>
+                                        <div class="col-6">
+                                            <span class="text-muted">Rating:</span>
+                                            <field name="satisfaction_rating" widget="priority"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_record_bottom mt8">
+                                    <div class="oe_kanban_bottom_left">
+                                        <field name="user_id" widget="many2one_avatar_user"/>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <field name="last_activity" widget="date"/>
+                                        <t t-if="record.active.raw_value">
+                                            <span class="badge badge-success">Active</span>
+                                        </t>
+                                        <t t-else="">
+                                            <span class="badge badge-secondary">Inactive</span>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- AI Assistant List View -->
+    <record id="view_architect_ai_assistant_list" model="ir.ui.view">
+        <field name="name">architect.ai.assistant.list</field>
+        <field name="model">avf.ai.assistant</field>
+        <field name="arch" type="xml">
+            <list string="AI Assistant Sessions" decoration-success="active==True" 
+                  decoration-muted="active==False">
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="session_type"/>
+                <field name="user_id" widget="many2one_avatar_user"/>
+                <field name="total_queries"/>
+                <field name="satisfaction_rating" widget="priority"/>
+                <field name="last_activity"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
         </field>
     </record>
 
     <!-- AI Assistant Search View -->
     <record id="view_architect_ai_assistant_search" model="ir.ui.view">
         <field name="name">architect.ai.assistant.search</field>
-        <field name="model">architect.ai.assistant</field>
+        <field name="model">avf.ai.assistant</field>
         <field name="arch" type="xml">
             <search string="Search AI Sessions">
                 <field name="name"/>
@@ -147,7 +255,7 @@
     <!-- AI Template Views -->
     <record id="view_architect_ai_template_form" model="ir.ui.view">
         <field name="name">architect.ai.template.form</field>
-        <field name="model">architect.ai.template</field>
+        <field name="model">avf.ai.template</field>
         <field name="arch" type="xml">
             <form string="AI Template">
                 <sheet>
@@ -188,25 +296,64 @@
         </field>
     </record>
 
-    <!-- AI Template Tree View -->
-    <record id="view_architect_ai_template_tree" model="ir.ui.view">
-        <field name="name">architect.ai.template.tree</field>
-        <field name="model">architect.ai.template</field>
+    <!-- AI Template Kanban View -->
+    <record id="view_architect_ai_template_kanban" model="ir.ui.view">
+        <field name="name">architect.ai.template.kanban</field>
+        <field name="model">avf.ai.template</field>
         <field name="arch" type="xml">
-            <tree string="AI Templates">
+            <kanban string="AI Templates">
                 <field name="name"/>
                 <field name="category"/>
                 <field name="usage_count"/>
                 <field name="active"/>
-                <button name="use_template" type="object" string="Use" class="btn-link"/>
-            </tree>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="oe_kanban_content">
+                                <div class="o_kanban_record_top mb8">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title">
+                                            <field name="name"/>
+                                        </strong>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_record_body">
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <span class="text-muted">Category:</span><br/>
+                                            <field name="category"/>
+                                        </div>
+                                        <div class="col-4">
+                                            <span class="text-muted">Uses:</span><br/>
+                                            <field name="usage_count"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_record_bottom mt8">
+                                    <div class="oe_kanban_bottom_left">
+                                        <button name="use_template" type="object" string="Use Template" class="btn btn-primary btn-sm"/>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <t t-if="record.active.raw_value">
+                                            <span class="badge badge-success">Active</span>
+                                        </t>
+                                        <t t-else="">
+                                            <span class="badge badge-secondary">Inactive</span>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
         </field>
     </record>
 
     <!-- AI Knowledge Base Views -->
     <record id="view_architect_ai_knowledge_form" model="ir.ui.view">
         <field name="name">architect.ai.knowledge.form</field>
-        <field name="model">architect.ai.knowledge</field>
+        <field name="model">avf.ai.knowledge</field>
         <field name="arch" type="xml">
             <form string="Knowledge Base Item">
                 <sheet>
@@ -250,27 +397,79 @@
         </field>
     </record>
 
-    <!-- AI Knowledge Base Tree View -->
-    <record id="view_architect_ai_knowledge_tree" model="ir.ui.view">
-        <field name="name">architect.ai.knowledge.tree</field>
-        <field name="model">architect.ai.knowledge</field>
+    <!-- AI Knowledge Base Kanban View -->
+    <record id="view_architect_ai_knowledge_kanban" model="ir.ui.view">
+        <field name="name">architect.ai.knowledge.kanban</field>
+        <field name="model">avf.ai.knowledge</field>
         <field name="arch" type="xml">
-            <tree string="Knowledge Base" decoration-success="verified==True">
+            <kanban string="Knowledge Base" default_group_by="category">
                 <field name="name"/>
                 <field name="category"/>
                 <field name="tags"/>
                 <field name="access_count"/>
                 <field name="verified"/>
                 <field name="active"/>
-            </tree>
+                <field name="relevance_score"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="oe_kanban_content">
+                                <div class="o_kanban_record_top mb8">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title">
+                                            <field name="name"/>
+                                        </strong>
+                                    </div>
+                                    <div class="o_kanban_record_top_right">
+                                        <t t-if="record.verified.raw_value">
+                                            <span class="fa fa-check-circle text-success" title="Verified"/>
+                                        </t>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_record_body">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <span class="text-muted">Tags:</span><br/>
+                                            <field name="tags" widget="many2many_tags"/>
+                                        </div>
+                                    </div>
+                                    <div class="row mt8">
+                                        <div class="col-6">
+                                            <span class="text-muted">Views:</span>
+                                            <field name="access_count"/>
+                                        </div>
+                                        <div class="col-6">
+                                            <span class="text-muted">Score:</span>
+                                            <field name="relevance_score"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_record_bottom mt8">
+                                    <div class="oe_kanban_bottom_left">
+                                        <button name="mark_accessed" type="object" string="View" class="btn btn-sm btn-secondary"/>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <t t-if="record.active.raw_value">
+                                            <span class="badge badge-success">Active</span>
+                                        </t>
+                                        <t t-else="">
+                                            <span class="badge badge-secondary">Inactive</span>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
         </field>
     </record>
 
     <!-- Menu Actions -->
     <record id="action_architect_ai_assistant" model="ir.actions.act_window">
         <field name="name">AI Assistant</field>
-        <field name="res_model">architect.ai.assistant</field>
-        <field name="view_mode">tree,form</field>
+        <field name="res_model">avf.ai.assistant</field>
+        <field name="view_mode">kanban,list,form</field>
         <field name="context">{'search_default_my_sessions': 1, 'search_default_active_sessions': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -284,8 +483,8 @@
 
     <record id="action_architect_ai_template" model="ir.actions.act_window">
         <field name="name">AI Templates</field>
-        <field name="res_model">architect.ai.template</field>
-        <field name="view_mode">tree,form</field>
+        <field name="res_model">avf.ai.template</field>
+        <field name="view_mode">kanban,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create your first AI template
@@ -298,8 +497,8 @@
 
     <record id="action_architect_ai_knowledge" model="ir.actions.act_window">
         <field name="name">Knowledge Base</field>
-        <field name="res_model">architect.ai.knowledge</field>
-        <field name="view_mode">tree,form</field>
+        <field name="res_model">avf.ai.knowledge</field>
+        <field name="view_mode">kanban,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Add your first knowledge item
@@ -313,15 +512,15 @@
     <!-- Menu Items -->
     <menuitem id="menu_ai_root" name="AI Assistant" 
               parent="menu_architect_root" sequence="80"/>
-    
+
     <menuitem id="menu_ai_assistant" name="AI Sessions" 
               parent="menu_ai_root" 
               action="action_architect_ai_assistant" sequence="10"/>
-    
+
     <menuitem id="menu_ai_template" name="Templates" 
               parent="menu_ai_root" 
               action="action_architect_ai_template" sequence="20"/>
-    
+
     <menuitem id="menu_ai_knowledge" name="Knowledge Base" 
               parent="menu_ai_root" 
               action="action_architect_ai_knowledge" sequence="30"/>
