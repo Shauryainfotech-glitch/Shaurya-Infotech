@@ -72,7 +72,8 @@ class NewDashboardClientAction extends Component {
         action: { type: Object, optional: true },
         actionId: { type: Number, optional: true },
         className: { type: String, optional: true },
-        updateActionState: { type: Function, optional: true }
+        updateActionState: { type: Function, optional: true },
+        globalState: { type: Object, optional: true }
     };
     
     setup() {
