@@ -74,8 +74,15 @@ class ArchitectTeam(models.Model):
         for team in self:
             completed_projects = team.project_ids.filtered(lambda p: p.state == 'completed')
             if completed_projects:
+                # Calculate efficiency rating
                 team.efficiency_rating = sum(completed_projects.mapped('progress')) / len(completed_projects)
-                team.quality_rating = sum(completed_projects.mapped('quality_rating')) / len(completed_projects)
+
+                # Calculate quality rating safely
+                projects_with_quality = completed_projects.filtered(lambda p: p.quality_rating is not False)
+                if projects_with_quality:
+                    team.quality_rating = sum(projects_with_quality.mapped('quality_rating')) / len(projects_with_quality)
+                else:
+                    team.quality_rating = 0.0
             else:
                 team.efficiency_rating = 0.0
                 team.quality_rating = 0.0

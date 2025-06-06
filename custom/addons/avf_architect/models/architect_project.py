@@ -70,6 +70,7 @@ class ArchitectProject(models.Model):
     actual_cost = fields.Monetary(string='Actual Cost', compute='_compute_actual_cost', store=True)
     currency_id = fields.Many2one('res.currency', string='Currency', 
                                  default=lambda self: self.env.company.currency_id)
+    allocated_hours = fields.Float(string='Allocated Hours', default=0.0)
     
     # Progress Tracking
     progress = fields.Float(string='Progress (%)', compute='_compute_progress', store=True)
@@ -111,6 +112,7 @@ class ArchitectProject(models.Model):
     ai_recommendations = fields.Text(string='AI Recommendations')
     risk_analysis = fields.Text(string='Risk Analysis')
     sustainability_score = fields.Float(string='Sustainability Score')
+    quality_rating = fields.Float(string='Quality Rating', default=0.0)
     
     @api.model
     def _get_default_stage(self):
@@ -154,11 +156,12 @@ class ArchitectProject(models.Model):
         for project in self:
             project.actual_cost = project.estimated_cost * 0.85  # Placeholder calculation
     
-    @api.model
-    def create(self, vals):
-        if 'code' not in vals or not vals['code']:
-            vals['code'] = self.env['ir.sequence'].next_by_code('architect.project') or 'New'
-        return super().create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if 'code' not in vals or not vals['code']:
+                vals['code'] = self.env['ir.sequence'].next_by_code('architect.project') or 'New'
+        return super().create(vals_list)
     
     def action_confirm(self):
         self.state = 'confirmed'
