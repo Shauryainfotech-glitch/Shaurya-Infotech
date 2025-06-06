@@ -314,3 +314,138 @@
               parent="menu_drawing_root" 
               action="action_architect_drawing_set" sequence="20"/>
 </odoo>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Drawing Management Tree View -->
+        <record id="view_drawing_management_tree" model="ir.ui.view">
+            <field name="name">avf.drawing.management.tree</field>
+            <field name="model">avf.drawing.management</field>
+            <field name="arch" type="xml">
+                <tree string="Drawing Management">
+                    <field name="sequence" widget="handle"/>
+                    <field name="drawing_number"/>
+                    <field name="name"/>
+                    <field name="project_id"/>
+                    <field name="drawing_type"/>
+                    <field name="version"/>
+                    <field name="status"/>
+                    <field name="creation_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Drawing Management Form View -->
+        <record id="view_drawing_management_form" model="ir.ui.view">
+            <field name="name">avf.drawing.management.form</field>
+            <field name="model">avf.drawing.management</field>
+            <field name="arch" type="xml">
+                <form string="Drawing Management">
+                    <header>
+                        <button name="action_submit_for_review" type="object" string="Submit for Review" 
+                                class="oe_highlight" states="draft"/>
+                        <button name="action_approve" type="object" string="Approve" 
+                                class="oe_highlight" states="review"/>
+                        <button name="action_create_revision" type="object" string="Create Revision" 
+                                states="approved"/>
+                        <field name="status" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="drawing_number"/>
+                                <field name="project_id"/>
+                                <field name="drawing_type"/>
+                                <field name="version"/>
+                            </group>
+                            <group>
+                                <field name="scale"/>
+                                <field name="sheet_size"/>
+                                <field name="sequence"/>
+                                <field name="is_latest_version"/>
+                            </group>
+                        </group>
+                        
+                        <notebook>
+                            <page string="Drawing File">
+                                <group>
+                                    <field name="drawing_file" filename="drawing_filename"/>
+                                    <field name="drawing_filename" invisible="1"/>
+                                    <field name="drawing_url"/>
+                                    <field name="file_size"/>
+                                </group>
+                            </page>
+                            
+                            <page string="Details">
+                                <group>
+                                    <field name="description"/>
+                                    <field name="notes"/>
+                                </group>
+                            </page>
+                            
+                            <page string="Review Information">
+                                <group>
+                                    <group>
+                                        <field name="created_by"/>
+                                        <field name="creation_date"/>
+                                    </group>
+                                    <group>
+                                        <field name="reviewed_by"/>
+                                        <field name="review_date"/>
+                                        <field name="approved_by"/>
+                                        <field name="approval_date"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Drawing Management Search View -->
+        <record id="view_drawing_management_search" model="ir.ui.view">
+            <field name="name">avf.drawing.management.search</field>
+            <field name="model">avf.drawing.management</field>
+            <field name="arch" type="xml">
+                <search string="Drawing Management">
+                    <field name="name"/>
+                    <field name="drawing_number"/>
+                    <field name="project_id"/>
+                    <field name="drawing_type"/>
+                    <filter string="Draft" name="draft" domain="[('status', '=', 'draft')]"/>
+                    <filter string="Under Review" name="review" domain="[('status', '=', 'review')]"/>
+                    <filter string="Approved" name="approved" domain="[('status', '=', 'approved')]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Project" name="group_project" domain="[]" context="{'group_by': 'project_id'}"/>
+                        <filter string="Drawing Type" name="group_type" domain="[]" context="{'group_by': 'drawing_type'}"/>
+                        <filter string="Status" name="group_status" domain="[]" context="{'group_by': 'status'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Drawing Management Action -->
+        <record id="action_drawing_management" model="ir.actions.act_window">
+            <field name="name">Drawing Management</field>
+            <field name="res_model">avf.drawing.management</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_drawing_management_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first drawing!
+                </p>
+                <p>
+                    Manage architectural drawings, revisions, and approvals.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

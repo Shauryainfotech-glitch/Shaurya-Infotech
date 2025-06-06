@@ -4,49 +4,12 @@ from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 import base64
 
-class DrawingManagement(models.Model):
-    _name = 'avf.drawing.management'
-    _description = 'Drawing Management'
-    _rec_name = 'name'
-
-    name = fields.Char(string='Drawing Name', required=True)
-    project_id = fields.Many2one('project.project', string='Project', required=True)
-    drawing_type = fields.Selection([
-        ('floor_plan', 'Floor Plan'),
-        ('elevation', 'Elevation'),
-        ('section', 'Section'),
-        ('detail', 'Detail'),
-        ('site_plan', 'Site Plan')
-    ], string='Drawing Type', required=True)
-    
-    version = fields.Char(string='Version', default='1.0')
-    status = fields.Selection([
-        ('draft', 'Draft'),
-        ('review', 'Under Review'),
-        ('approved', 'Approved'),
-        ('rejected', 'Rejected')
-    ], string='Status', default='draft')
-    
-    drawing_file = fields.Binary(string='Drawing File')
-    filename = fields.Char(string='Filename')
-    created_date = fields.Date(string='Created Date', default=fields.Date.today)
-    approved_date = fields.Date(string='Approved Date')
-    
-    description = fields.Text(string='Description')
-    scale = fields.Char(string='Scale')
-    sheet_size = fields.Selection([
-        ('a0', 'A0'),
-        ('a1', 'A1'),
-        ('a2', 'A2'),
-        ('a3', 'A3'),
-        ('a4', 'A4')
-    ], string='Sheet Size')
-
 class ArchitectDrawing(models.Model):
     _name = 'avf.drawing.management'
     _description = 'Drawing Management'
     _rec_name = 'name'
     _order = 'sequence, name'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     name = fields.Char(string='Drawing Name', required=True)
     project_id = fields.Many2one('project.project', string='Project', required=True, ondelete='cascade')
@@ -84,7 +47,7 @@ class ArchitectDrawing(models.Model):
         ('review', 'Under Review'),
         ('approved', 'Approved'),
         ('superseded', 'Superseded')
-    ], string='Status', default='draft')
+    ], string='Status', default='draft', tracking=True)
 
     # Metadata
     sequence = fields.Integer(string='Sequence', default=10)

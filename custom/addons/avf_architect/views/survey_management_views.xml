@@ -262,3 +262,11 @@
               parent="menu_survey_root" 
               action="action_architect_survey_equipment" sequence="20"/>
 </odoo>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Survey Management Placeholder Views -->
+        <!-- This file ensures the manifest reference doesn't cause errors -->
+        <!-- Actual survey views can be added later -->
+    </data>
+</odoo>
