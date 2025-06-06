@@ -4,290 +4,93 @@ from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 from datetime import datetime, timedelta
 
-class ArchitectCompliance(models.Model):
-    _name = 'architect.compliance'
+
+class AvfComplianceTracking(models.Model):
+    _name = 'avf.compliance.tracking'
+    _description = 'Compliance Tracking for Architectural Projects'
     _inherit = ['mail.thread', 'mail.activity.mixin']
-    _description = 'Compliance Tracking'
-    _order = 'priority desc, deadline'
+    _order = 'compliance_date desc'
 
-    name = fields.Char(string='Compliance Item', required=True, tracking=True)
+    name = fields.Char(string='Compliance Reference', required=True, tracking=True)
     project_id = fields.Many2one('project.project', string='Project', required=True)
+    compliance_type_id = fields.Many2one('avf.compliance.type', string='Compliance Type', required=True)
 
-    # Compliance Type
-    compliance_type_id = fields.Many2one('architect.compliance.type', string='Compliance Type', required=True)
-    category = fields.Selection([
-        ('environmental', 'Environmental'),
-        ('safety', 'Safety & Security'),
-        ('building_code', 'Building Code'),
-        ('fire_safety', 'Fire Safety'),
-        ('accessibility', 'Accessibility'),
-        ('heritage', 'Heritage Conservation'),
-        ('forest', 'Forest Conservation'),
-        ('pollution', 'Pollution Control'),
-        ('waste', 'Waste Management'),
-        ('energy', 'Energy Efficiency'),
-        ('water', 'Water Conservation'),
-        ('structural', 'Structural'),
-        ('electrical', 'Electrical'),
-        ('plumbing', 'Plumbing'),
-        ('hvac', 'HVAC'),
-        ('other', 'Other')
-    ], string='Category', required=True)
-
-    # Compliance Details
+    # Compliance details
+    compliance_date = fields.Date(string='Compliance Date', required=True, default=fields.Date.today)
+    due_date = fields.Date(string='Due Date')
     description = fields.Text(string='Description')
-    regulatory_reference = fields.Char(string='Regulatory Reference')
-    authority = fields.Char(string='Regulatory Authority')
 
-    # Status and Dates
+    # Status
     state = fields.Selection([
         ('pending', 'Pending'),
         ('in_progress', 'In Progress'),
-        ('submitted', 'Submitted'),
-        ('approved', 'Approved'),
-        ('rejected', 'Rejected'),
-        ('expired', 'Expired'),
-        ('not_applicable', 'Not Applicable')
+        ('compliant', 'Compliant'),
+        ('non_compliant', 'Non-Compliant'),
+        ('expired', 'Expired')
     ], string='Status', default='pending', tracking=True)
 
-    priority = fields.Selection([
-        ('0', 'Low'),
-        ('1', 'Normal'),
-        ('2', 'High'),
-        ('3', 'Critical')
-    ], string='Priority', default='1', tracking=True)
-
-    # Dates
-    start_date = fields.Date(string='Start Date', default=fields.Date.today)
-    deadline = fields.Date(string='Deadline', required=True, tracking=True)
-    submission_date = fields.Date(string='Submission Date')
-    approval_date = fields.Date(string='Approval Date')
-    expiry_date = fields.Date(string='Expiry Date')
-
-    # Assignment
-    responsible_user_id = fields.Many2one('res.users', string='Responsible Person', 
-                                         default=lambda self: self.env.user)
-    reviewer_id = fields.Many2one('res.users', string='Reviewer')
-
-    # Progress and Documentation
-    progress = fields.Float(string='Progress (%)', default=0.0)
-    notes = fields.Html(string='Notes')
-    requirements = fields.Html(string='Requirements')
-    submission_details = fields.Html(string='Submission Details')
+    # Authority details
+    authority_name = fields.Char(string='Authority Name')
+    reference_number = fields.Char(string='Reference Number')
+    inspector_name = fields.Char(string='Inspector Name')
 
     # Documents
-    document_count = fields.Integer(string='Documents', compute='_compute_document_count')
+    attachment_ids = fields.Many2many('ir.attachment', string='Supporting Documents')
+    certificate_attachment = fields.Many2one('ir.attachment', string='Compliance Certificate')
 
-    # Checklist
-    checklist_ids = fields.One2many('architect.compliance.checklist', 'compliance_id', string='Checklist Items')
-    checklist_progress = fields.Float(string='Checklist Progress (%)', compute='_compute_checklist_progress')
+    # Additional fields
+    remarks = fields.Text(string='Remarks')
+    compliance_score = fields.Float(string='Compliance Score (%)', default=0.0)
 
-    # Alerts and Notifications
-    alert_days_before = fields.Integer(string='Alert Days Before Deadline', default=7)
-    is_overdue = fields.Boolean(string='Overdue', compute='_compute_overdue')
-    days_to_deadline = fields.Integer(string='Days to Deadline', compute='_compute_days_to_deadline')
+    @api.constrains('compliance_score')
+    def _check_compliance_score(self):
+        for record in self:
+            if not 0 <= record.compliance_score <= 100:
+                raise ValidationError(_('Compliance score must be between 0 and 100.'))
 
-    # Cost and Resources
-    estimated_cost = fields.Monetary(string='Estimated Cost', currency_field='currency_id')
-    actual_cost = fields.Monetary(string='Actual Cost', currency_field='currency_id')
-    currency_id = fields.Many2one('res.currency', default=lambda self: self.env.company.currency_id)
+    def action_mark_compliant(self):
+        """Mark compliance as compliant"""
+        self.state = 'compliant'
+        self.compliance_score = 100.0
 
-    # FCA Specific Fields
-    forest_clearance_required = fields.Boolean(string='Forest Clearance Required')
-    forest_area = fields.Float(string='Forest Area (in hectares)')
-    compensatory_afforestation = fields.Float(string='Compensatory Afforestation (in hectares)')
-    net_present_value = fields.Monetary(string='Net Present Value', currency_field='currency_id')
-
-    # PARIVESH Integration
-    parivesh_proposal_id = fields.Char(string='PARIVESH Proposal ID')
-    parivesh_status = fields.Selection([
-        ('not_submitted', 'Not Submitted'),
-        ('submitted', 'Submitted'),
-        ('under_review', 'Under Review'),
-        ('clarification_sought', 'Clarification Sought'),
-        ('approved', 'Approved'),
-        ('rejected', 'Rejected')
-    ], string='PARIVESH Status', default='not_submitted')
-
-    # Environmental Impact
-    environmental_impact_high = fields.Boolean(string='High Environmental Impact')
-    eia_required = fields.Boolean(string='EIA Required')
-    public_hearing_required = fields.Boolean(string='Public Hearing Required')
-
-    # Biodiversity
-    biodiversity_assessment = fields.Html(string='Biodiversity Assessment')
-    wildlife_impact = fields.Html(string='Wildlife Impact Assessment')
-    mitigation_measures = fields.Html(string='Mitigation Measures')
-
-    @api.depends('checklist_ids.completed')
-    def _compute_checklist_progress(self):
-        for compliance in self:
-            total_items = len(compliance.checklist_ids)
-            if total_items:
-                completed_items = len(compliance.checklist_ids.filtered('completed'))
-                compliance.checklist_progress = (completed_items / total_items) * 100
-            else:
-                compliance.checklist_progress = 0.0
-
-    @api.depends('deadline')
-    def _compute_overdue(self):
-        today = fields.Date.today()
-        for compliance in self:
-            compliance.is_overdue = compliance.deadline and compliance.deadline < today and compliance.state not in ['approved', 'not_applicable']
-
-    @api.depends('deadline')
-    def _compute_days_to_deadline(self):
-        today = fields.Date.today()
-        for compliance in self:
-            if compliance.deadline:
-                delta = compliance.deadline - today
-                compliance.days_to_deadline = delta.days
-            else:
-                compliance.days_to_deadline = 0
-
-    def _compute_document_count(self):
-        for compliance in self:
-            compliance.document_count = self.env['ir.attachment'].search_count([
-                ('res_model', '=', 'architect.compliance'),
-                ('res_id', '=', compliance.id)
-            ])
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        for vals in vals_list:
-            if not vals.get('compliance_number'):
-                vals['compliance_number'] = self.env['ir.sequence'].next_by_code('architect.compliance') or '/'
-        return super().create(vals_list)
-
-    def action_start_compliance(self):
-        self.state = 'in_progress'
-        self.start_date = fields.Date.today()
-        self.message_post(body=_("Compliance process started."))
-
-    def action_submit_for_approval(self):
-        if self.checklist_progress < 100:
-            raise ValidationError(_("Please complete all mandatory checklist items before submission."))
-        self.state = 'submitted'
-        self.submission_date = fields.Date.today()
-        self.message_post(body=_("Submitted for regulatory approval."))
-
-    def action_approve(self):
-        self.state = 'approved'
-        self.approval_date = fields.Date.today()
-        self.progress = 100.0
-        self.message_post(body=_("Compliance approved."))
-
-    def action_reject(self):
-        self.state = 'rejected'
-        self.message_post(body=_("Compliance rejected. Please review and resubmit."))
-
-    def action_mark_not_applicable(self):
-        self.state = 'not_applicable'
-        self.message_post(body=_("Marked as not applicable."))
-
-    def action_generate_compliance_report(self):
-        return self.env.ref('avf_architect.report_compliance_status').report_action(self)
-
-    def action_parivesh_integration(self):
-        # Placeholder for PARIVESH portal integration
-        return {
-            'type': 'ir.actions.act_url',
-            'url': 'https://parivesh.nic.in/',
-            'target': 'new',
-        }
+    def action_mark_non_compliant(self):
+        """Mark compliance as non-compliant"""
+        self.state = 'non_compliant'
 
 
-class ArchitectComplianceType(models.Model):
-    _name = 'architect.compliance.type'
-    _description = 'Compliance Type'
-    _order = 'sequence, name'
+class AvfComplianceType(models.Model):
+    _name = 'avf.compliance.type'
+    _description = 'Compliance Types'
+    _order = 'name'
 
     name = fields.Char(string='Compliance Type', required=True)
     code = fields.Char(string='Code', required=True)
     description = fields.Text(string='Description')
-    category = fields.Selection([
-        ('environmental', 'Environmental'),
-        ('safety', 'Safety & Security'),
-        ('building_code', 'Building Code'),
-        ('heritage', 'Heritage Conservation'),
-        ('other', 'Other')
-    ], string='Category', required=True)
-
-    sequence = fields.Integer(string='Sequence', default=10)
     active = fields.Boolean(string='Active', default=True)
 
-    # Regulatory Information
-    regulatory_authority = fields.Char(string='Regulatory Authority')
-    regulatory_reference = fields.Char(string='Regulatory Reference')
-    validity_period = fields.Integer(string='Validity Period (Days)')
+    # Category
+    category = fields.Selection([
+        ('building_code', 'Building Code'),
+        ('environmental', 'Environmental'),
+        ('safety', 'Safety'),
+        ('accessibility', 'Accessibility'),
+        ('fire_safety', 'Fire Safety'),
+        ('structural', 'Structural'),
+        ('planning', 'Planning Permission')
+    ], string='Category', required=True)
 
     # Requirements
-    requirements = fields.Html(string='Requirements')
-    submission_process = fields.Html(string='Submission Process')
-    required_documents = fields.Html(string='Required Documents')
+    mandatory = fields.Boolean(string='Mandatory', default=True)
+    renewal_required = fields.Boolean(string='Renewal Required')
+    renewal_period_months = fields.Integer(string='Renewal Period (Months)')
 
-    # Checklist Template
-    checklist_template_ids = fields.One2many('architect.compliance.checklist.template', 'compliance_type_id', 
-                                           string='Checklist Template')
-
-    # Applicability
-    project_types = fields.Selection([
-        ('all', 'All Projects'),
-        ('government', 'Government Projects Only'),
-        ('private', 'Private Projects Only'),
-        ('specific', 'Specific Project Types')
-    ], string='Applicable To', default='all')
-
-    # Cost and Timeline
-    typical_duration = fields.Integer(string='Typical Duration (Days)')
-    typical_cost = fields.Monetary(string='Typical Cost', currency_field='currency_id')
-    currency_id = fields.Many2one('res.currency', default=lambda self: self.env.company.currency_id)
+    # Authority
+    authority_name = fields.Char(string='Governing Authority')
+    contact_details = fields.Text(string='Contact Details')
 
 
-class ArchitectComplianceChecklist(models.Model):
-    _name = 'architect.compliance.checklist'
-    _description = 'Compliance Checklist'
-    _order = 'sequence, name'
+class ProjectProject(models.Model):
+    _inherit = 'project.project'
 
-    compliance_id = fields.Many2one('architect.compliance', string='Compliance', required=True, ondelete='cascade')
-    name = fields.Char(string='Checklist Item', required=True)
-    description = fields.Text(string='Description')
-    sequence = fields.Integer(string='Sequence', default=10)
-
-    completed = fields.Boolean(string='Completed')
-    completion_date = fields.Date(string='Completion Date')
-    completed_by = fields.Many2one('res.users', string='Completed By')
-
-    is_mandatory = fields.Boolean(string='Mandatory', default=True)
-    notes = fields.Text(string='Notes')
-
-    # Documents
-    document_required = fields.Boolean(string='Document Required')
-    document_ids = fields.Many2many('ir.attachment', string='Documents')
-
-    @api.onchange('completed')
-    def _onchange_completed(self):
-        if self.completed:
-            self.completion_date = fields.Date.today()
-            self.completed_by = self.env.user
-        else:
-            self.completion_date = False
-            self.completed_by = False
-
-
-class ArchitectComplianceChecklistTemplate(models.Model):
-    _name = 'architect.compliance.checklist.template'
-    _description = 'Compliance Checklist Template'
-    _order = 'sequence, name'
-
-    name = fields.Char(string='Checklist Item', required=True)
-    compliance_type_id = fields.Many2one('architect.compliance.type', string='Compliance Type', 
-                                       required=True, ondelete='cascade')
-    description = fields.Text(string='Description')
-    sequence = fields.Integer(string='Sequence', default=10)
-    is_mandatory = fields.Boolean(string='Mandatory', default=True)
-    document_required = fields.Boolean(string='Document Required')
-
-    # AI Enhancement
-    ai_checkable = fields.Boolean(string='AI Can Verify')
-    ai_verification_criteria = fields.Text(string='AI Verification Criteria')
+    # Add compliance tracking to standard project model
+    compliance_ids = fields.One2many('avf.compliance.tracking', 'project_id', string='Compliance Records')
