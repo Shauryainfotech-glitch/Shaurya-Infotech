@@ -40,7 +40,7 @@
 
         # Reports
         'report/dashboard_report.xml',
-        'report/plan_report_templates.xml',
+        'report/dashboard_report_templates.xml',
     ],
     'assets': {
         'web.assets_backend': [
