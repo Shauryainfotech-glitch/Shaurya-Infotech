@@ -46,7 +46,7 @@
                     <sheet>
                         <div class="oe_title">
                             <h1>
-                                <field name="quote_number" readonly="1"/>
+                                <field name="quote_number"/>
                             </h1>
                         </div>
                         <group>
@@ -70,6 +70,7 @@
                                             <field name="description"/>
                                             <field name="quantity"/>
                                             <field name="unit_price"/>
+                                            <field name="discount_pct"/>
                                             <field name="discount_pct"/>
                                             <field name="price_subtotal"/>
                                         </group>
