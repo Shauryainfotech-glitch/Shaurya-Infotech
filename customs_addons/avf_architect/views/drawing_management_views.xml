@@ -98,25 +98,29 @@
 
     <!-- Drawing Tree View -->
     <record id="view_architect_drawing_tree" model="ir.ui.view">
-        <field name="name">architect.drawing.tree</field>
-        <field name="model">architect.drawing</field>
-        <field name="type">tree</field>
-        <field name="arch" type="xml">
-            <tree string="Architectural Drawings" decoration-info="state=='draft'"
-                  decoration-warning="state=='review'" decoration-success="state=='approved'"
-                  decoration-danger="state=='revision'" decoration-muted="state=='obsolete'">
-                <field name="code"/>
-                <field name="name"/>
-                <field name="project_id"/>
-                <field name="drawing_type"/>
-                <field name="designer_id"/>
-                <field name="revision"/>
-                <field name="version"/>
-                <field name="state"/>
-                <field name="website_published"/>
-            </tree>
-        </field>
-    </record>
+    <field name="name">architect.drawing.tree</field>
+    <field name="model">architect.drawing</field>
+    <field name="type">tree</field>
+    <field name="arch" type="xml">
+        <tree string="Architectural Drawings"
+              decoration-info="state=='draft'"
+              decoration-warning="state=='review'"
+              decoration-success="state=='approved'"
+              decoration-danger="state=='revision'"
+              decoration-muted="state=='obsolete'">
+            <field name="code"/>
+            <field name="name"/>
+            <field name="project_id"/>
+            <field name="drawing_type"/>
+            <field name="designer_id"/>
+            <field name="revision"/>
+            <field name="version"/>
+            <field name="state"/>
+            <field name="website_published"/>
+        </tree>
+    </field>
+</record>
+
 
     <!-- Drawing Search View -->
     <record id="view_architect_drawing_search" model="ir.ui.view">
