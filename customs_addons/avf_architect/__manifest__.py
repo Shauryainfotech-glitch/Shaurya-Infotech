@@ -76,6 +76,7 @@
         'data/financial_categories.xml',
         #'data/rate_schedule_data.xml',
         'views/menus.xml',
+        'views/drawing_actions.xml',
         'views/drawing_management_views.xml',
         'views/survey_management_views.xml',
         'views/ai_assistant_views.xml',
