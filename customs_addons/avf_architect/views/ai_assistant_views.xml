@@ -16,26 +16,26 @@
                            options="{'terminology': {'string_true': 'Active', 'string_false': 'Inactive'}}"/>
                 </header>
                 <sheet>
-                    <div class="oe_button_box" name="button_box">
-                        <button name="%(action_ai_analytics)d" type="action"
-                                class="oe_stat_button" icon="fa-bar-chart">
-                            <div class="o_field_widget o_stat_info">
-                                <span class="o_stat_value">
-                                    <field name="total_queries"/>
-                                </span>
-                                <span class="o_stat_text">Queries</span>
-                            </div>
-                        </button>
-                        <button name="%(action_ai_analytics)d" type="action"
-                                class="oe_stat_button" icon="fa-clock-o">
-                            <div class="o_field_widget o_stat_info">
-                                <span class="o_stat_value">
-                                    <field name="avg_response_time" widget="float_time"/>s
-                                </span>
-                                <span class="o_stat_text">Avg Response</span>
-                            </div>
-                        </button>
-                    </div>
+<!--                    <div class="oe_button_box" name="button_box">-->
+<!--                        <button name="%(action_ai_analytics)d" type="action"-->
+<!--                                class="oe_stat_button" icon="fa-bar-chart">-->
+<!--                            <div class="o_field_widget o_stat_info">-->
+<!--                                <span class="o_stat_value">-->
+<!--                                    <field name="total_queries"/>-->
+<!--                                </span>-->
+<!--                                <span class="o_stat_text">Queries</span>-->
+<!--                            </div>-->
+<!--                        </button>-->
+<!--                        <button name="%(action_ai_analytics)d" type="action"-->
+<!--                                class="oe_stat_button" icon="fa-clock-o">-->
+<!--                            <div class="o_field_widget o_stat_info">-->
+<!--                                <span class="o_stat_value">-->
+<!--                                    <field name="avg_response_time" widget="float_time"/>s-->
+<!--                                </span>-->
+<!--                                <span class="o_stat_text">Avg Response</span>-->
+<!--                            </div>-->
+<!--                        </button>-->
+<!--                    </div>-->
                     <div class="oe_title">
                         <h1>
                             <field name="name" placeholder="Session Name"/>
