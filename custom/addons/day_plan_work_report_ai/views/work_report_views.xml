@@ -148,7 +148,7 @@
     </record>
 
     <!-- Menu Item for Work Reports -->
-    <menuitem id="menu_work_report" name="Work Reports" parent="menu_day_plan_root" action="action_work_report"/>
+    <menuitem id="menu_work_report" name="Work Reports" parent="menu_day_plan_root" action="action_work_report" groups="day_plan_work_report_ai.group_user,day_plan_work_report_ai.group_manager,day_plan_work_report_ai.group_admin"/>
     
     <!-- Action to generate work report from day plan -->
     <record id="action_generate_work_report" model="ir.actions.server">

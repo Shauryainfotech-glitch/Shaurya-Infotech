@@ -310,6 +310,6 @@
     </record>
 
     <!-- Menu Items -->
-    <menuitem id="menu_day_plan_task" name="Tasks" parent="menu_day_plan_root" action="action_day_plan_task" sequence="20"/>
+    <menuitem id="menu_day_plan_task" name="Tasks" parent="menu_day_plan_root" action="action_day_plan_task" sequence="20" groups="day_plan_work_report_ai.group_user,day_plan_work_report_ai.group_manager,day_plan_work_report_ai.group_admin"/>
     <menuitem id="menu_day_plan_task_tag" name="Task Tags" parent="menu_day_plan_configuration" action="action_day_plan_task_tag" sequence="30"/>
 </odoo>

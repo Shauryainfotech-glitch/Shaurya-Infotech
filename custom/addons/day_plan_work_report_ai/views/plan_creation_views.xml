@@ -132,5 +132,6 @@
               name="Create Plan" 
               parent="menu_day_plan_root" 
               action="action_day_plan_creation"
-              sequence="2"/>
+              sequence="2"
+              groups="day_plan_work_report_ai.group_user,day_plan_work_report_ai.group_manager,day_plan_work_report_ai.group_admin"/>
 </odoo>
