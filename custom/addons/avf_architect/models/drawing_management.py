@@ -1,8 +1,10 @@
+
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 import base64
+import mimetypes
 
 class ArchitectDrawing(models.Model):
     _name = 'avf.drawing.management'
@@ -11,9 +13,9 @@ class ArchitectDrawing(models.Model):
     _order = 'sequence, name'
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
-    name = fields.Char(string='Drawing Name', required=True)
-    project_id = fields.Many2one('project.project', string='Project', required=True, ondelete='cascade')
-    drawing_number = fields.Char(string='Drawing Number', required=True)
+    name = fields.Char(string='Drawing Name', required=True, tracking=True)
+    project_id = fields.Many2one('project.project', string='Project', required=True, ondelete='cascade', tracking=True)
+    drawing_number = fields.Char(string='Drawing Number', required=True, tracking=True)
     drawing_type = fields.Selection([
         ('plan', 'Floor Plan'),
         ('elevation', 'Elevation'),
@@ -23,7 +25,7 @@ class ArchitectDrawing(models.Model):
         ('3d_view', '3D View'),
         ('working', 'Working Drawing'),
         ('presentation', 'Presentation Drawing')
-    ], string='Drawing Type', required=True)
+    ], string='Drawing Type', required=True, tracking=True)
 
     # File management
     drawing_file = fields.Binary(string='Drawing File', attachment=True)
@@ -38,145 +40,104 @@ class ArchitectDrawing(models.Model):
         ('A2', 'A2 (420 × 594 mm)'),
         ('A3', 'A3 (297 × 420 mm)'),
         ('A4', 'A4 (210 × 297 mm)')
-    ], string='Sheet Size', default='A3')
+    ], string='Sheet Size', default='A1')
 
-    # Status and versioning
-    version = fields.Char(string='Version', default='1.0')
-    status = fields.Selection([
+    # Version control
+    version = fields.Char(string='Version', default='1.0', tracking=True)
+    revision_notes = fields.Text(string='Revision Notes')
+    is_latest_version = fields.Boolean(string='Latest Version', default=True)
+
+    # Status and workflow
+    state = fields.Selection([
         ('draft', 'Draft'),
         ('review', 'Under Review'),
         ('approved', 'Approved'),
         ('superseded', 'Superseded')
     ], string='Status', default='draft', tracking=True)
 
-    # Metadata
-    sequence = fields.Integer(string='Sequence', default=10)
-    description = fields.Text(string='Description')
-    notes = fields.Text(string='Notes')
-    created_by = fields.Many2one('res.users', string='Created By', default=lambda self: self.env.user)
-    reviewed_by = fields.Many2one('res.users', string='Reviewed By')
+    # Responsibility
+    designer_id = fields.Many2one('res.users', string='Designer', tracking=True)
+    reviewer_id = fields.Many2one('res.users', string='Reviewer')
     approved_by = fields.Many2one('res.users', string='Approved By')
 
     # Dates
-    creation_date = fields.Date(string='Creation Date', default=fields.Date.today)
+    design_date = fields.Date(string='Design Date', default=fields.Date.today)
     review_date = fields.Date(string='Review Date')
     approval_date = fields.Date(string='Approval Date')
 
-    # Computed fields
-    file_size = fields.Float(string='File Size (MB)', compute='_compute_file_size')
-    is_latest_version = fields.Boolean(string='Latest Version', compute='_compute_latest_version')
+    # Additional information
+    description = fields.Text(string='Description')
+    notes = fields.Text(string='Notes')
+    tags = fields.Char(string='Tags')
+    sequence = fields.Integer(string='Sequence', default=10)
 
-    @api.depends('drawing_file')
-    def _compute_file_size(self):
-        for drawing in self:
-            if drawing.drawing_file:
-                # Convert bytes to MB
-                file_data = base64.b64decode(drawing.drawing_file)
-                drawing.file_size = len(file_data) / (1024 * 1024)
-            else:
-                drawing.file_size = 0.0
+    # Related records
+    comment_ids = fields.One2many('avf.drawing.comment', 'drawing_id', string='Comments')
+    comment_count = fields.Integer(string='Comments', compute='_compute_comment_count')
 
-    @api.depends('drawing_number', 'project_id')
-    def _compute_latest_version(self):
+    @api.depends('comment_ids')
+    def _compute_comment_count(self):
         for drawing in self:
-            if drawing.drawing_number and drawing.project_id:
-                latest = self.search([
-                    ('drawing_number', '=', drawing.drawing_number),
-                    ('project_id', '=', drawing.project_id.id)
-                ], order='version desc', limit=1)
-                drawing.is_latest_version = (drawing.id == latest.id) if latest else True
-            else:
-                drawing.is_latest_version = True
+            drawing.comment_count = len(drawing.comment_ids)
 
-    @api.constrains('drawing_number', 'project_id')
-    def _check_unique_drawing_number(self):
-        for drawing in self:
-            if drawing.drawing_number and drawing.project_id:
-                existing = self.search([
-                    ('drawing_number', '=', drawing.drawing_number),
-                    ('project_id', '=', drawing.project_id.id),
-                    ('version', '=', drawing.version),
-                    ('id', '!=', drawing.id)
-                ])
-                if existing:
-                    raise ValidationError(_("Drawing number %s with version %s already exists for this project.") % (drawing.drawing_number, drawing.version))
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if not vals.get('drawing_number'):
+                vals['drawing_number'] = self.env['ir.sequence'].next_by_code('avf.drawing.number') or 'DRW-001'
+        return super().create(vals_list)
 
     def action_submit_for_review(self):
         """Submit drawing for review"""
         self.ensure_one()
-        if self.status != 'draft':
+        if self.state != 'draft':
             raise ValidationError(_("Only draft drawings can be submitted for review."))
-        self.status = 'review'
+        self.state = 'review'
         self.review_date = fields.Date.today()
         self.message_post(body=_("Drawing submitted for review."))
 
     def action_approve(self):
         """Approve the drawing"""
         self.ensure_one()
-        if self.status != 'review':
+        if self.state != 'review':
             raise ValidationError(_("Only drawings under review can be approved."))
-        self.status = 'approved'
+        self.state = 'approved'
         self.approval_date = fields.Date.today()
         self.approved_by = self.env.user
         self.message_post(body=_("Drawing approved."))
 
-    def action_create_revision(self):
-        """Create a new revision of the drawing"""
+    def action_reject(self):
+        """Reject the drawing"""
         self.ensure_one()
-        # Mark current as superseded
-        self.status = 'superseded'
+        if self.state != 'review':
+            raise ValidationError(_("Only drawings under review can be rejected."))
+        self.state = 'draft'
+        self.message_post(body=_("Drawing rejected and returned to draft."))
 
-        # Create new version
-        new_version = self.copy({
-            'version': self._get_next_version(),
-            'status': 'draft',
-            'review_date': False,
-            'approval_date': False,
-            'reviewed_by': False,
-            'approved_by': False,
-        })
+    def action_supersede(self):
+        """Mark drawing as superseded"""
+        self.ensure_one()
+        self.state = 'superseded'
+        self.is_latest_version = False
+        self.message_post(body=_("Drawing marked as superseded."))
 
+    def action_view_comments(self):
+        """View drawing comments"""
+        self.ensure_one()
         return {
-            'name': _('Drawing Revision'),
+            'name': _('Drawing Comments'),
             'type': 'ir.actions.act_window',
-            'res_model': 'avf.drawing.management',
-            'res_id': new_version.id,
-            'view_mode': 'form',
-            'target': 'current',
+            'res_model': 'avf.drawing.comment',
+            'view_mode': 'tree,form',
+            'domain': [('drawing_id', '=', self.id)],
+            'context': {'default_drawing_id': self.id},
         }
-
-    def _get_next_version(self):
-        """Generate next version number"""
-        if not self.version:
-            return "1.0"
-
-        try:
-            parts = self.version.split('.')
-            major = int(parts[0])
-            minor = int(parts[1]) if len(parts) > 1 else 0
-            return f"{major}.{minor + 1}"
-        except:
-            return "1.0"
-
-class ArchitectDrawingRevision(models.Model):
-    _name = 'avf.drawing.revision'
-    _description = 'Drawing Revision History'
-    _order = 'revision_number desc'
-
-    drawing_id = fields.Many2one('avf.drawing.management', string='Drawing', required=True, ondelete='cascade')
-    revision_number = fields.Integer(string='Revision Number', required=True)
-    revision_date = fields.Date(string='Revision Date', default=fields.Date.today)
-    revised_by = fields.Many2one('res.users', string='Revised By', default=lambda self: self.env.user)
-    revision_notes = fields.Text(string='Revision Notes')
-
-    # Previous file for comparison
-    previous_file = fields.Binary(string='Previous File', attachment=True)
-    previous_filename = fields.Char(string='Previous Filename')
 
 class ArchitectDrawingComment(models.Model):
     _name = 'avf.drawing.comment'
     _description = 'Drawing Comments'
     _order = 'create_date desc'
+    _inherit = ['mail.thread']
 
     drawing_id = fields.Many2one('avf.drawing.management', string='Drawing', required=True, ondelete='cascade')
     comment = fields.Text(string='Comment', required=True)
@@ -187,6 +148,28 @@ class ArchitectDrawingComment(models.Model):
         ('approval', 'Approval Comment')
     ], string='Comment Type', default='general')
 
-    author_id = fields.Many2one('res.users', string='Author', default=lambda self: self.env.user)
+    author_id = fields.Many2one('res.users', string='Author', default=lambda self: self.env.user, required=True)
     is_resolved = fields.Boolean(string='Resolved', default=False)
     resolution_notes = fields.Text(string='Resolution Notes')
+    priority = fields.Selection([
+        ('low', 'Low'),
+        ('medium', 'Medium'),
+        ('high', 'High'),
+        ('critical', 'Critical')
+    ], string='Priority', default='medium')
+
+    # Coordinates for pinpoint comments
+    x_coordinate = fields.Float(string='X Coordinate')
+    y_coordinate = fields.Float(string='Y Coordinate')
+
+    def action_resolve(self):
+        """Mark comment as resolved"""
+        self.ensure_one()
+        self.is_resolved = True
+        self.message_post(body=_("Comment marked as resolved."))
+
+    def action_reopen(self):
+        """Reopen resolved comment"""
+        self.ensure_one()
+        self.is_resolved = False
+        self.message_post(body=_("Comment reopened."))

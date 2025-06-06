@@ -4,35 +4,6 @@ from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 from datetime import datetime, timedelta
 
-class ComplianceTracking(models.Model):
-    _name = 'avf.compliance.tracking'
-    _description = 'Compliance Tracking'
-    _rec_name = 'name'
-
-    name = fields.Char(string='Compliance Name', required=True)
-    project_id = fields.Many2one('project.project', string='Project', required=True)
-    compliance_type = fields.Selection([
-        ('fca', 'Forest Conservation Act'),
-        ('environmental', 'Environmental Clearance'),
-        ('fire_safety', 'Fire Safety'),
-        ('building_code', 'Building Code'),
-        ('accessibility', 'Accessibility Standards')
-    ], string='Compliance Type', required=True)
-
-    status = fields.Selection([
-        ('pending', 'Pending'),
-        ('in_progress', 'In Progress'),
-        ('compliant', 'Compliant'),
-        ('non_compliant', 'Non-Compliant')
-    ], string='Status', default='pending')
-
-    due_date = fields.Date(string='Due Date')
-    completed_date = fields.Date(string='Completed Date')
-    responsible_user_id = fields.Many2one('res.users', string='Responsible Person')
-
-    description = fields.Text(string='Description')
-    notes = fields.Text(string='Notes')
-
 class ArchitectCompliance(models.Model):
     _name = 'architect.compliance'
     _inherit = ['mail.thread', 'mail.activity.mixin']
@@ -68,11 +39,11 @@ class ArchitectCompliance(models.Model):
     regulatory_reference = fields.Char(string='Regulatory Reference')
     authority = fields.Char(string='Regulatory Authority')
 
-    # Status and Timeline
+    # Status and Dates
     state = fields.Selection([
         ('pending', 'Pending'),
         ('in_progress', 'In Progress'),
-        ('submitted', 'Submitted for Approval'),
+        ('submitted', 'Submitted'),
         ('approved', 'Approved'),
         ('rejected', 'Rejected'),
         ('expired', 'Expired'),
@@ -278,8 +249,8 @@ class ArchitectComplianceChecklist(models.Model):
     _description = 'Compliance Checklist'
     _order = 'sequence, name'
 
-    name = fields.Char(string='Checklist Item', required=True)
     compliance_id = fields.Many2one('architect.compliance', string='Compliance', required=True, ondelete='cascade')
+    name = fields.Char(string='Checklist Item', required=True)
     description = fields.Text(string='Description')
     sequence = fields.Integer(string='Sequence', default=10)
 

@@ -1,121 +1,148 @@
+
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
-import json
 
-class AIAssistant(models.Model):
+class AVFAIAssistant(models.Model):
     _name = 'avf.ai.assistant'
-    _description = 'AI Assistant for Architectural Projects'
+    _description = 'AI Assistant for Architect'
     _rec_name = 'name'
+    _order = 'create_date desc'
 
-    name = fields.Char(string='Assistant Name', required=True)
-    project_id = fields.Many2one('project.project', string='Related Project')
-    query = fields.Text(string='Query', required=True)
-    response = fields.Text(string='AI Response')
-    ai_model = fields.Selection([
-        ('gpt', 'GPT Model'),
-        ('claude', 'Claude Model'),
-        ('local', 'Local Model')
-    ], string='AI Model', default='gpt')
-    status = fields.Selection([
+    name = fields.Char(string='Request Name', required=True)
+    project_id = fields.Many2one('project.project', string='Project')
+    
+    request_type = fields.Selection([
+        ('design_suggestion', 'Design Suggestion'),
+        ('compliance_check', 'Compliance Check'),
+        ('cost_estimation', 'Cost Estimation'),
+        ('project_optimization', 'Project Optimization'),
+        ('risk_analysis', 'Risk Analysis'),
+        ('material_recommendation', 'Material Recommendation'),
+        ('energy_efficiency', 'Energy Efficiency'),
+        ('structural_analysis', 'Structural Analysis'),
+        ('other', 'Other')
+    ], string='Request Type', required=True)
+
+    query = fields.Text(string='Query/Request', required=True)
+    response = fields.Html(string='AI Response')
+    
+    # Context Information
+    building_type = fields.Selection([
+        ('residential', 'Residential'),
+        ('commercial', 'Commercial'),
+        ('institutional', 'Institutional'),
+        ('industrial', 'Industrial'),
+        ('mixed_use', 'Mixed Use')
+    ], string='Building Type')
+    
+    area_sqft = fields.Float(string='Area (sq ft)')
+    budget_range = fields.Selection([
+        ('low', 'Low Budget'),
+        ('medium', 'Medium Budget'),
+        ('high', 'High Budget'),
+        ('premium', 'Premium Budget')
+    ], string='Budget Range')
+    
+    location = fields.Char(string='Location')
+    climate_zone = fields.Selection([
+        ('tropical', 'Tropical'),
+        ('subtropical', 'Subtropical'),
+        ('temperate', 'Temperate'),
+        ('arid', 'Arid'),
+        ('polar', 'Polar')
+    ], string='Climate Zone')
+
+    # Status and Quality
+    state = fields.Selection([
         ('draft', 'Draft'),
         ('processing', 'Processing'),
         ('completed', 'Completed'),
-        ('error', 'Error')
+        ('failed', 'Failed')
     ], string='Status', default='draft')
-    created_date = fields.Datetime(string='Created Date', default=fields.Datetime.now)
-    processed_date = fields.Datetime(string='Processed Date')
 
-class ArchitectAIAssistant(models.Model):
-    _name = 'architect.ai.assistant'
-    _description = 'AI Assistant for Architectural Projects'
-    _order = 'create_date desc'
+    confidence_score = fields.Float(string='Confidence Score (%)')
+    user_rating = fields.Selection([
+        ('1', 'Poor'),
+        ('2', 'Fair'),
+        ('3', 'Good'),
+        ('4', 'Very Good'),
+        ('5', 'Excellent')
+    ], string='User Rating')
 
-    name = fields.Char(string='Query Title', required=True)
-    query = fields.Text(string='User Query', required=True)
-    response = fields.Text(string='AI Response')
-    project_id = fields.Many2one('project.project', string='Project')
-    user_id = fields.Many2one('res.users', string='User', default=lambda self: self.env.user)
+    # Attachments
+    input_files = fields.Binary(string='Input Files', attachment=True)
+    input_filename = fields.Char(string='Input Filename')
+    output_files = fields.Binary(string='Output Files', attachment=True)
+    output_filename = fields.Char(string='Output Filename')
 
-    # AI Context
-    context_type = fields.Selection([
-        ('design', 'Design Assistance'),
-        ('compliance', 'Compliance Check'),
-        ('estimation', 'Cost Estimation'),
-        ('dpr', 'DPR Generation'),
-        ('general', 'General Query')
-    ], string='Context Type', default='general')
+    # User Information
+    requested_by = fields.Many2one('res.users', string='Requested By', default=lambda self: self.env.user)
+    request_date = fields.Datetime(string='Request Date', default=fields.Datetime.now)
+    completion_date = fields.Datetime(string='Completion Date')
 
-    # Status
-    state = fields.Selection([
-        ('pending', 'Pending'),
-        ('processed', 'Processed'),
-        ('error', 'Error')
-    ], string='Status', default='pending')
+    # Additional Information
+    tags = fields.Char(string='Tags')
+    notes = fields.Text(string='Notes')
+    follow_up_required = fields.Boolean(string='Follow-up Required')
 
-    # Metadata
-    processing_time = fields.Float(string='Processing Time (seconds)')
-    confidence_score = fields.Float(string='Confidence Score')
-    tokens_used = fields.Integer(string='Tokens Used')
+    def action_process_request(self):
+        """Process AI request"""
+        self.ensure_one()
+        self.state = 'processing'
+        # Here you would integrate with actual AI services
+        self.response = self._generate_mock_response()
+        self.state = 'completed'
+        self.completion_date = fields.Datetime.now()
+        self.confidence_score = 85.0  # Mock confidence score
 
-    def process_query(self):
-        """Process AI query - placeholder for actual AI integration"""
-        self.state = 'processed'
-        self.response = f"AI response for: {self.query}"
-        return True
+    def _generate_mock_response(self):
+        """Generate mock AI response based on request type"""
+        responses = {
+            'design_suggestion': """
+                <h3>Design Recommendations</h3>
+                <ul>
+                    <li>Consider open floor plan for better space utilization</li>
+                    <li>Implement passive cooling strategies for energy efficiency</li>
+                    <li>Use local materials to reduce costs and environmental impact</li>
+                    <li>Incorporate natural lighting to reduce electricity consumption</li>
+                </ul>
+            """,
+            'compliance_check': """
+                <h3>Compliance Analysis</h3>
+                <ul>
+                    <li>Building Code Compliance: ✓ Compliant</li>
+                    <li>Fire Safety Requirements: ⚠ Needs review</li>
+                    <li>Accessibility Standards: ✓ Compliant</li>
+                    <li>Environmental Clearance: ⚠ Documentation required</li>
+                </ul>
+            """,
+            'cost_estimation': """
+                <h3>Cost Estimation</h3>
+                <p>Based on the provided parameters:</p>
+                <ul>
+                    <li>Construction Cost: ₹1,200 per sq ft</li>
+                    <li>Material Cost: 60% of total</li>
+                    <li>Labor Cost: 25% of total</li>
+                    <li>Other Costs: 15% of total</li>
+                </ul>
+            """,
+        }
+        return responses.get(self.request_type, "<p>AI analysis completed. Please review the recommendations.</p>")
 
-class ArchitectAIConversation(models.Model):
-    _name = 'architect.ai.conversation'
-    _description = 'AI Conversation History'
-    _order = 'sequence, create_date'
+    def action_regenerate_response(self):
+        """Regenerate AI response"""
+        self.ensure_one()
+        self.action_process_request()
 
-    assistant_id = fields.Many2one('architect.ai.assistant', string='AI Session', required=True, ondelete='cascade')
-    sequence = fields.Integer(string='Sequence', default=10)
-    message_type = fields.Selection([
-        ('user', 'User Message'),
-        ('ai', 'AI Response')
-    ], string='Message Type', required=True)
-    content = fields.Html(string='Content', required=True)
-    timestamp = fields.Datetime(string='Timestamp', default=fields.Datetime.now)
-
-    # Metadata
-    tokens_used = fields.Integer(string='Tokens Used')
-    model_version = fields.Char(string='Model Version')
-
-class ArchitectAITemplate(models.Model):
-    _name = 'architect.ai.template'
-    _description = 'AI Prompt Templates'
-
-    name = fields.Char(string='Template Name', required=True)
-    model_type = fields.Selection([
-        ('design', 'Design Assistant'),
-        ('compliance', 'Compliance Checker'),
-        ('estimation', 'Cost Estimation'),
-        ('planning', 'Project Planning'),
-        ('dpr', 'DPR Generator')
-    ], string='Model Type', required=True)
-
-    prompt_template = fields.Text(string='Prompt Template', required=True)
-    variables = fields.Text(string='Variables (JSON)')
-    description = fields.Text(string='Description')
-    active = fields.Boolean(string='Active', default=True)
-
-class ArchitectAIKnowledge(models.Model):
-    _name = 'architect.ai.knowledge'
-    _description = 'AI Knowledge Base'
-
-    name = fields.Char(string='Knowledge Item', required=True)
-    category = fields.Selection([
-        ('building_codes', 'Building Codes'),
-        ('design_standards', 'Design Standards'),
-        ('compliance_rules', 'Compliance Rules'),
-        ('best_practices', 'Best Practices'),
-        ('material_specs', 'Material Specifications')
-    ], string='Category', required=True)
-
-    content = fields.Html(string='Content', required=True)
-    source = fields.Char(string='Source')
-    region = fields.Char(string='Applicable Region')
-    last_updated = fields.Date(string='Last Updated', default=fields.Date.today)
-    active = fields.Boolean(string='Active', default=True)
+    def action_export_response(self):
+        """Export AI response to document"""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.report',
+            'report_name': 'avf_architect.ai_response_report',
+            'report_type': 'qweb-pdf',
+            'data': {'id': self.id},
+            'context': {'active_id': self.id},
+        }
