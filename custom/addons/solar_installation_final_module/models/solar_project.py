@@ -335,3 +335,8 @@ class SolarProject(models.Model):
             if not related_record:
                 raise ValidationError('The related model record does not exist!')
         return super(SolarProject, self).create(vals)
+
+    @api.constrains('partner_id')
+    def _check_partner(self):
+        if not self.partner_id:
+            raise ValidationError("Partner is required!")
