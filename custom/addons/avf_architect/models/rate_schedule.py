@@ -107,7 +107,7 @@ class ArchitectCostEstimate(models.Model):
     _description = 'Cost Estimate'
 
     name = fields.Char(string='Estimate Name', required=True)
-    project_id = fields.Many2one('architect.project', string='Project', required=True)
+    project_id = fields.Many2one('project.project', string='Project', required=True)
     schedule_id = fields.Many2one('architect.rate.schedule', string='Rate Schedule')
 
     # Estimate Details

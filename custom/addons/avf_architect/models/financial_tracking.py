@@ -485,7 +485,7 @@ class CostEstimateLine(models.Model):
 
 
 class ProjectBudget(models.Model):
-    _name = 'architect.project.budget'
+    _name = 'avf.project.budget'
     _description = 'Project Budget'
     _rec_name = 'name'
     _inherit = ['mail.thread', 'mail.activity.mixin']
@@ -513,7 +513,7 @@ class ProjectBudget(models.Model):
     def create(self, vals_list):
         for vals in vals_list:
             if vals.get('name', _('New')) == _('New'):
-                vals['name'] = self.env['ir.sequence'].next_by_code('architect.project.budget') or _('New')
+                vals['name'] = self.env['ir.sequence'].next_by_code('avf.project.budget') or _('New')
         return super().create(vals_list)
 
     @api.depends('budget_line_ids.allocated_amount')
@@ -548,7 +548,7 @@ class ArchitectBudgetLine(models.Model):
     _name = 'architect.budget.line'
     _description = 'Budget Line'
 
-    budget_id = fields.Many2one('architect.project.budget', string='Budget', required=True, ondelete='cascade')
+    budget_id = fields.Many2one('avf.project.budget', string='Budget', required=True, ondelete='cascade')
     category_id = fields.Many2one('architect.financial.category', string='Category', required=True)
 
     allocated_amount = fields.Monetary(string='Allocated Amount', required=True)

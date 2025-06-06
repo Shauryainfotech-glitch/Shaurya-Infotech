@@ -188,7 +188,7 @@ class ArchitectProject(models.Model):
     def create(self, vals_list):
         for vals in vals_list:
             if not vals.get('project_code'):
-                vals['project_code'] = self.env['ir.sequence'].next_by_code('architect.project') or 'ARCH-001'
+                vals['project_code'] = self.env['ir.sequence'].next_by_code('avf.architect.project') or 'ARCH-001'
         return super().create(vals_list)
 
     def action_start_project(self):
