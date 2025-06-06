@@ -164,11 +164,8 @@
         <field name="arch" type="xml">
             <form string="Project Checklist">
                 <header>
-                    <button name="action_verify"
-                            string="Verify"
-                            type="object"
-                            class="btn btn-primary"
-                            t-if="not record.verified.value and record.completed.value"/>
+                    <button name="action_verify" string="Verify" type="object" class="btn btn-primary"
+                            modifiers="{'invisible': ['|', ('verified', '=', True), ('completed', '=', False)]}" />
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
