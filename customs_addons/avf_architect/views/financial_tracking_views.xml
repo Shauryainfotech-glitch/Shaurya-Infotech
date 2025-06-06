@@ -233,7 +233,7 @@
                     <notebook>
                         <page string="Budget Lines" name="budget_lines">
                             <field name="line_ids">
-                                <tree editable="bottom">
+                                <list editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="category_id"/>
                                     <field name="subcategory_id"/>
@@ -242,18 +242,18 @@
                                     <field name="actual_amount" widget="monetary" sum="Total Actual" readonly="1"/>
                                     <field name="variance_amount" widget="monetary" sum="Total Variance" readonly="1"/>
                                     <field name="variance_percentage" widget="percentage" readonly="1"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                         <page string="Cost Estimates" name="cost_estimates">
                             <field name="cost_estimate_ids">
-                                <tree>
+                                <list>
                                     <field name="name"/>
                                     <field name="category_id"/>
                                     <field name="estimated_amount" widget="monetary"/>
                                     <field name="confidence_level"/>
                                     <field name="date"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                         <page string="Analysis" name="analysis">
