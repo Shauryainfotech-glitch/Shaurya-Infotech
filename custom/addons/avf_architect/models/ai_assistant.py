@@ -1,68 +1,53 @@
-
 # -*- coding: utf-8 -*-
-
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 
-class AVFAIAssistant(models.Model):
+
+class AvfAiAssistant(models.Model):
     _name = 'avf.ai.assistant'
-    _description = 'AI Assistant for Architect'
-    _rec_name = 'name'
+    _description = 'AI Assistant for Architectural Design Support'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'create_date desc'
 
-    name = fields.Char(string='Request Name', required=True)
-    project_id = fields.Many2one('project.project', string='Project')
-    
-    request_type = fields.Selection([
-        ('design_suggestion', 'Design Suggestion'),
-        ('compliance_check', 'Compliance Check'),
-        ('cost_estimation', 'Cost Estimation'),
-        ('project_optimization', 'Project Optimization'),
-        ('risk_analysis', 'Risk Analysis'),
-        ('material_recommendation', 'Material Recommendation'),
-        ('energy_efficiency', 'Energy Efficiency'),
-        ('structural_analysis', 'Structural Analysis'),
-        ('other', 'Other')
-    ], string='Request Type', required=True)
-
-    query = fields.Text(string='Query/Request', required=True)
+    name = fields.Char(string='Query Title', required=True)
+    query = fields.Text(string='User Query', required=True)
     response = fields.Html(string='AI Response')
-    
-    # Context Information
-    building_type = fields.Selection([
-        ('residential', 'Residential'),
-        ('commercial', 'Commercial'),
-        ('institutional', 'Institutional'),
-        ('industrial', 'Industrial'),
-        ('mixed_use', 'Mixed Use')
-    ], string='Building Type')
-    
-    area_sqft = fields.Float(string='Area (sq ft)')
-    budget_range = fields.Selection([
-        ('low', 'Low Budget'),
-        ('medium', 'Medium Budget'),
-        ('high', 'High Budget'),
-        ('premium', 'Premium Budget')
-    ], string='Budget Range')
-    
-    location = fields.Char(string='Location')
-    climate_zone = fields.Selection([
-        ('tropical', 'Tropical'),
-        ('subtropical', 'Subtropical'),
-        ('temperate', 'Temperate'),
-        ('arid', 'Arid'),
-        ('polar', 'Polar')
-    ], string='Climate Zone')
 
-    # Status and Quality
+    # Project context
+    project_id = fields.Many2one('architect.project', string='Related Project')
+    user_id = fields.Many2one('res.users', string='User', required=True, default=lambda self: self.env.user)
+
+    # Query type
+    query_type = fields.Selection([
+        ('design', 'Design Assistance'),
+        ('compliance', 'Compliance Check'),
+        ('estimation', 'Cost Estimation'),
+        ('planning', 'Project Planning'),
+        ('code', 'Building Code Query'),
+        ('material', 'Material Suggestion'),
+        ('structural', 'Structural Analysis'),
+        ('environmental', 'Environmental Impact'),
+        ('general', 'General Query')
+    ], string='Query Type', required=True, default='general')
+
+    # Status
     state = fields.Selection([
-        ('draft', 'Draft'),
+        ('pending', 'Pending'),
         ('processing', 'Processing'),
         ('completed', 'Completed'),
-        ('failed', 'Failed')
-    ], string='Status', default='draft')
+        ('error', 'Error')
+    ], string='Status', default='pending', tracking=True)
 
+    # AI Model details
+    ai_model = fields.Char(string='AI Model Used')
+    processing_time = fields.Float(string='Processing Time (seconds)')
     confidence_score = fields.Float(string='Confidence Score (%)')
+
+    # Attachments and references
+    attachment_ids = fields.Many2many('ir.attachment', string='Attachments')
+    reference_documents = fields.Text(string='Reference Documents')
+
+    # Feedback
     user_rating = fields.Selection([
         ('1', 'Poor'),
         ('2', 'Fair'),
@@ -70,79 +55,32 @@ class AVFAIAssistant(models.Model):
         ('4', 'Very Good'),
         ('5', 'Excellent')
     ], string='User Rating')
+    feedback = fields.Text(string='User Feedback')
 
-    # Attachments
-    input_files = fields.Binary(string='Input Files', attachment=True)
-    input_filename = fields.Char(string='Input Filename')
-    output_files = fields.Binary(string='Output Files', attachment=True)
-    output_filename = fields.Char(string='Output Filename')
+    # Follow-up
+    follow_up_needed = fields.Boolean(string='Follow-up Needed')
+    follow_up_notes = fields.Text(string='Follow-up Notes')
 
-    # User Information
-    requested_by = fields.Many2one('res.users', string='Requested By', default=lambda self: self.env.user)
-    request_date = fields.Datetime(string='Request Date', default=fields.Datetime.now)
-    completion_date = fields.Datetime(string='Completion Date')
+    @api.constrains('confidence_score')
+    def _check_confidence_score(self):
+        for record in self:
+            if record.confidence_score and not 0 <= record.confidence_score <= 100:
+                raise ValidationError(_('Confidence score must be between 0 and 100.'))
 
-    # Additional Information
-    tags = fields.Char(string='Tags')
-    notes = fields.Text(string='Notes')
-    follow_up_required = fields.Boolean(string='Follow-up Required')
-
-    def action_process_request(self):
-        """Process AI request"""
-        self.ensure_one()
+    def action_process_query(self):
+        """Process the AI query - placeholder for AI integration"""
         self.state = 'processing'
         # Here you would integrate with actual AI services
-        self.response = self._generate_mock_response()
+        # For now, just mark as completed
         self.state = 'completed'
-        self.completion_date = fields.Datetime.now()
-        self.confidence_score = 85.0  # Mock confidence score
+        self.ai_model = 'GPT-4 (Placeholder)'
+        self.processing_time = 2.5
+        self.confidence_score = 85.0
 
-    def _generate_mock_response(self):
-        """Generate mock AI response based on request type"""
-        responses = {
-            'design_suggestion': """
-                <h3>Design Recommendations</h3>
-                <ul>
-                    <li>Consider open floor plan for better space utilization</li>
-                    <li>Implement passive cooling strategies for energy efficiency</li>
-                    <li>Use local materials to reduce costs and environmental impact</li>
-                    <li>Incorporate natural lighting to reduce electricity consumption</li>
-                </ul>
-            """,
-            'compliance_check': """
-                <h3>Compliance Analysis</h3>
-                <ul>
-                    <li>Building Code Compliance: ✓ Compliant</li>
-                    <li>Fire Safety Requirements: ⚠ Needs review</li>
-                    <li>Accessibility Standards: ✓ Compliant</li>
-                    <li>Environmental Clearance: ⚠ Documentation required</li>
-                </ul>
-            """,
-            'cost_estimation': """
-                <h3>Cost Estimation</h3>
-                <p>Based on the provided parameters:</p>
-                <ul>
-                    <li>Construction Cost: ₹1,200 per sq ft</li>
-                    <li>Material Cost: 60% of total</li>
-                    <li>Labor Cost: 25% of total</li>
-                    <li>Other Costs: 15% of total</li>
-                </ul>
-            """,
-        }
-        return responses.get(self.request_type, "<p>AI analysis completed. Please review the recommendations.</p>")
+    def action_mark_helpful(self):
+        """Mark response as helpful"""
+        self.user_rating = '4'
 
-    def action_regenerate_response(self):
-        """Regenerate AI response"""
-        self.ensure_one()
-        self.action_process_request()
-
-    def action_export_response(self):
-        """Export AI response to document"""
-        self.ensure_one()
-        return {
-            'type': 'ir.actions.report',
-            'report_name': 'avf_architect.ai_response_report',
-            'report_type': 'qweb-pdf',
-            'data': {'id': self.id},
-            'context': {'active_id': self.id},
-        }
+    def action_request_follow_up(self):
+        """Request follow-up for the query"""
+        self.follow_up_needed = True

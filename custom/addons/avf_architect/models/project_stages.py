@@ -1,61 +1,51 @@
-
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError
 
-class ArchitectProjectStage(models.Model):
-    _name = 'architect.project.stage'
-    _description = 'Project Stages for Architect Projects'
+
+class AvfProjectStage(models.Model):
+    _name = 'avf.project.stage'
+    _description = 'Project Stages for Architectural Projects'
     _order = 'sequence, name'
 
     name = fields.Char(string='Stage Name', required=True)
     description = fields.Text(string='Description')
     sequence = fields.Integer(string='Sequence', default=10)
-    
-    # Stage properties
-    stage_type = fields.Selection([
-        ('planning', 'Planning'),
-        ('design', 'Design'),
-        ('approval', 'Approval'),
-        ('construction', 'Construction'),
-        ('completion', 'Completion')
-    ], string='Stage Type', required=True)
-    
-    # Status indicators
-    is_start_stage = fields.Boolean(string='Start Stage')
-    is_end_stage = fields.Boolean(string='End Stage')
-    is_milestone = fields.Boolean(string='Milestone Stage')
-    
-    # Workflow
-    next_stage_ids = fields.Many2many('architect.project.stage', 
-                                    'project_stage_next_rel', 'stage_id', 'next_stage_id',
-                                    string='Next Possible Stages')
-    
-    # Requirements
-    required_documents = fields.Text(string='Required Documents')
-    required_approvals = fields.Text(string='Required Approvals')
-    deliverables = fields.Text(string='Stage Deliverables')
-    
-    # Time estimation
-    estimated_duration = fields.Integer(string='Estimated Duration (Days)')
-    
-    # Colors and display
-    color = fields.Integer(string='Color Index')
-    active = fields.Boolean(default=True)
-    
-    # Related projects
-    project_ids = fields.One2many('project.project', 'stage_id', string='Projects in this Stage')
-    project_count = fields.Integer(string='Project Count', compute='_compute_project_count')
+    active = fields.Boolean(string='Active', default=True)
+    color = fields.Integer(string='Color Index', default=0)
+    fold = fields.Boolean(string='Folded in Kanban')
 
-    @api.depends('project_ids')
-    def _compute_project_count(self):
-        for stage in self:
-            stage.project_count = len(stage.project_ids)
+    # Stage type
+    stage_type = fields.Selection([
+        ('initiation', 'Project Initiation'),
+        ('planning', 'Planning & Design'),
+        ('development', 'Development'),
+        ('execution', 'Execution'),
+        ('monitoring', 'Monitoring'),
+        ('closure', 'Project Closure')
+    ], string='Stage Type', required=True, default='planning')
+
+    # Requirements and deliverables
+    required_documents = fields.Text(string='Required Documents')
+    deliverables = fields.Text(string='Stage Deliverables')
+
+    # Workflow automation
+    auto_progress = fields.Boolean(string='Auto Progress', 
+                                 help='Automatically move to next stage when conditions are met')
+    progress_conditions = fields.Text(string='Progress Conditions')
+
+    @api.constrains('sequence')
+    def _check_sequence(self):
+        for record in self:
+            if record.sequence < 0:
+                raise ValidationError(_('Sequence must be a positive number.'))
+
 
 class ProjectProjectStageExtension(models.Model):
     _inherit = 'project.project'
     
-    stage_id = fields.Many2one('architect.project.stage', string='Project Stage')
+    stage_id = fields.Many2one('avf.project.stage', string='Project Stage')
     stage_progress = fields.Float(string='Stage Progress %')
     stage_start_date = fields.Date(string='Stage Start Date')
     stage_notes = fields.Text(string='Stage Notes')
@@ -74,7 +64,7 @@ class ProjectProjectStageExtension(models.Model):
                 return {
                     'name': _('Select Next Stage'),
                     'type': 'ir.actions.act_window',
-                    'res_model': 'architect.project.stage.wizard',
+                    'res_model': 'avf.project.stage.wizard',
                     'view_mode': 'form',
                     'target': 'new',
                     'context': {

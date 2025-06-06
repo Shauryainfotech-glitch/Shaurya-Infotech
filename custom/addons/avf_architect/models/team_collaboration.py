@@ -1,203 +1,79 @@
-
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 
-class AVFTeamCollaboration(models.Model):
+
+class AvfTeamCollaboration(models.Model):
     _name = 'avf.team.collaboration'
-    _description = 'Team Collaboration'
-    _rec_name = 'name'
-    _order = 'create_date desc'
+    _description = 'Team Collaboration and Task Management'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _order = 'priority desc, date_deadline'
 
-    name = fields.Char(string='Task/Discussion Name', required=True)
-    project_id = fields.Many2one('project.project', string='Project', required=True)
-    
-    collaboration_type = fields.Selection([
-        ('task', 'Task Assignment'),
-        ('discussion', 'Team Discussion'),
-        ('review', 'Design Review'),
-        ('meeting', 'Team Meeting'),
-        ('decision', 'Decision Making'),
-        ('brainstorm', 'Brainstorming')
-    ], string='Collaboration Type', required=True)
-    
-    description = fields.Text(string='Description')
-    
-    # Team Members
-    assigned_to = fields.Many2one('res.users', string='Assigned To')
-    team_member_ids = fields.Many2many('res.users', string='Team Members')
-    created_by = fields.Many2one('res.users', string='Created By', default=lambda self: self.env.user)
-    
-    # Status and Priority
-    state = fields.Selection([
-        ('draft', 'Draft'),
-        ('active', 'Active'),
-        ('completed', 'Completed'),
-        ('cancelled', 'Cancelled')
-    ], string='Status', default='draft')
-    
+    name = fields.Char(string='Task Title', required=True, tracking=True)
+    description = fields.Html(string='Description')
+    project_id = fields.Many2one('architect.project', string='Project', required=True)
+
+    # Assignment
+    assigned_to = fields.Many2one('res.users', string='Assigned To', required=True, tracking=True)
+    team_members = fields.Many2many('res.users', string='Team Members')
+
+    # Timing
+    date_start = fields.Datetime(string='Start Date', default=fields.Datetime.now)
+    date_deadline = fields.Datetime(string='Deadline', required=True)
+    date_completed = fields.Datetime(string='Completed Date')
+
+    # Priority and status
     priority = fields.Selection([
-        ('low', 'Low'),
-        ('medium', 'Medium'),
-        ('high', 'High'),
-        ('urgent', 'Urgent')
-    ], string='Priority', default='medium')
-    
-    # Dates
-    start_date = fields.Datetime(string='Start Date')
-    due_date = fields.Datetime(string='Due Date')
-    completion_date = fields.Datetime(string='Completion Date')
-    
-    # Progress
-    progress_percentage = fields.Float(string='Progress %')
-    
-    # Communication
-    message_ids = fields.One2many('avf.team.message', 'collaboration_id', string='Messages')
-    file_ids = fields.Many2many('ir.attachment', string='Shared Files')
-    
-    # Meeting specific fields
-    meeting_date = fields.Datetime(string='Meeting Date')
-    meeting_location = fields.Char(string='Meeting Location')
-    agenda = fields.Text(string='Agenda')
-    minutes = fields.Text(string='Minutes of Meeting')
-    
-    def action_start(self):
-        """Start collaboration"""
-        self.ensure_one()
-        self.state = 'active'
-        self.start_date = fields.Datetime.now()
+        ('0', 'Low'),
+        ('1', 'Normal'),
+        ('2', 'High'),
+        ('3', 'Urgent')
+    ], string='Priority', default='1')
 
-    def action_complete(self):
-        """Complete collaboration"""
-        self.ensure_one()
-        self.state = 'completed'
-        self.completion_date = fields.Datetime.now()
-        self.progress_percentage = 100.0
+    state = fields.Selection([
+        ('todo', 'To Do'),
+        ('in_progress', 'In Progress'),
+        ('review', 'Under Review'),
+        ('done', 'Done'),
+        ('cancelled', 'Cancelled')
+    ], string='Status', default='todo', tracking=True)
 
-    def action_cancel(self):
-        """Cancel collaboration"""
-        self.ensure_one()
-        self.state = 'cancelled'
+    # Progress tracking
+    progress = fields.Float(string='Progress (%)', default=0.0)
+    estimated_hours = fields.Float(string='Estimated Hours')
+    actual_hours = fields.Float(string='Actual Hours')
 
-class AVFTeamMessage(models.Model):
-    _name = 'avf.team.message'
-    _description = 'Team Messages'
-    _order = 'create_date desc'
-
-    collaboration_id = fields.Many2one('avf.team.collaboration', string='Collaboration', 
-                                     required=True, ondelete='cascade')
-    
-    message = fields.Text(string='Message', required=True)
-    author_id = fields.Many2one('res.users', string='Author', 
-                               default=lambda self: self.env.user, required=True)
-    
-    message_type = fields.Selection([
-        ('comment', 'Comment'),
-        ('update', 'Status Update'),
-        ('question', 'Question'),
-        ('answer', 'Answer'),
-        ('file_share', 'File Share')
-    ], string='Message Type', default='comment')
-    
-    # Files
+    # Files and attachments
     attachment_ids = fields.Many2many('ir.attachment', string='Attachments')
-    
-    # Replies
-    parent_message_id = fields.Many2one('avf.team.message', string='Reply To')
-    reply_ids = fields.One2many('avf.team.message', 'parent_message_id', string='Replies')
-    
-    # Mentions
-    mentioned_user_ids = fields.Many2many('res.users', 'team_message_mention_rel', 
-                                        string='Mentioned Users')
-    
-    # Status
-    is_read = fields.Boolean(string='Read', default=False)
-    read_date = fields.Datetime(string='Read Date')
 
-class ArchitectTeam(models.Model):
-    _name = 'architect.team'
-    _description = 'Architect Team'
-    _rec_name = 'name'
+    # Comments and notes
+    notes = fields.Text(string='Notes')
 
-    name = fields.Char(string='Team Name', required=True)
-    description = fields.Text(string='Description')
-    team_lead_id = fields.Many2one('res.users', string='Team Leader', required=True)
-    
-    # Team Members
-    member_ids = fields.One2many('architect.team.member', 'team_id', string='Team Members')
-    member_count = fields.Integer(string='Member Count', compute='_compute_member_count')
-    
-    # Projects
-    project_ids = fields.Many2many('project.project', string='Assigned Projects')
-    
-    # Skills
-    skill_ids = fields.Many2many('architect.skill', string='Team Skills')
-    
-    # Status
-    active = fields.Boolean(default=True)
-    created_date = fields.Date(string='Created Date', default=fields.Date.today)
+    # Dependencies
+    dependency_ids = fields.Many2many('avf.team.collaboration', 'task_dependency_rel', 
+                                    'task_id', 'dependency_id', string='Dependencies')
+    dependent_task_ids = fields.Many2many('avf.team.collaboration', 'task_dependency_rel', 
+                                        'dependency_id', 'task_id', string='Dependent Tasks')
 
-    @api.depends('member_ids')
-    def _compute_member_count(self):
-        for team in self:
-            team.member_count = len(team.member_ids.filtered('active'))
+    @api.constrains('progress')
+    def _check_progress(self):
+        for record in self:
+            if not 0 <= record.progress <= 100:
+                raise ValidationError(_('Progress must be between 0 and 100.'))
 
-class ArchitectTeamMember(models.Model):
-    _name = 'architect.team.member'
-    _description = 'Team Member'
-    _rec_name = 'user_id'
+    @api.constrains('date_start', 'date_deadline')
+    def _check_dates(self):
+        for record in self:
+            if record.date_start and record.date_deadline and record.date_start > record.date_deadline:
+                raise ValidationError(_('Start date cannot be later than deadline.'))
 
-    team_id = fields.Many2one('architect.team', string='Team', required=True, ondelete='cascade')
-    user_id = fields.Many2one('res.users', string='Team Member', required=True)
-    role = fields.Selection([
-        ('architect', 'Architect'),
-        ('engineer', 'Engineer'),
-        ('draftsman', 'Draftsman'),
-        ('surveyor', 'Surveyor'),
-        ('coordinator', 'Project Coordinator'),
-        ('assistant', 'Assistant')
-    ], string='Role', required=True)
+    def action_start_task(self):
+        self.state = 'in_progress'
+        if not self.date_start:
+            self.date_start = fields.Datetime.now()
 
-    join_date = fields.Date(string='Join Date', default=fields.Date.today)
-    active = fields.Boolean(string='Active', default=True)
-    responsibilities = fields.Text(string='Responsibilities')
-    
-    # Skills
-    skill_ids = fields.Many2many('architect.skill', string='Skills')
-    experience_years = fields.Float(string='Experience (Years)')
-    
-    # Performance
-    current_workload = fields.Float(string='Current Workload %')
-    performance_rating = fields.Selection([
-        ('1', 'Poor'),
-        ('2', 'Below Average'),
-        ('3', 'Average'),
-        ('4', 'Good'),
-        ('5', 'Excellent')
-    ], string='Performance Rating')
-
-class ArchitectSkill(models.Model):
-    _name = 'architect.skill'
-    _description = 'Architect Skills'
-    _rec_name = 'name'
-
-    name = fields.Char(string='Skill Name', required=True)
-    category = fields.Selection([
-        ('technical', 'Technical'),
-        ('design', 'Design'),
-        ('management', 'Management'),
-        ('software', 'Software'),
-        ('compliance', 'Compliance')
-    ], string='Category', required=True)
-
-    description = fields.Text(string='Description')
-    level_required = fields.Selection([
-        ('beginner', 'Beginner'),
-        ('intermediate', 'Intermediate'),
-        ('advanced', 'Advanced'),
-        ('expert', 'Expert')
-    ], string='Required Level', default='intermediate')
-    
-    certification_required = fields.Boolean(string='Certification Required')
-    active = fields.Boolean(default=True)
+    def action_complete_task(self):
+        self.state = 'done'
+        self.progress = 100.0
+        self.date_completed = fields.Datetime.now()

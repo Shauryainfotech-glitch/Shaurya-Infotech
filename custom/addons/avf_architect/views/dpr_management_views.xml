@@ -1,0 +1,223 @@
+
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- DPR Management Tree View -->
+    <record id="view_avf_dpr_management_tree" model="ir.ui.view">
+        <field name="name">avf.dpr.management.tree</field>
+        <field name="model">avf.dpr.management</field>
+        <field name="arch" type="xml">
+            <tree string="Daily Progress Reports">
+                <field name="name"/>
+                <field name="report_number"/>
+                <field name="project_id"/>
+                <field name="report_date"/>
+                <field name="state" widget="badge"/>
+                <field name="prepared_by"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- DPR Management Form View -->
+    <record id="view_avf_dpr_management_form" model="ir.ui.view">
+        <field name="name">avf.dpr.management.form</field>
+        <field name="model">avf.dpr.management</field>
+        <field name="arch" type="xml">
+            <form string="Daily Progress Report">
+                <header>
+                    <button name="action_submit" string="Submit for Review" type="object" 
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_approve" string="Approve" type="object" 
+                            class="btn-success" invisible="state != 'submitted'"/>
+                    <button name="action_reject" string="Reject" type="object" 
+                            class="btn-danger" invisible="state != 'submitted'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted,approved"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="project_id"/>
+                            <field name="report_number" readonly="1"/>
+                            <field name="report_date"/>
+                        </group>
+                        <group>
+                            <field name="prepared_by"/>
+                            <field name="reviewed_by"/>
+                            <field name="approved_by" readonly="1"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Weather &amp; Conditions">
+                            <group>
+                                <group>
+                                    <field name="weather_condition"/>
+                                    <field name="temperature"/>
+                                </group>
+                                <group>
+                                    <field name="humidity"/>
+                                </group>
+                            </group>
+                        </page>
+                        
+                        <page string="Work Progress">
+                            <group>
+                                <field name="work_description"/>
+                                <field name="progress_summary"/>
+                                <field name="achievements"/>
+                                <field name="planned_activities"/>
+                            </group>
+                        </page>
+                        
+                        <page string="Resources">
+                            <group>
+                                <group>
+                                    <field name="total_workers"/>
+                                    <field name="skilled_workers"/>
+                                </group>
+                                <group>
+                                    <field name="unskilled_workers"/>
+                                </group>
+                            </group>
+                            <group string="Equipment &amp; Materials">
+                                <field name="equipment_used"/>
+                                <field name="materials_consumed"/>
+                                <field name="materials_received"/>
+                            </group>
+                        </page>
+                        
+                        <page string="Activities">
+                            <field name="activity_ids">
+                                <tree string="Activities" editable="bottom">
+                                    <field name="activity_name"/>
+                                    <field name="activity_type"/>
+                                    <field name="planned_quantity"/>
+                                    <field name="actual_quantity"/>
+                                    <field name="unit"/>
+                                    <field name="progress_percentage"/>
+                                    <field name="start_time"/>
+                                    <field name="end_time"/>
+                                    <field name="duration"/>
+                                </tree>
+                            </field>
+                        </page>
+                        
+                        <page string="Resource Details">
+                            <field name="resource_ids">
+                                <tree string="Resources" editable="bottom">
+                                    <field name="resource_name"/>
+                                    <field name="resource_type"/>
+                                    <field name="quantity"/>
+                                    <field name="unit"/>
+                                    <field name="unit_cost"/>
+                                    <field name="total_cost"/>
+                                    <field name="supplier_id"/>
+                                </tree>
+                            </field>
+                        </page>
+                        
+                        <page string="Issues &amp; Safety">
+                            <group>
+                                <field name="issues_faced"/>
+                                <field name="safety_incidents"/>
+                                <field name="quality_issues"/>
+                            </group>
+                        </page>
+                        
+                        <page string="Attachments">
+                            <group>
+                                <group>
+                                    <field name="photos" widget="image"/>
+                                    <field name="photos_filename"/>
+                                </group>
+                                <group>
+                                    <field name="additional_documents"/>
+                                    <field name="documents_filename"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- DPR Activity Form View -->
+    <record id="view_avf_dpr_activity_form" model="ir.ui.view">
+        <field name="name">avf.dpr.activity.form</field>
+        <field name="model">avf.dpr.activity</field>
+        <field name="arch" type="xml">
+            <form string="DPR Activity">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="activity_name"/>
+                            <field name="activity_type"/>
+                            <field name="planned_quantity"/>
+                            <field name="actual_quantity"/>
+                        </group>
+                        <group>
+                            <field name="unit"/>
+                            <field name="progress_percentage"/>
+                            <field name="start_time"/>
+                            <field name="end_time"/>
+                            <field name="duration"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="remarks"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- DPR Resource Form View -->
+    <record id="view_avf_dpr_resource_form" model="ir.ui.view">
+        <field name="name">avf.dpr.resource.form</field>
+        <field name="model">avf.dpr.resource</field>
+        <field name="arch" type="xml">
+            <form string="DPR Resource">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="resource_name"/>
+                            <field name="resource_type"/>
+                            <field name="quantity"/>
+                            <field name="unit"/>
+                        </group>
+                        <group>
+                            <field name="unit_cost"/>
+                            <field name="total_cost"/>
+                            <field name="supplier_id"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="remarks"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action for DPR Management -->
+    <record id="action_avf_dpr_management" model="ir.actions.act_window">
+        <field name="name">Daily Progress Reports</field>
+        <field name="res_model">avf.dpr.management</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first Daily Progress Report
+            </p>
+        </field>
+    </record>
+</odoo>

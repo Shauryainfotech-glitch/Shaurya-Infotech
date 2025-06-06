@@ -1,164 +1,92 @@
-
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 
-class AVFRateSchedule(models.Model):
+
+class AvfRateSchedule(models.Model):
     _name = 'avf.rate.schedule'
-    _description = 'Rate Schedule (DSR/SSR)'
-    _order = 'state_id, district, name'
+    _description = 'Rate Schedule for Government Projects'
+    _order = 'effective_date desc'
 
-    name = fields.Char(string='Schedule Name', required=True)
+    name = fields.Char(string='Rate Schedule Name', required=True)
     code = fields.Char(string='Schedule Code', required=True)
-    schedule_type = fields.Selection([
-        ('dsr', 'District Schedule of Rates (DSR)'),
-        ('ssr', 'State Schedule of Rates (SSR)'),
-        ('market', 'Market Rate'),
-        ('custom', 'Custom Rate')
-    ], string='Schedule Type', required=True, default='dsr')
-
-    # Location
-    state_id = fields.Many2one('res.country.state', string='State', required=True)
-    district = fields.Char(string='District')
-
-    # Validity
-    valid_from = fields.Date(string='Valid From', required=True)
-    valid_to = fields.Date(string='Valid To')
-    active = fields.Boolean(string='Active', default=True)
-
-    # Rate Items
-    rate_item_ids = fields.One2many('avf.rate.schedule.line', 'schedule_id', string='Rate Items')
-
-    # Approval
-    approved_by = fields.Many2one('res.users', string='Approved By')
-    approval_date = fields.Date(string='Approval Date')
-    approval_reference = fields.Char(string='Approval Reference')
-
-    # Additional Information
     description = fields.Text(string='Description')
-    notes = fields.Text(string='Notes')
-    version = fields.Char(string='Version', default='1.0')
+
+    # Dates
+    effective_date = fields.Date(string='Effective Date', required=True, default=fields.Date.today)
+    expiry_date = fields.Date(string='Expiry Date')
+
+    # Government details
+    government_agency = fields.Char(string='Government Agency')
+    notification_number = fields.Char(string='Notification Number')
 
     # Status
     state = fields.Selection([
         ('draft', 'Draft'),
         ('active', 'Active'),
         ('expired', 'Expired'),
-        ('superseded', 'Superseded')
+        ('cancelled', 'Cancelled')
     ], string='Status', default='draft')
 
-    def action_activate(self):
-        """Activate the rate schedule"""
-        self.ensure_one()
-        self.state = 'active'
-        self.message_post(body=_("Rate schedule activated."))
+    # Rate lines
+    line_ids = fields.One2many('avf.rate.schedule.line', 'schedule_id', string='Rate Lines')
 
-    def action_expire(self):
-        """Mark rate schedule as expired"""
-        self.ensure_one()
-        self.state = 'expired'
-        self.message_post(body=_("Rate schedule marked as expired."))
-
-class AVFRateScheduleLine(models.Model):
-    _name = 'avf.rate.schedule.line'
-    _description = 'Rate Schedule Line'
-    _order = 'item_code, description'
-
-    schedule_id = fields.Many2one('avf.rate.schedule', string='Rate Schedule', required=True, ondelete='cascade')
-    item_code = fields.Char(string='Item Code', required=True)
-    description = fields.Text(string='Description', required=True)
-
-    # Classification
-    category = fields.Selection([
-        ('earthwork', 'Earthwork'),
-        ('concrete', 'Concrete Work'),
-        ('masonry', 'Masonry'),
-        ('steel', 'Steel Work'),
-        ('carpentry', 'Carpentry'),
-        ('flooring', 'Flooring'),
-        ('roofing', 'Roofing'),
-        ('plastering', 'Plastering'),
-        ('painting', 'Painting'),
-        ('electrical', 'Electrical'),
-        ('plumbing', 'Plumbing'),
-        ('hvac', 'HVAC'),
-        ('finishing', 'Finishing'),
-        ('other', 'Other')
-    ], string='Category', required=True)
-
-    subcategory = fields.Char(string='Subcategory')
-
-    # Rate Information
-    unit = fields.Char(string='Unit', required=True)
-    rate = fields.Float(string='Rate', required=True, digits=(12, 2))
-    material_cost = fields.Float(string='Material Cost', digits=(12, 2))
-    labor_cost = fields.Float(string='Labor Cost', digits=(12, 2))
-    equipment_cost = fields.Float(string='Equipment Cost', digits=(12, 2))
-    overhead_percentage = fields.Float(string='Overhead %', default=10.0)
-    profit_percentage = fields.Float(string='Profit %', default=10.0)
-
-    # Specifications
-    specifications = fields.Text(string='Specifications')
-    includes = fields.Text(string='Includes')
-    excludes = fields.Text(string='Excludes')
-
-    # Additional fields
-    min_quantity = fields.Float(string='Minimum Quantity')
-    max_quantity = fields.Float(string='Maximum Quantity')
-    lead_time = fields.Integer(string='Lead Time (Days)')
-    
-    active = fields.Boolean(default=True)
-    sequence = fields.Integer(string='Sequence', default=10)
-
-    @api.depends('material_cost', 'labor_cost', 'equipment_cost', 'overhead_percentage', 'profit_percentage')
-    def _compute_total_rate(self):
-        """Compute total rate from components"""
-        for line in self:
-            base_cost = line.material_cost + line.labor_cost + line.equipment_cost
-            overhead = base_cost * (line.overhead_percentage / 100)
-            profit = (base_cost + overhead) * (line.profit_percentage / 100)
-            line.rate = base_cost + overhead + profit
-
-class ArchitectRateSchedule(models.Model):
-    _name = 'architect.rate.schedule'
-    _description = 'Architect Rate Schedule'
-    _order = 'state_id, district, name'
-
-    name = fields.Char(string='Schedule Name', required=True)
-    code = fields.Char(string='Schedule Code', required=True)
-    schedule_type = fields.Selection([
-        ('dsr', 'District Schedule of Rates (DSR)'),
-        ('ssr', 'State Schedule of Rates (SSR)'),
-        ('market', 'Market Rate'),
-        ('custom', 'Custom Rate')
-    ], string='Schedule Type', required=True, default='dsr')
-
-    # Location
-    state_id = fields.Many2one('res.country.state', string='State', required=True)
-    district = fields.Char(string='District')
-
-    # Validity
-    valid_from = fields.Date(string='Valid From', required=True)
-    valid_to = fields.Date(string='Valid To')
-    active = fields.Boolean(string='Active', default=True)
-
-    # Rate Items
-    rate_item_ids = fields.One2many('architect.rate.item', 'schedule_id', string='Rate Items')
+    # Currency
+    currency_id = fields.Many2one('res.currency', string='Currency', required=True,
+                                default=lambda self: self.env.company.currency_id)
 
     # Approval
     approved_by = fields.Many2one('res.users', string='Approved By')
     approval_date = fields.Date(string='Approval Date')
-    approval_reference = fields.Char(string='Approval Reference')
 
-class ArchitectRateItem(models.Model):
-    _name = 'architect.rate.item'
-    _description = 'Architect Rate Item'
+    @api.constrains('effective_date', 'expiry_date')
+    def _check_dates(self):
+        for record in self:
+            if record.expiry_date and record.effective_date > record.expiry_date:
+                raise ValidationError(_('Effective date cannot be later than expiry date.'))
 
-    schedule_id = fields.Many2one('architect.rate.schedule', string='Rate Schedule', required=True, ondelete='cascade')
+    def action_activate(self):
+        self.state = 'active'
+        self.approval_date = fields.Date.today()
+        self.approved_by = self.env.user
+
+
+class AvfRateScheduleLine(models.Model):
+    _name = 'avf.rate.schedule.line'
+    _description = 'Rate Schedule Lines'
+    _order = 'sequence, item_code'
+
+    schedule_id = fields.Many2one('avf.rate.schedule', string='Rate Schedule', required=True, ondelete='cascade')
+    sequence = fields.Integer(string='Sequence', default=10)
+
+    # Item details
     item_code = fields.Char(string='Item Code', required=True)
-    description = fields.Text(string='Description', required=True)
-    unit = fields.Char(string='Unit', required=True)
-    rate = fields.Float(string='Rate', required=True, digits=(12, 2))
-    category = fields.Char(string='Category')
-    active = fields.Boolean(default=True)
+    item_description = fields.Text(string='Item Description', required=True)
+    unit_of_measure = fields.Char(string='Unit of Measure', required=True)
+
+    # Rates
+    base_rate = fields.Float(string='Base Rate', required=True)
+    current_rate = fields.Float(string='Current Rate', required=True)
+
+    # Classification
+    category = fields.Selection([
+        ('labour', 'Labour'),
+        ('material', 'Material'),
+        ('equipment', 'Equipment'),
+        ('overhead', 'Overhead'),
+        ('miscellaneous', 'Miscellaneous')
+    ], string='Category', required=True)
+
+    # Additional details
+    specifications = fields.Text(string='Specifications')
+    remarks = fields.Text(string='Remarks')
+
+    # Status
+    active = fields.Boolean(string='Active', default=True)
+
+    @api.constrains('base_rate', 'current_rate')
+    def _check_rates(self):
+        for record in self:
+            if record.base_rate < 0 or record.current_rate < 0:
+                raise ValidationError(_('Rates cannot be negative.'))

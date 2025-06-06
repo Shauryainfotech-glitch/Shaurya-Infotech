@@ -1,4 +1,3 @@
-
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
@@ -32,5 +31,17 @@
                   action="action_architect_team"
                   sequence="10"/>
 
+        <!-- Project Management Menu -->
+        <menuitem id="menu_avf_project_management" name="Project Management" parent="menu_avf_architect_root" sequence="10"/>
+
+        <!-- Project submenu items -->
+        <menuitem id="menu_avf_projects" name="Projects" parent="menu_avf_project_management" action="action_avf_architect_projects" sequence="10"/>
+        <menuitem id="menu_avf_project_stages" name="Project Stages" parent="menu_avf_project_management" action="action_avf_project_stages" sequence="20"/>
+        <menuitem id="menu_avf_drawings" name="Drawings" parent="menu_avf_project_management" action="action_avf_drawing_management" sequence="30"/>
+        <menuitem id="menu_avf_dpr" name="Daily Progress Reports" parent="menu_avf_project_management" action="action_avf_dpr_management" sequence="35"/>
+        <menuitem id="menu_avf_documents" name="Documents" parent="menu_avf_project_management" action="action_architect_documents" sequence="40"/>
+        <menuitem id="menu_avf_survey" name="Survey Management" parent="menu_avf_project_management" action="action_avf_survey_management" sequence="50"/>
+        <menuitem id="menu_avf_compliance" name="Compliance" parent="menu_avf_project_management" action="action_avf_compliance_tracking" sequence="60"/>
+        <menuitem id="menu_avf_team_collaboration" name="Team Collaboration" parent="menu_avf_project_management" action="action_avf_team_collaboration" sequence="70"/>
     </data>
 </odoo>
