@@ -476,7 +476,7 @@ class CostEstimateLine(models.Model):
     unit_price = fields.Monetary(string='Unit Price', required=True)
     total_amount = fields.Monetary(string='Total Amount', compute='_compute_total_amount', store=True)
 
-    currency_id = fields.Many2one('res.currency', related='estimate_id.currency_id', store=True)
+    currency_id = fields.Many2one('res.currency', string='Currency', related='estimate_id.currency_id', store=True)
 
     @api.depends('quantity', 'unit_price')
     def _compute_total_amount(self):
@@ -580,7 +580,7 @@ class ArchitectCostEstimateLine(models.Model):
                                   compute='_compute_total_amount', store=True,
                                   currency_field='currency_id')
 
-    currency_id = fields.related('estimate_id.currency_id', store=True)
+    currency_id = fields.Many2one('res.currency', string='Currency', related='estimate_id.currency_id', store=True)
 
     # Notes
     notes = fields.Text(string='Notes')
