@@ -190,7 +190,13 @@ class SolarProject(models.Model):
     notes = fields.Text(string="Internal Notes")
     description = fields.Html(string="Project Description")
     related_model = fields.Many2one('related.model', string='Related Model')
-    partner_id = fields.Many2one('res.partner', string="Customer")
+    partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Customer",
+        related="project_id.customer_id",
+        readonly=True,
+        store=True
+    )
 
     # Method to compute the current active quote
     @api.depends('quote_ids', 'quote_ids.total_amount', 'quote_ids.state')
@@ -338,5 +344,6 @@ class SolarProject(models.Model):
 
     @api.constrains('partner_id')
     def _check_partner(self):
-        if not self.partner_id:
-            raise ValidationError("Partner is required!")
+        for record in self:
+            if not record.partner_id:
+                raise ValidationError("Partner is required for this project!")
