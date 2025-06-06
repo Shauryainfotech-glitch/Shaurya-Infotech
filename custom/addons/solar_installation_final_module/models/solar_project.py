@@ -189,6 +189,8 @@ class SolarProject(models.Model):
     # Miscellaneous
     notes = fields.Text(string="Internal Notes")
     description = fields.Html(string="Project Description")
+    related_model = fields.Many2one('related.model', string='Related Model')
+
 
     # Method to compute the current active quote
     @api.depends('quote_ids', 'quote_ids.total_amount', 'quote_ids.state')
@@ -325,3 +327,11 @@ class SolarProject(models.Model):
         if not self.actual_end_date:
             self.actual_end_date = fields.Date.context_today(self)
         self.write({'state': 'completed'})
+
+    @api.model
+    def create(self, vals):
+        if vals.get('related_model'):
+            related_record = self.env['related.model'].browse(vals['related_model'])
+            if not related_record:
+                raise ValidationError('The related model record does not exist!')
+        return super(SolarProject, self).create(vals)
