@@ -293,7 +293,7 @@ class ProjectTask(models.Model):
     class ArchitectProjectChecklist(models.Model):
         _name = 'architect.project.checklist'
         _description = 'Project Checklist'
-
+        _inherit = ['mail.thread', 'mail.activity.mixin']
         # Add this line:
         state = fields.Selection([
             ('draft', 'Draft'),
