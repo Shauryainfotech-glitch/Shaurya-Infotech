@@ -2,21 +2,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="0">
-        <!-- Create stages first before any foreign key references -->
-        <!-- Ensure we have records with the exact IDs that might be referenced -->
-        <record id="stage_planning_id_2" model="avf.project.stage">
-            <field name="id">2</field>
-            <field name="name">Planning</field>
-            <field name="sequence">2</field>
-            <field name="description">Initial planning and design phase</field>
-            <field name="stage_type">planning</field>
-        </record>
-
+        <!-- Create stages with specific IDs to prevent FK constraint violations -->
+        
         <record id="stage_initiation" model="avf.project.stage">
             <field name="name">Initiation</field>
             <field name="sequence">1</field>
             <field name="description">Project initiation and setup</field>
             <field name="stage_type">initiation</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="stage_planning" model="avf.project.stage">
+            <field name="name">Planning</field>
+            <field name="sequence">2</field>
+            <field name="description">Initial planning and design phase</field>
+            <field name="stage_type">planning</field>
+            <field name="active" eval="True"/>
         </record>
 
         <record id="stage_design" model="avf.project.stage">
@@ -24,6 +25,7 @@
             <field name="sequence">3</field>
             <field name="description">Design development phase</field>
             <field name="stage_type">development</field>
+            <field name="active" eval="True"/>
         </record>
 
         <record id="stage_approval" model="avf.project.stage">
@@ -31,6 +33,7 @@
             <field name="sequence">4</field>
             <field name="description">Approval and documentation phase</field>
             <field name="stage_type">monitoring</field>
+            <field name="active" eval="True"/>
         </record>
 
         <record id="stage_execution" model="avf.project.stage">
@@ -38,6 +41,7 @@
             <field name="sequence">5</field>
             <field name="description">Project execution phase</field>
             <field name="stage_type">execution</field>
+            <field name="active" eval="True"/>
         </record>
 
         <record id="stage_completion" model="avf.project.stage">
@@ -45,6 +49,11 @@
             <field name="sequence">6</field>
             <field name="description">Project completion and handover</field>
             <field name="stage_type">closure</field>
+            <field name="active" eval="True"/>
         </record>
+
+        <!-- Force specific IDs for critical stages that might be referenced -->
+        <function model="avf.project.stage" name="_force_stage_ids"/>
+        
     </data>
 </odoo>

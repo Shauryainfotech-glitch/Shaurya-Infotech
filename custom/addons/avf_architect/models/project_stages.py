@@ -41,6 +41,36 @@ class AvfProjectStage(models.Model):
             if record.sequence < 0:
                 raise ValidationError(_('Sequence must be a positive number.'))
 
+    @api.model
+    def _force_stage_ids(self):
+        """Force specific IDs for stages to prevent FK constraint violations"""
+        # This ensures that commonly referenced stage IDs exist
+        stage_data = [
+            (1, 'Initiation', 1, 'initiation'),
+            (2, 'Planning', 2, 'planning'),
+            (3, 'Design', 3, 'development'),
+            (4, 'Approval', 4, 'monitoring'),
+            (5, 'Execution', 5, 'execution'),
+            (6, 'Completion', 6, 'closure'),
+        ]
+        
+        for stage_id, name, sequence, stage_type in stage_data:
+            existing = self.search([('id', '=', stage_id)])
+            if not existing:
+                # Use SQL to force the ID
+                self.env.cr.execute("""
+                    INSERT INTO avf_project_stage (id, name, sequence, stage_type, active, create_date, write_date, create_uid, write_uid)
+                    VALUES (%s, %s, %s, %s, %s, NOW(), NOW(), %s, %s)
+                    ON CONFLICT (id) DO UPDATE SET
+                        name = EXCLUDED.name,
+                        sequence = EXCLUDED.sequence,
+                        stage_type = EXCLUDED.stage_type
+                """, (stage_id, name, sequence, stage_type, True, self.env.uid, self.env.uid))
+        
+        # Reset sequence
+        self.env.cr.execute("SELECT setval('avf_project_stage_id_seq', (SELECT MAX(id) FROM avf_project_stage), true)")
+        self.env.cr.commit()
+
 
 class ProjectProjectStageExtension(models.Model):
     _inherit = 'project.project'

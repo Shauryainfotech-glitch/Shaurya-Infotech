@@ -12,7 +12,7 @@ class AvfTeamCollaboration(models.Model):
 
     name = fields.Char(string='Task Title', required=True, tracking=True)
     description = fields.Html(string='Description')
-    project_id = fields.Many2one('architect.project', string='Project', required=True)
+    project_id = fields.Many2one('project.project', string='Project', required=True, ondelete='cascade')
 
     # Assignment
     assigned_to = fields.Many2one('res.users', string='Assigned To', required=True, tracking=True)

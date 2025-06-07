@@ -193,13 +193,6 @@ class ArchitectProject(models.Model):
             if project.built_up_area and project.site_area and project.built_up_area > project.site_area:
                 raise ValidationError(_("Built-up area cannot exceed site area."))
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        for vals in vals_list:
-            if not vals.get('project_code'):
-                vals['project_code'] = self.env['ir.sequence'].next_by_code('avf.architect.project') or 'ARCH-001'
-        return super().create(vals_list)
-
     def action_start_project(self):
         """Start the project"""
         self.ensure_one()
@@ -282,11 +275,14 @@ class ArchitectProject(models.Model):
         for vals in vals_list:
             if not vals.get('project_code'):
                 vals['project_code'] = self.env['ir.sequence'].next_by_code('avf.architect.project') or 'ARCH-001'
-            # Ensure valid stage_id
+            # Ensure valid stage_id - use the first available stage or None to avoid FK issues
             if not vals.get('stage_id'):
                 default_stage = self.env['avf.project.stage'].search([('sequence', '=', 1)], limit=1)
                 if default_stage:
                     vals['stage_id'] = default_stage.id
+                else:
+                    # Remove stage_id if no valid stage exists to avoid FK constraint
+                    vals.pop('stage_id', None)
         return super().create(vals_list)
 
     @api.model
@@ -296,28 +292,3 @@ class ArchitectProject(models.Model):
         default_stage = self.env['avf.project.stage'].search([('sequence', '=', 1)], limit=1)
         if default_stage and projects_without_stages:
             projects_without_stages.write({'stage_id': default_stage.id})
-
-    @api.model
-    def _pre_init_hook(self):
-        """Pre-init hook to handle existing data before migration"""
-        # This will be called before the module installation
-        # to clean up any invalid stage references
-        cr = self.env.cr
-        
-        # Check if project_project table exists and has stage_id column
-        cr.execute("""
-            SELECT column_name 
-            FROM information_schema.columns 
-            WHERE table_name='project_project' AND column_name='stage_id'
-        """)
-        
-        if cr.fetchone():
-            # Remove any invalid stage_id references
-            cr.execute("""
-                UPDATE project_project 
-                SET stage_id = NULL 
-                WHERE stage_id IS NOT NULL 
-                AND stage_id NOT IN (
-                    SELECT id FROM avf_project_stage WHERE id IS NOT NULL
-                )
-            """)

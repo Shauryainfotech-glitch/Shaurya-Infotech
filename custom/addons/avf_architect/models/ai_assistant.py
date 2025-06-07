@@ -14,7 +14,7 @@ class AvfAiAssistant(models.Model):
     response = fields.Html(string='AI Response')
 
     # Project context
-    project_id = fields.Many2one('architect.project', string='Related Project')
+    project_id = fields.Many2one('project.project', string='Related Project', ondelete='cascade')
     user_id = fields.Many2one('res.users', string='User', required=True, default=lambda self: self.env.user)
 
     # Query type

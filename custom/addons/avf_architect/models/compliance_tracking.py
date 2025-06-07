@@ -94,3 +94,4 @@ class ProjectProject(models.Model):
 
     # Add compliance tracking to standard project model
     compliance_ids = fields.One2many('avf.compliance.tracking', 'project_id', string='Compliance Records')
+```

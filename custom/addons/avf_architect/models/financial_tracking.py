@@ -10,7 +10,7 @@ class AvfFinancialTracking(models.Model):
     _order = 'date desc'
 
     name = fields.Char(string='Transaction Reference', required=True)
-    project_id = fields.Many2one('architect.project', string='Project', required=True)
+    project_id = fields.Many2one('project.project', string='Project', required=True, ondelete='cascade')
     date = fields.Date(string='Transaction Date', required=True, default=fields.Date.today)
     amount = fields.Float(string='Amount', required=True)
     currency_id = fields.Many2one('res.currency', string='Currency', required=True, 
