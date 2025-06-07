@@ -44,11 +44,11 @@ class ArchitectDocument(models.Model):
     expiry_date = fields.Date(string="Expiry Date")
 
     # Version Control
-    version = fields.Char(string='Version', default='1.0')
+
     revision = fields.Integer(string='Revision', default=1)
     parent_document_id = fields.Many2one('architect.document', string='Parent Document')
     child_document_ids = fields.One2many('architect.document', 'parent_document_id', string='Child Documents')
-    is_latest_version = fields.Boolean(string='Latest Version', default=True)
+
 
     # Status and Workflow
     state = fields.Selection([
@@ -71,6 +71,9 @@ class ArchitectDocument(models.Model):
     reviewer_id = fields.Many2one('res.users', string='Reviewer')
     approver_id = fields.Many2one('res.users', string='Approver')
 
+    previous_version_id = fields.Many2one('architect.document', string='Previous Version')
+    is_latest_version = fields.Boolean(string='Is Latest Version', default=True)
+    version = fields.Char(string='Version', default='1.0')
     # Access Control
     access_level = fields.Selection([
         ('public', 'Public'),
