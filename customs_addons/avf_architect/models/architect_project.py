@@ -271,7 +271,7 @@ class ArchitectProjectChecklist(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = 'Project Checklist'
 
-    name = fields.Char(string="Checklist Item", required=True)
+    name = fields.Char('Name', required=True)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('verified', 'Verified'),
