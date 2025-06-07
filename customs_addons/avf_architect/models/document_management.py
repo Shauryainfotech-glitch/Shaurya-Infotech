@@ -231,6 +231,11 @@ class ArchitectDocumentCategory(models.Model):
     child_ids = fields.One2many('architect.document.category', 'parent_id', string='Child Categories')
     allowed_file_types = fields.Char(string='Allowed File Types', help="Comma-separated list of allowed file extensions")
     max_file_size = fields.Integer(string='Max File Size (MB)', default=50)
+    subcategory_ids = fields.One2many(
+        'architect.document.subcategory',  # model name
+        'category_id',  # field in subcategory model pointing back to category
+        string='Subcategories'
+    )
     active = fields.Boolean(default=True)
     color = fields.Integer(string='Color Index')
     auto_expire = fields.Boolean(string="Auto Expire?")
