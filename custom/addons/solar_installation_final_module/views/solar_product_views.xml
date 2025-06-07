@@ -27,7 +27,8 @@
                             <field name="brand"/>
                             <field name="model_number"/>
                         </group>
-                           <page string="Product Images">
+
+                         <group string="Product Images">
                         <field name="image_ids">
                             <form string="Upload Product Image">
                                 <group>
@@ -36,7 +37,7 @@
                                 </group>
                             </form>
                         </field>
-                    </page>
+                    </group>
                         <notebook>
                             <page string="Technical Specs">
                                 <group>
