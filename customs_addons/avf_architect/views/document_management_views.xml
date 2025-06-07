@@ -58,7 +58,7 @@
                     <notebook>
                         <page string="Document File" name="document_file">
                             <group>
-                                <field name="document_file" filename="file_name"/>
+                                <field name="file_data" filename="file_name"/>
                                 <field name="file_name" invisible="1"/>
                                 <field name="file_url" widget="url" readonly="1"/>
                             </group>
