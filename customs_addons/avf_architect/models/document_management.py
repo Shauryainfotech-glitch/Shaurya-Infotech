@@ -105,6 +105,10 @@ class ArchitectDocument(models.Model):
          'Document name and version must be unique per project!')
     ]
 
+    def action_reject(self):
+        for record in self:
+            record.state = 'rejected'
+
     @api.depends('file_data', 'file_name')
     def _compute_file_info(self):
         for doc in self:
