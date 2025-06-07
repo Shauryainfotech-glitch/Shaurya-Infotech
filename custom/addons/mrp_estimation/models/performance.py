@@ -1,5 +1,7 @@
 from odoo import models, api
-from odoo.tools.profiler import profile
+import cProfile
+import pstats
+import io
 
 
 class EstimationPerformance(models.AbstractModel):
@@ -19,9 +21,11 @@ class EstimationPerformance(models.AbstractModel):
         return domain
 
     @api.model
-    @profile
     def get_estimation_statistics(self, partner_id=None, date_from=None, date_to=None):
         """Optimized statistics calculation using SQL."""
+        pr = cProfile.Profile()
+        pr.enable()
+
         domain = self._get_estimation_domain(partner_id, date_from, date_to)
         
         query = """
@@ -42,7 +46,16 @@ class EstimationPerformance(models.AbstractModel):
             params = [d[2] for d in domain]
         
         self.env.cr.execute(query % where_clause, params)
-        return self.env.cr.dictfetchone()
+        result = self.env.cr.dictfetchone()
+
+        pr.disable()
+        s = io.StringIO()
+        ps = pstats.Stats(pr, stream=s).sort_stats('cumulative')
+        ps.print_stats()
+        print("Profiling result for get_estimation_statistics:")
+        print(s.getvalue())
+
+        return result
 
     @api.model
     def prefetch_estimation_data(self, estimation_ids):
@@ -63,4 +76,4 @@ class EstimationPerformance(models.AbstractModel):
         line_ids.read([
             'product_id', 'quantity', 'unit_price',
             'material_cost', 'labor_cost'
-        ]) 
+        ])
