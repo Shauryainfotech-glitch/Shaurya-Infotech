@@ -92,7 +92,7 @@
                         </page>
                         <page string="Tags &amp; Keywords" name="tags">
                             <group>
-                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+
                                 <field name="keywords" placeholder="Comma-separated keywords..."/>
                             </group>
                         </page>
@@ -158,7 +158,7 @@
                 <field name="category_id"/>
                 <field name="author_id"/>
                 <field name="keywords"/>
-                <field name="tag_ids"/>
+
                 <filter string="My Documents" name="my_documents" 
                         domain="[('author_id', '=', uid)]"/>
                 <filter string="Portal Visible" name="portal_visible" 
@@ -233,9 +233,7 @@
                                 </div>
                             </div>
                             <div class="o_kanban_record_bottom">
-                                <div class="oe_kanban_bottom_left">
-                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                                </div>
+
                                 <div class="oe_kanban_bottom_right">
                                     <field name="state" widget="label_selection" 
                                            options="{'classes': {'draft': 'default', 'review': 'warning', 'approved': 'success', 'rejected': 'danger', 'archived': 'muted'}}"/>
