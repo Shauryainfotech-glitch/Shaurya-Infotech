@@ -33,6 +33,7 @@
         'calendar',
         'hr_timesheet',
         'portal',
+        'web',
     ],
     'data': [
         'security/security.xml',
