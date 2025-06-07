@@ -75,6 +75,13 @@ class ArchitectDocument(models.Model):
     is_latest_version = fields.Boolean(string='Is Latest Version', default=True)
     version = fields.Char(string='Version', default='1.0')
     version_notes = fields.Text(string='Version Notes')
+    related_document_ids = fields.Many2many(
+        'architect.document',
+        'architect_document_relation_rel',
+        'source_id',
+        'related_id',
+        string='Related Documents'
+    )
     # Access Control
     access_level = fields.Selection([
         ('public', 'Public'),
