@@ -52,17 +52,12 @@
                         </page>
 
                         <page string="Approval" name="approval">
-                            <group>
-                                <group>
-                                    <field name="submitted_by" readonly="1"/>
-                                    <field name="submitted_date" readonly="1"/>
-                                </group>
+
                                 <group>
                                     <field name="approved_by" readonly="1"/>
                                     <field name="approved_date" readonly="1"/>
                                     <field name="approval_notes" placeholder="Approval comments..."/>
                                 </group>
-                            </group>
                         </page>
                         <page string="Payment" name="payment">
                             <group>
