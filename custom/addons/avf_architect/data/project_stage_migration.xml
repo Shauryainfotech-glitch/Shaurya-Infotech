@@ -1,44 +1,54 @@
-
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data noupdate="1">
-        <!-- Migration: Ensure required project stages exist with correct IDs -->
-        <record id="stage_id_1" model="avf.project.stage">
+    <data noupdate="0">
+        <!-- Critical: Ensure stage_id=2 exists before any foreign key constraints -->
+        <function model="ir.model.data" name="xmlid_to_res_id">
+            <value>avf_architect.stage_id_2</value>
+        </function>
+        
+        <!-- Force creation of required stages with specific IDs -->
+        <record id="stage_id_1" model="avf.project.stage" forcecreate="True">
+            <field name="id">1</field>
             <field name="name">Initiation</field>
             <field name="sequence">1</field>
             <field name="description">Project initiation and setup</field>
             <field name="stage_type">initiation</field>
         </record>
 
-        <record id="stage_id_2" model="avf.project.stage">
+        <record id="stage_id_2" model="avf.project.stage" forcecreate="True">
+            <field name="id">2</field>
             <field name="name">Planning</field>
             <field name="sequence">2</field>
             <field name="description">Initial planning and design phase</field>
             <field name="stage_type">planning</field>
         </record>
 
-        <record id="stage_id_3" model="avf.project.stage">
+        <record id="stage_id_3" model="avf.project.stage" forcecreate="True">
+            <field name="id">3</field>
             <field name="name">Design</field>
             <field name="sequence">3</field>
             <field name="description">Design development phase</field>
             <field name="stage_type">development</field>
         </record>
 
-        <record id="stage_id_4" model="avf.project.stage">
+        <record id="stage_id_4" model="avf.project.stage" forcecreate="True">
+            <field name="id">4</field>
             <field name="name">Approval</field>
             <field name="sequence">4</field>
             <field name="description">Approval and documentation phase</field>
             <field name="stage_type">monitoring</field>
         </record>
 
-        <record id="stage_id_5" model="avf.project.stage">
+        <record id="stage_id_5" model="avf.project.stage" forcecreate="True">
+            <field name="id">5</field>
             <field name="name">Execution</field>
             <field name="sequence">5</field>
             <field name="description">Project execution phase</field>
             <field name="stage_type">execution</field>
         </record>
 
-        <record id="stage_id_6" model="avf.project.stage">
+        <record id="stage_id_6" model="avf.project.stage" forcecreate="True">
+            <field name="id">6</field>
             <field name="name">Completion</field>
             <field name="sequence">6</field>
             <field name="description">Project completion and handover</field>

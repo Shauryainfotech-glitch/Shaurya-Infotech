@@ -109,6 +109,11 @@ class ArchitectProject(models.Model):
     survey_count = fields.Integer(string='Survey Count', compute='_compute_survey_count')
     compliance_count = fields.Integer(string='Compliance Count', compute='_compute_compliance_count')
 
+    # Project stages and workflow
+    stage_id = fields.Many2one('avf.project.stage', string='Current Stage', 
+                              required=False, tracking=True,
+                              help="Current stage of the project")
+
     @api.depends('task_ids', 'task_ids.stage_id')
     def _compute_progress_percentage(self):
         """Compute progress based on project status and tasks"""
@@ -271,3 +276,23 @@ class ArchitectProject(models.Model):
                 'default_recommendation_type': 'project_optimization'
             },
         }
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('name', _('New')) == _('New'):
+                vals['name'] = self.env['ir.sequence'].next_by_code('architect.project') or _('New')
+            # Ensure valid stage_id
+            if not vals.get('stage_id'):
+                default_stage = self.env['avf.project.stage'].search([('sequence', '=', 1)], limit=1)
+                if default_stage:
+                    vals['stage_id'] = default_stage.id
+        return super().create(vals_list)
+
+    @api.model
+    def _fix_missing_stages(self):
+        """Fix projects with missing stage references"""
+        projects_without_stages = self.search([('stage_id', '=', False)])
+        default_stage = self.env['avf.project.stage'].search([('sequence', '=', 1)], limit=1)
+        if default_stage and projects_without_stages:
+            projects_without_stages.write({'stage_id': default_stage.id})
