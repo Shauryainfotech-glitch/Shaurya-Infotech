@@ -274,7 +274,7 @@
                         </group>
                         <group>
                             <field name="max_file_size"/>
-                            <field name="requires_approval"/>
+
                             <field name="auto_expire"/>
                             <field name="default_expiry_days" 
                                    modifiers="{'invisible': [('auto_expire', '=', False)]}"/>
@@ -310,7 +310,6 @@
                 <field name="code"/>
                 <field name="allowed_file_types"/>
                 <field name="max_file_size"/>
-                <field name="requires_approval"/>
                 <field name="active"/>
             </list>
         </field>

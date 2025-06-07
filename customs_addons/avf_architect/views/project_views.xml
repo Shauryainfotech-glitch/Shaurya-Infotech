@@ -219,7 +219,7 @@
                                 <field name="color" widget="color"/>
                             </group>
                             <group>
-                                <field name="requires_approval"/>
+
                                 <field name="approval_users" widget="many2many_tags"
                                        modifiers="{'invisible': [('requires_approval', '=', False)]}"/>
                             </group>

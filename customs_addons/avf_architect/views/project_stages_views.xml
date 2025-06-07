@@ -28,7 +28,7 @@
                         </group>
                         <group>
                             <field name="fold"/>
-                            <field name="requires_approval"/>
+
                             <field name="approval_user_ids" widget="many2many_tags" 
                                    modifiers="{'invisible': [('requires_approval', '=', False)]}"/>
                             <field name="previous_stage_id"/>
@@ -71,7 +71,7 @@
                 <field name="stage_type"/>
                 <field name="progress" widget="progressbar"/>
                 <field name="expected_duration"/>
-                <field name="requires_approval"/>
+
                 <field name="active"/>
             </kanban>
         </field>
