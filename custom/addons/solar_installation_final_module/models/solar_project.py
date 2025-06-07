@@ -310,17 +310,17 @@ class SolarProject(models.Model):
         if self.customer_id:
             self.site_address = self.customer_id.street
             self.site_city = self.customer_id.city
-            self.site_state = self.customer_id.state_id.name
+            self.site_state = self.customer_id.state_id.name if self.customer_id.state_id else False
             self.site_zip = self.customer_id.zip
             self.site_country_id = self.customer_id.country_id
             if not self.project_name:
                 self.project_name = f"{self.customer_id.name}'s Solar Installation"
         else:
-            self.site_address = False
-            self.site_city = False
-            self.site_state = False
-            self.site_zip = False
-            self.site_country_id = False
+            self.site_address = ''
+            self.site_city = ''
+            self.site_state = ''
+            self.site_zip = ''
+            self.site_country_id = None
 
     # Method to compute assigned teams
     @api.depends('schedule_ids.team_id')
@@ -361,14 +361,6 @@ class SolarProject(models.Model):
             if not record.partner_id:
                 raise ValidationError("Partner is required for this project!")
 
-    @api.model
-    def create(self, vals):
-        if vals.get('related_model'):
-            related_record = self.env['related.model'].browse(vals['related_model'])
-            if not related_record.exists():  # Ensuring the related model exists
-                raise ValidationError('The related model record does not exist!')
-        return super(SolarProject, self).create(vals)
-
     # Ensure that site_country_id, customer_id, and other related fields are always set
     @api.constrains('customer_id', 'site_country_id')
     def _check_customer_and_country(self):
@@ -377,3 +369,11 @@ class SolarProject(models.Model):
                 raise ValidationError("Customer must be selected for the project!")
             if not record.site_country_id:
                 raise ValidationError("Country must be selected for the project!")
+
+    @api.model
+    def create(self, vals):
+        if vals.get('related_model'):
+            related_record = self.env['related.model'].browse(vals['related_model'])
+            if not related_record.exists():
+                raise ValidationError('The related model record does not exist!')
+        return super(SolarProject, self).create(vals)
