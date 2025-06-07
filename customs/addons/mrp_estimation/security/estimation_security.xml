@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data noupdate="0">
+    <data noupdate="1">
         <!-- Security Groups -->
         <record id="module_category_manufacturing_estimation" model="ir.module.category">
             <field name="name">Manufacturing Estimation</field>
