@@ -14,7 +14,7 @@ class SolarQuote(models.Model):
         string="Quote Reference",
         required=True,
         copy=False,
-        readonly=True,
+        # readonly=True,
         default=lambda self: self.env['ir.sequence'].next_by_code('solar.quote') or "New"
     )
 
