@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Sample Firms -->
+    <record id="firm_avgc_solutions" model="avgc.firm">
+        <field name="name">AVGC Solutions Pvt Ltd</field>
+        <field name="email">contact@avgcsolutions.com</field>
+        <field name="phone">+91-11-12345678</field>
+        <field name="website">https://avgcsolutions.com</field>
+        <field name="city">New Delhi</field>
+        <field name="registration_number">U72900DL2020PTC123456</field>
+        <field name="contact_person">Rajesh Kumar</field>
+        <field name="is_active">True</field>
+    </record>
+    
+    <record id="firm_tech_innovations" model="avgc.firm">
+        <field name="name">Tech Innovations Ltd</field>
+        <field name="email">info@techinnovations.in</field>
+        <field name="phone">+91-22-87654321</field>
+        <field name="website">https://techinnovations.in</field>
+        <field name="city">Mumbai</field>
+        <field name="registration_number">U72200MH2019PLC234567</field>
+        <field name="contact_person">Priya Sharma</field>
+        <field name="is_active">True</field>
+    </record>
+    
+    <record id="firm_infrastructure_corp" model="avgc.firm">
+        <field name="name">Infrastructure Corp</field>
+        <field name="email">admin@infracorp.co.in</field>
+        <field name="phone">+91-80-56789012</field>
+        <field name="website">https://infracorp.co.in</field>
+        <field name="city">Bangalore</field>
+        <field name="registration_number">U45200KA2018PLC345678</field>
+        <field name="contact_person">Amit Patel</field>
+        <field name="is_active">True</field>
+    </record>
+</odoo>

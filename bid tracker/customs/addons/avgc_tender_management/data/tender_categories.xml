@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vendor Categories -->
+    <record id="vendor_category_infrastructure" model="avgc.vendor.category">
+        <field name="name">Infrastructure</field>
+        <field name="code">INFRA</field>
+        <field name="description">Infrastructure development and construction</field>
+    </record>
+    
+    <record id="vendor_category_technology" model="avgc.vendor.category">
+        <field name="name">Technology</field>
+        <field name="code">TECH</field>
+        <field name="description">Technology solutions and software development</field>
+    </record>
+    
+    <record id="vendor_category_consulting" model="avgc.vendor.category">
+        <field name="name">Consulting</field>
+        <field name="code">CONSULT</field>
+        <field name="description">Advisory and consulting services</field>
+    </record>
+    
+    <record id="vendor_category_supplies" model="avgc.vendor.category">
+        <field name="name">Supplies</field>
+        <field name="code">SUPPLY</field>
+        <field name="description">Equipment and material supplies</field>
+    </record>
+    
+    <!-- Document Categories -->
+    <record id="document_category_registration" model="avgc.document.category">
+        <field name="name">Registration Documents</field>
+        <field name="code">REG</field>
+        <field name="description">Company registration and legal documents</field>
+        <field name="is_required">True</field>
+        <field name="sort_order">10</field>
+    </record>
+    
+    <record id="document_category_financial" model="avgc.document.category">
+        <field name="name">Financial Documents</field>
+        <field name="code">FIN</field>
+        <field name="description">Financial statements and certificates</field>
+        <field name="is_required">True</field>
+        <field name="sort_order">20</field>
+    </record>
+    
+    <record id="document_category_technical" model="avgc.document.category">
+        <field name="name">Technical Documents</field>
+        <field name="code">TECH</field>
+        <field name="description">Technical specifications and certifications</field>
+        <field name="is_required">False</field>
+        <field name="sort_order">30</field>
+    </record>
+    
+    <record id="document_category_compliance" model="avgc.document.category">
+        <field name="name">Compliance Documents</field>
+        <field name="code">COMP</field>
+        <field name="description">Compliance certificates and legal documents</field>
+        <field name="is_required">True</field>
+        <field name="sort_order">40</field>
+    </record>
+    
+    <!-- AI Configuration -->
+    <record id="ai_config_claude_default" model="avgc.ai.configuration">
+        <field name="name">Claude Default Configuration</field>
+        <field name="ai_provider">claude</field>
+        <field name="model_name">claude-3-sonnet-20240229</field>
+        <field name="max_tokens">4000</field>
+        <field name="temperature">0.1</field>
+        <field name="is_active">True</field>
+        <field name="is_default">True</field>
+        <field name="daily_limit">1000</field>
+        <field name="monthly_limit">30000</field>
+        <field name="cost_per_request">0.05</field>
+    </record>
+    
+    <record id="ai_config_gpt_default" model="avgc.ai.configuration">
+        <field name="name">GPT-4 Default Configuration</field>
+        <field name="ai_provider">gpt</field>
+        <field name="model_name">gpt-4</field>
+        <field name="max_tokens">4000</field>
+        <field name="temperature">0.1</field>
+        <field name="is_active">True</field>
+        <field name="is_default">False</field>
+        <field name="daily_limit">500</field>
+        <field name="monthly_limit">15000</field>
+        <field name="cost_per_request">0.03</field>
+    </record>
+    
+    <record id="ai_config_gemini_default" model="avgc.ai.configuration">
+        <field name="name">Gemini Pro Configuration</field>
+        <field name="ai_provider">gemini</field>
+        <field name="model_name">gemini-pro</field>
+        <field name="max_tokens">4000</field>
+        <field name="temperature">0.1</field>
+        <field name="is_active">True</field>
+        <field name="is_default">False</field>
+        <field name="daily_limit">2000</field>
+        <field name="monthly_limit">60000</field>
+        <field name="cost_per_request">0.02</field>
+    </record>
+</odoo>

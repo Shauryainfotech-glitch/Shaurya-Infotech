@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tender Stages -->
+    <record id="tender_stage_draft" model="avgc.tender.stage">
+        <field name="name">Draft</field>
+        <field name="code">DRAFT</field>
+        <field name="sequence">1</field>
+        <field name="description">Initial tender creation and preparation</field>
+        <field name="is_active">True</field>
+        <field name="fold">False</field>
+    </record>
+
+    <record id="tender_stage_review" model="avgc.tender.stage">
+        <field name="name">Under Review</field>
+        <field name="code">REVIEW</field>
+        <field name="sequence">2</field>
+        <field name="description">Internal review and validation</field>
+        <field name="is_active">True</field>
+        <field name="fold">False</field>
+    </record>
+
+    <record id="tender_stage_approved" model="avgc.tender.stage">
+        <field name="name">Approved</field>
+        <field name="code">APPROVED</field>
+        <field name="sequence">3</field>
+        <field name="description">Tender approved for publication</field>
+        <field name="is_active">True</field>
+        <field name="fold">False</field>
+    </record>
+
+    <record id="tender_stage_published" model="avgc.tender.stage">
+        <field name="name">Published</field>
+        <field name="code">PUBLISHED</field>
+        <field name="sequence">4</field>
+        <field name="description">Tender published and open for submissions</field>
+        <field name="is_active">True</field>
+        <field name="fold">False</field>
+    </record>
+
+    <record id="tender_stage_submission" model="avgc.tender.stage">
+        <field name="name">Submission Phase</field>
+        <field name="code">SUBMISSION</field>
+        <field name="sequence">5</field>
+        <field name="description">Accepting vendor submissions</field>
+        <field name="is_active">True</field>
+        <field name="fold">False</field>
+    </record>
+
+    <record id="tender_stage_technical_eval" model="avgc.tender.stage">
+        <field name="name">Technical Evaluation</field>
+        <field name="code">TECH_EVAL</field>
+        <field name="sequence">6</field>
+        <field name="description">Technical evaluation of submissions</field>
+        <field name="is_active">True</field>
+        <field name="fold">False</field>
+    </record>
+
+    <record id="tender_stage_financial_eval" model="avgc.tender.stage">
+        <field name="name">Financial Evaluation</field>
+        <field name="code">FIN_EVAL</field>
+        <field name="sequence">7</field>
+        <field name="description">Financial evaluation of qualified submissions</field>
+        <field name="is_active">True</field>
+        <field name="fold">False</field>
+    </record>
+
+    <record id="tender_stage_negotiation" model="avgc.tender.stage">
+        <field name="name">Negotiation</field>
+        <field name="code">NEGOTIATION</field>
+        <field name="sequence">8</field>
+        <field name="description">Price and terms negotiation with shortlisted vendors</field>
+        <field name="is_active">True</field>
+        <field name="fold">False</field>
+    </record>
+
+    <record id="tender_stage_awarded" model="avgc.tender.stage">
+        <field name="name">Awarded</field>
+        <field name="code">AWARDED</field>
+        <field name="sequence">9</field>
+        <field name="description">Tender awarded to selected vendor</field>
+        <field name="is_active">True</field>
+        <field name="fold">False</field>
+    </record>
+
+    <record id="tender_stage_contract" model="avgc.tender.stage">
+        <field name="name">Contract Phase</field>
+        <field name="code">CONTRACT</field>
+        <field name="sequence">10</field>
+        <field name="description">Contract preparation and signing</field>
+        <field name="is_active">True</field>
+        <field name="fold">False</field>
+    </record>
+
+    <record id="tender_stage_completed" model="avgc.tender.stage">
+        <field name="name">Completed</field>
+        <field name="code">COMPLETED</field>
+        <field name="sequence">11</field>
+        <field name="description">Tender process completed</field>
+        <field name="is_active">True</field>
+        <field name="fold">True</field>
+    </record>
+
+    <record id="tender_stage_cancelled" model="avgc.tender.stage">
+        <field name="name">Cancelled</field>
+        <field name="code">CANCELLED</field>
+        <field name="sequence">12</field>
+        <field name="description">Tender cancelled</field>
+        <field name="is_active">True</field>
+        <field name="fold">True</field>
+    </record>
+
+    <!-- Stage Requirements -->
+    <record id="tender_stage_requirement_1" model="avgc.tender.stage.requirement">
+        <field name="stage_id" ref="tender_stage_published"/>
+        <field name="name">Document Completeness</field>
+        <field name="description">All required tender documents must be uploaded and verified</field>
+        <field name="is_mandatory">True</field>
+    </record>
+
+    <record id="tender_stage_requirement_2" model="avgc.tender.stage.requirement">
+        <field name="stage_id" ref="tender_stage_published"/>
+        <field name="name">Approval Signatures</field>
+        <field name="description">All required approvals must be obtained</field>
+        <field name="is_mandatory">True</field>
+    </record>
+
+    <record id="tender_stage_requirement_3" model="avgc.tender.stage.requirement">
+        <field name="stage_id" ref="tender_stage_awarded"/>
+        <field name="name">Evaluation Report</field>
+        <field name="description">Complete evaluation report must be generated and approved</field>
+        <field name="is_mandatory">True</field>
+    </record>
+
+    <!-- Stage Dependencies -->
+    <record id="tender_stage_dependency_1" model="avgc.tender.stage.dependency">
+        <field name="stage_id" ref="tender_stage_published"/>
+        <field name="previous_stage_id" ref="tender_stage_approved"/>
+        <field name="is_mandatory">True</field>
+    </record>
+
+    <record id="tender_stage_dependency_2" model="avgc.tender.stage.dependency">
+        <field name="stage_id" ref="tender_stage_technical_eval"/>
+        <field name="previous_stage_id" ref="tender_stage_submission"/>
+        <field name="is_mandatory">True</field>
+    </record>
+
+    <record id="tender_stage_dependency_3" model="avgc.tender.stage.dependency">
+        <field name="stage_id" ref="tender_stage_financial_eval"/>
+        <field name="previous_stage_id" ref="tender_stage_technical_eval"/>
+        <field name="is_mandatory">True</field>
+    </record>
+</odoo>

@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Dashboard View -->
+    <record id="view_avgc_dashboard" model="ir.ui.view">
+        <field name="name">avgc.dashboard.form</field>
+        <field name="model">avgc.dashboard</field>
+        <field name="arch" type="xml">
+            <form string="Tender Dashboard" create="false" edit="false">
+                <div class="o_avgc_dashboard">
+                    <!-- KPI Summary -->
+                    <div class="row">
+                        <div class="col-lg-3 col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5>Active Tenders</h5>
+                                    <h2><field name="active_tender_count"/></h2>
+                                    <p class="text-muted">Value: <field name="active_tender_value" widget="monetary"/></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5>GeM Bids</h5>
+                                    <h2><field name="active_gem_bid_count"/></h2>
+                                    <p class="text-muted">Value: <field name="active_gem_bid_value" widget="monetary"/></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5>Win Rate</h5>
+                                    <h2><field name="win_rate" widget="percentage"/></h2>
+                                    <p class="text-muted">Last 3 months</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5>Pending Tasks</h5>
+                                    <h2><field name="pending_task_count"/></h2>
+                                    <p class="text-muted">Due this week: <field name="due_this_week"/></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts and Graphs -->
+                    <div class="row mt-4">
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Tender Status Distribution</h5>
+                                </div>
+                                <div class="card-body">
+                                    <field name="tender_status_chart" widget="avgc_chart"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Category-wise Analysis</h5>
+                                </div>
+                                <div class="card-body">
+                                    <field name="category_analysis_chart" widget="avgc_chart"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Recent Activity</h5>
+                                </div>
+                                <div class="card-body">
+                                    <field name="recent_activity_ids">
+                                        <tree>
+                                            <field name="date"/>
+                                            <field name="user_id"/>
+                                            <field name="activity_type"/>
+                                            <field name="reference"/>
+                                            <field name="description"/>
+                                        </tree>
+                                    </field>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Upcoming Deadlines -->
+                    <div class="row mt-4">
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Upcoming Tender Deadlines</h5>
+                                </div>
+                                <div class="card-body">
+                                    <field name="upcoming_deadline_ids">
+                                        <tree>
+                                            <field name="title"/>
+                                            <field name="submission_deadline"/>
+                                            <field name="days_to_deadline"/>
+                                            <field name="estimated_value" widget="monetary"/>
+                                        </tree>
+                                    </field>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>High Priority Tasks</h5>
+                                </div>
+                                <div class="card-body">
+                                    <field name="high_priority_task_ids">
+                                        <tree>
+                                            <field name="name"/>
+                                            <field name="due_date"/>
+                                            <field name="assigned_to"/>
+                                            <field name="status"/>
+                                        </tree>
+                                    </field>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Performance Metrics -->
+                    <div class="row mt-4">
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Financial Overview</h5>
+                                </div>
+                                <div class="card-body">
+                                    <field name="financial_metrics_chart" widget="avgc_chart"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Vendor Performance</h5>
+                                </div>
+                                <div class="card-body">
+                                    <field name="vendor_performance_chart" widget="avgc_chart"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>AI Analysis Stats</h5>
+                                </div>
+                                <div class="card-body">
+                                    <field name="ai_analysis_chart" widget="avgc_chart"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Dashboard Action -->
+    <record id="action_avgc_dashboard" model="ir.actions.act_window">
+        <field name="name">Tender Dashboard</field>
+        <field name="res_model">avgc.dashboard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_avgc_dashboard"/>
+        <field name="target">main</field>
+    </record>
+
+    <!-- Analytics Views -->
+    <record id="view_avgc_analytics_form" model="ir.ui.view">
+        <field name="name">avgc.analytics.form</field>
+        <field name="model">avgc.analytics</field>
+        <field name="arch" type="xml">
+            <form string="Analytics" create="false" edit="false">
+                <sheet>
+                    <div class="row">
+                        <!-- Tender Analytics -->
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Tender Analytics</h5>
+                                </div>
+                                <div class="card-body">
+                                    <group>
+                                        <group>
+                                            <field name="total_tender_count"/>
+                                            <field name="total_tender_value" widget="monetary"/>
+                                            <field name="average_tender_value" widget="monetary"/>
+                                            <field name="success_rate" widget="percentage"/>
+                                        </group>
+                                        <group>
+                                            <field name="tender_growth_rate" widget="percentage"/>
+                                            <field name="average_processing_time"/>
+                                            <field name="compliance_score" widget="percentage"/>
+                                            <field name="risk_score" widget="percentage"/>
+                                        </group>
+                                    </group>
+                                    <field name="tender_trend_chart" widget="avgc_chart"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- GeM Analytics -->
+                        <div class="col-12 mt-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>GeM Analytics</h5>
+                                </div>
+                                <div class="card-body">
+                                    <group>
+                                        <group>
+                                            <field name="total_gem_bid_count"/>
+                                            <field name="total_gem_bid_value" widget="monetary"/>
+                                            <field name="average_gem_bid_value" widget="monetary"/>
+                                            <field name="gem_success_rate" widget="percentage"/>
+                                        </group>
+                                        <group>
+                                            <field name="gem_growth_rate" widget="percentage"/>
+                                            <field name="average_gem_processing_time"/>
+                                            <field name="gem_compliance_score" widget="percentage"/>
+                                            <field name="gem_risk_score" widget="percentage"/>
+                                        </group>
+                                    </group>
+                                    <field name="gem_trend_chart" widget="avgc_chart"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- AI Analytics -->
+                        <div class="col-12 mt-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>AI Analytics</h5>
+                                </div>
+                                <div class="card-body">
+                                    <group>
+                                        <group>
+                                            <field name="total_ai_analysis_count"/>
+                                            <field name="successful_analysis_count"/>
+                                            <field name="average_confidence_score" widget="percentage"/>
+                                            <field name="ai_processing_time"/>
+                                        </group>
+                                        <group>
+                                            <field name="ai_success_rate" widget="percentage"/>
+                                            <field name="ai_cost_savings" widget="monetary"/>
+                                            <field name="ai_efficiency_gain" widget="percentage"/>
+                                            <field name="ai_error_rate" widget="percentage"/>
+                                        </group>
+                                    </group>
+                                    <field name="ai_performance_chart" widget="avgc_chart"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Analytics Action -->
+    <record id="action_avgc_analytics" model="ir.actions.act_window">
+        <field name="name">Analytics</field>
+        <field name="res_model">avgc.analytics</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_avgc_analytics_form"/>
+        <field name="target">main</field>
+    </record>
+
+    <!-- AI Configuration Action -->
+    <record id="action_avgc_ai_configuration" model="ir.actions.act_window">
+        <field name="name">AI Configuration</field>
+        <field name="res_model">avgc.ai.configuration</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Configure AI settings!
+            </p>
+            <p>
+                Set up AI providers and analysis configurations.
+            </p>
+        </field>
+    </record>
+
+    <!-- AI Analysis Action -->
+    <record id="action_avgc_ai_analysis" model="ir.actions.act_window">
+        <field name="name">AI Analysis</field>
+        <field name="res_model">avgc.ai.analysis</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first AI analysis!
+            </p>
+            <p>
+                Analyze documents and tenders using AI technology.
+            </p>
+        </field>
+    </record>
+
+    <!-- Report Actions -->
+    <record id="action_avgc_tender_report" model="ir.actions.act_window">
+        <field name="name">Tender Reports</field>
+        <field name="res_model">avgc.tender.report</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Generate tender reports!
+            </p>
+            <p>
+                Analyze tender performance and statistics.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_avgc_vendor_report" model="ir.actions.act_window">
+        <field name="name">Vendor Reports</field>
+        <field name="res_model">avgc.vendor.report</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Generate vendor reports!
+            </p>
+            <p>
+                Analyze vendor performance and statistics.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_avgc_financial_report" model="ir.actions.act_window">
+        <field name="name">Financial Reports</field>
+        <field name="res_model">avgc.financial.report</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Generate financial reports!
+            </p>
+            <p>
+                Analyze financial performance and budgets.
+            </p>
+        </field>
+    </record>
+</odoo>
