@@ -116,11 +116,7 @@ class SolarProduct(models.Model):
         readonly=True
     )
 
-    image_ids = fields.One2many(
-        comodel_name="solar.product.image",
-        inverse_name="product_id",
-        string="Product Images"
-    )
+    image = fields.Binary(string="Product Image", attachment=True)
 
     active = fields.Boolean(string="Active", default=True)
 

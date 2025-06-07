@@ -28,16 +28,11 @@
                             <field name="model_number"/>
                         </group>
 
-                         <group string="Product Images">
-                        <field name="image_ids">
-                            <form string="Upload Product Image">
-                                <group>
-                                    <field name="name"/>
-                                    <field name="image"/>
-                                </group>
-                            </form>
-                        </field>
+                         <group string="Product Image">
+                        <field name="image" widget="image" class="oe_avatar"/>
                     </group>
+
+
                         <notebook>
                             <page string="Technical Specs">
                                 <group>
