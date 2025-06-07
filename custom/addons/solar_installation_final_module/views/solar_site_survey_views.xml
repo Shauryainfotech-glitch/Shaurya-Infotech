@@ -68,12 +68,6 @@
          <field name="action" ref="action_solar_site_survey"/>
       </record>
 
-      <!-- Model for solar.site.survey -->
-      <record id="model_solar_site_survey" model="ir.model">
-         <field name="name">solar.site.survey</field>
-         <field name="model">solar.site.survey</field>
-         <field name="state">manual</field>
-         <field name="info">Solar Site Survey</field>
-      </record>
+      
    </data>
 </odoo>
