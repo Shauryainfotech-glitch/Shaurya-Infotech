@@ -60,16 +60,13 @@
                                 </group>
                         </page>
                         <page string="Payment" name="payment">
-                            <group>
-                                <group>
-                                    <field name="payment_date"/>
-                                    <field name="payment_reference"/>
-                                </group>
+
+
                                 <group>
                                     <field name="bank_account"/>
                                     <field name="payment_notes" placeholder="Payment notes..."/>
                                 </group>
-                            </group>
+
                         </page>
                     </notebook>
                 </sheet>
