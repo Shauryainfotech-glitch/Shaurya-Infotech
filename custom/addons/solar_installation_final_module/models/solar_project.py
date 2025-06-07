@@ -14,7 +14,6 @@ class SolarProject(models.Model):
         string="Project Reference",
         required=True,
         copy=False,
-        readonly=True,
         default=lambda self: self.env['ir.sequence'].next_by_code('solar.project') or "New"
     )
     customer_id = fields.Many2one(

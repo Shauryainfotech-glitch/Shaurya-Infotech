@@ -21,7 +21,7 @@
                     </header>
                     <sheet>
                         <group>
-                            <field name="name" required="1"/>
+                            <field name="name"/>
                             <field name="product_code"/>
                             <field name="product_type"/>
                             <field name="brand"/>

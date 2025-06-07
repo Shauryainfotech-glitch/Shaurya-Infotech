@@ -20,7 +20,7 @@
                </header>
                <sheet>
                   <group>
-                     <field name="quote_number" readonly="1"/>
+                     <field name="quote_number" />
                      <field name="project_id"/>
                      <field name="quote_date"/>
                      <field name="validity_days"/>
