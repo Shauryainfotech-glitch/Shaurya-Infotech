@@ -13,7 +13,7 @@ class SolarSiteSurvey(models.Model):
         string="Survey Reference",
         required=True,
         copy=False,
-        readonly=True,
+        # readonly=True,
         default=lambda self: self.env['ir.sequence'].next_by_code('solar.site.survey') or "New"
     )
     project_id = fields.Many2one(
