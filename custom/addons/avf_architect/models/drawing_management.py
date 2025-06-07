@@ -1,7 +1,4 @@
 # Corrected the project_id field to reference the correct model 'project.project'.
-```
-
-```python
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api, _
