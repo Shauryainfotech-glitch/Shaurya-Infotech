@@ -13,7 +13,13 @@ class ArchitectClientPortal(models.Model):
     name = fields.Char(string='Portal Name', required=True)
     partner_id = fields.Many2one('res.partner', string='Client', required=True, tracking=True)
     project_ids = fields.Many2many('architect.project', string='Projects')
-    
+    dashboard_ids = fields.One2many(
+        'architect.client.dashboard',  # or the correct model name
+        'portal_id',  # the inverse field on dashboard model
+        string='Dashboards'
+    )
+
+    portal_id = fields.Many2one('architect.client.portal', string='Client Portal')
     # Access Management
     access_token = fields.Char(string='Access Token', readonly=True, copy=False)
     last_login = fields.Datetime(string='Last Login')
