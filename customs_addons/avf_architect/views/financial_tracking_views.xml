@@ -52,11 +52,7 @@
                         </page>
                         <page string="Budget Tracking" name="budget">
                             <group>
-                                <group>
-                                    <field name="budget_id"/>
-                                    <field name="budget_line_id"/>
-                                    <field name="is_budgeted"/>
-                                </group>
+
                                 <group>
                                     <field name="variance_amount" widget="monetary" readonly="1"/>
                                     <field name="variance_percentage" widget="percentage" readonly="1"/>
