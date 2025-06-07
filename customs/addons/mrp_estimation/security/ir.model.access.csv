@@ -1,11 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_mrp_estimation_user,mrp.estimation.user,model_mrp_estimation,group_estimation_user,1,1,1,0
 access_mrp_estimation_manager,mrp.estimation.manager,model_mrp_estimation,group_estimation_manager,1,1,1,1
-access_mrp_estimation_line_user,mrp.estimation.line.user,model_mrp_estimation_line,group_estimation_user,1,1,1,0
-access_mrp_estimation_line_manager,mrp.estimation.line.manager,model_mrp_estimation_line,group_estimation_manager,1,1,1,1
-access_mrp_estimation_cost_user,mrp.estimation.cost.user,model_mrp_estimation_cost,group_estimation_user,1,1,1,0
-access_mrp_estimation_cost_manager,mrp.estimation.cost.manager,model_mrp_estimation_cost,group_estimation_manager,1,1,1,1
-access_mrp_estimation_version_user,mrp.estimation.version.user,model_mrp_estimation_version,group_estimation_user,1,0,1,0
-access_mrp_estimation_version_manager,mrp.estimation.version.manager,model_mrp_estimation_version,group_estimation_manager,1,1,1,1
-access_mrp_costing_user,mrp.costing.user,model_mrp_costing,group_estimation_user,1,1,1,0
-access_mrp_costing_manager,mrp.costing.manager,model_mrp_costing,group_estimation_manager,1,1,1,1
+access_mrp_estimation_portal,mrp.estimation.portal,model_mrp_estimation,base.group_portal,1,0,0,0
