@@ -24,7 +24,7 @@
             </header>
             <sheet>
               <group>
-                <field name="name" />
+                <field name="name" readonly="1"/>
                 <field name="project_id"/>
                 <field name="survey_date"/>
                 <field name="surveyed_by"/>
