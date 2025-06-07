@@ -37,19 +37,17 @@
         'portal',
     ],
     'data': [
-        # Security
+        # Security (security files must be loaded first)
         'security/estimation_security.xml',
-        'security/portal_security.xml',  # Add this line
+        'security/portal_security.xml',
         'security/ir.model.access.csv',
         
         # Data
         'data/estimation_sequence.xml',
-        'data/product_data.xml',  # Add this line
-        
-        # Report Templates
-        'reports/estimation_templates.xml',
+        'data/product_data.xml',
         
         # Views
+        'views/portal_menu.xml',
         'views/estimation_views.xml',
         'views/estimation_line_views.xml',
         'views/estimation_cost_views.xml',
@@ -57,7 +55,6 @@
         'views/mrp_costing_views.xml',
         'views/res_config_settings_views.xml',
         'views/portal_templates.xml',
-        'views/portal_menu.xml',
         'views/estimation_menus.xml',
         
         # Wizards
