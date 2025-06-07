@@ -4,24 +4,25 @@ from datetime import datetime, timedelta
 class EstimationAutomation(models.Model):
     _name = 'estimation.automation'
     _description = 'Estimation Automation Rules'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
-    name = fields.Char('Name', required=True)
-    active = fields.Boolean('Active', default=True)
+    name = fields.Char('Name', required=True, tracking=True)
+    active = fields.Boolean('Active', default=True, tracking=True)
     trigger_type = fields.Selection([
         ('on_create', 'On Creation'),
         ('on_update', 'On Update'),
         ('scheduled', 'Scheduled'),
-    ], string='Trigger Type', required=True)
-    model_id = fields.Many2one('ir.model', string='Model', required=True)
+    ], string='Trigger Type', required=True, tracking=True)
+    model_id = fields.Many2one('ir.model', string='Model', required=True, tracking=True)
     action_type = fields.Selection([
         ('email', 'Send Email'),
         ('notification', 'Send Notification'),
         ('activity', 'Create Activity'),
         ('state', 'Change State'),
-    ], string='Action Type', required=True)
-    action_value = fields.Text('Action Value')
-    schedule_time = fields.Datetime('Schedule Time')
-    last_run = fields.Datetime('Last Run')
+    ], string='Action Type', required=True, tracking=True)
+    action_value = fields.Text('Action Value', tracking=True)
+    schedule_time = fields.Datetime('Schedule Time', tracking=True)
+    last_run = fields.Datetime('Last Run', tracking=True)
 
     def execute_automation(self):
         for rule in self:

@@ -397,7 +397,7 @@ class MrpEstimation(models.Model):
         
         # Send notification to approvers
         self._notify_approvers()
-    
+
     def action_approve(self):
         """Approve estimation"""
         if not self.env.user.has_group('mrp_estimation.group_estimation_manager'):
@@ -405,12 +405,12 @@ class MrpEstimation(models.Model):
         
         self.state = 'approved'
         self.message_post(body=_("Estimation approved by %s") % self.env.user.name)
-    
+
     def action_reject(self):
         """Reject estimation back to draft"""
         self.state = 'draft'
         self.message_post(body=_("Estimation rejected back to draft"))
-    
+
     def action_send_estimation(self):
         """Send estimation to customer"""
         self.ensure_one()
@@ -650,3 +650,6 @@ class MrpEstimation(models.Model):
             'view_mode': 'form',
             'target': 'current'
         }
+
+    def _expand_states(self, states, domain, order):
+        return [key for key, val in self._fields['state'].selection]
