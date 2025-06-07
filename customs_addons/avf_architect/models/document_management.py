@@ -32,7 +32,7 @@ class ArchitectDocument(models.Model):
     
     category_id = fields.Many2one('architect.document.category', string='Category')
     subcategory_id = fields.Many2one('architect.document.subcategory', string='Subcategory')
-    
+    active = fields.Boolean(default=True)
     # File Information
     file_data = fields.Binary(string='File', attachment=True)
     file_name = fields.Char(string='File Name')
@@ -104,6 +104,10 @@ class ArchitectDocument(models.Model):
         ('unique_name_project', 'unique(name, project_id, version)', 
          'Document name and version must be unique per project!')
     ]
+
+    def toggle_active(self):
+        for record in self:
+            record.active = not record.active
 
     def action_reject(self):
         for record in self:
