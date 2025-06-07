@@ -28,9 +28,9 @@
                             <field name="model_number"/>
                         </group>
 
+                        <!-- Product Images Section with One2many field -->
                         <group string="Product Images">
-                            <!-- One2many field for images -->
-                            <field name="product_image_ids">
+                            <field name="product_image_ids" widget="one2many_list">
                                 <form>
                                     <field name="image" widget="image"/>
                                     <field name="description"/>
