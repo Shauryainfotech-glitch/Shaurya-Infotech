@@ -46,9 +46,5 @@
 
 
     ],
-'assets': {
-    'web.assets_backend': [
-        'solar_installation_final_module/static/src/js/image_upload.js',
-    ],
-},
+
 }
