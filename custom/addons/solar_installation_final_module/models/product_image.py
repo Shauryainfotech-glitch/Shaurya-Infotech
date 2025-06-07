@@ -1,3 +1,4 @@
+from odoo import models, fields
 class ProductImage(models.Model):
     _name = "solar.product.image"
     _description = "Product Images"
