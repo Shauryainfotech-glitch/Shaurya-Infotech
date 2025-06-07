@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Document Category Views -->
+    <record id="view_avgc_document_category_tree" model="ir.ui.view">
+        <field name="name">avgc.document.category.tree</field>
+        <field name="model">avgc.document.category</field>
+        <field name="arch" type="xml">
+            <tree string="Document Categories">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="parent_id"/>
+                <field name="is_required"/>
+                <field name="sort_order"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_avgc_document_category_form" model="ir.ui.view">
+        <field name="name">avgc.document.category.form</field>
+        <field name="model">avgc.document.category</field>
+        <field name="arch" type="xml">
+            <form string="Document Category">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="parent_id"/>
+                            <field name="is_required"/>
+                        </group>
+                        <group>
+                            <field name="sort_order"/>
+                            <field name="active"/>
+                            <field name="child_ids" widget="many2many_tags"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description">
+                            <field name="description"/>
+                        </page>
+                        <page string="Requirements">
+                            <field name="requirements"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Document Version Views -->
+    <record id="view_avgc_document_version_tree" model="ir.ui.view">
+        <field name="name">avgc.document.version.tree</field>
+        <field name="model">avgc.document.version</field>
+        <field name="arch" type="xml">
+            <tree string="Document Versions">
+                <field name="name"/>
+                <field name="document_id"/>
+                <field name="version_number"/>
+                <field name="created_by"/>
+                <field name="create_date"/>
+                <field name="status"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_avgc_document_version_form" model="ir.ui.view">
+        <field name="name">avgc.document.version.form</field>
+        <field name="model">avgc.document.version</field>
+        <field name="arch" type="xml">
+            <form string="Document Version">
+                <header>
+                    <field name="status" widget="statusbar" statusbar_visible="draft,active,archived"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="document_id"/>
+                            <field name="version_number"/>
+                            <field name="created_by"/>
+                        </group>
+                        <group>
+                            <field name="file_data" filename="file_name"/>
+                            <field name="file_name"/>
+                            <field name="file_size" readonly="1"/>
+                            <field name="checksum" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Change Log">
+                            <field name="change_log"/>
+                        </page>
+                        <page string="Reviews">
+                            <field name="review_ids">
+                                <tree editable="bottom">
+                                    <field name="reviewer_id"/>
+                                    <field name="review_date"/>
+                                    <field name="status"/>
+                                    <field name="comments"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Document Share Views -->
+    <record id="view_avgc_document_share_tree" model="ir.ui.view">
+        <field name="name">avgc.document.share.tree</field>
+        <field name="model">avgc.document.share</field>
+        <field name="arch" type="xml">
+            <tree string="Document Shares">
+                <field name="name"/>
+                <field name="document_id"/>
+                <field name="shared_with"/>
+                <field name="share_type"/>
+                <field name="expiry_date"/>
+                <field name="status"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_avgc_document_share_form" model="ir.ui.view">
+        <field name="name">avgc.document.share.form</field>
+        <field name="model">avgc.document.share</field>
+        <field name="arch" type="xml">
+            <form string="Document Share">
+                <header>
+                    <button name="action_generate_link" string="Generate Link" type="object" class="oe_highlight"
+                            attrs="{'invisible': [('share_type', '!=', 'link')]}"/>
+                    <button name="action_revoke" string="Revoke Access" type="object" class="btn-danger"
+                            attrs="{'invisible': [('status', 'in', ['expired', 'revoked'])]}"/>
+                    <field name="status" widget="statusbar" statusbar_visible="draft,active,expired,revoked"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="document_id"/>
+                            <field name="shared_with"/>
+                            <field name="share_type"/>
+                        </group>
+                        <group>
+                            <field name="expiry_date"/>
+                            <field name="access_level"/>
+                            <field name="share_url" readonly="1" attrs="{'invisible': [('share_type', '!=', 'link')]}"/>
+                            <field name="access_count" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Access Log">
+                            <field name="access_log_ids">
+                                <tree>
+                                    <field name="access_date"/>
+                                    <field name="accessed_by"/>
+                                    <field name="ip_address"/>
+                                    <field name="action"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Notes">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Document Access Log Views -->
+    <record id="view_avgc_document_access_log_tree" model="ir.ui.view">
+        <field name="name">avgc.document.access.log.tree</field>
+        <field name="model">avgc.document.access.log</field>
+        <field name="arch" type="xml">
+            <tree string="Document Access Logs" create="false">
+                <field name="document_id"/>
+                <field name="access_date"/>
+                <field name="accessed_by"/>
+                <field name="action"/>
+                <field name="ip_address"/>
+                <field name="user_agent"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_avgc_document_access_log_search" model="ir.ui.view">
+        <field name="name">avgc.document.access.log.search</field>
+        <field name="model">avgc.document.access.log</field>
+        <field name="arch" type="xml">
+            <search string="Search Access Logs">
+                <field name="document_id"/>
+                <field name="accessed_by"/>
+                <field name="ip_address"/>
+                <separator/>
+                <filter string="Today" name="today" domain="[('access_date', '>=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]"/>
+                <filter string="This Week" name="this_week" domain="[('access_date', '>=', (context_today() - datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Document" name="group_document" context="{'group_by': 'document_id'}"/>
+                    <filter string="User" name="group_user" context="{'group_by': 'accessed_by'}"/>
+                    <filter string="Action" name="group_action" context="{'group_by': 'action'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Document Bulk Operation Views -->
+    <record id="view_avgc_document_bulk_operation_form" model="ir.ui.view">
+        <field name="name">avgc.document.bulk.operation.form</field>
+        <field name="model">avgc.document.bulk.operation</field>
+        <field name="arch" type="xml">
+            <form string="Bulk Document Operation">
+                <header>
+                    <button name="action_process" string="Process" type="object" class="oe_highlight"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,processing,completed,failed"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="operation_type"/>
+                            <field name="target_category_id"/>
+                        </group>
+                        <group>
+                            <field name="document_ids" widget="many2many_tags"/>
+                            <field name="process_count"/>
+                            <field name="success_count"/>
+                            <field name="error_count"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Processing Log">
+                            <field name="processing_log"/>
+                        </page>
+                        <page string="Errors">
+                            <field name="error_log"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Actions -->
+    <record id="action_avgc_document_category" model="ir.actions.act_window">
+        <field name="name">Document Categories</field>
+        <field name="res_model">avgc.document.category</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first document category!
+            </p>
+            <p>
+                Organize documents by categories for better management.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_avgc_document_share" model="ir.actions.act_window">
+        <field name="name">Document Shares</field>
+        <field name="res_model">avgc.document.share</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Share your first document!
+            </p>
+            <p>
+                Share documents securely with internal and external stakeholders.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_avgc_document_access_log" model="ir.actions.act_window">
+        <field name="name">Document Access Logs</field>
+        <field name="res_model">avgc.document.access.log</field>
+        <field name="view_mode">tree</field>
+        <field name="search_view_id" ref="view_avgc_document_access_log_search"/>
+    </record>
+</odoo>

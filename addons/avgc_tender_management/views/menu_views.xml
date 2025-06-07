@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Main Menu -->
+    <menuitem id="menu_avgc_tender_root" 
+              name="AVGC Tender Pro" 
+              sequence="10" 
+              web_icon="avgc_tender_management,static/description/icon.png"/>
+    
+    <!-- Dashboard -->
+    <menuitem id="menu_avgc_dashboard" 
+              name="Dashboard" 
+              parent="menu_avgc_tender_root" 
+              sequence="1" 
+              action="action_avgc_dashboard"/>
+    
+    <!-- Tender Management -->
+    <menuitem id="menu_avgc_tender_management" 
+              name="Tender Management" 
+              parent="menu_avgc_tender_root" 
+              sequence="10"/>
+    
+    <menuitem id="menu_avgc_tenders" 
+              name="Tenders" 
+              parent="menu_avgc_tender_management" 
+              sequence="1" 
+              action="action_avgc_tender"/>
+    
+    <menuitem id="menu_avgc_tender_submissions" 
+              name="Submissions" 
+              parent="menu_avgc_tender_management" 
+              sequence="2" 
+              action="action_avgc_tender_submission"/>
+    
+    <menuitem id="menu_avgc_tender_documents" 
+              name="Documents" 
+              parent="menu_avgc_tender_management" 
+              sequence="3" 
+              action="action_avgc_tender_document"/>
+    
+    <!-- GeM Bid Management -->
+    <menuitem id="menu_avgc_gem_bid_management" 
+              name="GeM Bid Management" 
+              parent="menu_avgc_tender_root" 
+              sequence="20"/>
+    
+    <menuitem id="menu_avgc_gem_bids" 
+              name="GeM Bids" 
+              parent="menu_avgc_gem_bid_management" 
+              sequence="1" 
+              action="action_avgc_gem_bid"/>
+    
+    <menuitem id="menu_avgc_gem_bid_stages" 
+              name="Bid Stages" 
+              parent="menu_avgc_gem_bid_management" 
+              sequence="2" 
+              action="action_avgc_gem_bid_stage"/>
+    
+    <menuitem id="menu_avgc_gem_bid_documents" 
+              name="Bid Documents" 
+              parent="menu_avgc_gem_bid_management" 
+              sequence="3" 
+              action="action_avgc_gem_bid_document"/>
+    
+    <!-- Vendor Management -->
+    <menuitem id="menu_avgc_vendor_management" 
+              name="Vendor Management" 
+              parent="menu_avgc_tender_root" 
+              sequence="30"/>
+    
+    <menuitem id="menu_avgc_vendors" 
+              name="Vendors" 
+              parent="menu_avgc_vendor_management" 
+              sequence="1" 
+              action="action_avgc_vendor"/>
+    
+    <menuitem id="menu_avgc_vendor_categories" 
+              name="Categories" 
+              parent="menu_avgc_vendor_management" 
+              sequence="2" 
+              action="action_avgc_vendor_category"/>
+    
+    <menuitem id="menu_avgc_vendor_evaluations" 
+              name="Evaluations" 
+              parent="menu_avgc_vendor_management" 
+              sequence="3" 
+              action="action_avgc_vendor_evaluation"/>
+    
+    <!-- Document Management -->
+    <menuitem id="menu_avgc_document_management" 
+              name="Document Management" 
+              parent="menu_avgc_tender_root" 
+              sequence="40"/>
+    
+    <menuitem id="menu_avgc_firms" 
+              name="Firms" 
+              parent="menu_avgc_document_management" 
+              sequence="1" 
+              action="action_avgc_firm"/>
+    
+    <menuitem id="menu_avgc_firm_documents" 
+              name="Firm Documents" 
+              parent="menu_avgc_document_management" 
+              sequence="2" 
+              action="action_avgc_firm_document"/>
+    
+    <menuitem id="menu_avgc_document_categories" 
+              name="Document Categories" 
+              parent="menu_avgc_document_management" 
+              sequence="3" 
+              action="action_avgc_document_category"/>
+    
+    <menuitem id="menu_avgc_document_shares" 
+              name="Document Shares" 
+              parent="menu_avgc_document_management" 
+              sequence="4" 
+              action="action_avgc_document_share"/>
+    
+    <!-- AI & Analytics -->
+    <menuitem id="menu_avgc_ai_analytics" 
+              name="AI & Analytics" 
+              parent="menu_avgc_tender_root" 
+              sequence="50"/>
+    
+    <menuitem id="menu_avgc_ai_analysis" 
+              name="AI Analysis" 
+              parent="menu_avgc_ai_analytics" 
+              sequence="1" 
+              action="action_avgc_ai_analysis"/>
+    
+    <menuitem id="menu_avgc_ai_configuration" 
+              name="AI Configuration" 
+              parent="menu_avgc_ai_analytics" 
+              sequence="2" 
+              action="action_avgc_ai_configuration"
+              groups="group_tender_admin"/>
+    
+    <menuitem id="menu_avgc_ocr_service" 
+              name="OCR Processing" 
+              parent="menu_avgc_ai_analytics" 
+              sequence="3" 
+              action="action_avgc_ocr_service"/>
+    
+    <menuitem id="menu_avgc_activity_logs" 
+              name="Activity Logs" 
+              parent="menu_avgc_ai_analytics" 
+              sequence="4" 
+              action="action_avgc_activity_log"/>
+    
+    <menuitem id="menu_avgc_activity_tags" 
+              name="Activity Tags" 
+              parent="menu_avgc_ai_analytics" 
+              sequence="5" 
+              action="action_avgc_activity_tag"/>
+    
+    <!-- Finance Management -->
+    <menuitem id="menu_avgc_finance_management" 
+              name="Finance Management" 
+              parent="menu_avgc_tender_root" 
+              sequence="60"/>
+    
+    <menuitem id="menu_avgc_finance_transactions" 
+              name="Transactions" 
+              parent="menu_avgc_finance_management" 
+              sequence="1" 
+              action="action_avgc_finance_transaction"/>
+    
+    <menuitem id="menu_avgc_budgets" 
+              name="Budgets" 
+              parent="menu_avgc_finance_management" 
+              sequence="2" 
+              action="action_avgc_budget"/>
+    
+    <menuitem id="menu_avgc_payment_schedules" 
+              name="Payment Schedules" 
+              parent="menu_avgc_finance_management" 
+              sequence="3" 
+              action="action_avgc_payment_schedule"/>
+    
+    <!-- Task Management -->
+    <menuitem id="menu_avgc_task_management" 
+              name="Task Management" 
+              parent="menu_avgc_tender_root" 
+              sequence="70"/>
+    
+    <menuitem id="menu_avgc_tasks" 
+              name="Tasks" 
+              parent="menu_avgc_task_management" 
+              sequence="1" 
+              action="action_avgc_task"/>
+    
+    <menuitem id="menu_avgc_task_templates" 
+              name="Task Templates" 
+              parent="menu_avgc_task_management" 
+              sequence="2" 
+              action="action_avgc_task_template"/>
+    
+    <menuitem id="menu_avgc_task_reports" 
+              name="Task Reports" 
+              parent="menu_avgc_task_management" 
+              sequence="3" 
+              action="action_avgc_task_report"/>
+    
+    <!-- Reports & Analytics -->
+    <menuitem id="menu_avgc_reports" 
+              name="Reports & Analytics" 
+              parent="menu_avgc_tender_root" 
+              sequence="80"/>
+    
+    <menuitem id="menu_avgc_tender_reports" 
+              name="Tender Reports" 
+              parent="menu_avgc_reports" 
+              sequence="1" 
+              action="action_avgc_tender_report"/>
+    
+    <menuitem id="menu_avgc_vendor_reports" 
+              name="Vendor Reports" 
+              parent="menu_avgc_reports" 
+              sequence="2" 
+              action="action_avgc_vendor_report"/>
+    
+    <menuitem id="menu_avgc_financial_reports" 
+              name="Financial Reports" 
+              parent="menu_avgc_reports" 
+              sequence="3" 
+              action="action_avgc_financial_report"/>
+    
+    <!-- Configuration -->
+    <menuitem id="menu_avgc_configuration" 
+              name="Configuration" 
+              parent="menu_avgc_tender_root" 
+              sequence="90" 
+              groups="group_tender_admin"/>
+    
+    <menuitem id="menu_avgc_system_settings" 
+              name="System Settings" 
+              parent="menu_avgc_configuration" 
+              sequence="1" 
+              action="action_avgc_system_settings"/>
+    
+    <menuitem id="menu_avgc_user_management" 
+              name="User Management" 
+              parent="menu_avgc_configuration" 
+              sequence="2" 
+              action="base.action_res_users"/>
+    
+    <menuitem id="menu_avgc_access_logs" 
+              name="Access Logs" 
+              parent="menu_avgc_configuration" 
+              sequence="3" 
+              action="action_avgc_document_access_log"/>
+</odoo>

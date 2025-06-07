@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Activity Log Tree View -->
+    <record id="view_avgc_activity_log_tree" model="ir.ui.view">
+        <field name="name">avgc.activity.log.tree</field>
+        <field name="model">avgc.activity.log</field>
+        <field name="arch" type="xml">
+            <tree string="Activity Logs" decoration-info="state=='pending'" decoration-warning="requires_attention" decoration-success="state=='completed'">
+                <field name="date"/>
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="activity_type"/>
+                <field name="reference"/>
+                <field name="importance"/>
+                <field name="requires_attention"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Activity Log Form View -->
+    <record id="view_avgc_activity_log_form" model="ir.ui.view">
+        <field name="name">avgc.activity.log.form</field>
+        <field name="model">avgc.activity.log</field>
+        <field name="arch" type="xml">
+            <form string="Activity Log">
+                <header>
+                    <button name="action_mark_as_pending" string="Mark Pending" type="object"
+                            attrs="{'invisible': [('state', '=', 'pending')]}"/>
+                    <button name="action_mark_as_in_progress" string="Mark In Progress" type="object"
+                            attrs="{'invisible': [('state', '=', 'in_progress')]}"/>
+                    <button name="action_mark_as_completed" string="Mark Completed" type="object"
+                            attrs="{'invisible': [('state', '=', 'completed')]}"/>
+                    <button name="action_mark_as_cancelled" string="Cancel" type="object"
+                            attrs="{'invisible': [('state', '=', 'cancelled')]}"/>
+                    <button name="action_toggle_attention" string="Toggle Attention" type="object"
+                            class="btn-secondary"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_reference" type="object" class="oe_stat_button" icon="fa-external-link"
+                                attrs="{'invisible': [('reference', '=', False)]}">
+                            <field name="activity_type" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Activity Title"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="date"/>
+                            <field name="user_id"/>
+                            <field name="activity_type"/>
+                            <field name="reference"/>
+                        </group>
+                        <group>
+                            <field name="importance"/>
+                            <field name="requires_attention"/>
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description">
+                            <field name="description" placeholder="Enter detailed description..."/>
+                        </page>
+                        <page string="Additional Details">
+                            <field name="details" placeholder="Enter any additional details..."/>
+                        </page>
+                        <page string="Related Records">
+                            <group>
+                                <field name="tender_id" readonly="1"/>
+                                <field name="gem_bid_id" readonly="1"/>
+                                <field name="document_id" readonly="1"/>
+                                <field name="vendor_id" readonly="1"/>
+                                <field name="task_id" readonly="1"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Activity Log Search View -->
+    <record id="view_avgc_activity_log_search" model="ir.ui.view">
+        <field name="name">avgc.activity.log.search</field>
+        <field name="model">avgc.activity.log</field>
+        <field name="arch" type="xml">
+            <search string="Search Activity Logs">
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="activity_type"/>
+                <field name="reference"/>
+                <field name="description"/>
+                <separator/>
+                <filter string="My Activities" name="my_activities" domain="[('user_id', '=', uid)]"/>
+                <filter string="Requires Attention" name="requires_attention" domain="[('requires_attention', '=', True)]"/>
+                <separator/>
+                <filter string="Pending" name="pending" domain="[('state', '=', 'pending')]"/>
+                <filter string="In Progress" name="in_progress" domain="[('state', '=', 'in_progress')]"/>
+                <filter string="Completed" name="completed" domain="[('state', '=', 'completed')]"/>
+                <filter string="Cancelled" name="cancelled" domain="[('state', '=', 'cancelled')]"/>
+                <separator/>
+                <filter string="High Importance" name="high_importance" domain="[('importance', '=', 'high')]"/>
+                <filter string="Critical" name="critical" domain="[('importance', '=', 'critical')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="User" name="group_user" context="{'group_by': 'user_id'}"/>
+                    <filter string="Activity Type" name="group_type" context="{'group_by': 'activity_type'}"/>
+                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="Importance" name="group_importance" context="{'group_by': 'importance'}"/>
+                    <filter string="Date" name="group_date" context="{'group_by': 'date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Activity Tag Tree View -->
+    <record id="view_avgc_activity_tag_tree" model="ir.ui.view">
+        <field name="name">avgc.activity.tag.tree</field>
+        <field name="model">avgc.activity.tag</field>
+        <field name="arch" type="xml">
+            <tree string="Activity Tags" editable="bottom">
+                <field name="name"/>
+                <field name="color" widget="color_picker"/>
+                <field name="description"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Activity Tag Form View -->
+    <record id="view_avgc_activity_tag_form" model="ir.ui.view">
+        <field name="name">avgc.activity.tag.form</field>
+        <field name="model">avgc.activity.tag</field>
+        <field name="arch" type="xml">
+            <form string="Activity Tag">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="color" widget="color_picker"/>
+                        <field name="description"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Activity Log Action -->
+    <record id="action_avgc_activity_log" model="ir.actions.act_window">
+        <field name="name">Activity Logs</field>
+        <field name="res_model">avgc.activity.log</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_avgc_activity_log_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No activity logs found
+            </p>
+            <p>
+                Create your first activity log to track important events and actions.
+            </p>
+        </field>
+    </record>
+
+    <!-- Activity Tag Action -->
+    <record id="action_avgc_activity_tag" model="ir.actions.act_window">
+        <field name="name">Activity Tags</field>
+        <field name="res_model">avgc.activity.tag</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No activity tags found
+            </p>
+            <p>
+                Create tags to categorize and filter your activity logs.
+            </p>
+        </field>
+    </record>
+</odoo>

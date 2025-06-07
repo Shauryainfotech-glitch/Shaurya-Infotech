@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Firm Views -->
+    <record id="view_avgc_firm_tree" model="ir.ui.view">
+        <field name="name">avgc.firm.tree</field>
+        <field name="model">avgc.firm</field>
+        <field name="arch" type="xml">
+            <tree string="Firms">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="firm_type"/>
+                <field name="registration_number"/>
+                <field name="email"/>
+                <field name="phone"/>
+                <field name="status"/>
+                <field name="rating" widget="float_percentage"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_avgc_firm_form" model="ir.ui.view">
+        <field name="name">avgc.firm.form</field>
+        <field name="model">avgc.firm</field>
+        <field name="arch" type="xml">
+            <form string="Firm">
+                <header>
+                    <button name="action_approve" string="Approve" type="object" class="oe_highlight"
+                            attrs="{'invisible': [('status', '!=', 'draft')]}"/>
+                    <button name="action_reject" string="Reject" type="object" class="btn-danger"
+                            attrs="{'invisible': [('status', 'in', ['rejected', 'blacklisted'])]}"/>
+                    <button name="action_blacklist" string="Blacklist" type="object" class="btn-danger"
+                            attrs="{'invisible': [('status', '=', 'blacklisted')]}"/>
+                    <field name="status" widget="statusbar" statusbar_visible="draft,approved,active"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_documents" type="object" class="oe_stat_button" icon="fa-file-text-o">
+                            <field name="document_count" widget="statinfo" string="Documents"/>
+                        </button>
+                        <button name="action_view_tenders" type="object" class="oe_stat_button" icon="fa-file-text">
+                            <field name="tender_count" widget="statinfo" string="Tenders"/>
+                        </button>
+                    </div>
+                    <field name="image" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                        <h2><field name="code"/></h2>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="firm_type"/>
+                            <field name="registration_number"/>
+                            <field name="tax_id"/>
+                            <field name="incorporation_date"/>
+                            <field name="rating" widget="float_percentage"/>
+                        </group>
+                        <group>
+                            <field name="email"/>
+                            <field name="phone"/>
+                            <field name="website"/>
+                            <field name="country_id"/>
+                            <field name="state_id"/>
+                            <field name="city"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Contact Information">
+                            <group>
+                                <group string="Primary Contact">
+                                    <field name="contact_name"/>
+                                    <field name="contact_position"/>
+                                    <field name="contact_email"/>
+                                    <field name="contact_phone"/>
+                                </group>
+                                <group string="Address">
+                                    <field name="street"/>
+                                    <field name="street2"/>
+                                    <field name="zip"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Documents">
+                            <field name="document_ids">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="document_type"/>
+                                    <field name="file_name"/>
+                                    <field name="expiry_date"/>
+                                    <field name="is_verified"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Certifications">
+                            <field name="certification_ids">
+                                <tree editable="bottom">
+                                    <field name="name"/>
+                                    <field name="certification_type"/>
+                                    <field name="issuing_authority"/>
+                                    <field name="issue_date"/>
+                                    <field name="expiry_date"/>
+                                    <field name="status"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Financial Information">
+                            <group>
+                                <group string="Bank Details">
+                                    <field name="bank_name"/>
+                                    <field name="bank_account_number"/>
+                                    <field name="bank_ifsc"/>
+                                </group>
+                                <group string="Financial Metrics">
+                                    <field name="annual_turnover"/>
+                                    <field name="credit_rating"/>
+                                    <field name="payment_terms"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Performance">
+                            <group>
+                                <group string="Evaluation">
+                                    <field name="quality_score" widget="progressbar"/>
+                                    <field name="delivery_score" widget="progressbar"/>
+                                    <field name="price_score" widget="progressbar"/>
+                                    <field name="communication_score" widget="progressbar"/>
+                                </group>
+                                <group string="Statistics">
+                                    <field name="total_tenders"/>
+                                    <field name="won_tenders"/>
+                                    <field name="lost_tenders"/>
+                                    <field name="success_rate" widget="percentage"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Notes">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Firm Document Views -->
+    <record id="view_avgc_firm_document_tree" model="ir.ui.view">
+        <field name="name">avgc.firm.document.tree</field>
+        <field name="model">avgc.firm.document</field>
+        <field name="arch" type="xml">
+            <tree string="Firm Documents">
+                <field name="name"/>
+                <field name="firm_id"/>
+                <field name="document_type"/>
+                <field name="file_name"/>
+                <field name="expiry_date"/>
+                <field name="is_verified"/>
+                <field name="status"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_avgc_firm_document_form" model="ir.ui.view">
+        <field name="name">avgc.firm.document.form</field>
+        <field name="model">avgc.firm.document</field>
+        <field name="arch" type="xml">
+            <form string="Firm Document">
+                <header>
+                    <button name="action_verify" string="Verify" type="object" class="oe_highlight"
+                            attrs="{'invisible': [('is_verified', '=', True)]}"/>
+                    <button name="action_request_update" string="Request Update" type="object"
+                            attrs="{'invisible': [('status', 'in', ['expired', 'pending_update'])]}"/>
+                    <field name="status" widget="statusbar" statusbar_visible="draft,valid,expired"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="firm_id"/>
+                            <field name="document_type"/>
+                            <field name="document_number"/>
+                        </group>
+                        <group>
+                            <field name="issue_date"/>
+                            <field name="expiry_date"/>
+                            <field name="is_verified"/>
+                            <field name="verified_by"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="file_data" filename="file_name"/>
+                            <field name="file_name" invisible="1"/>
+                            <field name="file_size" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="issuing_authority"/>
+                            <field name="verification_date"/>
+                            <field name="confidentiality_level"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Notes">
+                            <field name="notes"/>
+                        </page>
+                        <page string="Verification History">
+                            <field name="verification_history_ids">
+                                <tree>
+                                    <field name="verification_date"/>
+                                    <field name="verified_by"/>
+                                    <field name="status"/>
+                                    <field name="comments"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Actions -->
+    <record id="action_avgc_firm" model="ir.actions.act_window">
+        <field name="name">Firms</field>
+        <field name="res_model">avgc.firm</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first firm!
+            </p>
+            <p>
+                Manage firms and their documentation.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_avgc_firm_document" model="ir.actions.act_window">
+        <field name="name">Firm Documents</field>
+        <field name="res_model">avgc.firm.document</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first firm document!
+            </p>
+            <p>
+                Manage documents related to firms.
+            </p>
+        </field>
+    </record>
+</odoo>

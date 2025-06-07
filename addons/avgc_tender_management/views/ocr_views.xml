@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- OCR Service Views -->
+    <record id="view_avgc_ocr_service_tree" model="ir.ui.view">
+        <field name="name">avgc.ocr.service.tree</field>
+        <field name="model">avgc.ocr.service</field>
+        <field name="arch" type="xml">
+            <tree string="OCR Services">
+                <field name="name"/>
+                <field name="document_id"/>
+                <field name="status"/>
+                <field name="confidence_score"/>
+                <field name="processing_time"/>
+                <field name="created_by"/>
+                <field name="create_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_avgc_ocr_service_form" model="ir.ui.view">
+        <field name="name">avgc.ocr.service.form</field>
+        <field name="model">avgc.ocr.service</field>
+        <field name="arch" type="xml">
+            <form string="OCR Service">
+                <header>
+                    <button name="action_process" string="Process" type="object" class="oe_highlight"
+                            attrs="{'invisible': [('status', '!=', 'draft')]}"/>
+                    <button name="action_cancel" string="Cancel" type="object"
+                            attrs="{'invisible': [('status', 'in', ['completed', 'cancelled'])]}"/>
+                    <field name="status" widget="statusbar" statusbar_visible="draft,processing,completed"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="document_id"/>
+                            <field name="ocr_provider"/>
+                            <field name="language"/>
+                        </group>
+                        <group>
+                            <field name="confidence_score" widget="percentage"/>
+                            <field name="processing_time"/>
+                            <field name="created_by"/>
+                            <field name="create_date"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="OCR Results">
+                            <group>
+                                <field name="extracted_text" widget="html"/>
+                                <field name="json_response"/>
+                            </group>
+                        </page>
+                        <page string="Processing Log">
+                            <field name="processing_log"/>
+                        </page>
+                        <page string="Settings">
+                            <group>
+                                <group string="OCR Configuration">
+                                    <field name="dpi"/>
+                                    <field name="output_format"/>
+                                    <field name="enable_layout_analysis"/>
+                                    <field name="enable_table_recognition"/>
+                                </group>
+                                <group string="Advanced Options">
+                                    <field name="preprocess_image"/>
+                                    <field name="auto_rotate"/>
+                                    <field name="detect_orientation"/>
+                                    <field name="save_preprocessed_image"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_avgc_ocr_service_search" model="ir.ui.view">
+        <field name="name">avgc.ocr.service.search</field>
+        <field name="model">avgc.ocr.service</field>
+        <field name="arch" type="xml">
+            <search string="Search OCR Services">
+                <field name="name"/>
+                <field name="document_id"/>
+                <field name="created_by"/>
+                <separator/>
+                <filter string="Draft" name="draft" domain="[('status', '=', 'draft')]"/>
+                <filter string="Processing" name="processing" domain="[('status', '=', 'processing')]"/>
+                <filter string="Completed" name="completed" domain="[('status', '=', 'completed')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Status" name="group_status" context="{'group_by': 'status'}"/>
+                    <filter string="OCR Provider" name="group_provider" context="{'group_by': 'ocr_provider'}"/>
+                    <filter string="Created By" name="group_created_by" context="{'group_by': 'created_by'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- OCR Service Action -->
+    <record id="action_avgc_ocr_service" model="ir.actions.act_window">
+        <field name="name">OCR Processing</field>
+        <field name="res_model">avgc.ocr.service</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_avgc_ocr_service_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first OCR processing request!
+            </p>
+            <p>
+                Extract text from documents using OCR technology.
+            </p>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- GeM Bid Stages for 14-stage lifecycle management -->
+    <record id="gem_stage_draft" model="avgc.gem.bid.stage">
+        <field name="name">Draft</field>
+        <field name="code">DRAFT</field>
+        <field name="sequence">1</field>
+        <field name="description">Initial bid creation and preparation</field>
+        <field name="is_active">True</field>
+    </record>
+
+    <record id="gem_stage_technical_eval" model="avgc.gem.bid.stage">
+        <field name="name">Technical Evaluation</field>
+        <field name="code">TECH_EVAL</field>
+        <field name="sequence">2</field>
+        <field name="description">Technical specification review and evaluation</field>
+        <field name="is_active">True</field>
+    </record>
+
+    <record id="gem_stage_document_prep" model="avgc.gem.bid.stage">
+        <field name="name">Document Preparation</field>
+        <field name="code">DOC_PREP</field>
+        <field name="sequence">3</field>
+        <field name="description">Preparation and compilation of required documents</field>
+        <field name="is_active">True</field>
+    </record>
+
+    <record id="gem_stage_compliance" model="avgc.gem.bid.stage">
+        <field name="name">Compliance Check</field>
+        <field name="code">COMPLIANCE</field>
+        <field name="sequence">4</field>
+        <field name="description">Verification of compliance requirements</field>
+        <field name="is_active">True</field>
+    </record>
+
+    <record id="gem_stage_price_analysis" model="avgc.gem.bid.stage">
+        <field name="name">Price Analysis</field>
+        <field name="code">PRICE_ANALYSIS</field>
+        <field name="sequence">5</field>
+        <field name="description">Analysis and finalization of bid pricing</field>
+        <field name="is_active">True</field>
+    </record>
+
+    <record id="gem_stage_internal_approval" model="avgc.gem.bid.stage">
+        <field name="name">Internal Approval</field>
+        <field name="code">INT_APPROVAL</field>
+        <field name="sequence">6</field>
+        <field name="description">Internal review and approval process</field>
+        <field name="is_active">True</field>
+    </record>
+
+    <record id="gem_stage_submission_prep" model="avgc.gem.bid.stage">
+        <field name="name">Submission Preparation</field>
+        <field name="code">SUB_PREP</field>
+        <field name="sequence">7</field>
+        <field name="description">Final preparation for bid submission</field>
+        <field name="is_active">True</field>
+    </record>
+
+    <record id="gem_stage_submitted" model="avgc.gem.bid.stage">
+        <field name="name">Submitted</field>
+        <field name="code">SUBMITTED</field>
+        <field name="sequence">8</field>
+        <field name="description">Bid successfully submitted to GeM portal</field>
+        <field name="is_active">True</field>
+    </record>
+
+    <record id="gem_stage_tech_evaluation" model="avgc.gem.bid.stage">
+        <field name="name">Under Technical Evaluation</field>
+        <field name="code">UNDER_TECH_EVAL</field>
+        <field name="sequence">9</field>
+        <field name="description">Bid under technical evaluation by buyer</field>
+        <field name="is_active">True</field>
+    </record>
+
+    <record id="gem_stage_price_evaluation" model="avgc.gem.bid.stage">
+        <field name="name">Price Bid Evaluation</field>
+        <field name="code">PRICE_EVAL</field>
+        <field name="sequence">10</field>
+        <field name="description">Price bid evaluation phase</field>
+        <field name="is_active">True</field>
+    </record>
+
+    <record id="gem_stage_negotiation" model="avgc.gem.bid.stage">
+        <field name="name">Negotiation</field>
+        <field name="code">NEGOTIATION</field>
+        <field name="sequence">11</field>
+        <field name="description">Price negotiation with buyer</field>
+        <field name="is_active">True</field>
+    </record>
+
+    <record id="gem_stage_awarded" model="avgc.gem.bid.stage">
+        <field name="name">Awarded</field>
+        <field name="code">AWARDED</field>
+        <field name="sequence">12</field>
+        <field name="description">Bid successfully awarded</field>
+        <field name="is_active">True</field>
+    </record>
+
+    <record id="gem_stage_contract" model="avgc.gem.bid.stage">
+        <field name="name">Contract Processing</field>
+        <field name="code">CONTRACT</field>
+        <field name="sequence">13</field>
+        <field name="description">Contract preparation and processing</field>
+        <field name="is_active">True</field>
+    </record>
+
+    <record id="gem_stage_completed" model="avgc.gem.bid.stage">
+        <field name="name">Completed</field>
+        <field name="code">COMPLETED</field>
+        <field name="sequence">14</field>
+        <field name="description">Bid process completed</field>
+        <field name="is_active">True</field>
+    </record>
+
+    <!-- Stage Dependencies -->
+    <record id="gem_stage_dependency_1" model="avgc.gem.bid.stage.dependency">
+        <field name="stage_id" ref="gem_stage_technical_eval"/>
+        <field name="previous_stage_id" ref="gem_stage_draft"/>
+        <field name="is_mandatory">True</field>
+    </record>
+
+    <record id="gem_stage_dependency_2" model="avgc.gem.bid.stage.dependency">
+        <field name="stage_id" ref="gem_stage_document_prep"/>
+        <field name="previous_stage_id" ref="gem_stage_technical_eval"/>
+        <field name="is_mandatory">True</field>
+    </record>
+
+    <!-- Add more dependencies as needed -->
+</odoo>
