@@ -64,6 +64,18 @@ class ArchitectFinancialTracking(models.Model):
                 vals['name'] = self.env['ir.sequence'].next_by_code('architect.financial.tracking')
         return super().create(vals_list)
 
+    def action_submit(self):
+        for record in self:
+            record.state = 'submitted'
+
+    def action_approve(self):
+        for record in self:
+            record.state = 'approved'
+
+    def action_reject(self):
+        for record in self:
+            record.state = 'rejected'
+
     def action_confirm(self):
         self.state = 'confirmed'
         self.message_post(body=_("Financial transaction confirmed."))
