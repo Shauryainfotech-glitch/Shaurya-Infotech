@@ -36,7 +36,9 @@ class ArchitectFinancialTracking(models.Model):
     # Categories
     category_id = fields.Many2one('architect.financial.category', string='Category')
     subcategory_id = fields.Many2one('architect.financial.subcategory', string='Subcategory')
-
+    approved_by = fields.Many2one('res.users', string='Approved By', readonly=True)
+    approved_date = fields.Datetime(string='Approved Date', readonly=True)
+    approval_notes = fields.Text(string='Approval Notes')
     # Status
     state = fields.Selection([
         ('draft', 'Draft'),
