@@ -95,7 +95,7 @@ class SolarProject(models.Model):
     inquiry_date = fields.Datetime(
         string="Inquiry Date",
         default=fields.Datetime.now,
-        readonly=True,
+        # readonly=True,
         tracking=True
     )
     scheduled_start_date = fields.Date(

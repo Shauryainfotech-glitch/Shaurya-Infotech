@@ -35,10 +35,10 @@
                      <field name="ground_mount_depth"/>
                   </group>
                   <group string="Recommendations">
-                     <field name="recommended_capacity_kw" readonly="1"/>
-                     <field name="estimated_install_cost" readonly="1"/>
+                     <field name="recommended_capacity_kw" />
+                     <field name="estimated_install_cost" />
                      <field name="recommended_products_ids" widget="many2many_tags"/>
-<field name="survey_report" filename="name.pdf"/>
+                     <field name="survey_report" filename="name.pdf"/>
                   </group>
                   <group>
                      <field name="notes"/>
