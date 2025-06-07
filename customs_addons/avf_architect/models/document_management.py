@@ -39,7 +39,7 @@ class ArchitectDocument(models.Model):
     file_type = fields.Char(string='File Type', compute='_compute_file_info', store=True)
     mime_type = fields.Char(string='MIME Type', compute='_compute_file_info', store=True)
     code = fields.Char(string="Document Code")
-
+    document_file = fields.Binary(string="Document File", attachment=True)
     document_date = fields.Date(string="Document Date")
     expiry_date = fields.Date(string="Expiry Date")
     review_notes = fields.Text(string='Review Notes')
