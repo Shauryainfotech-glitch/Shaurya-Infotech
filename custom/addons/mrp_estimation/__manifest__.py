@@ -28,7 +28,7 @@
     'depends': [
         'base',
         'product',
-        'sale',
+        'sale ',
         'mrp',
         'stock',
         'account',
@@ -54,6 +54,7 @@
         'views/estimation_menus.xml',
         
         # Reports
+        'reports/estimation_reports.xml',   
         'reports/estimation_report_views.xml',
         'reports/estimation_templates.xml',
         
