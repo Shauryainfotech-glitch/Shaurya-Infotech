@@ -13,7 +13,7 @@ class EstimationAutomation(models.Model):
         ('on_update', 'On Update'),
         ('scheduled', 'Scheduled'),
     ], string='Trigger Type', required=True, tracking=True)
-    model_id = fields.Many2one('ir.model', string='Model', required=True, tracking=True)
+    model_id = fields.Many2one('ir.model', string='Model', required=True, tracking=True, ondelete='cascade')
     action_type = fields.Selection([
         ('email', 'Send Email'),
         ('notification', 'Send Notification'),
