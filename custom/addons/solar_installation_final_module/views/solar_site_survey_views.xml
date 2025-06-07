@@ -38,7 +38,7 @@
                      <field name="recommended_capacity_kw" readonly="1"/>
                      <field name="estimated_install_cost" readonly="1"/>
                      <field name="recommended_products_ids" widget="many2many_tags"/>
-                     <field name="survey_report" filename="%(name)s.pdf"/>
+<field name="survey_report" filename="name.pdf"/>
                   </group>
                   <group>
                      <field name="notes"/>
@@ -59,6 +59,21 @@
                Create your first site survey
             </p>
          </field>
+      </record>
+
+      <!-- Menu item for Solar Site Surveys -->
+      <record id="menu_solar_site_survey" model="ir.ui.menu">
+         <field name="name">Site Surveys</field>
+         <field name="parent_id" ref="base.menu_custom"/>
+         <field name="action" ref="action_solar_site_survey"/>
+      </record>
+
+      <!-- Model for solar.site.survey -->
+      <record id="model_solar_site_survey" model="ir.model">
+         <field name="name">solar.site.survey</field>
+         <field name="model">solar.site.survey</field>
+         <field name="state">manual</field>
+         <field name="info">Solar Site Survey</field>
       </record>
    </data>
 </odoo>
