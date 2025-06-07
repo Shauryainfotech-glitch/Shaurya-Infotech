@@ -39,7 +39,7 @@
     'data': [
         # Security
         'security/estimation_security.xml',
-        'security/portal_security.xml',
+        # 'security/portal_security.xml',
         'security/ir.model.access.csv',
         
         # Data
