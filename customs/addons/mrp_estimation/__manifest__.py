@@ -39,10 +39,12 @@
     'data': [
         # Security
         'security/estimation_security.xml',
+        'security/portal_security.xml',  # Add this line
         'security/ir.model.access.csv',
         
         # Data
         'data/estimation_sequence.xml',
+        'data/product_data.xml',  # Add this line
         
         # Report Templates
         'reports/estimation_templates.xml',

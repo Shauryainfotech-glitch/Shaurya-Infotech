@@ -113,5 +113,20 @@
             <field name="value">15.0</field>
         </record>
 
+        <!-- Manufacturing Cost Product -->
+        <record id="product_manufacturing_cost" model="product.product">
+            <field name="name">Manufacturing Cost</field>
+            <field name="type">service</field>
+            <field name="sale_ok" eval="True"/>
+            <field name="purchase_ok" eval="False"/>
+            <field name="list_price">0.0</field>
+            <field name="standard_price">0.0</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+            <field name="description">Manufacturing cost line for estimations</field>
+            <field name="default_code">MFG-COST</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+        </record>
+
     </data>
 </odoo>

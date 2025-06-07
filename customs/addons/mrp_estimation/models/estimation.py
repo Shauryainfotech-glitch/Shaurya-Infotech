@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 import logging
 import base64
 
+
 _logger = logging.getLogger(__name__)
 
 class MrpEstimation(models.Model):
@@ -539,6 +540,149 @@ class MrpEstimation(models.Model):
             'domain': [('parent_estimation_id', '=', self.id)],
         }
         return action
+    
+    @api.model
+    def action_create_bom(self):
+        """Create Bill of Materials from estimation."""
+        self.ensure_one()
+        
+        if not self.product_id:
+            raise UserError(_("Please select a product to manufacture before creating BOM."))
+            
+        # Check if BOM already exists
+        existing_bom = self.env['mrp.bom'].search([
+            ('product_tmpl_id', '=', self.product_id.product_tmpl_id.id),
+            ('product_id', '=', self.product_id.id)
+        ], limit=1)
+        
+        if existing_bom:
+            raise UserError(_("A Bill of Materials already exists for this product."))
+        
+        # Create BOM
+        bom_vals = {
+            'product_tmpl_id': self.product_id.product_tmpl_id.id,
+            'product_id': self.product_id.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'code': self.name,
+        }
+        
+        # Create BOM lines from estimation lines
+        bom_line_vals = []
+        for line in self.estimation_line_ids:
+            bom_line_vals.append((0, 0, {
+                'product_id': line.product_id.id,
+                'product_qty': line.product_qty,
+                'product_uom_id': line.product_uom_id.id,
+            }))
+        
+        bom_vals['bom_line_ids'] = bom_line_vals
+        
+        # Create the BOM
+        bom = self.env['mrp.bom'].create(bom_vals)
+        
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Success'),
+                'message': _('Bill of Materials has been created successfully.'),
+                'sticky': False,
+                'type': 'success',
+            }
+        }
+    
+    def action_create_sale_order(self):
+        """Create Sales Order from estimation."""
+        self.ensure_one()
+        
+        if not self.partner_id:
+            raise UserError(_("Please select a customer before creating a sales order."))
+            
+        # Create sales order
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_id.id,
+            'origin': self.name,
+            'client_order_ref': self.name,
+            'date_order': fields.Datetime.now(),
+            'user_id': self.user_id.id,
+            'company_id': self.company_id.id,
+            'currency_id': self.currency_id.id,
+        })
+        
+        # Create sales order lines
+        for line in self.estimation_line_ids:
+            self.env['sale.order.line'].create({
+                'order_id': sale_order.id,
+                'product_id': line.product_id.id,
+                'product_uom_qty': line.product_qty,
+                'product_uom': line.product_uom_id.id,
+                'price_unit': line.marked_up_cost,
+                'name': line.product_id.name,
+            })
+            
+        # Add costs as additional lines if they have markup
+        for cost in self.estimation_cost_ids:
+            if cost.total_cost > 0:
+                self.env['sale.order.line'].create({
+                    'order_id': sale_order.id,
+                    'product_id': self.env.ref('mrp_estimation.product_manufacturing_cost').id,
+                    'product_uom_qty': 1,
+                    'product_uom': self.env.ref('uom.product_uom_unit').id,
+                    'price_unit': cost.total_cost,
+                    'name': cost.name,
+                })
+        
+        # Open the created sales order
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Sales Order'),
+            'res_model': 'sale.order',
+            'res_id': sale_order.id,
+            'view_mode': 'form',
+            'target': 'current',
+        }
+    
+    def action_create_manufacturing_order(self):
+        """Create Manufacturing Order from estimation."""
+        self.ensure_one()
+        
+        if not self.product_id:
+            raise UserError(_("Please select a product to manufacture before creating manufacturing order."))
+        
+        # Check if BOM exists
+        bom = self.env['mrp.bom']._bom_find(
+            product=self.product_id,
+            company_id=self.company_id.id,
+            bom_type='normal'
+        )
+        
+        if not bom:
+            raise UserError(_("No Bill of Materials found for this product. Please create a BOM first."))
+        
+        # Create manufacturing order
+        mo_vals = {
+            'product_id': self.product_id.id,
+            'product_qty': self.product_qty,
+            'product_uom_id': self.product_uom_id.id,
+            'bom_id': bom.id,
+            'origin': self.name,
+            'company_id': self.company_id.id,
+            'user_id': self.user_id.id,
+            'date_planned_start': fields.Datetime.now(),
+        }
+        
+        # Create the manufacturing order
+        mo = self.env['mrp.production'].create(mo_vals)
+        
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Manufacturing Order'),
+            'res_model': 'mrp.production',
+            'res_id': mo.id,
+            'view_mode': 'form',
+            'target': 'current',
+        }
     
     # ======================
     # BUSINESS LOGIC METHODS
