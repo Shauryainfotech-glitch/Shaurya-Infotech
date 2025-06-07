@@ -28,7 +28,7 @@
     'depends': [
         'base',
         'product',
-        'sale ',
+        'sale',
         'mrp',
         'stock',
         'account',
