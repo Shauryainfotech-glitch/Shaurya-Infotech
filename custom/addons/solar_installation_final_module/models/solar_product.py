@@ -117,7 +117,7 @@ class SolarProduct(models.Model):
     )
 
     # New relation for multiple images
-    product_image_ids = fields.One2many(
+    product_image_ids = fields.Many2one(
         comodel_name='solar.product.image',
         inverse_name='product_id',
         string="Product Images"
