@@ -372,3 +372,13 @@ class SolarProject(models.Model):
             if not record.site_country_id:
                 raise ValidationError("Country must be selected for the project!")
 
+
+   @api.depends('customer_id', 'site_country_id')
+    def _compute_related_fields(self):
+        for rec in self:
+            if rec.customer_id:
+                rec.customer_id_name = rec.customer_id.name  # Example field to use customer data
+            if rec.site_country_id:
+                rec.site_country_name = rec.site_country_id.name  # Example field to use country data
+            else:
+                rec.site_country_name = "Not Set"  # Handle the case where it's not set
