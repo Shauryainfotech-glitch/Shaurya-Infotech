@@ -2,7 +2,7 @@
 <odoo>
    <data>
   <!-- Main Root Menu -->
-  <menuitem id="menu_solar_root"
+    <menuitem id="menu_solar_root"
             name="Solar Installation"
             sequence="10"/>
 
@@ -13,6 +13,7 @@
             parent="menu_solar_root"
             action="solar_installation_final_module.action_solar_product_views"
             sequence="10"/>
+
 
   <menuitem id="menu_solar_install_skill"
             name="Installation Skills"
@@ -51,5 +52,5 @@
             sequence="70"/>
 
 
- </data>
+  </data>
 </odoo>

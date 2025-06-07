@@ -85,51 +85,21 @@ class SolarProduct(models.Model):
         help="Purchase unit of measure"
     )
 
-    # Stock Integration
-    product_tmpl_id = fields.Many2one(
-        'product.template',
-        string='Product Template',
-        required=True,
-        ondelete='cascade',
-        auto_join=True,
-        index=True
-    )
-    default_code = fields.Char(
-        string='Internal Reference',
-        index=True
-    )
-    barcode = fields.Char(
-        string='Barcode',
-        copy=False,
-        index=True
-    )
+    # Stock & Availability
     stock_quantity = fields.Float(
-        string='Quantity On Hand',
-        related='product_tmpl_id.qty_available',
+        string="On Hand Quantity",
+        compute="_compute_stock_quantity",
         store=True
     )
     incoming_qty = fields.Float(
-        string='Incoming',
-        related='product_tmpl_id.incoming_qty',
+        string="Incoming Quantity",
+        compute="_compute_stock_quantity",
         store=True
     )
     outgoing_qty = fields.Float(
-        string='Outgoing',
-        related='product_tmpl_id.outgoing_qty',
+        string="Outgoing Quantity",
+        compute="_compute_stock_quantity",
         store=True
-    )
-    virtual_available = fields.Float(
-        string='Forecast Quantity',
-        related='product_tmpl_id.virtual_available',
-        store=True
-    )
-
-    # Stock Locations
-    location_ids = fields.Many2many(
-        'stock.location',
-        compute='_compute_location_ids',
-        string='Locations',
-        help='Locations where this product is stored'
     )
 
     # Relationships
@@ -146,73 +116,12 @@ class SolarProduct(models.Model):
         readonly=True
     )
 
-    project_id = fields.Many2one(
-        comodel_name="solar.project",
-        string="Related Project",
-        required=True,
-        ondelete="cascade",
-        tracking=True
-    )
     active = fields.Boolean(string="Active", default=True)
 
-    @api.model
-    def create(self, vals):
-        """Create corresponding product.template when creating solar product"""
-        if not vals.get('product_tmpl_id'):
-            product_vals = {
-                'name': vals.get('name'),
-                'type': 'product',  # Storable product
-                'standard_price': vals.get('standard_price', 0.0),
-                'list_price': vals.get('list_price', 0.0),
-                'uom_id': vals.get('uom_id'),
-                'uom_po_id': vals.get('uom_po_id'),
-                'default_code': vals.get('product_code'),
-                'barcode': vals.get('barcode'),
-            }
-            product_tmpl = self.env['product.template'].create(product_vals)
-            vals['product_tmpl_id'] = product_tmpl.id
-        return super().create(vals)
-
-    @api.depends('product_tmpl_id')
-    def _compute_location_ids(self):
-        """Compute all stock locations where this product is stored"""
-        for record in self:
-            quants = self.env['stock.quant'].search([
-                ('product_id.product_tmpl_id', '=', record.product_tmpl_id.id),
-                ('location_id.usage', '=', 'internal')
-            ])
-            record.location_ids = quants.mapped('location_id')
-
-    def action_view_stock_moves(self):
-        """Smart button action to view stock moves"""
-        self.ensure_one()
-        action = self.env.ref('stock.stock_move_action').read()[0]
-        action['domain'] = [('product_id.product_tmpl_id', '=', self.product_tmpl_id.id)]
-        action['context'] = {'search_default_product_id': self.product_tmpl_id.id}
-        return action
-
-    def action_update_quantity_on_hand(self):
-        """Smart button action to update quantity"""
-        self.ensure_one()
-        return self.product_tmpl_id.action_update_quantity_on_hand()
-
-    def _sync_product_template(self):
-        """Sync changes to product.template"""
-        for record in self:
-            if record.product_tmpl_id:
-                record.product_tmpl_id.write({
-                    'name': record.name,
-                    'standard_price': record.standard_price,
-                    'list_price': record.list_price,
-                    'uom_id': record.uom_id.id,
-                    'uom_po_id': record.uom_po_id.id,
-                    'default_code': record.product_code,
-                    'barcode': record.barcode,
-                })
-
-    def write(self, vals):
-        """Update product.template when solar product is updated"""
-        res = super().write(vals)
-        if any(field in vals for field in ['name', 'standard_price', 'list_price', 'uom_id', 'uom_po_id', 'product_code', 'barcode']):
-            self._sync_product_template()
-        return res
+    @api.depends()
+    def _compute_stock_quantity(self):
+        for rec in self:
+            # Simplified stock computation
+            rec.stock_quantity = 0.0
+            rec.incoming_qty = 0.0
+            rec.outgoing_qty = 0.0

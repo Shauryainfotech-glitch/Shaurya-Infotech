@@ -39,7 +39,7 @@ class SolarProjectProductLine(models.Model):
     )
     manual_unit_cost = fields.Monetary(
         string="Manual Cost Override",
-        help="If empty, uses product’s standard_price"
+        help="If empty, uses product's standard_price"
     )
     subtotal = fields.Monetary(
         string="Subtotal",

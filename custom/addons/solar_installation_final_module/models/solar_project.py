@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
-from odoo.exceptions import ValidationError, UserError
 from datetime import timedelta
-import logging
-
-_logger = logging.getLogger(__name__)
 
 
 class SolarProject(models.Model):
@@ -19,23 +15,14 @@ class SolarProject(models.Model):
         required=True,
         copy=False,
         readonly=True,
-        default=lambda self: self.env['ir.sequence'].next_by_code('solar.project') or "New",
-        tracking=True
-    )
-    company_id = fields.Many2one(
-        'res.company',
-        string='Company',
-        required=True,
-        default=lambda self: self.env.company
+        default=lambda self: self.env['ir.sequence'].next_by_code('solar.project') or "New"
     )
     customer_id = fields.Many2one(
-        'res.partner',
-        string='Customer',
-        domain=[('is_company', '=', True)],
+        comodel_name="res.partner",
+        string="Customer",
         required=True,
         tracking=True
     )
-
     project_name = fields.Char(
         string="Project Name",
         required=True,
@@ -51,30 +38,19 @@ class SolarProject(models.Model):
     site_state = fields.Char(string="State/Province")
     site_zip = fields.Char(string="ZIP")
     site_country_id = fields.Many2one(
-        'res.country',
-        string="Country",
-        default=lambda self: self.env.ref('base.in')  # Default to India
+        comodel_name="res.country",
+        string="Country"
     )
     gps_latitude = fields.Float(string="Latitude", digits=(9, 6))
     gps_longitude = fields.Float(string="Longitude", digits=(9, 6))
 
-    project_id = fields.Many2one(
-        comodel_name="solar.project",
-        string="Related Project",
-        required=True,
-        ondelete="cascade",
-        tracking=True
-    )
-
-    active_id = fields.Many2one('survey.survey', string="Survey", help="Survey related to the project")
     # Relationship to Site Survey
     survey_id = fields.Many2one(
         comodel_name="solar.site.survey",
         string="Site Survey",
         ondelete="set null",
         tracking=True,
-        help="Linked site survey for this project",
-        context="{'default_project_id': project_id}"  # Corrected context for linking survey_id
+        help="Linked site survey for this project"
     )
 
     # Relationship to Quotes/Proposals
@@ -179,34 +155,10 @@ class SolarProject(models.Model):
         compute="_compute_schedule_count"
     )
 
-    # Additional computed fields for analytics
-    progress = fields.Float(
-        string="Progress",
-        compute="_compute_progress",
-        store=True,
-        help="Project completion progress in percentage"
-    )
-    days_to_deadline = fields.Integer(
-        string="Days to Deadline",
-        compute="_compute_days_to_deadline",
-        store=True
-    )
-
     # Miscellaneous
     notes = fields.Text(string="Internal Notes")
     description = fields.Html(string="Project Description")
-    # Adding a related model field for better reference
-    related_model = fields.Many2one('related.model', string='Related Model')
 
-    partner_id = fields.Many2one(
-        comodel_name="res.partner",
-        string="Customer",
-        related="project_id.customer_id",
-        readonly=True,
-        store=True
-    )
-
-    # Method to compute the current active quote
     @api.depends('quote_ids', 'quote_ids.total_amount', 'quote_ids.state')
     def _compute_current_quote(self):
         for rec in self:
@@ -219,23 +171,6 @@ class SolarProject(models.Model):
                 else:
                     rec.current_quote_id = False
 
-    # Constraints
-    @api.constrains('scheduled_start_date', 'scheduled_end_date')
-    def _check_dates(self):
-        for record in self:
-            if record.scheduled_start_date and record.scheduled_end_date:
-                if record.scheduled_end_date < record.scheduled_start_date:
-                    raise ValidationError("End date cannot be before start date!")
-
-    @api.constrains('state')
-    def _check_state_transition(self):
-        for record in self:
-            if record.state == 'in_progress' and not record.schedule_ids:
-                raise ValidationError("Cannot start project without scheduling installation!")
-            if record.state == 'completed' and not record.actual_end_date:
-                raise ValidationError("Please set actual end date before marking project as completed!")
-
-    # Method to compute schedule dates
     @api.depends('schedule_ids.start_datetime', 'schedule_ids.end_datetime')
     def _compute_schedule_dates(self):
         for rec in self:
@@ -244,146 +179,27 @@ class SolarProject(models.Model):
             rec.scheduled_start_date = min(dates).date() if dates else False
             rec.scheduled_end_date = max(ends).date() if ends else False
 
-    # Method to compute the total quoted amount
     @api.depends('quote_ids', 'quote_ids.total_amount')
     def _compute_total_quote_amount(self):
         for rec in self:
-            accepted_quotes = rec.quote_ids.filtered(lambda q: q.state == 'accepted')
-            rec.total_quote_amount = sum(accepted_quotes.mapped('total_amount')) if accepted_quotes else 0.0
+            rec.total_quote_amount = sum(rec.quote_ids.mapped('total_amount')) if rec.quote_ids else 0.0
 
-    # Method to compute the total cost
     @api.depends('product_line_ids', 'product_line_ids.subtotal')
     def _compute_total_cost(self):
         for rec in self:
             rec.total_cost = sum(rec.product_line_ids.mapped('subtotal')) if rec.product_line_ids else 0.0
 
-    # Method to compute product count
     @api.depends('product_line_ids')
     def _compute_product_count(self):
         for rec in self:
             rec.product_count = len(rec.product_line_ids)
 
-    # Method to compute schedule count
     @api.depends('schedule_ids')
     def _compute_schedule_count(self):
         for rec in self:
             rec.schedule_count = len(rec.schedule_ids)
 
-    # Method to compute project progress
-    @api.depends('state', 'schedule_ids.state')
-    def _compute_progress(self):
-        state_progress = {
-            'draft': 0,
-            'surveyed': 20,
-            'quoted': 40,
-            'confirmed': 60,
-            'scheduled': 70,
-            'in_progress': 80,
-            'completed': 100,
-            'cancelled': 0
-        }
-        for record in self:
-            if record.state == 'in_progress' and record.schedule_ids:
-                completed_schedules = len(record.schedule_ids.filtered(lambda s: s.state == 'done'))
-                total_schedules = len(record.schedule_ids)
-                base_progress = state_progress['in_progress']
-                additional_progress = (completed_schedules / total_schedules) * 20 if total_schedules else 0
-                record.progress = base_progress + additional_progress
-            else:
-                record.progress = state_progress.get(record.state, 0)
-
-    # Method to compute days to deadline
-    @api.depends('scheduled_end_date')
-    def _compute_days_to_deadline(self):
-        today = fields.Date.context_today(self)
-        for record in self:
-            if record.scheduled_end_date:
-                if record.scheduled_end_date > today:
-                    record.days_to_deadline = (record.scheduled_end_date - today).days
-                else:
-                    record.days_to_deadline = 0
-            else:
-                record.days_to_deadline = 0
-
-    # Ensure customer_id and site_country_id are correctly populated
-    @api.onchange('customer_id')
-    def _onchange_customer_id(self):
-        if self.customer_id:
-            self.site_address = self.customer_id.street
-            self.site_city = self.customer_id.city
-            self.site_state = self.customer_id.state_id.name if self.customer_id.state_id else False
-            self.site_zip = self.customer_id.zip
-            self.site_country_id = self.customer_id.country_id if self.customer_id.country_id else False
-            if not self.project_name:
-                self.project_name = f"{self.customer_id.name}'s Solar Installation"
-        else:
-            # If customer_id is not set, reset address-related fields
-            self.site_address = ''
-            self.site_city = ''
-            self.site_state = ''
-            self.site_zip = ''
-            self.site_country_id = None
-
-    # Method to compute assigned teams
     @api.depends('schedule_ids.team_id')
     def _compute_assigned_teams(self):
         for rec in self:
             rec.team_ids = rec.schedule_ids.mapped('team_id')
-
-    # Action Methods
-    def action_set_to_draft(self):
-        self.ensure_one()
-        if self.state not in ['cancelled', 'completed']:
-            raise UserError("Only cancelled or completed projects can be reset to draft.")
-        self.write({'state': 'draft'})
-
-    def action_cancel_project(self):
-        self.ensure_one()
-        if self.state == 'completed':
-            raise UserError("Cannot cancel a completed project.")
-        self.write({'state': 'cancelled'})
-
-    def action_mark_completed(self):
-        self.ensure_one()
-        if not self.actual_end_date:
-            self.actual_end_date = fields.Date.context_today(self)
-        self.write({'state': 'completed'})
-
-    @api.model
-    def create(self, vals):
-        if vals.get('related_model'):
-            related_record = self.env['related.model'].browse(vals['related_model'])
-            if not related_record:
-                raise ValidationError('The related model record does not exist!')
-        return super(SolarProject, self).create(vals)
-
-    @api.constrains('partner_id')
-    def _check_partner(self):
-        for record in self:
-            if not record.partner_id:
-                raise ValidationError("Partner is required for this project!")
-
-    # Ensure that site_country_id, customer_id, and other related fields are always set
-    @api.constrains('customer_id', 'site_country_id')
-    def _check_customer_and_country(self):
-        for record in self:
-            if not record.customer_id:
-                raise ValidationError("Customer must be selected for the project!")
-            if not record.site_country_id:
-                raise ValidationError("Country must be selected for the project!")
-
-    @api.constrains('product_line_ids', 'product_line_ids.product_id')
-    def _check_product_id(self):
-        for record in self:
-            for product_line in record.product_line_ids:
-                if not product_line.product_id:
-                    raise ValidationError("Product ID cannot be empty in BOM!")
-
-    @api.model
-    def create(self, vals):
-        if 'product_line_ids' in vals:
-            for line in vals.get('product_line_ids'):
-                if not line.get('product_id'):
-                    raise ValidationError('Product ID is required for each product line!')
-        return super(SolarProject, self).create(vals)
-

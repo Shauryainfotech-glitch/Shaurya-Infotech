@@ -1,106 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
-        <!-- Action for Solar Quotes -->
-        <record id="action_solar_quote" model="ir.actions.act_window">
-            <field name="name">Solar Quotations</field>
-            <field name="res_model">solar.quote</field>
-            <field name="view_mode">form</field>
-            <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">
-                    Create your first solar quotation
-                </p>
-            </field>
-        </record>
-
-        <!-- Form View -->
-        <record id="view_solar_quote_form" model="ir.ui.view">
-            <field name="name">solar.quote.form</field>
-            <field name="model">solar.quote</field>
-            <field name="arch" type="xml">
-                <form string="Solar Quote">
-                    <header>
-                        <!-- Send Button -->
-                        <button string="Send" type="object" name="action_send" class="oe_highlight"
-                                modifiers="{'invisible': [('state', '!=', 'draft')]}"/>
-
-                        <!-- Accept Button -->
-                        <button string="Accept" type="object" name="action_accept" class="oe_highlight"
-                                modifiers="{'invisible': [('state', '!=', 'sent')]}"/>
-
-                        <!-- Refuse Button -->
-                        <button string="Refuse" type="object" name="action_refuse"
-                                modifiers="{'invisible': [('state', 'not in', ['draft', 'sent'])]}"/>
-
-                        <!-- Reset to Draft Button -->
-                        <button string="Reset to Draft" type="object" name="action_reset_to_draft"
-                                modifiers="{'invisible': [('state', 'not in', ['refused', 'expired'])]}"/>
-
-                        <!-- Mark as Expired Button -->
-                        <button string="Mark as Expired" type="object" name="action_mark_expired"
-                                modifiers="{'invisible': [('state', '!=', 'sent')]}"/>
-
-                        <!-- State -->
-                        <field name="state" widget="statusbar" statusbar_visible="draft,sent,accepted,refused,expired"/>
-                    </header>
-                    <sheet>
-                        <div class="oe_title">
-                            <h1>
-                                <field name="quote_number"/>
-                            </h1>
-                        </div>
+   <data>
+      <!-- Form View for Solar Quote -->
+      <record id="view_solar_quote_form" model="ir.ui.view">
+         <field name="name">solar.quote.form</field>
+         <field name="model">solar.quote</field>
+         <field name="arch" type="xml">
+            <form string="Solar Quote" version="1.1">
+               <header>
+                  <field name="state" widget="statusbar"
+                         statusbar_visible="draft,sent,accepted,refused,expired"/>
+                  <!-- Updated to use 'invisible' for dynamic button visibility -->
+                  <button string="Send" type="object" name="action_send"
+                          modifiers="{'invisible': [('state', '!=', 'draft')]}"/>
+                  <button string="Accept" type="object" name="action_accept"
+                          modifiers="{'invisible': [('state', '!=', 'sent')]}"/>
+                  <button string="Refuse" type="object" name="action_refuse"
+                          modifiers="{'invisible': [('state', 'not in', ('draft', 'sent'))]}"/>
+               </header>
+               <sheet>
+                  <group>
+                     <field name="quote_number" readonly="1"/>
+                     <field name="project_id"/>
+                     <field name="quote_date"/>
+                     <field name="validity_days"/>
+                     <field name="expiration_date"/>
+                     <field name="partner_id" readonly="1"/>
+                  </group>
+                  <group>
+                     <field name="notes"/>
+                     <field name="internal_notes"/>
+                  </group>
+                  <newline/>
+                  <field name="quote_line_ids">
+                     <form string="Quote Lines">
                         <group>
-                            <group>
-                                <field name="project_id"/>
-                                <field name="partner_id"/>
-                                <field name="currency_id" invisible="1"/>
-                            </group>
-                            <group>
-                                <field name="quote_date"/>
-                                <field name="validity_days"/>
-                                <field name="expiration_date"/>
-                            </group>
+                           <field name="sequence"/>
+                           <field name="product_id"/>
+                           <field name="description"/>
+                           <field name="quantity"/>
+                           <field name="unit_price"/>
+                           <field name="discount_pct"/>
+                           <field name="price_subtotal"/>
                         </group>
-                        <notebook>
-                            <page string="Quote Lines">
-                                <field name="quote_line_ids">
-                                    <form string="Quote Line" editable="bottom">
-                                        <group>
-                                            <field name="product_id"/>
-                                            <field name="description"/>
-                                            <field name="quantity"/>
-                                            <field name="unit_price"/>
-                                            <field name="discount_pct"/>
-                                            <field name="price_subtotal"/>
-                                        </group>
-                                    </form>
-                                </field>
-                                <group class="oe_subtotal_footer oe_right">
-                                    <field name="untaxed_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                                    <field name="tax_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                                    <div class="oe_subtotal_footer_separator oe_inline">
-                                        <label for="total_amount"/>
-                                    </div>
-                                    <field name="total_amount" widget="monetary" options="{'currency_field': 'currency_id'}"
-                                           class="oe_subtotal_footer_separator"/>
-                                </group>
-                                <div class="oe_clear"/>
-                            </page>
-                            <page string="Notes">
-                                <group>
-                                    <field name="notes" placeholder="Notes visible to the customer..."/>
-                                    <field name="internal_notes" placeholder="Internal notes (not visible to customer)..."/>
-                                </group>
-                            </page>
-                        </notebook>
-                    </sheet>
-                    <div class="oe_chatter">
-                        <field name="message_follower_ids"/>
-                        <field name="activity_ids"/>
-                        <field name="message_ids"/>
-                    </div>
-                </form>
-            </field>
-        </record>
-    </data>
+                     </form>
+                  </field>
+                  <group string="Totals">
+                     <field name="untaxed_amount" readonly="1"/>
+                     <field name="tax_amount" readonly="1"/>
+                     <field name="total_amount" readonly="1"/>
+                  </group>
+               </sheet>
+            </form>
+         </field>
+      </record>
+
+      <!-- Action for Solar Quotes -->
+      <record id="action_solar_quote" model="ir.actions.act_window">
+         <field name="name">Solar Quotations</field>
+         <field name="res_model">solar.quote</field>
+         <field name="view_mode">form</field> <!-- Only Form view is displayed -->
+         <field name="view_id" ref="view_solar_quote_form"/>
+         <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+               Create your first solar quotation
+            </p>
+         </field>
+      </record>
+   </data>
 </odoo>

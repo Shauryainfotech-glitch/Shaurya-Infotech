@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
-from odoo.exceptions import ValidationError, UserError
 from datetime import timedelta
 
 
@@ -14,15 +13,9 @@ class SolarQuote(models.Model):
         string="Quote Reference",
         required=True,
         copy=False,
-        # readonly=True,
+        readonly=True,
         default=lambda self: self.env['ir.sequence'].next_by_code('solar.quote') or "New"
     )
-
-    product_id = fields.Many2one('product.product', string="Product", required=True)
-    quantity = fields.Float(string="Quantity", required=True)
-    description = fields.Text(string="Description")
-
-
     project_id = fields.Many2one(
         comodel_name="solar.project",
         string="Related Project",
@@ -102,23 +95,12 @@ class SolarQuote(models.Model):
     notes = fields.Text(string="Customer Notes")
     internal_notes = fields.Text(string="Internal Notes")
 
-    @api.depends('unit_price', 'quantity')
-    def _compute_price_subtotal(self):
-        for line in self:
-            line.price_subtotal = line.unit_price * line.quantity
-
     @api.depends('quote_date', 'validity_days')
     def _compute_expiration_date(self):
-        """
-        expiration_date = quote_date + validity_days
-        """
         for rec in self:
             rec.expiration_date = rec.quote_date + timedelta(days=rec.validity_days)
 
     def _inverse_expiration_date(self):
-        """
-        validity_days = expiration_date - quote_date
-        """
         for rec in self:
             if rec.expiration_date and rec.quote_date:
                 delta = rec.expiration_date - rec.quote_date
@@ -126,9 +108,6 @@ class SolarQuote(models.Model):
 
     @api.depends('quote_line_ids.price_subtotal')
     def _compute_amounts(self):
-        """
-        Calculate untaxed_amount, tax_amount (18%), and total_amount.
-        """
         TAX_RATE = 0.18  # 18% GST placeholder
         for rec in self:
             untaxed = sum(rec.quote_line_ids.mapped('price_subtotal'))
@@ -140,71 +119,27 @@ class SolarQuote(models.Model):
     @api.constrains('quote_date', 'expiration_date')
     def _check_dates(self):
         for rec in self:
-            if rec.expiration_date and rec.quote_date and rec.expiration_date < rec.quote_date:
-                raise ValidationError("Expiration date cannot be before Quote date.")
-
-    @api.constrains('validity_days')
-    def _check_validity_days(self):
-        for rec in self:
-            if rec.validity_days <= 0:
-                raise ValidationError("Validity days must be greater than 0.")
+            if rec.expiration_date < rec.quote_date:
+                raise models.ValidationError("Expiration date cannot be before Quote date.")
 
     def action_send(self):
         for rec in self:
             if not rec.quote_line_ids:
-                raise UserError("Cannot send a quote without any line items.")
-            if rec.total_amount <= 0:
-                raise UserError("Cannot send a quote with zero or negative amount.")
+                raise models.UserError("Cannot send a quote without any line items.")
             rec.state = 'sent'
-            rec.project_id.state = 'quoted'
-            # Optionally: send email template here
 
     def action_accept(self):
         for rec in self:
             if rec.state != 'sent':
-                raise UserError("Only sent quotes can be accepted.")
+                raise models.UserError("Only sent quotes can be accepted.")
             if rec.expiration_date < fields.Date.context_today(rec):
-                raise UserError("Cannot accept an expired quote.")
+                raise models.UserError("Cannot accept an expired quote.")
             rec.state = 'accepted'
             rec.project_id.state = 'confirmed'
 
     def action_refuse(self):
         for rec in self:
             if rec.state not in ['sent', 'draft']:
-                raise UserError("Only draft or sent quotes can be refused.")
+                raise models.UserError("Only draft or sent quotes can be refused.")
             rec.state = 'refused'
-            # Don't automatically change project state as there might be other quotes
-
-    def action_reset_to_draft(self):
-        """Reset quote to draft state"""
-        for rec in self:
-            if rec.state not in ['refused', 'expired']:
-                raise UserError("Only refused or expired quotes can be reset to draft.")
-            rec.state = 'draft'
-
-    def action_mark_expired(self):
-        """Mark quote as expired"""
-        for rec in self:
-            if rec.state != 'sent':
-                raise UserError("Only sent quotes can be marked as expired.")
-            rec.state = 'expired'
-
-    @api.model
-    def _cron_expire_quotes(self):
-        """Cron job to automatically expire quotes past their expiration date"""
-        expired_quotes = self.search([
-            ('state', '=', 'sent'),
-            ('expiration_date', '<', fields.Date.today())
-        ])
-        expired_quotes.write({'state': 'expired'})
-
-    def copy(self, default=None):
-        """Override copy to reset quote number and dates"""
-        if default is None:
-            default = {}
-        default.update({
-            'quote_number': self.env['ir.sequence'].next_by_code('solar.quote') or "New",
-            'quote_date': fields.Date.context_today(self),
-            'state': 'draft'
-        })
-        return super().copy(default)
+            rec.project_id.state = 'draft'

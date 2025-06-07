@@ -1,27 +1,19 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_solar_install_skill_user,Solar Install Skill User,model_solar_install_skill,solar_installation_final_module.group_solar_user,1,1,1,0
-access_solar_install_skill_manager,Solar Install Skill Manager,model_solar_install_skill,solar_installation_final_module.group_solar_manager,1,1,1,1
-
-access_solar_product_user,Solar Product User,model_solar_product_product,solar_installation_final_module.group_solar_user,1,1,1,0
-access_solar_product_manager,Solar Product Manager,model_solar_product_product,solar_installation_final_module.group_solar_manager,1,1,1,1
-
-access_solar_project_user,Solar Project User,model_solar_project,solar_installation_final_module.group_solar_user,1,1,1,0
-access_solar_project_manager,Solar Project Manager,model_solar_project,solar_installation_final_module.group_solar_manager,1,1,1,1
-
-access_solar_project_product_line_user,Solar Project Product Line User,model_solar_project_product_line,solar_installation_final_module.group_solar_user,1,1,1,0
-access_solar_project_product_line_manager,Solar Project Product Line Manager,model_solar_project_product_line,solar_installation_final_module.group_solar_manager,1,1,1,1
-
-access_solar_quote_user,Solar Quote User,model_solar_quote,solar_installation_final_module.group_solar_user,1,1,1,0
-access_solar_quote_manager,Solar Quote Manager,model_solar_quote,solar_installation_final_module.group_solar_manager,1,1,1,1
-
-access_solar_quote_line_user,Solar Quote Line User,model_solar_quote_line,solar_installation_final_module.group_solar_user,1,1,1,0
-access_solar_quote_line_manager,Solar Quote Line Manager,model_solar_quote_line,solar_installation_final_module.group_solar_manager,1,1,1,1
-
-access_solar_install_schedule_user,Solar Install Schedule User,model_solar_install_schedule,solar_installation_final_module.group_solar_user,1,1,1,0
-access_solar_install_schedule_manager,Solar Install Schedule Manager,model_solar_install_schedule,solar_installation_final_module.group_solar_manager,1,1,1,1
-
-access_solar_install_team_user,Solar Install Team User,model_solar_install_team,solar_installation_final_module.group_solar_user,1,1,1,0
-access_solar_install_team_manager,Solar Install Team Manager,model_solar_install_team,solar_installation_final_module.group_solar_manager,1,1,1,1
-
-access_solar_site_survey_user,Solar Site Survey User,model_solar_site_survey,solar_installation_final_module.group_solar_user,1,1,1,0
-access_solar_site_survey_manager,Solar Site Survey Manager,model_solar_site_survey,solar_installation_final_module.group_solar_manager,1,1,1,1
+access_solar_install_skill_user,solar.install.skill.user,model_solar_install_skill,group_solar_user,1,1,1,0
+access_solar_install_skill_manager,solar.install.skill.manager,model_solar_install_skill,group_solar_manager,1,1,1,1
+access_solar_product_user,solar.product.product.user,model_solar_product_product,group_solar_user,1,1,1,0
+access_solar_product_manager,solar.product.product.manager,model_solar_product_product,group_solar_manager,1,1,1,1
+access_solar_project_user,solar.project.user,model_solar_project,group_solar_user,1,1,1,0
+access_solar_project_manager,solar.project.manager,model_solar_project,group_solar_manager,1,1,1,1
+access_solar_project_product_line_user,solar.project.product.line.user,model_solar_project_product_line,group_solar_user,1,1,1,0
+access_solar_project_product_line_manager,solar.project.product.line.manager,model_solar_project_product_line,group_solar_manager,1,1,1,1
+access_solar_quote_user,solar.quote.user,model_solar_quote,group_solar_user,1,1,1,0
+access_solar_quote_manager,solar.quote.manager,model_solar_quote,group_solar_manager,1,1,1,1
+access_solar_quote_line_user,solar.quote.line.user,model_solar_quote_line,group_solar_user,1,1,1,0
+access_solar_quote_line_manager,solar.quote.line.manager,model_solar_quote_line,group_solar_manager,1,1,1,1
+access_solar_install_schedule_user,solar.install.schedule.user,model_solar_install_schedule,group_solar_user,1,1,1,0
+access_solar_install_schedule_manager,solar.install.schedule.manager,model_solar_install_schedule,group_solar_manager,1,1,1,1
+access_solar_install_team_user,solar.install.team.user,model_solar_install_team,group_solar_user,1,1,1,0
+access_solar_install_team_manager,solar.install.team.manager,model_solar_install_team,group_solar_manager,1,1,1,1
+access_solar_site_survey_user,solar.site.survey.user,model_solar_site_survey,group_solar_user,1,1,1,0
+access_solar_site_survey_manager,solar.site.survey.manager,model_solar_site_survey,group_solar_manager,1,1,1,1
