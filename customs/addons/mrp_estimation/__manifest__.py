@@ -44,14 +44,9 @@
         
         # Data
         'data/estimation_sequence.xml',
-        'data/product_data.xml',
+        'data/costing_sequence.xml',  # Add this line
         
         # Views
-        'views/portal_menu.xml',
-        'views/estimation_views.xml',
-        'views/estimation_line_views.xml',
-        'views/estimation_cost_views.xml',
-        'views/estimation_version_views.xml',
         'views/mrp_costing_views.xml',
         'views/res_config_settings_views.xml',
         'views/portal_templates.xml',
