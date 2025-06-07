@@ -116,7 +116,7 @@ class SolarProduct(models.Model):
         readonly=True
     )
 
-    image = fields.Binary(string="Product Image", attachment=True)
+    image = fields.Binary(string="Upload Image Here ", attachment=True)
 
     active = fields.Boolean(string="Active", default=True)
 
