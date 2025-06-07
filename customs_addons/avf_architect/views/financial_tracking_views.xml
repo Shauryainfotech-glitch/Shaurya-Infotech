@@ -50,15 +50,7 @@
                                 <field name="notes" placeholder="Additional notes..."/>
                             </group>
                         </page>
-                        <page string="Budget Tracking" name="budget">
-                            <group>
 
-                                <group>
-                                    <field name="variance_amount" widget="monetary" readonly="1"/>
-                                    <field name="variance_percentage" widget="percentage" readonly="1"/>
-                                </group>
-                            </group>
-                        </page>
                         <page string="Approval" name="approval">
                             <group>
                                 <group>
