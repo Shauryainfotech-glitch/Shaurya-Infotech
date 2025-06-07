@@ -85,7 +85,6 @@
                 <filter string="My Teams" name="my_teams"
                         domain="['|', ('leader_id', '=', uid), ('member_ids', 'in', uid)]"/>
                 <filter string="Active" name="active" domain="[('active', '=', True)]"/>
-                <filter string="Available" name="available" domain="[('available_hours', '>', 0)]"/>
                 <separator/>
                 <filter string="Active State" name="state_active" domain="[('state', '=', 'active')]"/>
                 <filter string="Over Allocated" name="overallocated" domain="[('state', '=', 'overallocated')]"/>
