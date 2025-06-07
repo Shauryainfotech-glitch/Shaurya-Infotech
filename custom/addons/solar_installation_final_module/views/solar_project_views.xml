@@ -13,7 +13,7 @@
                </header>
                <sheet>
                   <group>
-                     <field name="name" readonly="1"/>
+                     <field name="name" />
                      <field name="project_name"/>
                      <field name="customer_id"/>
                      <field name="inquiry_date" readonly="1"/>
