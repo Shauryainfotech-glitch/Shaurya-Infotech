@@ -27,20 +27,20 @@
                             <field name="brand"/>
                             <field name="model_number"/>
                         </group>
-<!--                        <page string="Product Images">-->
-<!--                        <field name="image_ids">-->
-<!--                            <tree>-->
-<!--                                <field name="name"/>-->
-<!--                                <field name="image"/>-->
-<!--                            </tree>-->
-<!--                            <form string="Upload Product Image">-->
-<!--                                <group>-->
-<!--                                    <field name="name"/>-->
-<!--                                    <field name="image"/>-->
-<!--                                </group>-->
-<!--                            </form>-->
-<!--                        </field>-->
-<!--                     </page>-->
+                        <page string="Product Images">
+                        <field name="image_ids">
+                            <tree>
+                                <field name="name"/>
+                                <field name="image"/>
+                            </tree>
+                            <form string="Upload Product Image">
+                                <group>
+                                    <field name="name"/>
+                                    <field name="image"/>
+                                </group>
+                            </form>
+                        </field>
+                     </page>
                         <notebook>
                             <page string="Technical Specs">
                                 <group>
