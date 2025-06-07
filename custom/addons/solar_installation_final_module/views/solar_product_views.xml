@@ -28,8 +28,9 @@
                             <field name="model_number"/>
                         </group>
 
-                        <!-- Product Images Section with One2many field -->
+                        <!-- Product Images Section with custom upload button -->
                         <group string="Product Images">
+                            <button name="%(action_solar_product_images_upload)s" string="Upload Multiple Images" type="action" class="btn-primary"/>
                             <field name="product_image_ids" widget="one2many_list">
                                 <form>
                                     <field name="image" widget="image"/>

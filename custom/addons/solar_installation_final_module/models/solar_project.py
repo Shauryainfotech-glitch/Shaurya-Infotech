@@ -202,3 +202,21 @@ class SolarProject(models.Model):
     def _compute_assigned_teams(self):
         for rec in self:
             rec.team_ids = rec.schedule_ids.mapped('team_id')
+
+            @api.multi
+            def action_upload_multiple_images(self):
+                """
+                Handle the upload of multiple images at once.
+                This function will be triggered by the custom button in the form view.
+                """
+                file_data = self.env.context.get('file_data')
+                product_image_model = self.env['solar.product.image']
+
+                for product in self:
+                    # Loop through the uploaded files and save each as a new image record
+                    for file in file_data:
+                        image_data = base64.b64encode(file).decode('utf-8')
+                        product_image_model.create({
+                            'product_id': product.id,
+                            'image': image_data
+                        })
