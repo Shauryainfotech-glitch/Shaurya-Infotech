@@ -42,7 +42,7 @@ class ArchitectDocument(models.Model):
 
     document_date = fields.Date(string="Document Date")
     expiry_date = fields.Date(string="Expiry Date")
-
+    review_notes = fields.Text(string='Review Notes')
     # Version Control
 
     revision = fields.Integer(string='Revision', default=1)
