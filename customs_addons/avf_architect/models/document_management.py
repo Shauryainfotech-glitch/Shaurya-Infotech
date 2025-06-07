@@ -48,7 +48,7 @@ class ArchitectDocument(models.Model):
     revision = fields.Integer(string='Revision', default=1)
     parent_document_id = fields.Many2one('architect.document', string='Parent Document')
     child_document_ids = fields.One2many('architect.document', 'parent_document_id', string='Child Documents')
-
+    approval_notes = fields.Text(string='Approval Notes')
 
     # Status and Workflow
     state = fields.Selection([
