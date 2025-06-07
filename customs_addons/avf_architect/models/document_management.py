@@ -74,6 +74,7 @@ class ArchitectDocument(models.Model):
     previous_version_id = fields.Many2one('architect.document', string='Previous Version')
     is_latest_version = fields.Boolean(string='Is Latest Version', default=True)
     version = fields.Char(string='Version', default='1.0')
+    version_notes = fields.Text(string='Version Notes')
     # Access Control
     access_level = fields.Selection([
         ('public', 'Public'),
