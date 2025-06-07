@@ -38,13 +38,13 @@
     ],
     'data': [
         # Security
-        # 'security/estimation_security.xml',
-        # 'security/portal_security.xml',
+        'security/estimation_security.xml',
+        'security/portal_security.xml',
         'security/ir.model.access.csv',
         
         # Data
         # 'data/estimation_sequence.xml',
-        'data/costing_sequence.xml',  # Add this line
+        'data/costing_sequence.xml',
         
         # Views
         'views/mrp_costing_views.xml',
