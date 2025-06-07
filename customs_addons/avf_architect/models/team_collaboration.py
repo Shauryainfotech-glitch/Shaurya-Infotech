@@ -15,6 +15,7 @@ class ArchitectTeam(models.Model):
     code = fields.Char(string='Team Code', required=True, copy=False)
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
     leader_id = fields.Many2one('res.users', string='Team Leader', required=True, tracking=True)
+    available_hours = fields.Float(string="Available Hours", compute="_compute_available_hours", store=True)
 
     member_ids = fields.Many2many('res.users', string="Team Members")
     specialization = fields.Selection([
