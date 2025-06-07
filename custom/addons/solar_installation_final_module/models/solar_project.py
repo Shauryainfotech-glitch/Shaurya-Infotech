@@ -305,6 +305,7 @@ class SolarProject(models.Model):
             else:
                 record.days_to_deadline = 0
 
+    # Ensure customer_id and site_country_id are correctly populated
     @api.onchange('customer_id')
     def _onchange_customer_id(self):
         if self.customer_id:
@@ -312,10 +313,11 @@ class SolarProject(models.Model):
             self.site_city = self.customer_id.city
             self.site_state = self.customer_id.state_id.name if self.customer_id.state_id else False
             self.site_zip = self.customer_id.zip
-            self.site_country_id = self.customer_id.country_id
+            self.site_country_id = self.customer_id.country_id if self.customer_id.country_id else False
             if not self.project_name:
                 self.project_name = f"{self.customer_id.name}'s Solar Installation"
         else:
+            # If customer_id is not set, reset address-related fields
             self.site_address = ''
             self.site_city = ''
             self.site_state = ''
@@ -370,10 +372,3 @@ class SolarProject(models.Model):
             if not record.site_country_id:
                 raise ValidationError("Country must be selected for the project!")
 
-    @api.model
-    def create(self, vals):
-        if vals.get('related_model'):
-            related_record = self.env['related.model'].browse(vals['related_model'])
-            if not related_record.exists():
-                raise ValidationError('The related model record does not exist!')
-        return super(SolarProject, self).create(vals)
