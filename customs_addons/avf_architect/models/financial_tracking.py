@@ -218,6 +218,12 @@ class ArchitectBudget(models.Model):
                 budget.variance_amount = 0.0
                 budget.variance_percentage = 0.0
 
+    def action_submit(self):
+        for record in self:
+            record.state = 'submitted'
+
+
+
     def action_approve(self):
         self.write({
             'state': 'approved',
