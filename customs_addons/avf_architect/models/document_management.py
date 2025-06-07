@@ -233,7 +233,8 @@ class ArchitectDocumentCategory(models.Model):
     max_file_size = fields.Integer(string='Max File Size (MB)', default=50)
     active = fields.Boolean(default=True)
     color = fields.Integer(string='Color Index')
-
+    auto_expire = fields.Boolean(string="Auto Expire?")
+    default_expiry_days = fields.Integer(string="Default Expiry Days")
 
 class ArchitectDocumentSubcategory(models.Model):
     _name = 'architect.document.subcategory'
