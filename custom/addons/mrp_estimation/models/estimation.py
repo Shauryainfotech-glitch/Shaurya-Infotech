@@ -13,6 +13,11 @@ class MrpEstimation(models.Model):
     _order = 'name desc'
     _rec_name = 'name'
 
+    # ... all your existing fields ...
+
+    approver_id = fields.Many2one('res.users', string='Approver')
+
+    # ... rest of your code ...
     # ======================
     # HEADER FIELDS
     # ======================
