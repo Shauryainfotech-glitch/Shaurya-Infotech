@@ -29,10 +29,10 @@
                         </group>
                         <page string="Product Images">
                         <field name="image_ids">
-                            <tree>
+                            <list>
                                 <field name="name"/>
                                 <field name="image"/>
-                            </tree>
+                           </list>
                             <form string="Upload Product Image">
                                 <group>
                                     <field name="name"/>
