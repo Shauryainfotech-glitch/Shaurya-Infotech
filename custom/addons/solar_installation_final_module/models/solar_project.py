@@ -372,4 +372,18 @@ class SolarProject(models.Model):
             if not record.site_country_id:
                 raise ValidationError("Country must be selected for the project!")
 
+    @api.constrains('product_line_ids', 'product_line_ids.product_id')
+    def _check_product_id(self):
+        for record in self:
+            for product_line in record.product_line_ids:
+                if not product_line.product_id:
+                    raise ValidationError("Product ID cannot be empty in BOM!")
+
+    @api.model
+    def create(self, vals):
+        if 'product_line_ids' in vals:
+            for line in vals.get('product_line_ids'):
+                if not line.get('product_id'):
+                    raise ValidationError('Product ID is required for each product line!')
+        return super(SolarProject, self).create(vals)
 
