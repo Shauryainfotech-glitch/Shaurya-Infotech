@@ -1,7 +1,7 @@
 <odoo>
     <data>
-        <!-- Action for Solar Projects -->
-            <record id="action_solar_product_views" model="ir.actions.act_window">
+        <!-- Action for Solar Products -->
+        <record id="action_solar_product_views" model="ir.actions.act_window">
             <field name="name">Solar Products</field>
             <field name="res_model">solar.product.product</field>
             <field name="view_mode">form</field> <!-- Only form view -->
@@ -19,6 +19,7 @@
                                statusbar_visible="draft,surveyed,quoted,confirmed,scheduled,in_progress,completed,cancelled"/>
                     </header>
                     <sheet>
+                        <!-- Group only product-related fields -->
                         <group>
                             <field name="name" readonly="1"/>
                             <field name="project_name"/>
@@ -26,49 +27,8 @@
                             <field name="inquiry_date" readonly="1"/>
                         </group>
 
-                        <!-- Site Information Section -->
-                        <group string="Site Information">
-                            <field name="site_address"/>
-                            <field name="site_city"/>
-                            <field name="site_state"/>
-                            <field name="site_zip"/>
-                            <field name="site_country_id"/>
-                            <field name="gps_latitude"/>
-                            <field name="gps_longitude"/>
-                        </group>
-
-                        <!-- Notebook for various tabs -->
+                        <!-- Notebook for Products tab -->
                         <notebook>
-                            <!-- Survey Tab -->
-                            <page string="Survey">
-                                <!-- Updated context to link survey_id to project_id -->
-                                <field name="survey_id" context="{'default_project_id': project_id}"/>
-                            </page>
-
-                            <!-- Quotations Tab -->
-                            <page string="Quotations">
-                                <field name="quote_ids">
-                                    <form>
-                                        <field name="quote_number"/>
-                                        <field name="quote_date"/>
-                                        <field name="total_amount"/>
-                                        <field name="state"/>
-                                    </form>
-                                </field>
-                            </page>
-
-                            <!-- Schedule Tab -->
-                            <page string="Schedule">
-                                <field name="schedule_ids">
-                                    <form>
-                                        <field name="team_id"/>
-                                        <field name="start_datetime"/>
-                                        <field name="end_datetime"/>
-                                        <field name="state"/>
-                                    </form>
-                                </field>
-                            </page>
-
                             <!-- Products (BOM) Tab -->
                             <page string="Products (BOM)">
                                 <field name="product_line_ids">
@@ -80,24 +40,6 @@
                                         <field name="subtotal"/>
                                     </form>
                                 </field>
-                            </page>
-
-                            <!-- Metrics Tab -->
-                            <page string="Metrics">
-                                <group>
-                                    <field name="total_quote_amount" readonly="1"/>
-                                    <field name="total_cost" readonly="1"/>
-                                    <field name="scheduled_start_date" readonly="1"/>
-                                    <field name="scheduled_end_date" readonly="1"/>
-                                    <field name="product_count" readonly="1"/>
-                                    <field name="schedule_count" readonly="1"/>
-                                </group>
-                            </page>
-
-                            <!-- Notes Tab -->
-                            <page string="Notes">
-                                <field name="description" widget="html"/>
-                                <field name="notes"/>
                             </page>
                         </notebook>
                     </sheet>
