@@ -730,18 +730,87 @@ class MrpEstimation(models.Model):
                 summary=_('Estimation Approval Required'),
                 note=_('Please review and approve estimation %s') % self.name
             )
-    
-    # ======================
-    # INTEGRATION METHODS
-    # ======================
-    
-    # def action_view_versions(self):
-    #     """View estimation versions"""
-    #     self.ensure_one()
-    #     action = {
-    #         'name': _('Estimation Versions'),
-    #         'type': 'ir.actions.act_window',
-    #         'res_model': 'mrp.estimation.version',
-    #         'view_mode': 'tree,form',
-    #         'domain': [('parent_estimation_id', '=', self.id)],
-    #     }
+
+
+# ======================
+# MISSING MODELS - ADD THESE
+# ======================
+
+class MrpEstimationLine(models.Model):
+    _name = 'mrp.estimation.line'
+    _description = 'Estimation Material Line'
+    _order = 'sequence, id'
+
+    sequence = fields.Integer(string='Sequence', default=10)
+    estimation_id = fields.Many2one('mrp.estimation', string='Estimation', required=True, ondelete='cascade')
+    product_id = fields.Many2one('product.product', string='Product', required=True)
+    product_qty = fields.Float(string='Quantity', required=True, default=1.0)
+    product_uom_id = fields.Many2one('uom.uom', string='Unit of Measure', required=True)
+    product_cost = fields.Monetary(string='Unit Cost', required=True, currency_field='currency_id')
+    subtotal = fields.Monetary(string='Subtotal', compute='_compute_subtotal', store=True, currency_field='currency_id')
+    marked_up_cost = fields.Monetary(string='Marked Up Cost', compute='_compute_marked_up_cost', currency_field='currency_id')
+    currency_id = fields.Many2one(related='estimation_id.currency_id', store=True)
+
+    @api.depends('product_qty', 'product_cost')
+    def _compute_subtotal(self):
+        for line in self:
+            line.subtotal = line.product_qty * line.product_cost
+
+    @api.depends('subtotal', 'estimation_id.material_markup_type', 'estimation_id.material_markup_value')
+    def _compute_marked_up_cost(self):
+        for line in self:
+            markup = 0.0
+            if line.estimation_id.material_markup_type == 'percentage':
+                markup = line.subtotal * (line.estimation_id.material_markup_value / 100)
+            else:
+                markup = line.estimation_id.material_markup_value
+            line.marked_up_cost = line.subtotal + markup
+
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        if self.product_id:
+            self.product_uom_id = self.product_id.uom_id
+            self.product_cost = self.product_id.standard_price
+
+
+class MrpEstimationCost(models.Model):
+    _name = 'mrp.estimation.cost'
+    _description = 'Estimation Cost Line'
+    _order = 'sequence, id'
+
+    sequence = fields.Integer(string='Sequence', default=10)
+    estimation_id = fields.Many2one('mrp.estimation', string='Estimation', required=True, ondelete='cascade')
+    name = fields.Char(string='Description', required=True)
+    cost_type = fields.Selection([
+        ('labor', 'Labor Cost'),
+        ('overhead', 'Overhead Cost'),
+        ('machine', 'Machine Cost'),
+        ('quality', 'Quality Cost'),
+        ('other', 'Other Cost')
+    ], string='Cost Type', required=True, default='labor')
+    cost_amount = fields.Monetary(string='Cost Amount', required=True, currency_field='currency_id')
+    total_cost = fields.Monetary(string='Total Cost', compute='_compute_total_cost', store=True, currency_field='currency_id')
+    currency_id = fields.Many2one(related='estimation_id.currency_id', store=True)
+
+    @api.depends('cost_amount', 'estimation_id.cost_markup_type', 'estimation_id.cost_markup_value')
+    def _compute_total_cost(self):
+        for cost in self:
+            markup = 0.0
+            if cost.estimation_id.cost_markup_type == 'percentage':
+                markup = cost.cost_amount * (cost.estimation_id.cost_markup_value / 100)
+            else:
+                markup = cost.estimation_id.cost_markup_value
+            cost.total_cost = cost.cost_amount + markup
+
+
+class MrpEstimationVersion(models.Model):
+    _name = 'mrp.estimation.version'
+    _description = 'Estimation Version History'
+    _order = 'version_number desc'
+
+    parent_estimation_id = fields.Many2one('mrp.estimation', string='Parent Estimation', required=True, ondelete='cascade')
+    version_number = fields.Float(string='Version Number', required=True)
+    version_notes = fields.Text(string='Version Notes')
+    created_by = fields.Many2one('res.users', string='Created By', required=True)
+    creation_date = fields.Datetime(string='Creation Date', required=True)
+    estimation_data = fields.Text(string='Estimation Data (JSON)', help="Serialized estimation data for this version")
