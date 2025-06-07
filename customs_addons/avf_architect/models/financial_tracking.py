@@ -41,9 +41,13 @@ class ArchitectFinancialTracking(models.Model):
     state = fields.Selection([
         ('draft', 'Draft'),
         ('confirmed', 'Confirmed'),
+        ('submitted', 'Submitted'),
+        ('approved', 'Approved'),
         ('paid', 'Paid'),
+        ('rejected', 'Rejected'),
         ('cancelled', 'Cancelled')
     ], string='Status', default='draft', tracking=True)
+
 
     # Related Records
     invoice_id = fields.Many2one('account.move', string='Related Invoice')
@@ -56,6 +60,14 @@ class ArchitectFinancialTracking(models.Model):
     # Approval
     approved_by = fields.Many2one('res.users', string='Approved By')
     approval_date = fields.Date(string='Approval Date')
+
+    def action_pay(self):
+        for record in self:
+            record.state = 'paid'
+
+    def action_receive(self):
+        for record in self:
+            record.state = 'paid'
 
     @api.model_create_multi
     def create(self, vals_list):
