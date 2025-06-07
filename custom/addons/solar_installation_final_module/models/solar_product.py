@@ -116,7 +116,12 @@ class SolarProduct(models.Model):
         readonly=True
     )
 
-    image = fields.Binary(string="Upload Image Here ", attachment=True)
+    # New relation for multiple images
+    product_image_ids = fields.One2many(
+        comodel_name='solar.product.image',
+        inverse_name='product_id',
+        string="Product Images"
+    )
 
     active = fields.Boolean(string="Active", default=True)
 
