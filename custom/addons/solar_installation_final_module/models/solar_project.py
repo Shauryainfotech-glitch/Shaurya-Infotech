@@ -32,6 +32,7 @@ class SolarProject(models.Model):
         'res.partner',
         string='Customer',
         domain=[('is_company', '=', True)],
+        required=True,
         tracking=True
     )
 
@@ -50,8 +51,9 @@ class SolarProject(models.Model):
     site_state = fields.Char(string="State/Province")
     site_zip = fields.Char(string="ZIP")
     site_country_id = fields.Many2one(
-        comodel_name="res.country",
-        string="Country"
+        'res.country',
+        string="Country",
+        default=lambda self: self.env.ref('base.in')  # Default to India
     )
     gps_latitude = fields.Float(string="Latitude", digits=(9, 6))
     gps_longitude = fields.Float(string="Longitude", digits=(9, 6))
@@ -193,6 +195,7 @@ class SolarProject(models.Model):
     # Miscellaneous
     notes = fields.Text(string="Internal Notes")
     description = fields.Html(string="Project Description")
+    # Adding a related model field for better reference
     related_model = fields.Many2one('related.model', string='Related Model')
 
     partner_id = fields.Many2one(
@@ -302,7 +305,6 @@ class SolarProject(models.Model):
             else:
                 record.days_to_deadline = 0
 
-    # Method to update project info on customer change
     @api.onchange('customer_id')
     def _onchange_customer_id(self):
         if self.customer_id:
@@ -313,6 +315,12 @@ class SolarProject(models.Model):
             self.site_country_id = self.customer_id.country_id
             if not self.project_name:
                 self.project_name = f"{self.customer_id.name}'s Solar Installation"
+        else:
+            self.site_address = False
+            self.site_city = False
+            self.site_state = False
+            self.site_zip = False
+            self.site_country_id = False
 
     # Method to compute assigned teams
     @api.depends('schedule_ids.team_id')
@@ -352,3 +360,20 @@ class SolarProject(models.Model):
         for record in self:
             if not record.partner_id:
                 raise ValidationError("Partner is required for this project!")
+
+    @api.model
+    def create(self, vals):
+        if vals.get('related_model'):
+            related_record = self.env['related.model'].browse(vals['related_model'])
+            if not related_record.exists():  # Ensuring the related model exists
+                raise ValidationError('The related model record does not exist!')
+        return super(SolarProject, self).create(vals)
+
+    # Ensure that site_country_id, customer_id, and other related fields are always set
+    @api.constrains('customer_id', 'site_country_id')
+    def _check_customer_and_country(self):
+        for record in self:
+            if not record.customer_id:
+                raise ValidationError("Customer must be selected for the project!")
+            if not record.site_country_id:
+                raise ValidationError("Country must be selected for the project!")
