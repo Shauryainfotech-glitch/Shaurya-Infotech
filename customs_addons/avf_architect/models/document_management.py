@@ -40,6 +40,11 @@ class ArchitectDocument(models.Model):
     file_type = fields.Char(string='File Type', compute='_compute_file_info', store=True)
     mime_type = fields.Char(string='MIME Type', compute='_compute_file_info', store=True)
     code = fields.Char(string="Document Code")
+
+    document_date = fields.Date(string="Document Date")  # ← Add this
+    expiry_date = fields.Date(string="Expiry Date")  # ← Add this
+    file_size = fields.Float(string="File Size", readonly=True)  # ← Add this
+
     # Version Control
     version = fields.Char(string='Version', default='1.0')
     revision = fields.Integer(string='Revision', default=1)
