@@ -50,7 +50,7 @@
                     <notebook>
                         <page string="Rate Items" name="rate_items">
                             <field name="rate_item_ids">
-                                <tree editable="bottom">
+                                <list editable="bottom">
                                     <field name="item_code"/>
                                     <field name="name"/>
                                     <field name="category_id"/>
@@ -60,7 +60,7 @@
                                     <field name="market_rate" widget="monetary"/>
                                     <field name="rate_variance" widget="percentage"/>
                                     <field name="currency_id" invisible="1"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                         <page string="Terms &amp; Conditions" name="terms">
@@ -101,7 +101,7 @@
         <field name="name">architect.rate.schedule.tree</field>
         <field name="model">architect.rate.schedule</field>
         <field name="arch" type="xml">
-            <tree string="Rate Schedules" decoration-success="state=='published'"
+            <list string="Rate Schedules" decoration-success="state=='published'"
                   decoration-muted="state=='archived'">
                 <field name="code"/>
                 <field name="name"/>
@@ -112,7 +112,7 @@
                 <field name="version"/>
                 <field name="item_count"/>
                 <field name="state" widget="badge"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -159,7 +159,7 @@
                                 <field name="is_composite"/>
                             </group>
                             <field name="component_ids" modifiers="{'invisible': [('is_composite', '=', False)]}">
-                                <tree editable="bottom">
+                                <list editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="name"/>
                                     <field name="component_type"/>
@@ -168,7 +168,7 @@
                                     <field name="rate" widget="monetary"/>
                                     <field name="amount" widget="monetary" readonly="1"/>
                                     <field name="currency_id" invisible="1"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                         <page string="Other Details" name="other">
@@ -196,7 +196,7 @@
         <field name="name">architect.rate.item.tree</field>
         <field name="model">architect.rate.item</field>
         <field name="arch" type="xml">
-            <tree string="Rate Items" decoration-warning="rate_variance &gt; 20"
+            <list string="Rate Items" decoration-warning="rate_variance &gt; 20"
                   decoration-danger="rate_variance &gt; 50">
                 <field name="item_code"/>
                 <field name="name"/>
@@ -207,7 +207,7 @@
                 <field name="market_rate" widget="monetary"/>
                 <field name="rate_variance" widget="percentage"/>
                 <field name="currency_id" invisible="1"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -255,7 +255,7 @@
                     <notebook>
                         <page string="Estimation Lines" name="estimation_lines">
                             <field name="estimation_line_ids">
-                                <tree editable="bottom">
+                                <list editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="rate_item_id"/>
                                     <field name="description"/>
@@ -265,7 +265,7 @@
                                     <field name="total_amount" widget="monetary" readonly="1" sum="Subtotal"/>
                                     <field name="notes"/>
                                     <field name="currency_id" invisible="1"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                         <page string="Cost Summary" name="cost_summary">
@@ -306,7 +306,7 @@
         <field name="name">architect.estimation.tree</field>
         <field name="model">architect.estimation</field>
         <field name="arch" type="xml">
-            <tree string="Project Estimations" decoration-success="state=='approved'"
+            <list string="Project Estimations" decoration-success="state=='approved'"
                   decoration-danger="state=='rejected'">
                 <field name="code"/>
                 <field name="name"/>
@@ -315,7 +315,7 @@
                 <field name="total_amount" widget="monetary"/>
                 <field name="estimation_date"/>
                 <field name="state" widget="badge"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -345,11 +345,11 @@
                         <field name="description" placeholder="Category description..."/>
                     </group>
                     <field name="child_ids">
-                        <tree>
+                        <list>
                             <field name="name"/>
                             <field name="code"/>
                             <field name="sequence"/>
-                        </tree>
+                        </list>
                     </field>
                 </sheet>
             </form>

@@ -70,7 +70,7 @@
         <field name="name">architect.client.portal.tree</field>
         <field name="model">architect.client.portal</field>
         <field name="arch" type="xml">
-            <tree string="Client Portals" decoration-success="active==True"
+            <list string="Client Portals" decoration-success="active==True"
                   decoration-muted="active==False">
                 <field name="name"/>
                 <field name="partner_id"/>
@@ -79,7 +79,7 @@
                 <field name="login_count"/>
                 <field name="visit_count"/>
                 <field name="active"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -128,7 +128,7 @@
                     <notebook>
                         <page string="Widgets" name="widgets">
                             <field name="widget_ids">
-                                <tree editable="bottom">
+                                <list editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="name"/>
                                     <field name="widget_type"/>
@@ -136,7 +136,7 @@
                                     <field name="show_title"/>
                                     <field name="collapsible"/>
                                     <field name="auto_refresh"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                         <page string="Customization" name="customization">
@@ -156,13 +156,13 @@
         <field name="name">architect.client.dashboard.tree</field>
         <field name="model">architect.client.dashboard</field>
         <field name="arch" type="xml">
-            <tree string="Client Dashboards">
+            <list string="Client Dashboards">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="portal_id"/>
                 <field name="layout"/>
                 <field name="is_default"/>
-            </tree>
+            </list>
         </field>
     </record>
 

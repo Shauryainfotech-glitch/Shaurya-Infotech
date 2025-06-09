@@ -115,7 +115,7 @@
         <field name="name">architect.dpr.tree</field>
         <field name="model">architect.dpr</field>
         <field name="arch" type="xml">
-            <tree string="DPR Documents" decoration-info="state=='draft'"
+            <list string="DPR Documents" decoration-info="state=='draft'"
                   decoration-warning="state=='under_review'" decoration-success="state=='approved'"
                   decoration-danger="state=='rejected'">
                 <field name="code"/>
@@ -125,7 +125,7 @@
                 <field name="total_cost" widget="monetary"/>
                 <field name="implementation_period"/>
                 <field name="state" widget="badge"/>
-            </tree>
+            </list>
         </field>
     </record>
 
