@@ -1,80 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Top-level menu accessible by any user -->
-    <menuitem id="account.menu_finance" name="Accounting"/>
+  <data>
 
-    <!-- Template menu accessible by all users -->
+    <!-- Main Menu -->
+    <menuitem id="account.menu_finance" name="Accounting" sequence="10"/>
+
+    <!-- Templates -->
     <menuitem id="menu_account_templates"
               sequence="100"
               name="Templates"
               parent="account.menu_finance" />
 
-    <!-- Ensure 'account.menu_action_account_moves_all' is visible to all users -->
+    <!-- Make existing menu public -->
     <record id="account.menu_action_account_moves_all" model="ir.ui.menu">
-        <field name="groups_id" eval="[(5,0,0)]" /> 
+        <field name="groups_id" eval="[(5, 0, 0)]"/>
+        <field name="sequence">2</field>
     </record>
 
-    <record id="account.menu_action_account_moves_all" model="ir.ui.menu">
-        <field name="sequence">2</field> <!-- Sequence for ordering -->
-    </record>
+    <!-- Accounting Journals -->
+    <menuitem id="menu_finance_entries_accounting_journals"
+              name="Journals"
+              parent="account.menu_finance"
+              sequence="2"/>
 
-    <!-- Journals menu accessible to all users -->
-    <menuitem id="menu_finance_entries_accounting_journals" name="Journals"
-              parent="account.menu_finance_entries" sequence="2">
-        <menuitem id="menu_action_account_moves_journal_sales"
-                  action="account.action_account_moves_journal_sales"
-                  sequence="1"/>  <!-- Accessible by all users -->
-
-        <menuitem id="menu_action_account_moves_journal_purchase"
-                  action="account.action_account_moves_journal_purchase"
-                  sequence="2"/>  <!-- Accessible by all users -->
-
-        <menuitem id="menu_action_account_moves_journal_bank_cash"
-                  action="account.action_account_moves_journal_bank_cash"
-                  sequence="3"/>  <!-- Accessible by all users -->
-
-        <menuitem id="menu_action_account_moves_journal_misc"
-                  action="account.action_account_moves_journal_misc"
-                  sequence="4"/>  <!-- Accessible by all users -->
-    </menuitem>
-
-    <!-- Action for Account Moves All (Only form view) -->
+    <!-- Actions only in FORM mode (no tree!) -->
     <record id="action_account_moves_all" model="ir.actions.act_window">
         <field name="name">Account Moves</field>
         <field name="res_model">account.move</field>
-        <field name="view_mode">form</field> <!-- Only the form view is now defined -->
+        <field name="view_mode">form</field>
         <field name="context">{}</field>
     </record>
 
-    <!-- Action for Sales Journal (Only form view) -->
     <record id="action_account_moves_journal_sales" model="ir.actions.act_window">
         <field name="name">Sales Journal</field>
         <field name="res_model">account.move</field>
-        <field name="view_mode">form</field> <!-- Only the form view is now defined -->
+        <field name="view_mode">form</field>
         <field name="domain">[('journal_id.type','=','sale')]</field>
     </record>
 
-    <!-- Action for Purchase Journal (Only form view) -->
     <record id="action_account_moves_journal_purchase" model="ir.actions.act_window">
         <field name="name">Purchase Journal</field>
         <field name="res_model">account.move</field>
-        <field name="view_mode">form</field> <!-- Only the form view is now defined -->
+        <field name="view_mode">form</field>
         <field name="domain">[('journal_id.type','=','purchase')]</field>
     </record>
 
-    <!-- Action for Bank and Cash Journal (Only form view) -->
     <record id="action_account_moves_journal_bank_cash" model="ir.actions.act_window">
         <field name="name">Bank and Cash Journal</field>
         <field name="res_model">account.move</field>
-        <field name="view_mode">form</field> <!-- Only the form view is now defined -->
+        <field name="view_mode">form</field>
         <field name="domain">[('journal_id.type','=','bank')]</field>
     </record>
 
-    <!-- Action for Miscellaneous Journal (Only form view) -->
     <record id="action_account_moves_journal_misc" model="ir.actions.act_window">
         <field name="name">Miscellaneous Journal</field>
         <field name="res_model">account.move</field>
-        <field name="view_mode">form</field> <!-- Only the form view is now defined -->
+        <field name="view_mode">form</field>
         <field name="domain">[('journal_id.type','=','general')]</field>
     </record>
 
+    <!-- Menu Items with form-only actions -->
+    <menuitem id="menu_action_account_moves_journal_sales"
+              action="action_account_moves_journal_sales"
+              parent="menu_finance_entries_accounting_journals"
+              sequence="1"/>
+
+    <menuitem id="menu_action_account_moves_journal_purchase"
+              action="action_account_moves_journal_purchase"
+              parent="menu_finance_entries_accounting_journals"
+              sequence="2"/>
+
+    <menuitem id="menu_action_account_moves_journal_bank_cash"
+              action="action_account_moves_journal_bank_cash"
+              parent="menu_finance_entries_accounting_journals"
+              sequence="3"/>
+
+    <menuitem id="menu_action_account_moves_journal_misc"
+              action="action_account_moves_journal_misc"
+              parent="menu_finance_entries_accounting_journals"
+              sequence="4"/>
+
+  </data>
 </odoo>
