@@ -2,7 +2,7 @@
 <odoo>
     <!-- Financial Tracking Views -->
     <record id="view_architect_financial_tracking_tree" model="ir.ui.view">
-        <field name="name">architect.financial.tracking.tree</field>
+        <field name="name">architect.financial.tracking.list</field>
         <field name="model">architect.financial.tracking</field>
         <field name="arch" type="xml">
             <list string="Financial Tracking" decoration-muted="state == 'cancelled'"
@@ -182,7 +182,7 @@
 
     <!-- Budget Views -->
     <record id="view_architect_budget_tree" model="ir.ui.view">
-        <field name="name">architect.budget.tree</field>
+        <field name="name">architect.budget.list</field>
         <field name="model">architect.budget</field>
         <field name="arch" type="xml">
             <list string="Project Budgets" decoration-danger="is_over_budget == True"
@@ -362,7 +362,7 @@
 
     <!-- Cost Estimate Views -->
     <record id="view_architect_cost_estimate_tree" model="ir.ui.view">
-        <field name="name">architect.cost.estimate.tree</field>
+        <field name="name">architect.cost.estimate.list</field>
         <field name="model">architect.cost.estimate</field>
         <field name="arch" type="xml">
             <list string="Cost Estimates" decoration-success="is_approved == True" decoration-muted="state == 'rejected'">
@@ -532,7 +532,7 @@
 
     <!-- Financial Category Views -->
     <record id="view_architect_financial_category_tree" model="ir.ui.view">
-        <field name="name">architect.financial.category.tree</field>
+        <field name="name">architect.financial.category.list</field>
         <field name="model">architect.financial.category</field>
         <field name="arch" type="xml">
             <list string="Financial Categories" decoration-muted="active == False">
@@ -579,7 +579,7 @@
 
     <!-- Financial Subcategory Views -->
     <record id="view_architect_financial_subcategory_tree" model="ir.ui.view">
-        <field name="name">architect.financial.subcategory.tree</field>
+        <field name="name">architect.financial.subcategory.list</field>
         <field name="model">architect.financial.subcategory</field>
         <field name="arch" type="xml">
             <list string="Financial Subcategories" decoration-muted="active == False">
@@ -638,7 +638,7 @@
     <record id="action_architect_budget" model="ir.actions.act_window">
         <field name="name">Project Budgets</field>
         <field name="res_model">architect.budget</field>
-        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_mode">list,kanban,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create your first project budget
@@ -652,7 +652,7 @@
     <record id="action_architect_cost_estimate" model="ir.actions.act_window">
         <field name="name">Cost Estimates</field>
         <field name="res_model">architect.cost.estimate</field>
-        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_mode">list,kanban,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create your first cost estimate

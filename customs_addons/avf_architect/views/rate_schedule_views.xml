@@ -98,7 +98,7 @@
 
     <!-- Rate Schedule Tree View -->
     <record id="view_architect_rate_schedule_tree" model="ir.ui.view">
-        <field name="name">architect.rate.schedule.tree</field>
+        <field name="name">architect.rate.schedule.list</field>
         <field name="model">architect.rate.schedule</field>
         <field name="arch" type="xml">
             <list string="Rate Schedules" decoration-success="state=='published'"
@@ -193,7 +193,7 @@
 
     <!-- Rate Item Tree View -->
     <record id="view_architect_rate_item_tree" model="ir.ui.view">
-        <field name="name">architect.rate.item.tree</field>
+        <field name="name">architect.rate.item.list</field>
         <field name="model">architect.rate.item</field>
         <field name="arch" type="xml">
             <list string="Rate Items" decoration-warning="rate_variance &gt; 20"
@@ -303,7 +303,7 @@
 
     <!-- Estimation Tree View -->
     <record id="view_architect_estimation_tree" model="ir.ui.view">
-        <field name="name">architect.estimation.tree</field>
+        <field name="name">architect.estimation.list</field>
         <field name="model">architect.estimation</field>
         <field name="arch" type="xml">
             <list string="Project Estimations" decoration-success="state=='approved'"

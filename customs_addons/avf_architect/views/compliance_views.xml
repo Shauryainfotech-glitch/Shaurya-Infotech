@@ -132,7 +132,7 @@
 
     <!-- Compliance Tree View -->
     <record id="view_architect_compliance_tree" model="ir.ui.view">
-        <field name="name">architect.compliance.tree</field>
+        <field name="name">architect.compliance.list</field>
         <field name="model">architect.compliance</field>
         <field name="arch" type="xml">
             <list string="Compliance Tracking" decoration-warning="is_overdue==True"
@@ -295,7 +295,7 @@
 
     <!-- Compliance Type Tree View -->
     <record id="view_architect_compliance_type_tree" model="ir.ui.view">
-        <field name="name">architect.compliance.type.tree</field>
+        <field name="name">architect.compliance.type.list</field>
         <field name="model">architect.compliance.type</field>
         <field name="arch" type="xml">
             <list string="Compliance Types">

@@ -112,7 +112,7 @@
 
     <!-- DPR Tree View -->
     <record id="view_architect_dpr_tree" model="ir.ui.view">
-        <field name="name">architect.dpr.tree</field>
+        <field name="name">architect.dpr.list</field>
         <field name="model">architect.dpr</field>
         <field name="arch" type="xml">
             <list string="DPR Documents" decoration-info="state=='draft'"

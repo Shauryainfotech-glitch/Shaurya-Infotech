@@ -126,7 +126,7 @@
 
     <!-- Document Tree View -->
     <record id="view_architect_document_tree" model="ir.ui.view">
-        <field name="name">architect.document.tree</field>
+        <field name="name">architect.document.list</field>
         <field name="model">architect.document</field>
         <field name="arch" type="xml">
             <list string="Project Documents" decoration-info="state=='draft'"
@@ -301,7 +301,7 @@
 
     <!-- Document Category Tree View -->
     <record id="view_architect_document_category_tree" model="ir.ui.view">
-        <field name="name">architect.document.category.tree</field>
+        <field name="name">architect.document.category.list</field>
         <field name="model">architect.document.category</field>
         <field name="arch" type="xml">
             <list string="Document Categories">
@@ -364,7 +364,7 @@
 
     <!-- Document Template Tree View -->
     <record id="view_architect_document_template_tree" model="ir.ui.view">
-        <field name="name">architect.document.template.tree</field>
+        <field name="name">architect.document.template.list</field>
         <field name="model">architect.document.template</field>
         <field name="arch" type="xml">
             <list string="Document Templates">
