@@ -21,7 +21,8 @@ class ArchitectProjectStage(models.Model):
                              help="Requirements to complete this stage")
     deliverables = fields.Html(string='Expected Deliverables',
                              help="Expected deliverables for this stage")
-    
+    description = fields.Text(string="Description")
+
     # Approvals
     requires_approval = fields.Boolean(string='Requires Approval')
     approval_user_ids = fields.Many2many('res.users', string='Approvers')
