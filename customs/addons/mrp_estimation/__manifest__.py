@@ -6,9 +6,9 @@
     'description': """
     Manufacturing Estimation & Costing Module
     =========================================
-    
+
     This module provides comprehensive manufacturing estimation and costing capabilities:
-    
+
     Key Features:
     * Detailed product manufacturing estimation
     * Material cost breakdown and analysis
@@ -19,7 +19,7 @@
     * Advanced cost markup and pricing strategies
     * Real-time manufacturing cost tracking
     * Comprehensive reporting and analytics
-    
+
     Perfect for manufacturing companies that need precise cost estimation and quote management.
     """,
     'author': 'Your Company',
@@ -41,20 +41,23 @@
         'security/estimation_security.xml',
         'security/portal_security.xml',
         'security/ir.model.access.csv',
-        
+
         # Data
         'data/estimation_sequence.xml',
         'data/costing_sequence.xml',
-        
+
         # Views
         'views/mrp_costing_views.xml',
         'views/res_config_settings_views.xml',
         'views/portal_templates.xml',
         'views/estimation_menus.xml',
-        
+
+        # Reports
+        'reports/report_estimation.xml',
+
         # Wizards
         'wizard/estimation_wizard_views.xml',
-        
+
         # Data that depends on views/reports
         'data/estimation_data.xml',
     ],
