@@ -64,7 +64,7 @@
         'website',
         'portal',
         'mll',
-        'ai_llm',
+        #'ai_llm',
         'spreadsheet',
         'quality'
     ],
