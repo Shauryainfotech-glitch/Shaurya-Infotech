@@ -182,6 +182,7 @@ class ArchitectBudget(models.Model):
     state = fields.Selection([
         ('draft', 'Draft'),
         ('approved', 'Approved'),
+        ('submitted', 'Submitted'),
         ('active', 'Active'),
         ('closed', 'Closed')
     ], string='Status', default='draft', tracking=True)
@@ -222,7 +223,9 @@ class ArchitectBudget(models.Model):
         for record in self:
             record.state = 'submitted'
 
-
+    def action_revise(self):
+        for record in self:
+            record.state = 'draft'
 
     def action_approve(self):
         self.write({
