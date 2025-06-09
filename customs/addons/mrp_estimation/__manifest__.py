@@ -51,6 +51,7 @@
         'views/mrp_costing_views.xml',
         'views/res_config_settings_views.xml',
         'views/portal_templates.xml',
+        'views/estimation_widget_template.xml',
 
         # Reports
         'reports/report_estimation.xml',
@@ -75,6 +76,7 @@
     },
     'installable': True,
     'application': True,
+    'auto_install': False,
     'external_dependencies': {
         'python': [],
     },
