@@ -381,7 +381,7 @@
     <record id="action_architect_document" model="ir.actions.act_window">
         <field name="name">Documents</field>
         <field name="res_model">architect.document</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">kanban,list,form</field>
         <field name="context">{'search_default_my_documents': 1, 'search_default_latest_version': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -396,7 +396,7 @@
     <record id="action_architect_document_category" model="ir.actions.act_window">
         <field name="name">Document Categories</field>
         <field name="res_model">architect.document.category</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create your first document category
@@ -410,7 +410,7 @@
     <record id="action_architect_document_template" model="ir.actions.act_window">
         <field name="name">Document Templates</field>
         <field name="res_model">architect.document.template</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create your first document template

@@ -360,7 +360,7 @@
     <record id="action_architect_rate_schedule" model="ir.actions.act_window">
         <field name="name">Rate Schedules</field>
         <field name="res_model">architect.rate.schedule</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create your first rate schedule
@@ -374,7 +374,7 @@
     <record id="action_architect_rate_item" model="ir.actions.act_window">
         <field name="name">Rate Items</field>
         <field name="res_model">architect.rate.item</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Add your first rate item
@@ -388,7 +388,7 @@
     <record id="action_architect_estimation" model="ir.actions.act_window">
         <field name="name">Project Estimations</field>
         <field name="res_model">architect.estimation</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create your first project estimation
@@ -402,7 +402,7 @@
     <record id="action_architect_rate_category" model="ir.actions.act_window">
         <field name="name">Rate Categories</field>
         <field name="res_model">architect.rate.category</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create your first rate category

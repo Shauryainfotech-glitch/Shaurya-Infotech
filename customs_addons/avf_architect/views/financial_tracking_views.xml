@@ -666,7 +666,7 @@
     <record id="action_architect_financial_category" model="ir.actions.act_window">
         <field name="name">Financial Categories</field>
         <field name="res_model">architect.financial.category</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create your first financial category
@@ -680,7 +680,7 @@
     <record id="action_architect_financial_subcategory" model="ir.actions.act_window">
         <field name="name">Financial Subcategories</field>
         <field name="res_model">architect.financial.subcategory</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create your first financial subcategory
