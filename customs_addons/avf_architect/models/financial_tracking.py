@@ -156,6 +156,8 @@ class ArchitectBudget(models.Model):
         default=lambda self: self.env.company,
         index=True
     )
+    is_over_budget = fields.Boolean(readonly=True)
+
     manager_id = fields.Many2one(
         'res.users',
         string='Manager',
@@ -183,7 +185,7 @@ class ArchitectBudget(models.Model):
 
     currency_id = fields.Many2one('res.currency', string='Currency',
                                   default=lambda self: self.env.company.currency_id)
-
+    cost_estimate_ids = fields.One2many('architect.cost.estimate', 'budget_id', string='Cost Estimates')
     # Budget Lines
     budget_line_ids = fields.One2many('architect.budget.line', 'budget_id',
                                       string='Budget Lines')
@@ -262,12 +264,13 @@ class ArchitectBudgetLine(models.Model):
     budget_id = fields.Many2one('architect.budget', string='Budget',
                                 required=True, ondelete='cascade')
     sequence = fields.Integer(string='Sequence', default=10)
-
+    description = fields.Text(string="Description")
     # Line Details
     name = fields.Char(string='Description', required=True)
     category_id = fields.Many2one('architect.financial.category', string='Category')
     subcategory_id = fields.Many2one('architect.financial.subcategory', string='Subcategory')
-
+    budgeted_amount = fields.Monetary()
+    actual_amount = fields.Monetary(readonly=True)
     # Amounts
     allocated_amount = fields.Monetary(string='Allocated Amount',
                                        currency_field='currency_id', required=True)
@@ -324,7 +327,8 @@ class ArchitectCostEstimate(models.Model):
     # Estimate Lines
     estimate_line_ids = fields.One2many('architect.cost.estimate.line', 'estimate_id',
                                         string='Estimate Lines')
-
+    estimated_amount = fields.Monetary()
+    confidence_level = fields.Selection([('low', 'Low'), ('medium', 'Medium'), ('high', 'High')])
     # Status
     state = fields.Selection([
         ('draft', 'Draft'),
