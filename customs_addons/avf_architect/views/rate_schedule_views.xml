@@ -1,0 +1,435 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Rate Schedule Form View -->
+    <record id="view_architect_rate_schedule_form" model="ir.ui.view">
+        <field name="name">architect.rate.schedule.form</field>
+        <field name="model">architect.rate.schedule</field>
+        <field name="arch" type="xml">
+            <form string="Rate Schedule">
+                <header>
+                    <button name="action_publish" string="Publish"
+                            type="object" class="oe_highlight"
+                            attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                    <button name="action_archive" string="Archive"
+                            type="object" class="btn-warning"
+                            attrs="{'invisible': [('state', '!=', 'published')]}"/>
+                    <button name="action_duplicate_for_new_period" string="Duplicate for New Period"
+                            type="object" class="btn-secondary"/>
+                    <button name="action_apply_escalation" string="Apply Escalation"
+                            type="object" class="btn-secondary"
+                            attrs="{'invisible': [('price_escalation_factor', '=', 0)]}"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,published,archived"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Rate Schedule Name"/>
+                        </h1>
+                        <h2>
+                            <field name="code" readonly="1"/>
+                        </h2>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="schedule_type"/>
+                            <field name="state_id"/>
+                            <field name="district"/>
+                            <field name="region"/>
+                            <field name="issuing_authority"/>
+                        </group>
+                        <group>
+                            <field name="effective_date"/>
+                            <field name="expiry_date"/>
+                            <field name="version"/>
+                            <field name="approval_reference"/>
+                            <field name="approval_date"/>
+                            <field name="currency_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Rate Items" name="rate_items">
+                            <field name="rate_item_ids">
+                                <tree editable="bottom">
+                                    <field name="item_code"/>
+                                    <field name="name"/>
+                                    <field name="category_id"/>
+                                    <field name="work_type"/>
+                                    <field name="unit_rate" widget="monetary"/>
+                                    <field name="unit_of_measure"/>
+                                    <field name="market_rate" widget="monetary"/>
+                                    <field name="rate_variance" widget="percentage"/>
+                                    <field name="currency_id" invisible="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Terms &amp; Conditions" name="terms">
+                            <field name="terms_conditions" placeholder="Terms and conditions..."/>
+                        </page>
+                        <page string="Special Conditions" name="special">
+                            <field name="special_conditions" placeholder="Special conditions..."/>
+                        </page>
+                        <page string="Settings" name="settings">
+                            <group>
+                                <group>
+                                    <field name="is_official"/>
+                                    <field name="source_url"/>
+                                    <field name="last_update_date"/>
+                                </group>
+                                <group>
+                                    <field name="price_escalation_factor"/>
+                                    <field name="item_count"/>
+                                </group>
+                            </group>
+                            <group>
+                                <field name="notes" placeholder="Additional notes..."/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Rate Schedule Tree View -->
+    <record id="view_architect_rate_schedule_tree" model="ir.ui.view">
+        <field name="name">architect.rate.schedule.tree</field>
+        <field name="model">architect.rate.schedule</field>
+        <field name="arch" type="xml">
+            <tree string="Rate Schedules" decoration-success="state=='published'"
+                  decoration-muted="state=='archived'">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="schedule_type"/>
+                <field name="state_id"/>
+                <field name="district"/>
+                <field name="effective_date"/>
+                <field name="version"/>
+                <field name="item_count"/>
+                <field name="state" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Rate Item Form View -->
+    <record id="view_architect_rate_item_form" model="ir.ui.view">
+        <field name="name">architect.rate.item.form</field>
+        <field name="model">architect.rate.item</field>
+        <field name="arch" type="xml">
+            <form string="Rate Item">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Item Description"/>
+                        </h1>
+                        <h2>
+                            <field name="item_code" placeholder="Item Code"/>
+                        </h2>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="rate_schedule_id"/>
+                            <field name="category_id"/>
+                            <field name="subcategory_id"/>
+                            <field name="work_type"/>
+                        </group>
+                        <group>
+                            <field name="unit_rate" widget="monetary"/>
+                            <field name="unit_of_measure"/>
+                            <field name="market_rate" widget="monetary"/>
+                            <field name="rate_variance" widget="percentage"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Specification" name="specification">
+                            <field name="specification" placeholder="Item specifications..."/>
+                        </page>
+                        <page string="Quality Standards" name="quality">
+                            <field name="quality_standards" placeholder="Quality standards..."/>
+                        </page>
+                        <page string="Rate Components" name="components"
+                              attrs="{'invisible': [('is_composite', '=', False)]}">
+                            <group>
+                                <field name="is_composite"/>
+                            </group>
+                            <field name="component_ids" attrs="{'invisible': [('is_composite', '=', False)]}">
+                                <tree editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="component_type"/>
+                                    <field name="quantity"/>
+                                    <field name="unit"/>
+                                    <field name="rate" widget="monetary"/>
+                                    <field name="amount" widget="monetary" readonly="1"/>
+                                    <field name="currency_id" invisible="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Other Details" name="other">
+                            <group>
+                                <group>
+                                    <field name="applicable_from"/>
+                                    <field name="applicable_to"/>
+                                    <field name="gst_rate"/>
+                                    <field name="inclusive_of_gst"/>
+                                </group>
+                            </group>
+                            <group>
+                                <field name="notes" placeholder="Additional notes..."/>
+                                <field name="tags"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Rate Item Tree View -->
+    <record id="view_architect_rate_item_tree" model="ir.ui.view">
+        <field name="name">architect.rate.item.tree</field>
+        <field name="model">architect.rate.item</field>
+        <field name="arch" type="xml">
+            <tree string="Rate Items" decoration-warning="rate_variance &gt; 20"
+                  decoration-danger="rate_variance &gt; 50">
+                <field name="item_code"/>
+                <field name="name"/>
+                <field name="category_id"/>
+                <field name="work_type"/>
+                <field name="unit_rate" widget="monetary"/>
+                <field name="unit_of_measure"/>
+                <field name="market_rate" widget="monetary"/>
+                <field name="rate_variance" widget="percentage"/>
+                <field name="currency_id" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Estimation Form View -->
+    <record id="view_architect_estimation_form" model="ir.ui.view">
+        <field name="name">architect.estimation.form</field>
+        <field name="model">architect.estimation</field>
+        <field name="arch" type="xml">
+            <form string="Project Estimation">
+                <header>
+                    <button name="action_submit" string="Submit"
+                            type="object" class="oe_highlight"
+                            attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                    <button name="action_approve" string="Approve"
+                            type="object" class="oe_highlight"
+                            attrs="{'invisible': [('state', '!=', 'submitted')]}"/>
+                    <button name="action_reject" string="Reject"
+                            type="object" class="btn-warning"
+                            attrs="{'invisible': [('state', '!=', 'submitted')]}"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,submitted,approved,rejected"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Estimation Name"/>
+                        </h1>
+                        <h2>
+                            <field name="code" readonly="1"/>
+                        </h2>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="project_id"/>
+                            <field name="rate_schedule_id"/>
+                            <field name="total_area"/>
+                            <field name="built_up_area"/>
+                        </group>
+                        <group>
+                            <field name="estimation_date"/>
+                            <field name="validity_date"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Estimation Lines" name="estimation_lines">
+                            <field name="estimation_line_ids">
+                                <tree editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="rate_item_id"/>
+                                    <field name="description"/>
+                                    <field name="quantity"/>
+                                    <field name="unit" readonly="1"/>
+                                    <field name="unit_rate" widget="monetary" readonly="1"/>
+                                    <field name="total_amount" widget="monetary" readonly="1" sum="Subtotal"/>
+                                    <field name="notes"/>
+                                    <field name="currency_id" invisible="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Cost Summary" name="cost_summary">
+                            <group>
+                                <group string="Amounts">
+                                    <field name="subtotal" widget="monetary" readonly="1"/>
+                                    <field name="overhead_percentage"/>
+                                    <field name="overhead_amount" widget="monetary" readonly="1"/>
+                                    <field name="profit_percentage"/>
+                                    <field name="profit_amount" widget="monetary" readonly="1"/>
+                                    <field name="total_before_tax" widget="monetary" readonly="1"/>
+                                    <field name="tax_amount" widget="monetary" readonly="1"/>
+                                    <field name="total_amount" widget="monetary" readonly="1"
+                                           class="oe_subtotal_footer_separator"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Assumptions &amp; Notes" name="assumptions">
+                            <group>
+                                <field name="assumptions" placeholder="Estimation assumptions..."/>
+                                <field name="exclusions" placeholder="Items excluded from estimation..."/>
+                                <field name="notes" placeholder="Additional notes..."/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Estimation Tree View -->
+    <record id="view_architect_estimation_tree" model="ir.ui.view">
+        <field name="name">architect.estimation.tree</field>
+        <field name="model">architect.estimation</field>
+        <field name="arch" type="xml">
+            <tree string="Project Estimations" decoration-success="state=='approved'"
+                  decoration-danger="state=='rejected'">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="rate_schedule_id"/>
+                <field name="total_amount" widget="monetary"/>
+                <field name="estimation_date"/>
+                <field name="state" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Rate Category Views -->
+    <record id="view_architect_rate_category_form" model="ir.ui.view">
+        <field name="name">architect.rate.category.form</field>
+        <field name="model">architect.rate.category</field>
+        <field name="arch" type="xml">
+            <form string="Rate Category">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Category Name"/>
+                        </h1>
+                        <h2>
+                            <field name="code" placeholder="Category Code"/>
+                        </h2>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="sequence"/>
+                            <field name="parent_id"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="description" placeholder="Category description..."/>
+                    </group>
+                    <field name="child_ids">
+                        <tree>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="sequence"/>
+                        </tree>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Actions -->
+    <record id="action_architect_rate_schedule" model="ir.actions.act_window">
+        <field name="name">Rate Schedules</field>
+        <field name="res_model">architect.rate.schedule</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first rate schedule
+            </p>
+            <p>
+                Manage DSR/SSR rate schedules for accurate project estimation.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_architect_rate_item" model="ir.actions.act_window">
+        <field name="name">Rate Items</field>
+        <field name="res_model">architect.rate.item</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add your first rate item
+            </p>
+            <p>
+                Define individual rate items for construction activities.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_architect_estimation" model="ir.actions.act_window">
+        <field name="name">Project Estimations</field>
+        <field name="res_model">architect.estimation</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first project estimation
+            </p>
+            <p>
+                Generate accurate cost estimations using rate schedules.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_architect_rate_category" model="ir.actions.act_window">
+        <field name="name">Rate Categories</field>
+        <field name="res_model">architect.rate.category</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first rate category
+            </p>
+            <p>
+                Organize rate items with categories and subcategories.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem id="menu_rate_schedule_root" name="Rate Schedules"
+              parent="menu_architect_root" sequence="45"/>
+
+    <menuitem id="menu_rate_schedule" name="Rate Schedules"
+              parent="menu_rate_schedule_root"
+              action="action_architect_rate_schedule" sequence="10"/>
+
+    <menuitem id="menu_rate_item" name="Rate Items"
+              parent="menu_rate_schedule_root"
+              action="action_architect_rate_item" sequence="20"/>
+
+    <menuitem id="menu_estimation" name="Estimations"
+              parent="menu_rate_schedule_root"
+              action="action_architect_estimation" sequence="30"/>
+
+    <menuitem id="menu_rate_category" name="Rate Categories"
+              parent="menu_rate_schedule_root"
+              action="action_architect_rate_category" sequence="40"/>
+</odoo>

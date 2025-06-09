@@ -16,7 +16,6 @@
                            options="{'terminology': {'string_true': 'Active', 'string_false': 'Inactive'}}"/>
                 </header>
                 <sheet>
-
                     <field name="company_logo" widget="image" class="oe_avatar" options="{'preview_image': 'company_logo', 'size': [90, 90]}"/>
                     <div class="oe_title">
                         <h1>
@@ -33,8 +32,8 @@
                         <group>
                             <field name="theme"/>
                             <field name="email_notifications"/>
-                            <field name="notification_frequency" 
-                                   modifiers="{'invisible': [('email_notifications', '=', False)]}"/>
+                            <field name="notification_frequency"
+                                   attrs="{'invisible': [('email_notifications', '=', False)]}"/>
                             <field name="access_token" readonly="1" password="True"/>
                         </group>
                     </group>
@@ -55,16 +54,6 @@
                                 <field name="custom_css" placeholder="Custom CSS styles..."/>
                             </group>
                         </page>
-                        <page string="Dashboards" name="dashboards">
-                            <field name="dashboard_ids">
-                                <list>
-                                    <field name="name"/>
-                                    <field name="layout"/>
-                                    <field name="is_default"/>
-                                    <field name="sequence"/>
-                                </list>
-                            </field>
-                        </page>
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
@@ -81,7 +70,7 @@
         <field name="name">architect.client.portal.tree</field>
         <field name="model">architect.client.portal</field>
         <field name="arch" type="xml">
-            <list string="Client Portals" decoration-success="active==True"
+            <tree string="Client Portals" decoration-success="active==True"
                   decoration-muted="active==False">
                 <field name="name"/>
                 <field name="partner_id"/>
@@ -90,7 +79,7 @@
                 <field name="login_count"/>
                 <field name="visit_count"/>
                 <field name="active"/>
-            </list>
+            </tree>
         </field>
     </record>
 
@@ -104,12 +93,12 @@
                 <field name="partner_id"/>
                 <field name="project_ids"/>
                 <filter string="Active" name="active" domain="[('active', '=', True)]"/>
-                <filter string="Recent Activity" name="recent_activity" 
+                <filter string="Recent Activity" name="recent_activity"
                         domain="[('last_activity', '>=', (context_today() - datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]"/>
                 <group expand="0" string="Group By">
-                    <filter string="Client" name="group_client" 
+                    <filter string="Client" name="group_client"
                             context="{'group_by': 'partner_id'}"/>
-                    <filter string="Theme" name="group_theme" 
+                    <filter string="Theme" name="group_theme"
                             context="{'group_by': 'theme'}"/>
                 </group>
             </search>
@@ -139,7 +128,7 @@
                     <notebook>
                         <page string="Widgets" name="widgets">
                             <field name="widget_ids">
-                                <list editable="bottom">
+                                <tree editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="name"/>
                                     <field name="widget_type"/>
@@ -147,7 +136,7 @@
                                     <field name="show_title"/>
                                     <field name="collapsible"/>
                                     <field name="auto_refresh"/>
-                                </list>
+                                </tree>
                             </field>
                         </page>
                         <page string="Customization" name="customization">
@@ -167,138 +156,13 @@
         <field name="name">architect.client.dashboard.tree</field>
         <field name="model">architect.client.dashboard</field>
         <field name="arch" type="xml">
-            <list string="Client Dashboards">
+            <tree string="Client Dashboards">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="portal_id"/>
                 <field name="layout"/>
                 <field name="is_default"/>
-            </list>
-        </field>
-    </record>
-
-    <!-- Dashboard Widget Form View -->
-    <record id="view_architect_dashboard_widget_form" model="ir.ui.view">
-        <field name="name">architect.dashboard.widget.form</field>
-        <field name="model">architect.dashboard.widget</field>
-        <field name="arch" type="xml">
-            <form string="Dashboard Widget">
-                <sheet>
-                    <div class="oe_title">
-                        <h1>
-                            <field name="name" placeholder="Widget Name"/>
-                        </h1>
-                    </div>
-                    <group>
-                        <group>
-                            <field name="dashboard_id"/>
-                            <field name="widget_type"/>
-                            <field name="sequence"/>
-                            <field name="size"/>
-                        </group>
-                        <group>
-                            <field name="show_title"/>
-                            <field name="collapsible"/>
-                            <field name="auto_refresh"/>
-                            <field name="refresh_interval" 
-                                   modifiers="{'invisible': [('auto_refresh', '=', False)]}"/>
-                        </group>
-                    </group>
-                    <notebook>
-                        <page string="Data Configuration" name="data_config">
-                            <field name="data_source" placeholder="Data source configuration..."/>
-                        </page>
-                        <page string="Custom Template" name="custom_template">
-                            <field name="custom_template" placeholder="Custom widget template..."/>
-                        </page>
-                        <page string="Custom Style" name="custom_style">
-                            <field name="custom_style" placeholder="Custom widget styles..."/>
-                        </page>
-                    </notebook>
-                </sheet>
-            </form>
-        </field>
-    </record>
-
-    <!-- Client Message Form View -->
-    <record id="view_architect_client_message_form" model="ir.ui.view">
-        <field name="name">architect.client.message.form</field>
-        <field name="model">architect.client.message</field>
-        <field name="arch" type="xml">
-            <form string="Client Message">
-                <header>
-                    <button name="action_send" string="Send" type="object" 
-                            class="oe_highlight" modifiers="{'invisible': [('state', '!=', 'draft')]}"/>
-                    <field name="state" widget="statusbar" 
-                           statusbar_visible="draft,sent,delivered,read"/>
-                </header>
-                <sheet>
-                    <div class="oe_title">
-                        <h1>
-                            <field name="name" placeholder="Message Subject"/>
-                        </h1>
-                    </div>
-                    <group>
-                        <group>
-                            <field name="portal_id"/>
-                            <field name="project_id"/>
-                            <field name="message_type"/>
-                            <field name="date"/>
-                        </group>
-                        <group>
-                            <field name="sender_id"/>
-                            <field name="recipient_ids" widget="many2many_tags"/>
-                            <field name="read_date" modifiers="{'invisible': [('state', 'not in', ['read'])]}"/>
-                        </group>
-                    </group>
-                    <notebook>
-                        <page string="Message Content" name="content">
-                            <field name="content" placeholder="Message content..."/>
-                        </page>
-                        <page string="Read Status" name="read_status">
-                            <field name="read_by" widget="many2many_tags"/>
-                        </page>
-                    </notebook>
-                </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids"/>
-                    <field name="message_ids"/>
-                </div>
-            </form>
-        </field>
-    </record>
-
-    <!-- Client Message Tree View -->
-    <record id="view_architect_client_message_tree" model="ir.ui.view">
-        <field name="name">architect.client.message.tree</field>
-        <field name="model">architect.client.message</field>
-        <field name="arch" type="xml">
-            <list string="Client Messages" decoration-info="state=='draft'"
-                  decoration-success="state=='read'" decoration-warning="state=='sent'">
-                <field name="name"/>
-                <field name="portal_id"/>
-                <field name="project_id"/>
-                <field name="message_type"/>
-                <field name="sender_id"/>
-                <field name="date"/>
-                <field name="state"/>
-            </list>
-        </field>
-    </record>
-
-    <!-- Client Activity Tree View -->
-    <record id="view_architect_client_activity_tree" model="ir.ui.view">
-        <field name="name">architect.client.activity.tree</field>
-        <field name="model">architect.client.activity</field>
-        <field name="arch" type="xml">
-            <list string="Client Activities" create="false" edit="false">
-                <field name="portal_id"/>
-                <field name="date"/>
-                <field name="activity_type"/>
-                <field name="description"/>
-                <field name="project_id"/>
-                <field name="ip_address"/>
-            </list>
+            </tree>
         </field>
     </record>
 
@@ -332,51 +196,15 @@
         </field>
     </record>
 
-    <record id="action_architect_client_message" model="ir.actions.act_window">
-        <field name="name">Client Messages</field>
-        <field name="res_model">architect.client.message</field>
-        <field name="view_mode">tree,form</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Send your first client message
-            </p>
-            <p>
-                Communicate with clients through the portal messaging system.
-            </p>
-        </field>
-    </record>
-
-    <record id="action_architect_client_activity" model="ir.actions.act_window">
-        <field name="name">Client Activities</field>
-        <field name="res_model">architect.client.activity</field>
-        <field name="view_mode">tree</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                No client activities recorded yet
-            </p>
-            <p>
-                Client portal activities will appear here automatically.
-            </p>
-        </field>
-    </record>
-
     <!-- Menu Items -->
-    <menuitem id="menu_client_portal_root" name="Client Portal" 
+    <menuitem id="menu_client_portal_root" name="Client Portal"
               parent="menu_architect_root" sequence="60"/>
-    
-    <menuitem id="menu_client_portal" name="Portals" 
-              parent="menu_client_portal_root" 
+
+    <menuitem id="menu_client_portal" name="Portals"
+              parent="menu_client_portal_root"
               action="action_architect_client_portal" sequence="10"/>
-    
-    <menuitem id="menu_client_dashboard" name="Dashboards" 
-              parent="menu_client_portal_root" 
+
+    <menuitem id="menu_client_dashboard" name="Dashboards"
+              parent="menu_client_portal_root"
               action="action_architect_client_dashboard" sequence="20"/>
-    
-    <menuitem id="menu_client_message" name="Messages" 
-              parent="menu_client_portal_root" 
-              action="action_architect_client_message" sequence="30"/>
-    
-    <menuitem id="menu_client_activity" name="Activities" 
-              parent="menu_client_portal_root" 
-              action="action_architect_client_activity" sequence="40"/>
 </odoo>
