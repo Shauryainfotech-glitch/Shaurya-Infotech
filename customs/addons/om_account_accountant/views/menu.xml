@@ -6,7 +6,7 @@
     <menuitem id="menu_account_templates"
               sequence="100"
               name="Templates"
-              parent="account.menu_finance" />  <!-- Removed group restriction for testing -->
+              parent="account.menu_finance" />
 
     <!-- Ensure 'account.menu_action_account_moves_all' is visible to all users -->
     <record id="account.menu_action_account_moves_all" model="ir.ui.menu">
