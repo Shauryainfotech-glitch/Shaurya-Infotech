@@ -467,9 +467,7 @@
                         </page>
                         <page string="Cost Breakdown" name="cost_breakdown">
                             <group>
-                                <group string="Base Amounts">
-                                    <field name="subtotal_amount" widget="monetary" readonly="1"/>
-                                </group>
+
                                 <group string="Additional Costs">
                                     <field name="contingency_percentage"/>
                                     <field name="contingency_amount" widget="monetary" readonly="1"/>
