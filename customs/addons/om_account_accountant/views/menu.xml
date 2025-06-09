@@ -69,7 +69,6 @@
               action="action_account_moves_journal_purchase"
               parent="menu_finance_entries_accounting_journals"
               sequence="2"/>
-
     <menuitem id="menu_action_account_moves_journal_bank_cash"
               action="action_account_moves_journal_bank_cash"
               parent="menu_finance_entries_accounting_journals"
