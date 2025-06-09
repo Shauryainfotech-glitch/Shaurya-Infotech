@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        
+
         <!-- Create Version Wizard Form View -->
         <record id="view_create_estimation_version_wizard_form" model="ir.ui.view">
             <field name="name">create.estimation.version.wizard.form</field>
@@ -39,19 +39,19 @@
             <field name="inherit_id" ref="view_mrp_estimation_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//header" position="inside">
-                    <button name="%(action_create_estimation_version_wizard)d" type="action" 
-                            string="Create Version" states="draft,approved" 
+                    <button name="%(action_create_estimation_version_wizard)d" type="action"
+                            string="Create Version" states="draft,approved"
                             groups="mrp_estimation.group_estimation_user"/>
                 </xpath>
             </field>
         </record>
 
-        <!-- Estimation Line Tree View (for reference) -->
-        <record id="view_mrp_estimation_line_tree" model="ir.ui.view">
-            <field name="name">mrp.estimation.line.tree</field>
+        <!-- Estimation Line List View -->
+        <record id="view_mrp_estimation_line_list" model="ir.ui.view">
+            <field name="name">mrp.estimation.line.list</field>
             <field name="model">mrp.estimation.line</field>
             <field name="arch" type="xml">
-                <tree string="Estimation Lines">
+                <list string="Estimation Lines">
                     <field name="sequence" widget="handle"/>
                     <field name="estimation_id"/>
                     <field name="product_id"/>
@@ -64,7 +64,7 @@
                     <field name="existing_material"/>
                     <field name="supplier_id"/>
                     <field name="lead_time"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -106,12 +106,12 @@
             </field>
         </record>
 
-        <!-- Estimation Cost Tree View -->
-        <record id="view_mrp_estimation_cost_tree" model="ir.ui.view">
-            <field name="name">mrp.estimation.cost.tree</field>
+        <!-- Estimation Cost List View -->
+        <record id="view_mrp_estimation_cost_list" model="ir.ui.view">
+            <field name="name">mrp.estimation.cost.list</field>
             <field name="model">mrp.estimation.cost</field>
             <field name="arch" type="xml">
-                <tree string="Estimation Costs">
+                <list string="Estimation Costs">
                     <field name="sequence" widget="handle"/>
                     <field name="estimation_id"/>
                     <field name="name"/>
@@ -123,7 +123,7 @@
                     <field name="unit_cost"/>
                     <field name="quantity"/>
                     <field name="total_cost"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -177,19 +177,19 @@
             </field>
         </record>
 
-        <!-- Estimation Version Tree View -->
-        <record id="view_mrp_estimation_version_tree" model="ir.ui.view">
-            <field name="name">mrp.estimation.version.tree</field>
+        <!-- Estimation Version List View -->
+        <record id="view_mrp_estimation_version_list" model="ir.ui.view">
+            <field name="name">mrp.estimation.version.list</field>
             <field name="model">mrp.estimation.version</field>
             <field name="arch" type="xml">
-                <tree string="Estimation Versions">
+                <list string="Estimation Versions">
                     <field name="parent_estimation_id"/>
                     <field name="version_number"/>
                     <field name="created_by"/>
                     <field name="creation_date"/>
                     <field name="is_active_version"/>
                     <field name="version_notes"/>
-                </tree>
+                </list>
             </field>
         </record>
 
