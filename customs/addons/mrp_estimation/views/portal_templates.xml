@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Portal My Home: add estimation counter -->
+        <template id="portal_my_home_estimation" name="Portal My Home: Estimations" customize_show="True" inherit_id="portal.portal_my_home" priority="50">
+            <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+                <t t-call="portal.portal_docs_entry">
+                    <t t-set="title">Estimations</t>
+                    <t t-set="url" t-value="'/my/estimations'"/>
+                    <t t-set="placeholder_count" t-value="'estimation_count'"/>
+                </t>
+            </xpath>
+        </template>
+
+        <!-- Portal Estimation List -->
+        <template id="portal_my_estimations" name="My Estimations">
+            <t t-call="portal.portal_layout">
+                <t t-set="breadcrumbs_searchbar" t-value="True"/>
+                
+                <t t-call="portal.portal_searchbar">
+                    <t t-set="title">Estimations</t>
+                </t>
+                
+                <t t-if="not estimations">
+                    <div class="alert alert-warning mt8" role="alert">
+                        There are no estimations available.
+                    </div>
+                </t>
+                <t t-else="">
+                    <div class="panel panel-default">
+                        <div class="table-responsive">
+                            <table class="table table-hover o_portal_my_doc_table">
+                                <thead>
+                                    <tr class="active">
+                                        <th>Estimation #</th>
+                                        <th>Product</th>
+                                        <th>Quantity</th>
+                                        <th class="text-right">Total</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="estimations" t-as="estimation">
+                                        <tr>
+                                            <td>
+                                                <a t-attf-href="/my/estimation/#{estimation.id}?#{keep_query()}">
+                                                    <span t-field="estimation.name"/>
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <span t-field="estimation.product_id"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="estimation.product_qty"/>
+                                                <span t-field="estimation.product_uom_id"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-field="estimation.estimation_total" 
+                                                      t-options='{"widget": "monetary", "display_currency": estimation.currency_id}'/>
+                                            </td>
+                                            <td>
+                                                <span class="badge badge-pill badge-info" t-field="estimation.state"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="estimation.estimation_date"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div t-if="pager" class="o_portal_pager text-center">
+                            <t t-call="portal.pager"/>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+
+        <!-- Portal Estimation Detail -->
+        <template id="portal_estimation_detail" name="Estimation Detail">
+            <t t-call="portal.portal_layout">
+                <t t-set="o_portal_fullwidth_alert" t-value="True"/>
+                
+                <div class="row mt16">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between">
+                                <h4 class="mb-0">
+                                    <span>Estimation </span>
+                                    <span t-field="estimation.name"/>
+                                </h4>
+                                <div>
+                                    <a role="button" class="btn btn-secondary" 
+                                       t-attf-href="/my/estimation/#{estimation.id}/download?#{keep_query()}">
+                                        <i class="fa fa-download"/> Download PDF
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <!-- Estimation Header Info -->
+                                <div class="row mb16">
+                                    <div class="col-lg-6">
+                                        <strong>Product:</strong> <span t-field="estimation.product_id"/><br/>
+                                        <strong>Quantity:</strong> <span t-field="estimation.product_qty"/> <span t-field="estimation.product_uom_id"/><br/>
+                                        <strong>Date:</strong> <span t-field="estimation.estimation_date"/><br/>
+                                        <t t-if="estimation.validity_date">
+                                            <strong>Valid Until:</strong> <span t-field="estimation.validity_date"/><br/>
+                                        </t>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <strong>Status:</strong> <span class="badge badge-pill badge-info" t-field="estimation.state"/><br/>
+                                        <strong>Version:</strong> <span t-field="estimation.version"/><br/>
+                                        <strong>Total Amount:</strong> 
+                                        <span t-field="estimation.estimation_total" 
+                                              t-options='{"widget": "monetary", "display_currency": estimation.currency_id}'/><br/>
+                                    </div>
+                                </div>
+
+                                <!-- Material Lines -->
+                                <t t-if="estimation.estimation_line_ids">
+                                    <h5>Materials</h5>
+                                    <div class="table-responsive">
+                                        <table class="table table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th>Product</th>
+                                                    <th class="text-right">Quantity</th>
+                                                    <th class="text-right">Unit Cost</th>
+                                                    <th class="text-right">Subtotal</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <t t-foreach="estimation.estimation_line_ids" t-as="line">
+                                                    <tr>
+                                                        <td><span t-field="line.product_id"/></td>
+                                                        <td class="text-right">
+                                                            <span t-field="line.product_qty"/>
+                                                            <span t-field="line.product_uom_id"/>
+                                                        </td>
+                                                        <td class="text-right">
+                                                            <span t-field="line.marked_up_cost" 
+                                                                  t-options='{"widget": "monetary", "display_currency": estimation.currency_id}'/>
+                                                        </td>
+                                                        <td class="text-right">
+                                                            <span t-field="line.subtotal" 
+                                                                  t-options='{"widget": "monetary", "display_currency": estimation.currency_id}'/>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </t>
+
+                                <!-- Cost Breakdown -->
+                                <t t-if="estimation.estimation_cost_ids">
+                                    <h5>Additional Costs</h5>
+                                    <div class="table-responsive">
+                                        <table class="table table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th>Description</th>
+                                                    <th>Type</th>
+                                                    <th class="text-right">Cost</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <t t-foreach="estimation.estimation_cost_ids" t-as="cost">
+                                                    <tr>
+                                                        <td><span t-field="cost.name"/></td>
+                                                        <td><span t-field="cost.cost_type"/></td>
+                                                        <td class="text-right">
+                                                            <span t-field="cost.total_cost" 
+                                                                  t-options='{"widget": "monetary", "display_currency": estimation.currency_id}'/>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </t>
+
+                                <!-- Total Summary -->
+                                <div class="row">
+                                    <div class="col-lg-6 offset-lg-6">
+                                        <table class="table table-sm">
+                                            <tr>
+                                                <td><strong>Material Total:</strong></td>
+                                                <td class="text-right">
+                                                    <span t-field="estimation.material_total" 
+                                                          t-options='{"widget": "monetary", "display_currency": estimation.currency_id}'/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Cost Total:</strong></td>
+                                                <td class="text-right">
+                                                    <span t-field="estimation.cost_total" 
+                                                          t-options='{"widget": "monetary", "display_currency": estimation.currency_id}'/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Markup:</strong></td>
+                                                <td class="text-right">
+                                                    <span t-field="estimation.markup_total" 
+                                                          t-options='{"widget": "monetary", "display_currency": estimation.currency_id}'/>
+                                                </td>
+                                            </tr>
+                                            <tr class="border-top">
+                                                <td><strong>Total:</strong></td>
+                                                <td class="text-right">
+                                                    <strong>
+                                                        <span t-field="estimation.estimation_total" 
+                                                              t-options='{"widget": "monetary", "display_currency": estimation.currency_id}'/>
+                                                    </strong>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <!-- Customer Notes -->
+                                <t t-if="estimation.customer_notes">
+                                    <h5>Notes</h5>
+                                    <div t-field="estimation.customer_notes"/>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+    </data>
+</odoo>

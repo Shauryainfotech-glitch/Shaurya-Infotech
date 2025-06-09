@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Portal Rules for Estimations -->
+        <record id="estimation_portal_rule" model="ir.rule">
+            <field name="name">Portal User: Own Estimations only</field>
+            <field name="model_id" ref="model_mrp_estimation"/>
+            <field name="domain_force">[('partner_id', '=', user.partner_id.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <!-- Portal Rules for Estimation Lines -->
+        <record id="estimation_line_portal_rule" model="ir.rule">
+            <field name="name">Portal User: Own Estimation Lines only</field>
+            <field name="model_id" ref="model_mrp_estimation_line"/>
+            <field name="domain_force">[('estimation_id.partner_id', '=', user.partner_id.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <!-- Portal Rules for Estimation Costs -->
+        <record id="estimation_cost_portal_rule" model="ir.rule">
+            <field name="name">Portal User: Own Estimation Costs only</field>
+            <field name="model_id" ref="model_mrp_estimation_cost"/>
+            <field name="domain_force">[('estimation_id.partner_id', '=', user.partner_id.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <!-- Portal Rules for Estimation Versions -->
+        <record id="estimation_version_portal_rule" model="ir.rule">
+            <field name="name">Portal User: Own Estimation Versions only</field>
+            <field name="model_id" ref="model_mrp_estimation_version"/>
+            <field name="domain_force">[('parent_estimation_id.partner_id', '=', user.partner_id.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+    </data>
+</odoo>

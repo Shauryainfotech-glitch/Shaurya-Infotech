@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Create Version Wizard Form View -->
+        <record id="view_create_estimation_version_wizard_form" model="ir.ui.view">
+            <field name="name">create.estimation.version.wizard.form</field>
+            <field name="model">create.estimation.version.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Create New Estimation Version">
+                    <group>
+                        <field name="estimation_id" invisible="1"/>
+                        <field name="current_version" readonly="1"/>
+                        <field name="new_version" readonly="1"/>
+                        <field name="version_notes" required="1"/>
+                    </group>
+                    <footer>
+                        <button name="action_create_version" type="object" string="Create Version" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Create Version Wizard Action -->
+        <record id="action_create_estimation_version_wizard" model="ir.actions.act_window">
+            <field name="name">Create New Version</field>
+            <field name="res_model">create.estimation.version.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="binding_model_id" ref="model_mrp_estimation"/>
+            <field name="binding_view_types">form</field>
+        </record>
+
+        <!-- Add Version Creation Button to Estimation Form -->
+        <record id="view_mrp_estimation_form_add_version_button" model="ir.ui.view">
+            <field name="name">mrp.estimation.form.add.version.button</field>
+            <field name="model">mrp.estimation</field>
+            <field name="inherit_id" ref="view_mrp_estimation_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header" position="inside">
+                    <button name="%(action_create_estimation_version_wizard)d" type="action" 
+                            string="Create Version" states="draft,approved" 
+                            groups="mrp_estimation.group_estimation_user"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Estimation Line Tree View (for reference) -->
+        <record id="view_mrp_estimation_line_tree" model="ir.ui.view">
+            <field name="name">mrp.estimation.line.tree</field>
+            <field name="model">mrp.estimation.line</field>
+            <field name="arch" type="xml">
+                <tree string="Estimation Lines">
+                    <field name="sequence" widget="handle"/>
+                    <field name="estimation_id"/>
+                    <field name="product_id"/>
+                    <field name="product_qty"/>
+                    <field name="product_uom_id"/>
+                    <field name="product_cost"/>
+                    <field name="markup_percentage"/>
+                    <field name="marked_up_cost"/>
+                    <field name="subtotal"/>
+                    <field name="existing_material"/>
+                    <field name="supplier_id"/>
+                    <field name="lead_time"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Estimation Line Form View -->
+        <record id="view_mrp_estimation_line_form" model="ir.ui.view">
+            <field name="name">mrp.estimation.line.form</field>
+            <field name="model">mrp.estimation.line</field>
+            <field name="arch" type="xml">
+                <form string="Estimation Line">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="estimation_id"/>
+                                <field name="sequence"/>
+                                <field name="product_id"/>
+                                <field name="product_qty"/>
+                                <field name="product_uom_id"/>
+                            </group>
+                            <group>
+                                <field name="product_cost"/>
+                                <field name="markup_percentage"/>
+                                <field name="marked_up_cost"/>
+                                <field name="subtotal"/>
+                                <field name="currency_id" invisible="1"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Material Information">
+                                <field name="existing_material"/>
+                                <field name="supplier_id"/>
+                                <field name="lead_time"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="notes" nolabel="1" placeholder="Additional notes..."/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Estimation Cost Tree View -->
+        <record id="view_mrp_estimation_cost_tree" model="ir.ui.view">
+            <field name="name">mrp.estimation.cost.tree</field>
+            <field name="model">mrp.estimation.cost</field>
+            <field name="arch" type="xml">
+                <tree string="Estimation Costs">
+                    <field name="sequence" widget="handle"/>
+                    <field name="estimation_id"/>
+                    <field name="name"/>
+                    <field name="cost_type"/>
+                    <field name="operation_time"/>
+                    <field name="hourly_rate"/>
+                    <field name="labor_hours"/>
+                    <field name="labor_rate"/>
+                    <field name="unit_cost"/>
+                    <field name="quantity"/>
+                    <field name="total_cost"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Estimation Cost Form View -->
+        <record id="view_mrp_estimation_cost_form" model="ir.ui.view">
+            <field name="name">mrp.estimation.cost.form</field>
+            <field name="model">mrp.estimation.cost</field>
+            <field name="arch" type="xml">
+                <form string="Estimation Cost">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="estimation_id"/>
+                                <field name="sequence"/>
+                                <field name="name"/>
+                                <field name="cost_type"/>
+                            </group>
+                            <group>
+                                <field name="total_cost"/>
+                                <field name="currency_id" invisible="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Operation Details" attrs="{'invisible': [('cost_type', '!=', 'operation')]}">
+                                <group>
+                                    <field name="operation_id"/>
+                                    <field name="workcenter_id"/>
+                                    <field name="operation_time"/>
+                                    <field name="hourly_rate"/>
+                                </group>
+                            </page>
+                            <page string="Labor Details" attrs="{'invisible': [('cost_type', '!=', 'labor')]}">
+                                <group>
+                                    <field name="labor_hours"/>
+                                    <field name="labor_rate"/>
+                                    <field name="labor_overhead"/>
+                                </group>
+                            </page>
+                            <page string="Cost Details" attrs="{'invisible': [('cost_type', 'in', ['operation', 'labor'])]}">
+                                <group>
+                                    <field name="unit_cost"/>
+                                    <field name="quantity"/>
+                                </group>
+                            </page>
+                        </notebook>
+                        <group>
+                            <field name="notes" nolabel="1" placeholder="Additional notes..."/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Estimation Version Tree View -->
+        <record id="view_mrp_estimation_version_tree" model="ir.ui.view">
+            <field name="name">mrp.estimation.version.tree</field>
+            <field name="model">mrp.estimation.version</field>
+            <field name="arch" type="xml">
+                <tree string="Estimation Versions">
+                    <field name="parent_estimation_id"/>
+                    <field name="version_number"/>
+                    <field name="created_by"/>
+                    <field name="creation_date"/>
+                    <field name="is_active_version"/>
+                    <field name="version_notes"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Estimation Version Form View -->
+        <record id="view_mrp_estimation_version_form" model="ir.ui.view">
+            <field name="name">mrp.estimation.version.form</field>
+            <field name="model">mrp.estimation.version</field>
+            <field name="arch" type="xml">
+                <form string="Estimation Version">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="parent_estimation_id"/>
+                                <field name="version_number"/>
+                                <field name="is_active_version"/>
+                            </group>
+                            <group>
+                                <field name="created_by"/>
+                                <field name="creation_date"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="version_notes" nolabel="1" placeholder="Version change notes..."/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

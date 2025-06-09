@@ -1,0 +1,286 @@
+/* Manufacturing Estimation Backend Styles */
+
+.o_estimation_kanban_card {
+    padding: 10px;
+    margin: 5px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    background: white;
+    border-left: 4px solid #17a2b8;
+}
+
+.o_estimation_kanban_card.state_draft {
+    border-left-color: #6c757d;
+}
+
+.o_estimation_kanban_card.state_waiting_approval {
+    border-left-color: #ffc107;
+}
+
+.o_estimation_kanban_card.state_approved {
+    border-left-color: #28a745;
+}
+
+.o_estimation_kanban_card.state_sent {
+    border-left-color: #17a2b8;
+}
+
+.o_estimation_kanban_card.state_confirmed {
+    border-left-color: #007bff;
+}
+
+.o_estimation_kanban_card.state_done {
+    border-left-color: #6f42c1;
+}
+
+.o_estimation_kanban_card.state_cancel {
+    border-left-color: #dc3545;
+}
+
+.o_estimation_total {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #28a745;
+}
+
+.o_estimation_state_badge {
+    display: inline-block;
+    padding: 0.25em 0.4em;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
+}
+
+.o_estimation_state_badge.draft {
+    color: #495057;
+    background-color: #e9ecef;
+}
+
+.o_estimation_state_badge.waiting_approval {
+    color: #856404;
+    background-color: #fff3cd;
+}
+
+.o_estimation_state_badge.approved {
+    color: #155724;
+    background-color: #d4edda;
+}
+
+.o_estimation_state_badge.sent {
+    color: #0c5460;
+    background-color: #d1ecf1;
+}
+
+.o_estimation_state_badge.confirmed {
+    color: #004085;
+    background-color: #cce7ff;
+}
+
+.o_estimation_state_badge.done {
+    color: #3d1a78;
+    background-color: #e7d6f7;
+}
+
+.o_estimation_state_badge.cancel {
+    color: #721c24;
+    background-color: #f8d7da;
+}
+
+/* Cost breakdown styling */
+.o_cost_breakdown {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    margin: 10px 0;
+}
+
+.o_cost_breakdown_header {
+    font-weight: bold;
+    color: #495057;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #dee2e6;
+    padding-bottom: 5px;
+}
+
+.o_cost_breakdown_item {
+    display: flex;
+    justify-content: space-between;
+    padding: 3px 0;
+}
+
+.o_cost_breakdown_total {
+    font-weight: bold;
+    border-top: 1px solid #dee2e6;
+    padding-top: 5px;
+    margin-top: 5px;
+}
+
+/* Material lines styling */
+.o_material_lines_container {
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+}
+
+.o_material_line {
+    padding: 10px;
+    border-bottom: 1px solid #f1f3f4;
+}
+
+.o_material_line:last-child {
+    border-bottom: none;
+}
+
+.o_material_line_header {
+    font-weight: 600;
+    color: #495057;
+}
+
+.o_material_line_details {
+    font-size: 0.9em;
+    color: #6c757d;
+    margin-top: 5px;
+}
+
+/* Estimation form enhancements */
+.o_estimation_form .oe_subtotal_footer {
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.o_estimation_form .oe_subtotal_footer_separator {
+    border-top: 2px solid #007bff;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+/* Markup configuration styling */
+.o_markup_config {
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 5px;
+    padding: 15px;
+    margin: 10px 0;
+}
+
+.o_markup_config .o_form_label {
+    font-weight: 600;
+    color: #856404;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .o_estimation_kanban_card {
+        margin: 2px 0;
+        padding: 8px;
+    }
+    
+    .o_cost_breakdown_item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .o_estimation_total {
+        font-size: 1em;
+    }
+}
+
+/* Animation for state changes */
+.o_estimation_state_transition {
+    transition: all 0.3s ease-in-out;
+}
+
+/* Chart container styling */
+.o_cost_analysis_chart {
+    height: 300px;
+    width: 100%;
+    margin: 20px 0;
+}
+
+/* Button styling for estimation actions */
+.o_estimation_action_button {
+    margin: 2px;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+.o_estimation_action_button.primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: white;
+}
+
+.o_estimation_action_button.success {
+    background-color: #28a745;
+    border-color: #28a745;
+    color: white;
+}
+
+.o_estimation_action_button.warning {
+    background-color: #ffc107;
+    border-color: #ffc107;
+    color: #212529;
+}
+
+.o_estimation_action_button.danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: white;
+}
+
+/* Version control styling */
+.o_version_indicator {
+    display: inline-block;
+    background: #6c757d;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    font-weight: 500;
+}
+
+.o_version_indicator.latest {
+    background: #28a745;
+}
+
+/* Smart button enhancements */
+.oe_stat_button .fa {
+    font-size: 1.5em;
+    margin-bottom: 5px;
+}
+
+.oe_stat_button .o_stat_info {
+    font-weight: bold;
+}
+
+/* Loading states */
+.o_estimation_loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.o_estimation_loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid #007bff;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
