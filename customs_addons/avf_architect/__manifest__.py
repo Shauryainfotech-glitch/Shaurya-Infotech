@@ -86,7 +86,6 @@
         'views/document_management_views.xml',
         'views/financial_tracking_views.xml',
         'views/project_views.xml',
-        'views/dpr_views.xml',
         'views/compliance_views.xml',
         'views/rate_schedule_views.xml',
         'views/drawing_views.xml',
