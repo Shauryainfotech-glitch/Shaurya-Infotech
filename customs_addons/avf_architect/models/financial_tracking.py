@@ -165,6 +165,12 @@ class ArchitectBudget(models.Model):
         ('capital', 'Capital'),
         ('operational', 'Operational'),
     ], string='Budget Type')
+
+    total_amount = fields.Monetary(
+        string="Total Amount",
+        compute="_compute_total_amount",
+        store=True
+    )
     # Budget Details
     total_budget = fields.Monetary(string='Total Budget', currency_field='currency_id',
                                    required=True, tracking=True)
