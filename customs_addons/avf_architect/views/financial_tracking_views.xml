@@ -5,7 +5,7 @@
         <field name="name">architect.financial.tracking.tree</field>
         <field name="model">architect.financial.tracking</field>
         <field name="arch" type="xml">
-            <tree string="Financial Tracking" decoration-muted="state == 'cancelled'"
+            <list string="Financial Tracking" decoration-muted="state == 'cancelled'"
                   decoration-danger="state == 'rejected'" decoration-success="state == 'approved'">
                 <field name="name"/>
                 <field name="project_id"/>
@@ -21,7 +21,7 @@
                        decoration-success="state == 'approved'"
                        decoration-danger="state == 'rejected'"/>
                 <field name="currency_id" invisible="1"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -185,7 +185,7 @@
         <field name="name">architect.budget.tree</field>
         <field name="model">architect.budget</field>
         <field name="arch" type="xml">
-            <tree string="Project Budgets" decoration-danger="is_over_budget == True"
+            <list string="Project Budgets" decoration-danger="is_over_budget == True"
                   decoration-warning="utilization_percentage &gt; 80" decoration-success="state == 'active'">
                 <field name="name"/>
                 <field name="project_id"/>
@@ -204,7 +204,7 @@
                        decoration-primary="state == 'active'"/>
                 <field name="is_over_budget" invisible="1"/>
                 <field name="currency_id" invisible="1"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -365,7 +365,7 @@
         <field name="name">architect.cost.estimate.tree</field>
         <field name="model">architect.cost.estimate</field>
         <field name="arch" type="xml">
-            <tree string="Cost Estimates" decoration-success="is_approved == True" decoration-muted="state == 'rejected'">
+            <list string="Cost Estimates" decoration-success="is_approved == True" decoration-muted="state == 'rejected'">
                 <field name="name"/>
                 <field name="project_id"/>
                 <field name="category_id"/>
@@ -381,7 +381,7 @@
                        decoration-danger="state == 'rejected'"/>
                 <field name="is_approved" widget="boolean"/>
                 <field name="currency_id" invisible="1"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -538,14 +538,14 @@
         <field name="name">architect.financial.category.tree</field>
         <field name="model">architect.financial.category</field>
         <field name="arch" type="xml">
-            <tree string="Financial Categories" decoration-muted="active == False">
+            <list string="Financial Categories" decoration-muted="active == False">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="code"/>
                 <field name="category_type"/>
                 <field name="account_id"/>
                 <field name="active"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -585,12 +585,12 @@
         <field name="name">architect.financial.subcategory.tree</field>
         <field name="model">architect.financial.subcategory</field>
         <field name="arch" type="xml">
-            <tree string="Financial Subcategories" decoration-muted="active == False">
+            <list string="Financial Subcategories" decoration-muted="active == False">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="category_id"/>
                 <field name="active"/>
-            </tree>
+            </list>
         </field>
     </record>
 
