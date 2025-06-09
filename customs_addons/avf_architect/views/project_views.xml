@@ -46,7 +46,7 @@
                                 <field name="name" placeholder="Project Name..."/>
                             </h1>
                             <h2>
-                                <field name="code" />
+                                <field name="code" placeholder="Project ID..."/>
                             </h2>
                         </div>
                         <group>
