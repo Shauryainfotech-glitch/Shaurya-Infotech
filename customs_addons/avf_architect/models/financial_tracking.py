@@ -161,6 +161,10 @@ class ArchitectBudget(models.Model):
         string='Manager',
         default=lambda self: self.env.user
     )
+    budget_type = fields.Selection([
+        ('capital', 'Capital'),
+        ('operational', 'Operational'),
+    ], string='Budget Type')
     # Budget Details
     total_budget = fields.Monetary(string='Total Budget', currency_field='currency_id',
                                    required=True, tracking=True)
