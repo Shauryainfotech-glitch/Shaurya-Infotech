@@ -10,17 +10,17 @@
                 <form string="Architectural Project">
                     <header>
                         <button name="action_confirm" string="Confirm" type="object"
-                               class="oe_highlight" states="draft"/>
+                               class="oe_highlight" modifiers="{'invisible': [('state', '!=', 'draft')]}"/>
                         <button name="action_start" string="Start" type="object"
-                               class="oe_highlight" states="confirmed"/>
+                               class="oe_highlight" modifiers="{'invisible': [('state', '!=', 'confirmed')]}"/>
                         <button name="action_review" string="Submit for Review" type="object"
-                               class="oe_highlight" states="in_progress"/>
+                               class="oe_highlight" modifiers="{'invisible': [('state', '!=', 'in_progress')]}"/>
                         <button name="action_approve" string="Approve" type="object"
-                               class="oe_highlight" states="review"/>
+                               class="oe_highlight" modifiers="{'invisible': [('state', '!=', 'review')]}"/>
                         <button name="action_complete" string="Complete" type="object"
-                               class="oe_highlight" states="approved"/>
+                               class="oe_highlight" modifiers="{'invisible': [('state', '!=', 'approved')]}"/>
                         <button name="action_cancel" string="Cancel" type="object"
-                               states="draft,confirmed,in_progress"/>
+                               modifiers="{'invisible': [('state', 'not in', ['draft', 'confirmed', 'in_progress'])]}"/>
                         <button name="generate_ai_recommendations" string="Generate AI Recommendations"
                                type="object" class="btn-secondary"/>
                         <field name="state" widget="statusbar"
