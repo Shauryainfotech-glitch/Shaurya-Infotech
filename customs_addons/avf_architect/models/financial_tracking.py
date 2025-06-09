@@ -200,7 +200,7 @@ class ArchitectBudget(models.Model):
     # Dates
     start_date = fields.Date(string='Start Date', required=True)
     end_date = fields.Date(string='End Date', required=True)
-
+    line_ids = fields.One2many('architect.budget.line', 'budget_id', string='Budget Lines')
     # Approval
     approved_by = fields.Many2one('res.users', string='Approved By')
     approval_date = fields.Date(string='Approval Date')
