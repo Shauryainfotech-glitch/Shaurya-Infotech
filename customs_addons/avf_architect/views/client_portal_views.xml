@@ -33,7 +33,7 @@
                             <field name="theme"/>
                             <field name="email_notifications"/>
                             <field name="notification_frequency"
-                                   attrs="{'invisible': [('email_notifications', '=', False)]}"/>
+                                   modifiers="{'invisible': [('email_notifications', '=', False)]}"/>
                             <field name="access_token" readonly="1" password="True"/>
                         </group>
                     </group>
