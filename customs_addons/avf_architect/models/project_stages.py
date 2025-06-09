@@ -31,6 +31,13 @@ class ArchitectProjectStage(models.Model):
         default=lambda self: self.env.company,
         index=True
     )
+    approval_users = fields.Many2many(
+        'res.users',
+        'architect_stage_approval_rel',
+        'stage_id',
+        'user_id',
+        string='Approval Users'
+    )
     # Stage Type
     stage_type = fields.Selection([
         ('concept', 'Concept Design'),
