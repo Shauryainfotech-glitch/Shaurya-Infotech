@@ -9,15 +9,15 @@
                 <header>
                     <button name="action_publish" string="Publish"
                             type="object" class="oe_highlight"
-                            attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                            modifiers="{'invisible': [('state', '!=', 'draft')]}"/>
                     <button name="action_archive" string="Archive"
                             type="object" class="btn-warning"
-                            attrs="{'invisible': [('state', '!=', 'published')]}"/>
+                            modifiers="{'invisible': [('state', '!=', 'published')]}"/>
                     <button name="action_duplicate_for_new_period" string="Duplicate for New Period"
                             type="object" class="btn-secondary"/>
                     <button name="action_apply_escalation" string="Apply Escalation"
                             type="object" class="btn-secondary"
-                            attrs="{'invisible': [('price_escalation_factor', '=', 0)]}"/>
+                            modifiers="{'invisible': [('price_escalation_factor', '=', 0)]}"/>
                     <field name="state" widget="statusbar"
                            statusbar_visible="draft,published,archived"/>
                 </header>
@@ -154,11 +154,11 @@
                             <field name="quality_standards" placeholder="Quality standards..."/>
                         </page>
                         <page string="Rate Components" name="components"
-                              attrs="{'invisible': [('is_composite', '=', False)]}">
+                              modifiers="{'invisible': [('is_composite', '=', False)]}">
                             <group>
                                 <field name="is_composite"/>
                             </group>
-                            <field name="component_ids" attrs="{'invisible': [('is_composite', '=', False)]}">
+                            <field name="component_ids" modifiers="{'invisible': [('is_composite', '=', False)]}">
                                 <tree editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="name"/>
@@ -220,13 +220,13 @@
                 <header>
                     <button name="action_submit" string="Submit"
                             type="object" class="oe_highlight"
-                            attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                            modifiers="{'invisible': [('state', '!=', 'draft')]}"/>
                     <button name="action_approve" string="Approve"
                             type="object" class="oe_highlight"
-                            attrs="{'invisible': [('state', '!=', 'submitted')]}"/>
+                            modifiers="{'invisible': [('state', '!=', 'submitted')]}"/>
                     <button name="action_reject" string="Reject"
                             type="object" class="btn-warning"
-                            attrs="{'invisible': [('state', '!=', 'submitted')]}"/>
+                            modifiers="{'invisible': [('state', '!=', 'submitted')]}"/>
                     <field name="state" widget="statusbar"
                            statusbar_visible="draft,submitted,approved,rejected"/>
                 </header>

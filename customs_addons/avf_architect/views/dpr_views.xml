@@ -9,16 +9,16 @@
                 <header>
                     <button name="action_submit_for_review" string="Submit for Review"
                             type="object" class="oe_highlight"
-                            attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                            modifiers="{'invisible': [('state', '!=', 'draft')]}"/>
                     <button name="action_approve" string="Approve"
                             type="object" class="oe_highlight"
-                            attrs="{'invisible': [('state', '!=', 'under_review')]}"/>
+                            modifiers="{'invisible': [('state', '!=', 'under_review')]}"/>
                     <button name="action_reject" string="Reject"
                             type="object" class="btn-warning"
-                            attrs="{'invisible': [('state', '!=', 'under_review')]}"/>
+                            modifiers="{'invisible': [('state', '!=', 'under_review')]}"/>
                     <button name="action_request_revision" string="Request Revision"
                             type="object" class="btn-warning"
-                            attrs="{'invisible': [('state', '!=', 'under_review')]}"/>
+                            modifiers="{'invisible': [('state', '!=', 'under_review')]}"/>
                     <button name="action_generate_ai_content" string="Generate AI Content"
                             type="object" class="btn-secondary"/>
                     <field name="state" widget="statusbar"
