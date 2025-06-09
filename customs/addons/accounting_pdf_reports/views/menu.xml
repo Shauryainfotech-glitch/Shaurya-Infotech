@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- Parent Menu Item for Financial Reports -->
+    <!-- ✅ Parent Menu Item: Financial Reports under Accounting -->
     <menuitem id="menu_finance_reports"
               name="Financial Reports"
-              sequence="1"
-              parent="base.menu_apps"/>  <!-- Adjusted sequence for clarity -->
+              sequence="100"
+              parent="account.menu_finance"/>  <!-- Correct parent for accounting tools -->
 
-    <!-- Submenus under the 'Financial Reports' menu -->
+    <!-- ✅ Submenus under 'Financial Reports' -->
     <menuitem id="menu_finance_legal_statement"
               name="Legal Statement"
               sequence="10"
@@ -23,6 +23,5 @@
               sequence="30"
               parent="menu_finance_reports" />
 
-
-
 </odoo>
+
