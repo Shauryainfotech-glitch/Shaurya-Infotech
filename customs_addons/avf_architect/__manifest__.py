@@ -63,6 +63,10 @@
         'hr_timesheet',
         'website',
         'portal',
+        'mll',
+        'ai_llm',
+        'spreadsheet',
+        'quality'
     ],
     'data': [
         'security/security.xml',
