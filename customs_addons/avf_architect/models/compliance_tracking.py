@@ -13,7 +13,8 @@ class ArchitectCompliance(models.Model):
 
     name = fields.Char(string='Compliance Item', required=True, tracking=True)
     project_id = fields.Many2one('architect.project', string='Project', required=True)
-    
+    is_overdue = fields.Boolean(string='Overdue', compute='_compute_is_overdue', store=True)
+
     # Compliance Type
     compliance_type_id = fields.Many2one('architect.compliance.type', string='Compliance Type', required=True)
     category = fields.Selection([
@@ -85,7 +86,7 @@ class ArchitectCompliance(models.Model):
     
     # Alerts and Notifications
     alert_days_before = fields.Integer(string='Alert Days Before Deadline', default=7)
-    is_overdue = fields.Boolean(string='Overdue', compute='_compute_overdue')
+
     days_to_deadline = fields.Integer(string='Days to Deadline', compute='_compute_days_to_deadline')
     
     # Cost and Resources
@@ -204,6 +205,12 @@ class ArchitectCompliance(models.Model):
             'url': 'https://parivesh.nic.in/',
             'target': 'new',
         }
+
+    @api.depends('deadline')
+    def _compute_is_overdue(self):
+        today = fields.Date.context_today(self)
+        for record in self:
+            record.is_overdue = bool(record.deadline and record.deadline < today)
 
 
 class ArchitectComplianceType(models.Model):
