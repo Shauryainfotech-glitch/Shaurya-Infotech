@@ -60,6 +60,7 @@
         </field>
     </record>
 
+
     <!-- Project Stage Kanban View -->
     <record id="view_architect_project_stage_list" model="ir.ui.view">
         <field name="name">architect.project.stage.list</field>
