@@ -43,7 +43,7 @@
         'security/ir.model.access.csv',
         
         # Data
-        # 'data/estimation_sequence.xml',
+        'data/estimation_sequence.xml',
         'data/costing_sequence.xml',
         
         # Views
