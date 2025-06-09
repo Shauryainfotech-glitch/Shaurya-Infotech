@@ -27,7 +27,7 @@
                             <field name="name" placeholder="Rate Schedule Name"/>
                         </h1>
                         <h2>
-                            <field name="code" readonly="1"/>
+                            <field name="code" placeholder="code"/>
                         </h2>
                     </div>
                     <group>
