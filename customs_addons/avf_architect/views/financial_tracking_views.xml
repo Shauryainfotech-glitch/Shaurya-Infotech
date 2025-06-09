@@ -397,8 +397,7 @@
                             class="oe_highlight" modifiers="{'invisible': [('state', '!=', 'submitted')]}"/>
                     <button name="action_reject" string="Reject" type="object"
                             class="btn-warning" modifiers="{'invisible': [('state', '!=', 'submitted')]}"/>
-                    <button name="create_budget_from_estimate" string="Create Budget" type="object"
-                            class="btn-primary" modifiers="{'invisible': [('state', '!=', 'approved')]}"/>
+
                     <field name="state" widget="statusbar"
                            statusbar_visible="draft,submitted,approved,rejected"/>
                 </header>
