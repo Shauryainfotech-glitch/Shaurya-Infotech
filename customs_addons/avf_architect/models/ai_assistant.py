@@ -29,7 +29,7 @@ class ArchitectAIAssistant(models.Model):
     # Conversation
     conversation_ids = fields.One2many('architect.ai.conversation', 'session_id',
                                        string='Conversation History')
-
+    temp_message = fields.Text(string='Temporary Message')
     # Context Information
     context_data = fields.Text(string='Context Data (JSON)')
     project_context = fields.Html(string='Project Context')
