@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!-- Financial Tracking Views -->
-    <record id="view_architect_financial_tracking_tree" model="ir.ui.view">
+    <record id="view_architect_financial_tracking_list" model="ir.ui.view">
         <field name="name">architect.financial.tracking.list</field>
         <field name="model">architect.financial.tracking</field>
         <field name="arch" type="xml">
@@ -181,7 +181,7 @@
     </record>
 
     <!-- Budget Views -->
-    <record id="view_architect_budget_tree" model="ir.ui.view">
+    <record id="view_architect_budget_list" model="ir.ui.view">
         <field name="name">architect.budget.list</field>
         <field name="model">architect.budget</field>
         <field name="arch" type="xml">
@@ -361,7 +361,7 @@
     </record>
 
     <!-- Cost Estimate Views -->
-    <record id="view_architect_cost_estimate_tree" model="ir.ui.view">
+    <record id="view_architect_cost_estimate_list" model="ir.ui.view">
         <field name="name">architect.cost.estimate.list</field>
         <field name="model">architect.cost.estimate</field>
         <field name="arch" type="xml">
@@ -531,7 +531,7 @@
     </record>
 
     <!-- Financial Category Views -->
-    <record id="view_architect_financial_category_tree" model="ir.ui.view">
+    <record id="view_architect_financial_category_list" model="ir.ui.view">
         <field name="name">architect.financial.category.list</field>
         <field name="model">architect.financial.category</field>
         <field name="arch" type="xml">
@@ -578,7 +578,7 @@
     </record>
 
     <!-- Financial Subcategory Views -->
-    <record id="view_architect_financial_subcategory_tree" model="ir.ui.view">
+    <record id="view_architect_financial_subcategory_list" model="ir.ui.view">
         <field name="name">architect.financial.subcategory.list</field>
         <field name="model">architect.financial.subcategory</field>
         <field name="arch" type="xml">

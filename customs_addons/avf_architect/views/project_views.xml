@@ -124,7 +124,7 @@
         </record>
 
         <!-- Project Tree View -->
-        <record id="view_architect_project_tree" model="ir.ui.view">
+        <record id="view_architect_project_list" model="ir.ui.view">
             <field name="name">architect.project.list</field>
             <field name="model">architect.project</field>
             <field name="arch" type="xml">

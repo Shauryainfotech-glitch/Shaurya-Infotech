@@ -66,7 +66,7 @@
     </record>
 
     <!-- Client Portal Tree View -->
-    <record id="view_architect_client_portal_tree" model="ir.ui.view">
+    <record id="view_architect_client_portal_list" model="ir.ui.view">
         <field name="name">architect.client.portal.list</field>
         <field name="model">architect.client.portal</field>
         <field name="arch" type="xml">
@@ -152,7 +152,7 @@
     </record>
 
     <!-- Client Dashboard Tree View -->
-    <record id="view_architect_client_dashboard_tree" model="ir.ui.view">
+    <record id="view_architect_client_dashboard_list" model="ir.ui.view">
         <field name="name">architect.client.dashboard.list</field>
         <field name="model">architect.client.dashboard</field>
         <field name="arch" type="xml">

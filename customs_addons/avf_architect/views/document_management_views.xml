@@ -125,7 +125,7 @@
     </record>
 
     <!-- Document Tree View -->
-    <record id="view_architect_document_tree" model="ir.ui.view">
+    <record id="view_architect_document_list" model="ir.ui.view">
         <field name="name">architect.document.list</field>
         <field name="model">architect.document</field>
         <field name="arch" type="xml">
@@ -300,7 +300,7 @@
     </record>
 
     <!-- Document Category Tree View -->
-    <record id="view_architect_document_category_tree" model="ir.ui.view">
+    <record id="view_architect_document_category_list" model="ir.ui.view">
         <field name="name">architect.document.category.list</field>
         <field name="model">architect.document.category</field>
         <field name="arch" type="xml">
@@ -363,7 +363,7 @@
     </record>
 
     <!-- Document Template Tree View -->
-    <record id="view_architect_document_template_tree" model="ir.ui.view">
+    <record id="view_architect_document_template_list" model="ir.ui.view">
         <field name="name">architect.document.template.list</field>
         <field name="model">architect.document.template</field>
         <field name="arch" type="xml">

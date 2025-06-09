@@ -76,7 +76,7 @@
     </record>
 
     <!-- AI Assistant Tree View -->
-    <record id="view_architect_ai_assistant_tree" model="ir.ui.view">
+    <record id="view_architect_ai_assistant_list" model="ir.ui.view">
         <field name="name">architect.ai.assistant.list</field>
         <field name="model">architect.ai.assistant</field>
         <field name="arch" type="xml">
@@ -170,7 +170,7 @@
     </record>
 
     <!-- AI Template Tree View -->
-    <record id="view_architect_ai_template_tree" model="ir.ui.view">
+    <record id="view_architect_ai_template_list" model="ir.ui.view">
         <field name="name">architect.ai.template.list</field>
         <field name="model">architect.ai.template</field>
         <field name="arch" type="xml">
@@ -232,7 +232,7 @@
     </record>
 
     <!-- AI Knowledge Base Tree View -->
-    <record id="view_architect_ai_knowledge_tree" model="ir.ui.view">
+    <record id="view_architect_ai_knowledge_list" model="ir.ui.view">
         <field name="name">architect.ai.knowledge.list</field>
         <field name="model">architect.ai.knowledge</field>
         <field name="arch" type="xml">

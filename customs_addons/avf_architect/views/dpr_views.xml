@@ -111,7 +111,7 @@
     </record>
 
     <!-- DPR Tree View -->
-    <record id="view_architect_dpr_tree" model="ir.ui.view">
+    <record id="view_architect_dpr_list" model="ir.ui.view">
         <field name="name">architect.dpr.list</field>
         <field name="model">architect.dpr</field>
         <field name="arch" type="xml">

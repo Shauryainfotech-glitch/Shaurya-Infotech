@@ -61,7 +61,7 @@
     </record>
 
     <!-- Project Stage Kanban View -->
-    <record id="view_architect_project_stage_tree" model="ir.ui.view">
+    <record id="view_architect_project_stage_list" model="ir.ui.view">
         <field name="name">architect.project.stage.list</field>
         <field name="model">architect.project.stage</field>
         <field name="arch" type="xml">
@@ -142,7 +142,7 @@
     </record>
 
     <!-- Project Checklist Template Kanban View -->
-    <record id="view_architect_stage_checklist_template_tree" model="ir.ui.view">
+    <record id="view_architect_stage_checklist_template_list" model="ir.ui.view">
         <field name="name">architect.stage.checklist.template.list</field>
         <field name="model">architect.stage.checklist.template</field>
         <field name="arch" type="xml">
@@ -208,7 +208,7 @@
     </record>
 
     <!-- Project Checklist Kanban View -->
-    <record id="view_architect_project_checklist_tree" model="ir.ui.view">
+    <record id="view_architect_project_checklist_list" model="ir.ui.view">
         <field name="name">architect.project.checklist.list</field>
         <field name="model">architect.project.checklist</field>
         <field name="arch" type="xml">
