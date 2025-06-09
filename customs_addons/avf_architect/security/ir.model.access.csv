@@ -25,12 +25,6 @@ access_architect_ai_knowledge_user,architect.ai.knowledge.user,model_architect_a
 access_architect_ai_knowledge_manager,architect.ai.knowledge.manager,model_architect_ai_knowledge,architect_group_manager,1,1,1,1
 access_architect_dpr_user,architect.dpr.user,model_architect_dpr,architect_group_user,1,1,1,0
 access_architect_dpr_manager,architect.dpr.manager,model_architect_dpr,architect_group_manager,1,1,1,1
-access_dpr_section_user,architect.dpr.section.user,model_dpr_section,architect_group_user,1,1,1,0
-access_dpr_section_manager,architect.dpr.section.manager,model_dpr_section,architect_group_manager,1,1,1,1
-access_dpr_template_user,architect.dpr.template.user,model_dpr_template,architect_group_user,1,0,0,0
-access_dpr_template_manager,architect.dpr.template.manager,model_dpr_template,architect_group_manager,1,1,1,1
-access_dpr_template_section_user,architect.dpr.template.section.user,model_dpr_template_section,architect_group_user,1,0,0,0
-access_dpr_template_section_manager,architect.dpr.template.section.manager,model_dpr_template_section,architect_group_manager,1,1,1,1
 access_architect_compliance_user,architect.compliance.user,model_architect_compliance,architect_group_user,1,1,1,0
 access_architect_compliance_manager,architect.compliance.manager,model_architect_compliance,architect_group_manager,1,1,1,1
 access_architect_compliance_type_user,architect.compliance.type.user,model_architect_compliance_type,architect_group_user,1,0,0,0
