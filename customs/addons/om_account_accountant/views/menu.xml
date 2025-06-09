@@ -10,7 +10,7 @@
 
     <!-- Ensure 'account.menu_action_account_moves_all' is visible to all users -->
     <record id="account.menu_action_account_moves_all" model="ir.ui.menu">
-        <field name="groups_id" eval="[(5,0,0)]" />  <!-- Ensures no group restrictions -->
+        <field name="groups_id" eval="[(5,0,0)]" /> 
     </record>
 
     <record id="account.menu_action_account_moves_all" model="ir.ui.menu">
