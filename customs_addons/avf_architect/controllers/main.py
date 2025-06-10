@@ -49,7 +49,7 @@ class ArchitectController(http.Controller):
 
             # Recent projects
             recent_projects = project_env.search([
-                ('user_id', '=', request.env.user.id)
+                ('user_id' , '=', request.env.user.id)
             ], limit=5, order='write_date desc')
 
             return {
@@ -147,7 +147,7 @@ class ArchitectController(http.Controller):
                 'action': 'Review project timeline'
             })
         
-        # Sustainability recommendations
+        #    Sustainability recommendations
         recommendations.append({
             'type': 'sustainability',
             'title': 'Green Building Standards',
