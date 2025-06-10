@@ -16,8 +16,8 @@ class MrpCosting(models.Model):
     # Costs
     planned_cost = fields.Monetary('Planned Cost', tracking=True)
     actual_cost = fields.Monetary('Actual Cost', tracking=True)
-    cost_variance = fields.Monetary('Cost Variance', compute='_compute_variance')
-    cost_variance_percentage = fields.Float('Variance %', compute='_compute_variance')
+    cost_variance = fields.Monetary('Cost Variance', compute='_compute_variance', store=True)
+    cost_variance_percentage = fields.Float('Variance %', compute='_compute_variance', store=True)
 
     # Cost Breakdown
     raw_material_cost = fields.Monetary('Raw Material Cost', tracking=True)

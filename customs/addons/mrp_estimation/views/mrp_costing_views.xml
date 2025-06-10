@@ -7,7 +7,7 @@
             <field name="name">mrp.costing.tree</field>
             <field name="model">mrp.costing</field>
             <field name="arch" type="xml">
-                <list string="Manufacturing Costing">
+                <tree string="Manufacturing Costing">
                     <field name="name"/>
                     <field name="mo_id"/>
                     <field name="product_id"/>
@@ -16,11 +16,9 @@
                     <field name="actual_cost"/>
                     <field name="cost_variance"/>
                     <field name="cost_variance_percentage"/>
-                    <field name="state" decoration-info="state=='draft'"
-                           decoration-warning="state=='in_progress'"
-                           decoration-success="state=='done'"/>
+                    <field name="state"/>
                     <field name="company_id" groups="base.group_multi_company"/>
-                </list>
+                </tree>
             </field>
         </record>
 
@@ -32,13 +30,13 @@
                 <form string="Manufacturing Costing">
                     <header>
                         <button name="action_start_costing" type="object" string="Start Costing"
-                                class="oe_highlight" invisible="state != 'draft'"/>
+                                class="oe_highlight" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
                         <button name="action_complete_costing" type="object" string="Complete"
-                                class="oe_highlight" invisible="state != 'in_progress'"/>
+                                class="oe_highlight" attrs="{'invisible': [('state', '!=', 'in_progress')]}"/>
                         <button name="action_cancel_costing" type="object" string="Cancel"
-                                invisible="state not in ['draft','in_progress']"/>
+                                attrs="{'invisible': [('state', 'in', ['done', 'cancelled'])]}"/>
                         <button name="action_reset_to_draft" type="object" string="Reset to Draft"
-                                invisible="state not in ['cancelled','done']"/>
+                                attrs="{'invisible': [('state', 'not in', ['cancelled', 'done'])]}"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,done"/>
                     </header>
                     <sheet>
@@ -72,29 +70,7 @@
                                         <field name="machine_cost"/>
                                         <field name="quality_cost"/>
                                     </group>
-                                    <group string="Cost Analysis">
-                                        <div class="o_cost_analysis_chart">
-                                            <canvas ref="canvas" width="400" height="200"/>
-                                        </div>
-                                    </group>
                                 </group>
-                            </page>
-                            <page string="Variance Analysis" invisible="state == 'draft'">
-                                <group>
-                                    <group string="Cost Comparison">
-                                        <field name="planned_cost" readonly="1"/>
-                                        <field name="actual_cost" readonly="1"/>
-                                        <field name="cost_variance" readonly="1"/>
-                                        <field name="cost_variance_percentage" widget="percentage" readonly="1"/>
-                                    </group>
-                                </group>
-                                <separator string="Variance Details"/>
-                                <div class="alert alert-info" role="alert" invisible="cost_variance >= 0">
-                                    <strong>Cost Savings!</strong> The actual cost is lower than planned.
-                                </div>
-                                <div class="alert alert-warning" role="alert" invisible="cost_variance &lt; 0">
-                                    <strong>Cost Overrun!</strong> The actual cost exceeded the planned cost.
-                                </div>
                             </page>
                         </notebook>
                     </sheet>
@@ -117,12 +93,13 @@
                     <field name="mo_id"/>
                     <field name="product_id"/>
                     <field name="estimation_id"/>
+                    <separator/>
                     <filter string="Draft" name="draft" domain="[('state','=','draft')]"/>
                     <filter string="In Progress" name="in_progress" domain="[('state','=','in_progress')]"/>
                     <filter string="Done" name="done" domain="[('state','=','done')]"/>
                     <separator/>
                     <filter string="My Costings" name="my_costings" domain="[('create_uid','=',uid)]"/>
-                    <filter string="Cost Overruns" name="cost_overruns" domain="[('cost_variance','>',0)]"/>
+                    <filter string="Cost Overruns" name="cost_overruns" domain="[('cost_variance','&gt;',0)]"/>
                     <filter string="Cost Savings" name="cost_savings" domain="[('cost_variance','&lt;',0)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Status" name="group_state" context="{'group_by':'state'}"/>
@@ -133,64 +110,11 @@
             </field>
         </record>
 
-        <!-- MRP Costing Kanban View -->
-        <record id="view_mrp_costing_kanban" model="ir.ui.view">
-            <field name="name">mrp.costing.kanban</field>
-            <field name="model">mrp.costing</field>
-            <field name="arch" type="xml">
-                <kanban default_group_by="state" class="o_kanban_small_column">
-                    <field name="name"/>
-                    <field name="mo_id"/>
-                    <field name="product_id"/>
-                    <field name="planned_cost"/>
-                    <field name="actual_cost"/>
-                    <field name="cost_variance"/>
-                    <field name="state"/>
-                    <field name="currency_id"/>
-                    <templates>
-                        <t t-name="kanban-box">
-                            <div class="oe_kanban_card oe_kanban_global_click">
-                                <div class="oe_kanban_content">
-                                    <div class="o_kanban_record_top">
-                                        <div class="o_kanban_record_headings">
-                                            <strong class="o_kanban_record_title">
-                                                <span t-field="record.name.value"/>
-                                            </strong>
-                                        </div>
-                                        <div class="o_kanban_manage_button_section">
-                                            <a class="o_kanban_manage_toggle_button" href="#" role="button">
-                                                <i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="o_kanban_record_body">
-                                        <field name="mo_id"/>
-                                        <br/>
-                                        <field name="product_id"/>
-                                        <div class="text-muted">
-                                            Planned: <field name="planned_cost" widget="monetary"/>
-                                        </div>
-                                        <div t-if="record.actual_cost.value">
-                                            Actual: <field name="actual_cost" widget="monetary"/>
-                                        </div>
-                                        <div t-if="record.cost_variance.value != 0"
-                                             t-attf-class="#{record.cost_variance.value > 0 ? 'text-danger' : 'text-success'}">
-                                            Variance: <field name="cost_variance" widget="monetary"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </t>
-                    </templates>
-                </kanban>
-            </field>
-        </record>
-
         <!-- MRP Costing Action -->
         <record id="action_mrp_costing" model="ir.actions.act_window">
             <field name="name">Manufacturing Costing</field>
             <field name="res_model">mrp.costing</field>
-            <field name="view_mode">kanban,list,form</field>
+            <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_mrp_costing_search"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
@@ -205,7 +129,7 @@
         <!-- Add to menu -->
         <menuitem id="menu_mrp_estimation_costing"
                   name="Cost Analysis"
-                  parent="menu_mrp_estimation_main"
+                  parent="mrp_estimation.menu_mrp_estimation_main"
                   action="action_mrp_costing"
                   sequence="20"/>
 
