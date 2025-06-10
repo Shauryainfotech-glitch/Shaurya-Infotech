@@ -40,18 +40,18 @@
             <field name="arch" type="xml">
                 <xpath expr="//header" position="inside">
                     <button name="%(action_create_estimation_version_wizard)d" type="action"
-                            string="Create Version" states="draft,approved"
+                            string="Create Version" invisible="state not in ['draft','approved']"
                             groups="mrp_estimation.group_estimation_user"/>
                 </xpath>
             </field>
         </record>
 
-        <!-- Estimation Line List View -->
-        <record id="view_mrp_estimation_line_list" model="ir.ui.view">
-            <field name="name">mrp.estimation.line.list</field>
+        <!-- Estimation Line Tree View (for reference) -->
+        <record id="view_mrp_estimation_line_tree" model="ir.ui.view">
+            <field name="name">mrp.estimation.line.tree</field>
             <field name="model">mrp.estimation.line</field>
             <field name="arch" type="xml">
-                <list string="Estimation Lines">
+                <tree string="Estimation Lines">
                     <field name="sequence" widget="handle"/>
                     <field name="estimation_id"/>
                     <field name="product_id"/>
@@ -64,7 +64,7 @@
                     <field name="existing_material"/>
                     <field name="supplier_id"/>
                     <field name="lead_time"/>
-                </list>
+                </tree>
             </field>
         </record>
 
@@ -106,12 +106,12 @@
             </field>
         </record>
 
-        <!-- Estimation Cost List View -->
-        <record id="view_mrp_estimation_cost_list" model="ir.ui.view">
-            <field name="name">mrp.estimation.cost.list</field>
+        <!-- Estimation Cost Tree View -->
+        <record id="view_mrp_estimation_cost_tree" model="ir.ui.view">
+            <field name="name">mrp.estimation.cost.tree</field>
             <field name="model">mrp.estimation.cost</field>
             <field name="arch" type="xml">
-                <list string="Estimation Costs">
+                <tree string="Estimation Costs">
                     <field name="sequence" widget="handle"/>
                     <field name="estimation_id"/>
                     <field name="name"/>
@@ -123,7 +123,7 @@
                     <field name="unit_cost"/>
                     <field name="quantity"/>
                     <field name="total_cost"/>
-                </list>
+                </tree>
             </field>
         </record>
 
@@ -147,7 +147,7 @@
                             </group>
                         </group>
                         <notebook>
-                            <page string="Operation Details" attrs="{'invisible': [('cost_type', '!=', 'operation')]}">
+                            <page string="Operation Details" invisible="cost_type != 'operation'">
                                 <group>
                                     <field name="operation_id"/>
                                     <field name="workcenter_id"/>
@@ -155,14 +155,14 @@
                                     <field name="hourly_rate"/>
                                 </group>
                             </page>
-                            <page string="Labor Details" attrs="{'invisible': [('cost_type', '!=', 'labor')]}">
+                            <page string="Labor Details" invisible="cost_type != 'labor'">
                                 <group>
                                     <field name="labor_hours"/>
                                     <field name="labor_rate"/>
                                     <field name="labor_overhead"/>
                                 </group>
                             </page>
-                            <page string="Cost Details" attrs="{'invisible': [('cost_type', 'in', ['operation', 'labor'])]}">
+                            <page string="Cost Details" invisible="cost_type in ['operation', 'labor']">
                                 <group>
                                     <field name="unit_cost"/>
                                     <field name="quantity"/>
@@ -177,19 +177,19 @@
             </field>
         </record>
 
-        <!-- Estimation Version List View -->
-        <record id="view_mrp_estimation_version_list" model="ir.ui.view">
-            <field name="name">mrp.estimation.version.list</field>
+        <!-- Estimation Version Tree View -->
+        <record id="view_mrp_estimation_version_tree" model="ir.ui.view">
+            <field name="name">mrp.estimation.version.tree</field>
             <field name="model">mrp.estimation.version</field>
             <field name="arch" type="xml">
-                <list string="Estimation Versions">
+                <tree string="Estimation Versions">
                     <field name="parent_estimation_id"/>
                     <field name="version_number"/>
                     <field name="created_by"/>
                     <field name="creation_date"/>
                     <field name="is_active_version"/>
                     <field name="version_notes"/>
-                </list>
+                </tree>
             </field>
         </record>
 

@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+
         <!-- Main Estimation Views -->
 
-        <!-- Estimation List View -->
-        <record id="view_mrp_estimation_list" model="ir.ui.view">
-            <field name="name">mrp.estimation.list</field>
+        <!-- Estimation Tree View -->
+        <record id="view_mrp_estimation_tree" model="ir.ui.view">
+            <field name="name">mrp.estimation.tree</field>
             <field name="model">mrp.estimation</field>
             <field name="arch" type="xml">
-                <list string="Manufacturing Estimations">
+                <tree string="Manufacturing Estimations">
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="product_id"/>
@@ -22,7 +23,7 @@
                            decoration-success="state=='approved'"/>
                     <field name="user_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
-                </list>
+                </tree>
             </field>
         </record>
 
@@ -34,21 +35,21 @@
                 <form string="Manufacturing Estimation">
                     <header>
                         <button name="action_submit_for_approval" type="object" string="Submit for Approval"
-                                class="oe_highlight" states="draft"/>
+                                class="oe_highlight" invisible="state != 'draft'"/>
                         <button name="action_approve" type="object" string="Approve"
-                                class="oe_highlight" states="waiting_approval"
+                                class="oe_highlight" invisible="state != 'waiting_approval'"
                                 groups="mrp_estimation.group_estimation_manager"/>
                         <button name="action_reject" type="object" string="Reject"
-                                states="waiting_approval" groups="mrp_estimation.group_estimation_manager"/>
+                                invisible="state != 'waiting_approval'" groups="mrp_estimation.group_estimation_manager"/>
                         <button name="action_send_estimation" type="object" string="Send to Customer"
-                                class="oe_highlight" states="approved"/>
+                                class="oe_highlight" invisible="state != 'approved'"/>
                         <button name="action_confirm" type="object" string="Confirm"
-                                class="oe_highlight" states="sent"/>
-                        <button name="action_done" type="object" string="Done" states="confirmed"/>
+                                class="oe_highlight" invisible="state != 'sent'"/>
+                        <button name="action_done" type="object" string="Done" invisible="state != 'confirmed'"/>
                         <button name="action_cancel" type="object" string="Cancel"
-                                states="draft,waiting_approval,approved,sent"/>
+                                invisible="state not in ['draft','waiting_approval','approved','sent']"/>
                         <button name="action_reset_to_draft" type="object" string="Reset to Draft"
-                                states="cancel"/>
+                                invisible="state != 'cancel'"/>
                         <field name="state" widget="statusbar"
                                statusbar_visible="draft,waiting_approval,approved,sent,confirmed,done"/>
                     </header>
@@ -98,7 +99,7 @@
                         <notebook>
                             <page string="Material Lines">
                                 <field name="estimation_line_ids">
-                                    <list string="Material Lines" editable="bottom">
+                                    <tree string="Material Lines" editable="bottom">
                                         <field name="sequence" widget="handle"/>
                                         <field name="product_id" required="1"/>
                                         <field name="product_qty" required="1"/>
@@ -111,7 +112,7 @@
                                         <field name="existing_material"/>
                                         <field name="supplier_id"/>
                                         <field name="lead_time"/>
-                                    </list>
+                                    </tree>
                                 </field>
                                 <group class="oe_subtotal_footer oe_right">
                                     <field name="material_total" widget="monetary"/>
@@ -120,20 +121,20 @@
 
                             <page string="Cost Breakdown">
                                 <field name="estimation_cost_ids">
-                                    <list string="Cost Lines" editable="bottom">
+                                    <tree string="Cost Lines" editable="bottom">
                                         <field name="sequence" widget="handle"/>
                                         <field name="name" required="1"/>
                                         <field name="cost_type" required="1"/>
-                                        <field name="operation_time" attrs="{'invisible': [('cost_type', '!=', 'operation')], 'required': [('cost_type', '=', 'operation')]}"/>
-                                        <field name="hourly_rate" attrs="{'invisible': [('cost_type', '!=', 'operation')], 'required': [('cost_type', '=', 'operation')]}"/>
-                                        <field name="labor_hours" attrs="{'invisible': [('cost_type', '!=', 'labor')], 'required': [('cost_type', '=', 'labor')]}"/>
-                                        <field name="labor_rate" attrs="{'invisible': [('cost_type', '!=', 'labor')], 'required': [('cost_type', '=', 'labor')]}"/>
-                                        <field name="labor_overhead" attrs="{'invisible': [('cost_type', '!=', 'labor')]}"/>
-                                        <field name="unit_cost" attrs="{'invisible': [('cost_type', 'in', ['operation', 'labor'])], 'required': [('cost_type', 'not in', ['operation', 'labor'])]}"/>
-                                        <field name="quantity" attrs="{'invisible': [('cost_type', 'in', ['operation', 'labor'])], 'required': [('cost_type', 'not in', ['operation', 'labor'])]}"/>
+                                        <field name="operation_time" invisible="cost_type != 'operation'" required="cost_type == 'operation'"/>
+                                        <field name="hourly_rate" invisible="cost_type != 'operation'" required="cost_type == 'operation'"/>
+                                        <field name="labor_hours" invisible="cost_type != 'labor'" required="cost_type == 'labor'"/>
+                                        <field name="labor_rate" invisible="cost_type != 'labor'" required="cost_type == 'labor'"/>
+                                        <field name="labor_overhead" invisible="cost_type != 'labor'"/>
+                                        <field name="unit_cost" invisible="cost_type in ['operation', 'labor']" required="cost_type not in ['operation', 'labor']"/>
+                                        <field name="quantity" invisible="cost_type in ['operation', 'labor']" required="cost_type not in ['operation', 'labor']"/>
                                         <field name="total_cost"/>
                                         <field name="currency_id" invisible="1"/>
-                                    </list>
+                                    </tree>
                                 </field>
                                 <group class="oe_subtotal_footer oe_right">
                                     <field name="cost_total" widget="monetary"/>
@@ -217,7 +218,7 @@
         <record id="action_mrp_estimation" model="ir.actions.act_window">
             <field name="name">Manufacturing Estimations</field>
             <field name="res_model">mrp.estimation</field>
-            <field name="view_mode">list,form</field>
+            <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_mrp_estimation_search"/>
             <field name="context">{'search_default_my_estimations': 1}</field>
             <field name="help" type="html">
@@ -259,5 +260,6 @@
                   parent="menu_mrp_estimation_config"
                   action="base.action_res_config"
                   sequence="10"/>
+
     </data>
 </odoo>

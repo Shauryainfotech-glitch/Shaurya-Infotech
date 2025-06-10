@@ -7,7 +7,7 @@
             <field name="name">mrp.costing.tree</field>
             <field name="model">mrp.costing</field>
             <field name="arch" type="xml">
-                <list string="Manufacturing Costing">
+                <tree string="Manufacturing Costing">
                     <field name="name"/>
                     <field name="mo_id"/>
                     <field name="product_id"/>
@@ -18,7 +18,7 @@
                     <field name="cost_variance_percentage"/>
                     <field name="state"/>
                     <field name="company_id" groups="base.group_multi_company"/>
-                </list>
+                </tree>
             </field>
         </record>
 
@@ -30,13 +30,13 @@
                 <form string="Manufacturing Costing">
                     <header>
                         <button name="action_start_costing" type="object" string="Start Costing"
-                                class="oe_highlight" states="draft"/>
+                                class="oe_highlight" invisible="state != 'draft'"/>
                         <button name="action_complete_costing" type="object" string="Complete"
-                                class="oe_highlight" states="in_progress"/>
+                                class="oe_highlight" invisible="state != 'in_progress'"/>
                         <button name="action_cancel_costing" type="object" string="Cancel"
-                                states="draft,in_progress"/>
+                                invisible="state not in ['draft','in_progress']"/>
                         <button name="action_reset_to_draft" type="object" string="Reset to Draft"
-                                states="cancelled,done"/>
+                                invisible="state not in ['cancelled','done']"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,done"/>
                     </header>
                     <sheet>
@@ -111,7 +111,7 @@
         <record id="action_mrp_costing" model="ir.actions.act_window">
             <field name="name">Manufacturing Costing</field>
             <field name="res_model">mrp.costing</field>
-            <field name="view_mode">list,form</field>
+            <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_mrp_costing_search"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
