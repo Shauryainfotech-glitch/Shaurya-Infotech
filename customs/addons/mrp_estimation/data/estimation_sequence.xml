@@ -23,7 +23,7 @@
             <field name="decoration_type">warning</field>
             <field name="delay_count">1</field>
             <field name="delay_unit">days</field>
-            <field name="delay_from">date_deadline</field>
+            <field name="delay_from">current_date</field>
         </record>
 
     </data>
