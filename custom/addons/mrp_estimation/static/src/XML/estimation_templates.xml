@@ -1,0 +1,18 @@
+<odoo>
+    <template id="estimation_report_template">
+        <t t-call="web.basic_layout">
+            <div class="page">
+                <h2>Estimation Report</h2>
+                <div>
+                    <strong>Estimation Name:</strong> <t t-esc="o.name"/>
+                </div>
+                <div>
+                    <strong>Product:</strong> <t t-esc="o.product_id.name"/>
+                </div>
+                <div>
+                    <strong>Quantity:</strong> <t t-esc="o.quantity"/>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

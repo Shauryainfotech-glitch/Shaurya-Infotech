@@ -1,0 +1,24 @@
+<odoo>
+    <template id="portal_estimation_template" name="Estimation Portal">
+        <t t-call="website.layout">
+            <div class="container">
+                <h2>Estimation Details</h2>
+                <div>
+                    <strong>Name: </strong><t t-esc="estimation.name"/>
+                </div>
+                <div>
+                    <strong>Product: </strong><t t-esc="estimation.product_id.name"/>
+                </div>
+                <div>
+                    <strong>Quantity: </strong><t t-esc="estimation.quantity"/>
+                </div>
+                <div>
+                    <strong>Total Cost: </strong><t t-esc="estimation.total_cost"/>
+                </div>
+                <div>
+                    <a href="/my/estimations" class="btn btn-primary">Back to My Estimations</a>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

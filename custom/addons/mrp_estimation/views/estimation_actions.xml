@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Server Action: Send Estimation to Customer -->
+        <record id="action_send_to_customer" model="ir.actions.server">
+            <field name="name">Send Estimation to Customer</field>
+            <field name="model_id" ref="model_mrp_estimation"/>
+            <field name="state">code</field>
+            <field name="code">
+records.action_send_estimation()
+            </field>
+        </record>
+
+        <!-- Server Action: Approve Estimation -->
+        <record id="action_approve_estimation" model="ir.actions.server">
+            <field name="name">Approve Estimation</field>
+            <field name="model_id" ref="model_mrp_estimation"/>
+            <field name="state">code</field>
+            <field name="code">
+records.action_approve()
+            </field>
+        </record>
+
+        <!-- Server Action: Submit for Approval -->
+        <record id="action_submit_for_approval" model="ir.actions.server">
+            <field name="name">Submit for Approval</field>
+            <field name="model_id" ref="model_mrp_estimation"/>
+            <field name="state">code</field>
+            <field name="code">
+records.action_submit_for_approval()
+            </field>
+        </record>
+
+        <!-- Server Action: Mark as Done -->
+        <record id="action_mark_done" model="ir.actions.server">
+            <field name="name">Mark as Done</field>
+            <field name="model_id" ref="model_mrp_estimation"/>
+            <field name="state">code</field>
+            <field name="code">
+records.action_done()
+            </field>
+        </record>
+
+        <!-- Server Action: Reset to Draft -->
+        <record id="action_reset_to_draft" model="ir.actions.server">
+            <field name="name">Reset to Draft</field>
+            <field name="model_id" ref="model_mrp_estimation"/>
+            <field name="state">code</field>
+            <field name="code">
+records.action_reset_to_draft()
+            </field>
+            <field name="groups_id" eval="[(4, ref('group_estimation_manager'))]"/>
+        </record>
+
+        <!-- Server Action: Create Manufacturing Order -->
+        <record id="action_create_manufacturing_order" model="ir.actions.server">
+            <field name="name">Create Manufacturing Order</field>
+            <field name="model_id" ref="model_mrp_estimation"/>
+            <field name="state">code</field>
+            <field name="code">
+records.action_create_manufacturing_order()
+            </field>
+        </record>
+
+        <!-- Server Action: Create Sales Order -->
+        <record id="action_create_sales_order" model="ir.actions.server">
+            <field name="name">Create Sales Order</field>
+            <field name="model_id" ref="model_mrp_estimation"/>
+            <field name="state">code</field>
+            <field name="code">
+records.action_create_sale_order()
+            </field>
+        </record>
+
+        <!-- Server Action: Create BOM -->
+        <record id="action_create_bom" model="ir.actions.server">
+            <field name="name">Create Bill of Materials</field>
+            <field name="model_id" ref="model_mrp_estimation"/>
+            <field name="state">code</field>
+            <field name="code">
+records.action_create_bom()
+            </field>
+        </record>
+
+        <!-- Server Action: Duplicate Estimation -->
+        <record id="action_duplicate_estimation" model="ir.actions.server">
+            <field name="name">Duplicate Estimation</field>
+            <field name="model_id" ref="model_mrp_estimation"/>
+            <field name="state">code</field>
+            <field name="code">
+action = records.copy_data()
+new_record = records.create(action[0])
+action = {
+    'type': 'ir.actions.act_window',
+    'res_model': 'mrp.estimation',
+    'res_id': new_record.id,
+    'view_mode': 'form',
+    'target': 'current',
+}
+            </field>
+        </record>
+
+        <!-- Automated Action: Auto-approve small estimations -->
+        <record id="auto_approve_small_estimations" model="base.automation">
+            <field name="name">Auto-approve Small Estimations</field>
+            <field name="model_id" ref="model_mrp_estimation"/>
+            <field name="state">code</field>
+            <field name="code">
+# Auto-approve estimations under threshold
+threshold = float(env['ir.config_parameter'].sudo().get_param('mrp_estimation.auto_approve_threshold', '1000.0'))
+if record.estimation_total &lt; threshold and record.state == 'waiting_approval':
+    record.action_approve()
+            </field>
+            <field name="trigger">on_write</field>
+            <field name="filter_domain">[('state', '=', 'waiting_approval')]</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <!-- Automated Action: Send notification on approval -->
+        <record id="notify_on_approval" model="base.automation">
+            <field name="name">Notify on Estimation Approval</field>
+            <field name="model_id" ref="model_mrp_estimation"/>
+            <field name="state">code</field>
+            <field name="code">
+# Send notification to estimation creator
+if record.state == 'approved':
+    record.message_post(
+        body=f"Estimation {record.name} has been approved.",
+        subject="Estimation Approved",
+        partner_ids=[record.user_id.partner_id.id]
+    )
+            </field>
+            <field name="trigger">on_write</field>
+            <field name="filter_domain">[('state', '=', 'approved')]</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- Cron Job: Check estimation validity -->
+        <record id="cron_check_estimation_validity" model="ir.cron">
+            <field name="name">Check Estimation Validity</field>
+            <field name="model_id" ref="model_mrp_estimation"/>
+            <field name="state">code</field>
+            <field name="code">
+# Mark expired estimations
+today = fields.Date.today()
+expired_estimations = model.search([
+    ('validity_date', '&lt;', today),
+    ('state', 'in', ['sent', 'approved'])
+])
+for estimation in expired_estimations:
+    estimation.message_post(
+        body=f"Estimation {estimation.name} has expired.",
+        subject="Estimation Expired"
+    )
+            </field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- Scheduled Activity: Follow up on pending approvals -->
+        <record id="activity_followup_approval" model="mail.activity.type">
+            <field name="name">Follow-up Estimation Approval</field>
+            <field name="summary">Follow up on pending estimation approval</field>
+            <field name="category">reminder</field>
+            <field name="res_model">mrp.estimation</field>
+            <field name="icon">fa-clock-o</field>
+            <field name="delay_count">2</field>
+            <field name="delay_unit">days</field>
+        </record>
+
+    </data>
+</odoo>

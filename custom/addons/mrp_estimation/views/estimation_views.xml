@@ -1,0 +1,72 @@
+<odoo>
+    <data>
+        <record id="view_mrp_estimation_form" model="ir.ui.view">
+            <field name="name">mrp.estimation.form</field>
+            <field name="model">mrp.estimation</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <!-- Action Buttons -->
+                        <button name="action_confirm" string="Confirm" type="object"
+                                attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                        <button name="action_approve" string="Approve" type="object"
+                                attrs="{'invisible': [('state', '!=', 'to_approve')]}"/>
+                        <button name="action_send_estimation" string="Send to Customer" type="object"
+                                attrs="{'invisible': [('state', 'not in', ['approved', 'sent'])]}"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <!-- Add your buttons here -->
+                        </div>
+                        <group>
+                            <group>
+                                <field name="name" readonly="state != 'draft'"/>
+                                <field name="partner_id" invisible="state != 'draft'"/>
+                                <field name="date" readonly="state != 'draft'"/>
+                            </group>
+                            <group>
+                                <field name="product_id" invisible="state != 'draft'"/>
+                                <field name="product_qty" readonly="state != 'draft'"/>
+                                <field name="product_uom_id" readonly="state != 'draft'"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Components" name="components">
+                                <field name="component_ids" readonly="state != 'draft'">
+                                    <tree editable="bottom">
+                                        <field name="product_id"/>
+                                        <field name="quantity"/>
+                                        <field name="uom_id"/>
+                                        <field name="cost"/>
+                                        <field name="subtotal"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Operations" name="operations">
+                                <field name="operation_ids" readonly="state != 'draft'">
+                                    <tree editable="bottom">
+                                        <field name="operation_id"/>
+                                        <field name="time"/>
+                                        <field name="cost_hour"/>
+                                        <field name="subtotal"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                        <group class="oe_subtotal_footer">
+                            <field name="total_components"/>
+                            <field name="total_operations"/>
+                            <field name="total_cost" class="oe_subtotal_footer_separator"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

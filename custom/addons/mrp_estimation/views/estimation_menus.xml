@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Main Menu -->
+        <menuitem id="menu_mrp_estimation_root"
+                  name="Manufacturing Estimation"
+                  web_icon="mrp_estimation,static/description/icon.png"
+                  sequence="50"/>
+
+        <!-- Estimations Menu -->
+        <menuitem id="menu_mrp_estimation"
+                  name="Estimations"
+                  parent="menu_mrp_estimation_root"
+                  sequence="10"/>
+
+        <menuitem id="menu_mrp_estimation_all"
+                  name="All Estimations"
+                  parent="menu_mrp_estimation"
+                  action="action_estimation"
+                  sequence="10"/>
+
+        <menuitem id="menu_mrp_estimation_draft"
+                  name="Draft Estimations"
+                  parent="menu_mrp_estimation"
+                  action="action_estimation"
+                  sequence="20"/>
+
+        <menuitem id="menu_mrp_estimation_to_approve"
+                  name="To Approve"
+                  parent="menu_mrp_estimation"
+                  action="action_estimation"
+                  sequence="30"
+                  groups="mrp_estimation.group_estimation_manager"/>
+
+        <!-- Manufacturing Costing Menu -->
+        <menuitem id="menu_mrp_costing"
+                  name="Costing"
+                  parent="menu_mrp_estimation_root"
+                  sequence="20"/>
+
+        <menuitem id="menu_mrp_costing_all"
+                  name="All Costing Records"
+                  parent="menu_mrp_costing"
+                  action="action_mrp_costing"
+                  sequence="10"/>
+
+        <!-- Analysis Menu -->
+        <menuitem id="menu_mrp_estimation_analysis"
+                  name="Analysis"
+                  parent="menu_mrp_estimation_root"
+                  sequence="30"/>
+
+        <menuitem id="menu_mrp_estimation_lines"
+                  name="Estimation Lines"
+                  parent="menu_mrp_estimation_analysis"
+                  action="action_estimation_line"
+                  sequence="10"/>
+
+        <menuitem id="menu_mrp_estimation_costs"
+                  name="Cost Analysis"
+                  parent="menu_mrp_estimation_analysis"
+                  action="action_estimation_cost"
+                  sequence="20"/>
+
+        <menuitem id="menu_mrp_estimation_versions"
+                  name="Version Control"
+                  parent="menu_mrp_estimation_analysis"
+                  action="action_estimation_version"
+                  sequence="30"/>
+
+        <!-- Configuration Menu -->
+        <menuitem id="menu_mrp_estimation_config"
+                  name="Configuration"
+                  parent="menu_mrp_estimation_root"
+                  sequence="100"
+                  groups="mrp_estimation.group_estimation_manager"/>
+
+        <menuitem id="menu_mrp_estimation_settings"
+                  name="Settings"
+                  parent="menu_mrp_estimation_config"
+                  action="action_mrp_estimation_config_settings"
+                  sequence="10"/>
+
+    </data>
+</odoo>

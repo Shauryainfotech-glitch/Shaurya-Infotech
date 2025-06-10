@@ -1,0 +1,29 @@
+/* Portal Styles for Estimation Module */
+.portal-estimation-container {
+    margin-top: 20px;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.portal-estimation-header {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.portal-estimation-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+}
+
+.portal-estimation-item .product-name {
+    font-size: 18px;
+    color: #333;
+}
+
+.portal-estimation-item .product-cost {
+    font-size: 18px;
+    color: #007bff;
+}
