@@ -139,6 +139,7 @@ class ArchitectAIAssistant(models.Model):
 
         return context
 
+
     def clear_conversation(self):
         """Clear conversation history"""
         self.conversation_ids.unlink()
