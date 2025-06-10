@@ -55,19 +55,19 @@
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <button name="action_view_boms" type="object"
+                            <button name="action_view_boms" type="action"
                                     class="oe_stat_button" icon="fa-list-alt">
                                 <field name="bom_count" widget="statinfo" string="BOMs"/>
                             </button>
-                            <button name="action_view_manufacturing_orders" type="object"
+                            <button name="action_view_manufacturing_orders" type="action"
                                     class="oe_stat_button" icon="fa-wrench">
                                 <field name="mo_count" widget="statinfo" string="MOs"/>
                             </button>
-                            <button name="action_view_sale_orders" type="object"
+                            <button name="action_view_sale_orders" type="action"
                                     class="oe_stat_button" icon="fa-usd">
                                 <field name="so_count" widget="statinfo" string="Sales"/>
                             </button>
-                            <button name="action_view_versions" type="object"
+                            <button name="action_view_versions" type="action"
                                     class="oe_stat_button" icon="fa-code-fork">
                                 <field name="version_count" widget="statinfo" string="Versions"/>
                             </button>
