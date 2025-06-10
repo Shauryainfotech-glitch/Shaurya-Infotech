@@ -2,93 +2,357 @@
 <odoo>
     <data>
 
-        <!-- Extend Configuration Settings -->
-        <record id="res_config_settings_view_form" model="ir.ui.view">
-            <field name="name">res.config.settings.view.form.inherit.estimation</field>
-            <field name="model">res.config.settings</field>
-            <field name="type">form</field>
-            <field name="priority" eval="20"/>
-            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <!-- Main Estimation Views -->
+
+        <!-- Estimation Tree View -->
+        <record id="view_mrp_estimation_tree" model="ir.ui.view">
+            <field name="name">mrp.estimation.tree</field>
+            <field name="model">mrp.estimation</field>
+            <field name="type">list</field>
             <field name="arch" type="xml">
-                <xpath expr="//div[hasclass('settings')]" position="inside">
-                    <div class="app_settings_block" data-string="Manufacturing Estimation" string="Manufacturing Estimation" data-key="mrp_estimation">
-                        <h2>Manufacturing Estimation Settings</h2>
-
-                        <div class="row mt16 o_settings_container">
-                            <div class="col-12 col-lg-6 o_setting_box">
-                                <div class="o_setting_left_pane">
-                                    <field name="approval_required"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="approval_required"/>
-                                    <div class="text-muted">
-                                        Require approval workflow for estimations before they can be sent to customers
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-12 col-lg-6 o_setting_box">
-                                <div class="o_setting_left_pane">
-                                    <field name="auto_markup_enabled"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="auto_markup_enabled"/>
-                                    <div class="text-muted">
-                                        Automatically apply markup to estimation lines based on default values
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <h3>Default Values</h3>
-                        <div class="row mt16 o_settings_container">
-                            <div class="col-12 col-lg-6 o_setting_box">
-                                <div class="o_setting_right_pane">
-                                    <label for="estimation_sequence_prefix" string="Estimation Sequence Prefix"/>
-                                    <field name="estimation_sequence_prefix" class="o_light_label"/>
-                                    <div class="text-muted">
-                                        Prefix for estimation sequence numbers (e.g., EST, QUOTE, etc.)
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-12 col-lg-6 o_setting_box">
-                                <div class="o_setting_right_pane">
-                                    <label for="version_increment" string="Version Increment"/>
-                                    <field name="version_increment" class="o_light_label"/>
-                                    <div class="text-muted">
-                                        Default increment value when creating new estimation versions
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <h3>Markup Configuration</h3>
-                        <div class="row mt16 o_settings_container">
-                            <div class="col-12 col-lg-6 o_setting_box">
-                                <div class="o_setting_right_pane">
-                                    <label for="default_material_markup" string="Default Material Markup (%)"/>
-                                    <field name="default_material_markup" class="o_light_label"/>
-                                    <div class="text-muted">
-                                        Default markup percentage applied to material costs
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-12 col-lg-6 o_setting_box">
-                                <div class="o_setting_right_pane">
-                                    <label for="default_cost_markup" string="Default Cost Markup (%)"/>
-                                    <field name="default_cost_markup" class="o_light_label"/>
-                                    <div class="text-muted">
-                                        Default markup percentage applied to operation and labor costs
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </xpath>
+                <list string="Manufacturing Estimations">
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="product_id"/>
+                    <field name="product_qty"/>
+                    <field name="estimation_date"/>
+                    <field name="validity_date"/>
+                    <field name="estimation_total"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="state" decoration-info="state=='draft'"
+                           decoration-warning="state=='waiting_approval'"
+                           decoration-success="state=='approved'"/>
+                    <field name="user_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </list>
             </field>
         </record>
+
+        <!-- Estimation Form View -->
+        <record id="view_mrp_estimation_form" model="ir.ui.view">
+            <field name="name">mrp.estimation.form</field>
+            <field name="model">mrp.estimation</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Manufacturing Estimation">
+                    <header>
+                        <button name="action_submit_for_approval" type="object" string="Submit for Approval"
+                                class="oe_highlight" invisible="state != 'draft'"/>
+                        <button name="action_approve" type="object" string="Approve"
+                                class="oe_highlight" invisible="state != 'waiting_approval'"
+                                groups="mrp_estimation.group_estimation_manager"/>
+                        <button name="action_reject" type="object" string="Reject"
+                                invisible="state != 'waiting_approval'" groups="mrp_estimation.group_estimation_manager"/>
+                        <button name="action_send_estimation" type="object" string="Send to Customer"
+                                class="oe_highlight" invisible="state != 'approved'"/>
+                        <button name="action_confirm" type="object" string="Confirm"
+                                class="oe_highlight" invisible="state != 'sent'"/>
+                        <button name="action_done" type="object" string="Done" invisible="state != 'confirmed'"/>
+                        <button name="action_cancel" type="object" string="Cancel"
+                                invisible="state not in ['draft','waiting_approval','approved','sent']"/>
+                        <button name="action_reset_to_draft" type="object" string="Reset to Draft"
+                                invisible="state != 'cancel'"/>
+                        <field name="state" widget="statusbar"
+                               statusbar_visible="draft,waiting_approval,approved,sent,confirmed,done"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_view_boms" type="object"
+                                    class="oe_stat_button" icon="fa-list-alt">
+                                <field name="bom_count" widget="statinfo" string="BOMs"/>
+                            </button>
+                            <button name="action_view_manufacturing_orders" type="object"
+                                    class="oe_stat_button" icon="fa-wrench">
+                                <field name="mo_count" widget="statinfo" string="MOs"/>
+                            </button>
+                            <button name="action_view_sale_orders" type="object"
+                                    class="oe_stat_button" icon="fa-usd">
+                                <field name="so_count" widget="statinfo" string="Sales"/>
+                            </button>
+                            <button name="action_view_versions" type="object"
+                                    class="oe_stat_button" icon="fa-code-fork">
+                                <field name="version_count" widget="statinfo" string="Versions"/>
+                            </button>
+                        </div>
+
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+
+                        <group>
+                            <group>
+                                <field name="partner_id" required="1"/>
+                                <field name="product_id" required="1"/>
+                                <field name="product_qty" required="1"/>
+                                <field name="product_uom_id" required="1"/>
+                            </group>
+                            <group>
+                                <field name="estimation_date" required="1"/>
+                                <field name="validity_date"/>
+                                <field name="version"/>
+                                <field name="user_id"/>
+                                <field name="currency_id"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Material Lines">
+                                <field name="estimation_line_ids">
+                                    <list string="Material Lines" editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="product_id" required="1"/>
+                                        <field name="product_qty" required="1"/>
+                                        <field name="product_uom_id" required="1"/>
+                                        <field name="product_cost" required="1"/>
+                                        <field name="markup_percentage"/>
+                                        <field name="marked_up_cost"/>
+                                        <field name="subtotal"/>
+                                        <field name="currency_id" invisible="1"/>
+                                        <field name="existing_material"/>
+                                        <field name="supplier_id"/>
+                                        <field name="lead_time"/>
+                                    </list>
+                                </field>
+                                <group class="oe_subtotal_footer oe_right">
+                                    <field name="material_total" widget="monetary"/>
+                                </group>
+                            </page>
+
+                            <page string="Cost Breakdown">
+                                <field name="estimation_cost_ids">
+                                    <list string="Cost Lines" editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="name" required="1"/>
+                                        <field name="cost_type" required="1"/>
+                                        <field name="operation_time" invisible="cost_type != 'operation'" required="cost_type == 'operation'"/>
+                                        <field name="hourly_rate" invisible="cost_type != 'operation'" required="cost_type == 'operation'"/>
+                                        <field name="labor_hours" invisible="cost_type != 'labor'" required="cost_type == 'labor'"/>
+                                        <field name="labor_rate" invisible="cost_type != 'labor'" required="cost_type == 'labor'"/>
+                                        <field name="labor_overhead" invisible="cost_type != 'labor'"/>
+                                        <field name="unit_cost" invisible="cost_type in ['operation', 'labor']" required="cost_type not in ['operation', 'labor']"/>
+                                        <field name="quantity" invisible="cost_type in ['operation', 'labor']" required="cost_type not in ['operation', 'labor']"/>
+                                        <field name="total_cost"/>
+                                        <field name="currency_id" invisible="1"/>
+                                    </list>
+                                </field>
+                                <group class="oe_subtotal_footer oe_right">
+                                    <field name="cost_total" widget="monetary"/>
+                                </group>
+                            </page>
+
+                            <page string="Markup &amp; Totals">
+                                <group>
+                                    <group string="Material Markup">
+                                        <field name="material_markup_type"/>
+                                        <field name="material_markup_value"/>
+                                    </group>
+                                    <group string="Cost Markup">
+                                        <field name="cost_markup_type"/>
+                                        <field name="cost_markup_value"/>
+                                    </group>
+                                </group>
+                                <group class="oe_subtotal_footer oe_right">
+                                    <field name="material_total" widget="monetary"/>
+                                    <field name="cost_total" widget="monetary"/>
+                                    <field name="markup_total" widget="monetary"/>
+                                    <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                                        <label for="estimation_total"/>
+                                    </div>
+                                    <field name="estimation_total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary"/>
+                                </group>
+                            </page>
+
+                            <page string="Notes">
+                                <group>
+                                    <field name="notes" nolabel="1" placeholder="Internal notes..."/>
+                                </group>
+                                <separator string="Customer Notes"/>
+                                <group>
+                                    <field name="customer_notes" nolabel="1" placeholder="Notes visible to customer..."/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Estimation Search View -->
+        <record id="view_mrp_estimation_search" model="ir.ui.view">
+            <field name="name">mrp.estimation.search</field>
+            <field name="model">mrp.estimation</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Manufacturing Estimations">
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="product_id"/>
+                    <field name="user_id"/>
+                    <filter string="My Estimations" name="my_estimations" domain="[('user_id','=',uid)]"/>
+                    <separator/>
+                    <filter string="Draft" name="draft" domain="[('state','=','draft')]"/>
+                    <filter string="Waiting Approval" name="waiting_approval" domain="[('state','=','waiting_approval')]"/>
+                    <filter string="Approved" name="approved" domain="[('state','=','approved')]"/>
+                    <filter string="Sent" name="sent" domain="[('state','=','sent')]"/>
+                    <filter string="Confirmed" name="confirmed" domain="[('state','=','confirmed')]"/>
+                    <separator/>
+                    <filter string="This Month" name="this_month"
+                            domain="[('estimation_date','&gt;=',datetime.datetime.now().replace(day=1).strftime('%Y-%m-%d'))]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Customer" name="group_partner" context="{'group_by':'partner_id'}"/>
+                        <filter string="Status" name="group_state" context="{'group_by':'state'}"/>
+                        <filter string="Responsible" name="group_user" context="{'group_by':'user_id'}"/>
+                        <filter string="Product" name="group_product" context="{'group_by':'product_id'}"/>
+                        <filter string="Estimation Date" name="group_date" context="{'group_by':'estimation_date'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Main Estimation Action -->
+        <record id="action_mrp_estimation" model="ir.actions.act_window">
+            <field name="name">Manufacturing Estimations</field>
+            <field name="res_model">mrp.estimation</field>
+            <field name="view_mode">list,form</field>
+            <field name="search_view_id" ref="view_mrp_estimation_search"/>
+            <field name="context">{'search_default_my_estimations': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first Manufacturing Estimation
+                </p>
+                <p>
+                    Estimations help you calculate manufacturing costs and provide accurate quotes to customers.
+                </p>
+            </field>
+        </record>
+
+        <!-- Settings Action -->
+        <record id="action_mrp_estimation_settings" model="ir.actions.act_window">
+            <field name="name">Manufacturing Estimation Settings</field>
+            <field name="res_model">res.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="mrp_estimation_config_form"/>
+            <field name="target">inline</field>
+            <field name="context">{'module': 'mrp_estimation'}</field>
+        </record>
+
+        <!-- Menu Items -->
+        <menuitem id="menu_mrp_estimation_root"
+                  name="Manufacturing Estimation"
+                  sequence="25"
+                  web_icon="mrp_estimation,static/description/icon.png"/>
+
+        <menuitem id="menu_mrp_estimation_main"
+                  name="Estimations"
+                  parent="menu_mrp_estimation_root"
+                  sequence="10"/>
+
+        <menuitem id="menu_mrp_estimation_estimations"
+                  name="Estimations"
+                  parent="menu_mrp_estimation_main"
+                  action="action_mrp_estimation"
+                  sequence="10"/>
+
+        <!-- Configuration Menu -->
+        <menuitem id="menu_mrp_estimation_config"
+                  name="Configuration"
+                  parent="menu_mrp_estimation_root"
+                  sequence="90"
+                  groups="mrp_estimation.group_estimation_manager"/>
+
+        <menuitem id="menu_mrp_estimation_settings"
+                  name="Settings"
+                  parent="menu_mrp_estimation_config"
+                  action="action_mrp_estimation_settings"
+                  sequence="10"/>
+
+    </data>
+</odoo>ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Estimation Search View -->
+        <record id="view_mrp_estimation_search" model="ir.ui.view">
+            <field name="name">mrp.estimation.search</field>
+            <field name="model">mrp.estimation</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Manufacturing Estimations">
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="product_id"/>
+                    <field name="user_id"/>
+                    <filter string="My Estimations" name="my_estimations" domain="[('user_id','=',uid)]"/>
+                    <separator/>
+                    <filter string="Draft" name="draft" domain="[('state','=','draft')]"/>
+                    <filter string="Waiting Approval" name="waiting_approval" domain="[('state','=','waiting_approval')]"/>
+                    <filter string="Approved" name="approved" domain="[('state','=','approved')]"/>
+                    <filter string="Sent" name="sent" domain="[('state','=','sent')]"/>
+                    <filter string="Confirmed" name="confirmed" domain="[('state','=','confirmed')]"/>
+                    <separator/>
+                    <filter string="This Month" name="this_month"
+                            domain="[('estimation_date','&gt;=',datetime.datetime.now().replace(day=1).strftime('%Y-%m-%d'))]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Customer" name="group_partner" context="{'group_by':'partner_id'}"/>
+                        <filter string="Status" name="group_state" context="{'group_by':'state'}"/>
+                        <filter string="Responsible" name="group_user" context="{'group_by':'user_id'}"/>
+                        <filter string="Product" name="group_product" context="{'group_by':'product_id'}"/>
+                        <filter string="Estimation Date" name="group_date" context="{'group_by':'estimation_date'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Main Estimation Action -->
+        <record id="action_mrp_estimation" model="ir.actions.act_window">
+            <field name="name">Manufacturing Estimations</field>
+            <field name="res_model">mrp.estimation</field>
+            <field name="view_mode">list,form</field>
+            <field name="search_view_id" ref="view_mrp_estimation_search"/>
+            <field name="context">{'search_default_my_estimations': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first Manufacturing Estimation
+                </p>
+                <p>
+                    Estimations help you calculate manufacturing costs and provide accurate quotes to customers.
+                </p>
+            </field>
+        </record>
+
+        <!-- Menu Items -->
+        <menuitem id="menu_mrp_estimation_root"
+                  name="Manufacturing Estimation"
+                  sequence="25"
+                  web_icon="mrp_estimation,static/description/icon.png"/>
+
+        <menuitem id="menu_mrp_estimation_main"
+                  name="Estimations"
+                  parent="menu_mrp_estimation_root"
+                  sequence="10"/>
+
+        <menuitem id="menu_mrp_estimation_estimations"
+                  name="Estimations"
+                  parent="menu_mrp_estimation_main"
+                  action="action_mrp_estimation"
+                  sequence="10"/>
+
+        <!-- Configuration Menu -->
+        <menuitem id="menu_mrp_estimation_config"
+                  name="Configuration"
+                  parent="menu_mrp_estimation_root"
+                  sequence="90"
+                  groups="mrp_estimation.group_estimation_manager"/>
 
     </data>
 </odoo>

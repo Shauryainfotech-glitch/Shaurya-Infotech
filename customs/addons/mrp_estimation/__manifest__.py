@@ -46,12 +46,14 @@
         'data/estimation_sequence.xml',
         'data/costing_sequence.xml',
 
-        # Views
+        # Views - Main views first
         'views/estimation_menus.xml',
         'views/mrp_costing_views.xml',
-        'views/res_config_settings_views.xml',
         'views/portal_templates.xml',
         'views/estimation_widget_template.xml',
+
+        # Configuration views - after main views
+        'views/res_config_settings_views.xml',
 
         # Reports
         'reports/report_estimation.xml',
