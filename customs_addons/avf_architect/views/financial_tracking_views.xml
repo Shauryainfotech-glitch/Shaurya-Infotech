@@ -73,7 +73,6 @@
                             <group>
                                 <field name="description" placeholder="Transaction description..."/>
                                 <field name="notes" placeholder="Additional notes..."/>
-                                <field name="name" placeholder="Additional notes..."/>
                             </group>
                         </page>
                         <page string="Approval" name="approval">
