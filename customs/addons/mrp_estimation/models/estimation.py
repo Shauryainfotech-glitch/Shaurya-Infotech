@@ -103,12 +103,12 @@ class MrpEstimation(models.Model):
         default=lambda self: self.env.company.currency_id
     )
 
-    company_id = fields.Many2one(
-        'res.company',
-        string='Company',
-        required=True,
-        default=lambda self: self.env.company
-    )
+    # company_id = fields.Many2one(
+    #     'res.company',
+    #     string='Company',
+    #     required=True,
+    #     default=lambda self: self.env.company
+    # )
 
     user_id = fields.Many2one(
         'res.users',
@@ -606,7 +606,7 @@ class MrpEstimation(models.Model):
 
         bom = self.env['mrp.bom']._bom_find(
             product=self.product_id,
-            company_id=self.company_id.id,
+            # company_id=self.company_id.id,
             bom_type='normal'
         )
 
