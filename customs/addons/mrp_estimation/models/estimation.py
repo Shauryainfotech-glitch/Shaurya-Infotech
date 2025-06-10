@@ -674,3 +674,21 @@ class MrpEstimationTag(models.Model):
     _sql_constraints = [
         ('name_unique', 'unique(name)', 'Tag name must be unique!')
     ]
+from odoo import models, fields, api
+
+class MrpEstimation(models.Model):
+    _name = 'mrp.estimation'
+    _description = 'Manufacturing Estimation'
+
+    # Adding the BOM count field for the button
+    bom_count = fields.Integer(string="BOM Count", compute='_compute_bom_count')
+
+    @api.depends('bom_ids')
+    def _compute_bom_count(self):
+        for record in self:
+            record.bom_count = len(record.bom_ids)
+
+    def action_view_boms(self):
+        # Example action to view related BOMs
+        bom_action = self.env.ref('mrp.mrp_bom_action')
+        return bom_action.read()[0]  # Returning the action for the BOMs view

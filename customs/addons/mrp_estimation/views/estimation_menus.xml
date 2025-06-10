@@ -57,19 +57,19 @@
                         <div class="oe_button_box" name="button_box">
                             <!-- Updated BOM button to use correct action -->
                             <button name="action_view_boms" type="object"
-                                    class="oe_stat_button" icon="fa-list-alt">
+                                    class="oe_stat_button" icon="fa-list-alt" string="View BOMs">
                                 <field name="bom_count" widget="statinfo" string="BOMs"/>
                             </button>
                             <button name="action_view_manufacturing_orders" type="object"
-                                    class="oe_stat_button" icon="fa-wrench">
+                                    class="oe_stat_button" icon="fa-wrench" string="MOs">
                                 <field name="mo_count" widget="statinfo" string="MOs"/>
                             </button>
                             <button name="action_view_sale_orders" type="object"
-                                    class="oe_stat_button" icon="fa-usd">
+                                    class="oe_stat_button" icon="fa-usd" string="Sales">
                                 <field name="so_count" widget="statinfo" string="Sales"/>
                             </button>
                             <button name="action_view_versions" type="object"
-                                    class="oe_stat_button" icon="fa-code-fork">
+                                    class="oe_stat_button" icon="fa-code-fork" string="Versions">
                                 <field name="version_count" widget="statinfo" string="Versions"/>
                             </button>
                         </div>
