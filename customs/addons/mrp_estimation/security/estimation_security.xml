@@ -17,56 +17,10 @@
             <field name="comment">Manager can approve estimations and manage all estimation records</field>
         </record>
 
-        <!-- Defining External IDs for Models -->
-        <record id="model_mrp_estimation" model="ir.model">
-            <field name="name">mrp.estimation</field>
-            <field name="model">mrp.estimation</field>
-        </record>
-
-        <record id="model_mrp_estimation_line" model="ir.model">
-            <field name="name">mrp.estimation.line</field>
-            <field name="model">mrp.estimation.line</field>
-        </record>
-
-        <record id="model_mrp_estimation_cost" model="ir.model">
-            <field name="name">mrp.estimation.cost</field>
-            <field name="model">mrp.estimation.cost</field>
-        </record>
-
-        <record id="model_mrp_estimation_version" model="ir.model">
-            <field name="name">mrp.estimation.version</field>
-            <field name="model">mrp.estimation.version</field>
-        </record>
-
-        <record id="model_mrp_costing" model="ir.model">
-            <field name="name">mrp.costing</field>
-            <field name="model">mrp.costing</field>
-        </record>
-
-        <record id="model_mrp_estimation_calculation" model="ir.model">
-            <field name="name">mrp.estimation.calculation</field>
-            <field name="model">mrp.estimation.calculation</field>
-        </record>
-
-        <record id="model_mrp_estimation_performance" model="ir.model">
-            <field name="name">mrp.estimation.performance</field>
-            <field name="model">mrp.estimation.performance</field>
-        </record>
-
-        <record id="model_estimation_portal_mixin" model="ir.model">
-            <field name="name">estimation.portal.mixin</field>
-            <field name="model">estimation.portal.mixin</field>
-        </record>
-
-        <record id="model_create_estimation_version_wizard" model="ir.model">
-            <field name="name">create.estimation.version.wizard</field>
-            <field name="model">create.estimation.version.wizard</field>
-        </record>
-
         <!-- Record Rules -->
         <record id="estimation_user_rule" model="ir.rule">
             <field name="name">Estimation User Access Rule</field>
-            <field name="model_id" ref="model_mrp_estimation"/>
+            <field name="model_id" ref="mrp_estimation.model_mrp_estimation"/>
             <field name="domain_force">['|', ('user_id', '=', user.id), ('user_id', '=', False)]</field>
             <field name="groups" eval="[(4, ref('group_estimation_user'))]"/>
             <field name="perm_read" eval="True"/>
@@ -77,7 +31,7 @@
 
         <record id="estimation_manager_rule" model="ir.rule">
             <field name="name">Estimation Manager Access Rule</field>
-            <field name="model_id" ref="model_mrp_estimation"/>
+            <field name="model_id" ref="mrp_estimation.model_mrp_estimation"/>
             <field name="domain_force">[(1, '=', 1)]</field>
             <field name="groups" eval="[(4, ref('group_estimation_manager'))]"/>
             <field name="perm_read" eval="True"/>
@@ -89,14 +43,14 @@
         <!-- Estimation Line Rules -->
         <record id="estimation_line_user_rule" model="ir.rule">
             <field name="name">Estimation Line User Access Rule</field>
-            <field name="model_id" ref="model_mrp_estimation_line"/>
+            <field name="model_id" ref="mrp_estimation.model_mrp_estimation_line"/>
             <field name="domain_force">['|', ('estimation_id.user_id', '=', user.id), ('estimation_id.user_id', '=', False)]</field>
             <field name="groups" eval="[(4, ref('group_estimation_user'))]"/>
         </record>
 
         <record id="estimation_line_manager_rule" model="ir.rule">
             <field name="name">Estimation Line Manager Access Rule</field>
-            <field name="model_id" ref="model_mrp_estimation_line"/>
+            <field name="model_id" ref="mrp_estimation.model_mrp_estimation_line"/>
             <field name="domain_force">[(1, '=', 1)]</field>
             <field name="groups" eval="[(4, ref('group_estimation_manager'))]"/>
         </record>
@@ -104,14 +58,14 @@
         <!-- Estimation Cost Rules -->
         <record id="estimation_cost_user_rule" model="ir.rule">
             <field name="name">Estimation Cost User Access Rule</field>
-            <field name="model_id" ref="model_mrp_estimation_cost"/>
+            <field name="model_id" ref="mrp_estimation.model_mrp_estimation_cost"/>
             <field name="domain_force">['|', ('estimation_id.user_id', '=', user.id), ('estimation_id.user_id', '=', False)]</field>
             <field name="groups" eval="[(4, ref('group_estimation_user'))]"/>
         </record>
 
         <record id="estimation_cost_manager_rule" model="ir.rule">
             <field name="name">Estimation Cost Manager Access Rule</field>
-            <field name="model_id" ref="model_mrp_estimation_cost"/>
+            <field name="model_id" ref="mrp_estimation.model_mrp_estimation_cost"/>
             <field name="domain_force">[(1, '=', 1)]</field>
             <field name="groups" eval="[(4, ref('group_estimation_manager'))]"/>
         </record>
@@ -119,14 +73,14 @@
         <!-- Estimation Version Rules -->
         <record id="estimation_version_user_rule" model="ir.rule">
             <field name="name">Estimation Version User Access Rule</field>
-            <field name="model_id" ref="model_mrp_estimation_version"/>
+            <field name="model_id" ref="mrp_estimation.model_mrp_estimation_version"/>
             <field name="domain_force">['|', ('parent_estimation_id.user_id', '=', user.id), ('parent_estimation_id.user_id', '=', False)]</field>
             <field name="groups" eval="[(4, ref('group_estimation_user'))]"/>
         </record>
 
         <record id="estimation_version_manager_rule" model="ir.rule">
             <field name="name">Estimation Version Manager Access Rule</field>
-            <field name="model_id" ref="model_mrp_estimation_version"/>
+            <field name="model_id" ref="mrp_estimation.model_mrp_estimation_version"/>
             <field name="domain_force">[(1, '=', 1)]</field>
             <field name="groups" eval="[(4, ref('group_estimation_manager'))]"/>
         </record>
@@ -134,14 +88,14 @@
         <!-- MRP Costing Rules -->
         <record id="mrp_costing_user_rule" model="ir.rule">
             <field name="name">MRP Costing User Access Rule</field>
-            <field name="model_id" ref="model_mrp_costing"/>
+            <field name="model_id" ref="mrp_estimation.model_mrp_costing"/>
             <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
             <field name="groups" eval="[(4, ref('group_estimation_user'))]"/>
         </record>
 
         <record id="mrp_costing_manager_rule" model="ir.rule">
             <field name="name">MRP Costing Manager Access Rule</field>
-            <field name="model_id" ref="model_mrp_costing"/>
+            <field name="model_id" ref="mrp_estimation.model_mrp_costing"/>
             <field name="domain_force">[(1, '=', 1)]</field>
             <field name="groups" eval="[(4, ref('group_estimation_manager'))]"/>
         </record>
