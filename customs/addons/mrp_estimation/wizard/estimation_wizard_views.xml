@@ -6,6 +6,7 @@
         <record id="view_create_estimation_version_wizard_form" model="ir.ui.view">
             <field name="name">create.estimation.version.wizard.form</field>
             <field name="model">create.estimation.version.wizard</field>
+            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Create New Estimation Version">
                     <group>
@@ -36,6 +37,7 @@
         <record id="view_mrp_estimation_form_add_version_button" model="ir.ui.view">
             <field name="name">mrp.estimation.form.add.version.button</field>
             <field name="model">mrp.estimation</field>
+            <field name="type">form</field>
             <field name="inherit_id" ref="view_mrp_estimation_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//header" position="inside">
@@ -50,8 +52,9 @@
         <record id="view_mrp_estimation_line_tree" model="ir.ui.view">
             <field name="name">mrp.estimation.line.tree</field>
             <field name="model">mrp.estimation.line</field>
+            <field name="type">list</field>
             <field name="arch" type="xml">
-                <tree string="Estimation Lines">
+                <list string="Estimation Lines">
                     <field name="sequence" widget="handle"/>
                     <field name="estimation_id"/>
                     <field name="product_id"/>
@@ -64,7 +67,7 @@
                     <field name="existing_material"/>
                     <field name="supplier_id"/>
                     <field name="lead_time"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -72,6 +75,7 @@
         <record id="view_mrp_estimation_line_form" model="ir.ui.view">
             <field name="name">mrp.estimation.line.form</field>
             <field name="model">mrp.estimation.line</field>
+            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Estimation Line">
                     <sheet>
@@ -110,8 +114,9 @@
         <record id="view_mrp_estimation_cost_tree" model="ir.ui.view">
             <field name="name">mrp.estimation.cost.tree</field>
             <field name="model">mrp.estimation.cost</field>
+            <field name="type">list</field>
             <field name="arch" type="xml">
-                <tree string="Estimation Costs">
+                <list string="Estimation Costs">
                     <field name="sequence" widget="handle"/>
                     <field name="estimation_id"/>
                     <field name="name"/>
@@ -123,7 +128,7 @@
                     <field name="unit_cost"/>
                     <field name="quantity"/>
                     <field name="total_cost"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -131,6 +136,7 @@
         <record id="view_mrp_estimation_cost_form" model="ir.ui.view">
             <field name="name">mrp.estimation.cost.form</field>
             <field name="model">mrp.estimation.cost</field>
+            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Estimation Cost">
                     <sheet>
@@ -181,15 +187,16 @@
         <record id="view_mrp_estimation_version_tree" model="ir.ui.view">
             <field name="name">mrp.estimation.version.tree</field>
             <field name="model">mrp.estimation.version</field>
+            <field name="type">list</field>
             <field name="arch" type="xml">
-                <tree string="Estimation Versions">
+                <list string="Estimation Versions">
                     <field name="parent_estimation_id"/>
                     <field name="version_number"/>
                     <field name="created_by"/>
                     <field name="creation_date"/>
                     <field name="is_active_version"/>
                     <field name="version_notes"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -197,6 +204,7 @@
         <record id="view_mrp_estimation_version_form" model="ir.ui.view">
             <field name="name">mrp.estimation.version.form</field>
             <field name="model">mrp.estimation.version</field>
+            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Estimation Version">
                     <sheet>

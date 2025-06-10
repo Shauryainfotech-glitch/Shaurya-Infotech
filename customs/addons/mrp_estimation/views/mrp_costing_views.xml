@@ -6,8 +6,9 @@
         <record id="view_mrp_costing_tree" model="ir.ui.view">
             <field name="name">mrp.costing.tree</field>
             <field name="model">mrp.costing</field>
+            <field name="type">list</field>
             <field name="arch" type="xml">
-                <tree string="Manufacturing Costing">
+                <list string="Manufacturing Costing">
                     <field name="name"/>
                     <field name="mo_id"/>
                     <field name="product_id"/>
@@ -18,7 +19,7 @@
                     <field name="cost_variance_percentage"/>
                     <field name="state"/>
                     <field name="company_id" groups="base.group_multi_company"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -26,6 +27,7 @@
         <record id="view_mrp_costing_form" model="ir.ui.view">
             <field name="name">mrp.costing.form</field>
             <field name="model">mrp.costing</field>
+            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Manufacturing Costing">
                     <header>
@@ -87,6 +89,7 @@
         <record id="view_mrp_costing_search" model="ir.ui.view">
             <field name="name">mrp.costing.search</field>
             <field name="model">mrp.costing</field>
+            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Manufacturing Costing">
                     <field name="name"/>
@@ -111,7 +114,7 @@
         <record id="action_mrp_costing" model="ir.actions.act_window">
             <field name="name">Manufacturing Costing</field>
             <field name="res_model">mrp.costing</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">list,form</field>
             <field name="search_view_id" ref="view_mrp_costing_search"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">

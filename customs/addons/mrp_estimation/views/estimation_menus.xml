@@ -8,8 +8,9 @@
         <record id="view_mrp_estimation_tree" model="ir.ui.view">
             <field name="name">mrp.estimation.tree</field>
             <field name="model">mrp.estimation</field>
+            <field name="type">list</field>
             <field name="arch" type="xml">
-                <tree string="Manufacturing Estimations">
+                <list string="Manufacturing Estimations">
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="product_id"/>
@@ -23,7 +24,7 @@
                            decoration-success="state=='approved'"/>
                     <field name="user_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -31,6 +32,7 @@
         <record id="view_mrp_estimation_form" model="ir.ui.view">
             <field name="name">mrp.estimation.form</field>
             <field name="model">mrp.estimation</field>
+            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Manufacturing Estimation">
                     <header>
@@ -99,7 +101,7 @@
                         <notebook>
                             <page string="Material Lines">
                                 <field name="estimation_line_ids">
-                                    <tree string="Material Lines" editable="bottom">
+                                    <list string="Material Lines" editable="bottom">
                                         <field name="sequence" widget="handle"/>
                                         <field name="product_id" required="1"/>
                                         <field name="product_qty" required="1"/>
@@ -112,7 +114,7 @@
                                         <field name="existing_material"/>
                                         <field name="supplier_id"/>
                                         <field name="lead_time"/>
-                                    </tree>
+                                    </list>
                                 </field>
                                 <group class="oe_subtotal_footer oe_right">
                                     <field name="material_total" widget="monetary"/>
@@ -121,7 +123,7 @@
 
                             <page string="Cost Breakdown">
                                 <field name="estimation_cost_ids">
-                                    <tree string="Cost Lines" editable="bottom">
+                                    <list string="Cost Lines" editable="bottom">
                                         <field name="sequence" widget="handle"/>
                                         <field name="name" required="1"/>
                                         <field name="cost_type" required="1"/>
@@ -134,7 +136,7 @@
                                         <field name="quantity" invisible="cost_type in ['operation', 'labor']" required="cost_type not in ['operation', 'labor']"/>
                                         <field name="total_cost"/>
                                         <field name="currency_id" invisible="1"/>
-                                    </tree>
+                                    </list>
                                 </field>
                                 <group class="oe_subtotal_footer oe_right">
                                     <field name="cost_total" widget="monetary"/>
@@ -187,6 +189,7 @@
         <record id="view_mrp_estimation_search" model="ir.ui.view">
             <field name="name">mrp.estimation.search</field>
             <field name="model">mrp.estimation</field>
+            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Manufacturing Estimations">
                     <field name="name"/>
@@ -218,7 +221,7 @@
         <record id="action_mrp_estimation" model="ir.actions.act_window">
             <field name="name">Manufacturing Estimations</field>
             <field name="res_model">mrp.estimation</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">list,form</field>
             <field name="search_view_id" ref="view_mrp_estimation_search"/>
             <field name="context">{'search_default_my_estimations': 1}</field>
             <field name="help" type="html">

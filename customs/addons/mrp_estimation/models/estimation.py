@@ -478,7 +478,7 @@ class MrpEstimation(models.Model):
             'name': _('Bills of Materials'),
             'type': 'ir.actions.act_window',
             'res_model': 'mrp.bom',
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'domain': [('id', 'in', boms.ids)],
         }
         if len(boms) == 1:
@@ -499,7 +499,7 @@ class MrpEstimation(models.Model):
             'name': _('Manufacturing Orders'),
             'type': 'ir.actions.act_window',
             'res_model': 'mrp.production',
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'domain': [('id', 'in', manufacturing_orders.ids)],
         }
         if len(manufacturing_orders) == 1:
@@ -520,7 +520,7 @@ class MrpEstimation(models.Model):
             'name': _('Sales Orders'),
             'type': 'ir.actions.act_window',
             'res_model': 'sale.order',
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'domain': [('id', 'in', sale_orders.ids)],
         }
         if len(sale_orders) == 1:
@@ -537,7 +537,7 @@ class MrpEstimation(models.Model):
             'name': _('Estimation Versions'),
             'type': 'ir.actions.act_window',
             'res_model': 'mrp.estimation.version',
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'domain': [('parent_estimation_id', '=', self.id)],
         }
         return action
