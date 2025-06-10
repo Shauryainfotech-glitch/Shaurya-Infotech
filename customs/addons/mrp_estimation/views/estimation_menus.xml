@@ -55,6 +55,7 @@
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
+                            <!-- Updated BOM button to use correct action -->
                             <button name="action_view_boms" type="object"
                                     class="oe_stat_button" icon="fa-list-alt">
                                 <field name="bom_count" widget="statinfo" string="BOMs"/>
