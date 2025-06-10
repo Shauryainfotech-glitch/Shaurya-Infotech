@@ -6,7 +6,6 @@
         <record id="view_create_estimation_version_wizard_form" model="ir.ui.view">
             <field name="name">create.estimation.version.wizard.form</field>
             <field name="model">create.estimation.version.wizard</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Create New Estimation Version">
                     <group>
@@ -37,7 +36,6 @@
         <record id="view_mrp_estimation_form_add_version_button" model="ir.ui.view">
             <field name="name">mrp.estimation.form.add.version.button</field>
             <field name="model">mrp.estimation</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="view_mrp_estimation_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//header" position="inside">
@@ -48,11 +46,10 @@
             </field>
         </record>
 
-        <!-- Estimation Line Tree View (for reference) -->
+        <!-- Estimation Line Tree View -->
         <record id="view_mrp_estimation_line_tree" model="ir.ui.view">
             <field name="name">mrp.estimation.line.tree</field>
             <field name="model">mrp.estimation.line</field>
-            <field name="type">list</field>
             <field name="arch" type="xml">
                 <list string="Estimation Lines">
                     <field name="sequence" widget="handle"/>
@@ -75,7 +72,6 @@
         <record id="view_mrp_estimation_line_form" model="ir.ui.view">
             <field name="name">mrp.estimation.line.form</field>
             <field name="model">mrp.estimation.line</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Estimation Line">
                     <sheet>
@@ -114,7 +110,6 @@
         <record id="view_mrp_estimation_cost_tree" model="ir.ui.view">
             <field name="name">mrp.estimation.cost.tree</field>
             <field name="model">mrp.estimation.cost</field>
-            <field name="type">list</field>
             <field name="arch" type="xml">
                 <list string="Estimation Costs">
                     <field name="sequence" widget="handle"/>
@@ -136,7 +131,6 @@
         <record id="view_mrp_estimation_cost_form" model="ir.ui.view">
             <field name="name">mrp.estimation.cost.form</field>
             <field name="model">mrp.estimation.cost</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Estimation Cost">
                     <sheet>
@@ -187,7 +181,6 @@
         <record id="view_mrp_estimation_version_tree" model="ir.ui.view">
             <field name="name">mrp.estimation.version.tree</field>
             <field name="model">mrp.estimation.version</field>
-            <field name="type">list</field>
             <field name="arch" type="xml">
                 <list string="Estimation Versions">
                     <field name="parent_estimation_id"/>
@@ -204,7 +197,6 @@
         <record id="view_mrp_estimation_version_form" model="ir.ui.view">
             <field name="name">mrp.estimation.version.form</field>
             <field name="model">mrp.estimation.version</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Estimation Version">
                     <sheet>
@@ -224,6 +216,49 @@
                         </group>
                     </sheet>
                 </form>
+            </field>
+        </record>
+
+        <!-- Actions for individual models -->
+        <record id="action_mrp_estimation_line" model="ir.actions.act_window">
+            <field name="name">Estimation Lines</field>
+            <field name="res_model">mrp.estimation.line</field>
+            <field name="view_mode">list,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No estimation lines found
+                </p>
+                <p>
+                    Estimation lines define the materials needed for manufacturing.
+                </p>
+            </field>
+        </record>
+
+        <record id="action_mrp_estimation_cost" model="ir.actions.act_window">
+            <field name="name">Estimation Costs</field>
+            <field name="res_model">mrp.estimation.cost</field>
+            <field name="view_mode">list,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No estimation costs found
+                </p>
+                <p>
+                    Estimation costs include labor, operations, and overhead expenses.
+                </p>
+            </field>
+        </record>
+
+        <record id="action_mrp_estimation_version" model="ir.actions.act_window">
+            <field name="name">Estimation Versions</field>
+            <field name="res_model">mrp.estimation.version</field>
+            <field name="view_mode">list,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No estimation versions found
+                </p>
+                <p>
+                    Version control helps track changes and revisions to estimations.
+                </p>
             </field>
         </record>
 

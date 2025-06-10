@@ -2,11 +2,12 @@
 <odoo>
     <data>
 
+        <!-- Main Estimation Views -->
+
         <!-- Estimation Tree View -->
         <record id="view_mrp_estimation_tree" model="ir.ui.view">
             <field name="name">mrp.estimation.tree</field>
             <field name="model">mrp.estimation</field>
-            <field name="type">list</field>
             <field name="arch" type="xml">
                 <list string="Manufacturing Estimations">
                     <field name="name"/>
@@ -16,7 +17,7 @@
                     <field name="estimation_date"/>
                     <field name="validity_date"/>
                     <field name="estimation_total"/>
-                    <field name="currency_id" invisible="1"/>
+                    <field name="currency_id" column_invisible="1"/>
                     <field name="state" decoration-info="state=='draft'"
                            decoration-warning="state=='waiting_approval'"
                            decoration-success="state=='approved'"/>
@@ -30,7 +31,6 @@
         <record id="view_mrp_estimation_form" model="ir.ui.view">
             <field name="name">mrp.estimation.form</field>
             <field name="model">mrp.estimation</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Manufacturing Estimation">
                     <header>
@@ -108,7 +108,7 @@
                                         <field name="markup_percentage"/>
                                         <field name="marked_up_cost"/>
                                         <field name="subtotal"/>
-                                        <field name="currency_id" invisible="1"/>
+                                        <field name="currency_id" column_invisible="1"/>
                                         <field name="existing_material"/>
                                         <field name="supplier_id"/>
                                         <field name="lead_time"/>
@@ -133,7 +133,7 @@
                                         <field name="unit_cost" invisible="cost_type in ['operation', 'labor']" required="cost_type not in ['operation', 'labor']"/>
                                         <field name="quantity" invisible="cost_type in ['operation', 'labor']" required="cost_type not in ['operation', 'labor']"/>
                                         <field name="total_cost"/>
-                                        <field name="currency_id" invisible="1"/>
+                                        <field name="currency_id" column_invisible="1"/>
                                     </list>
                                 </field>
                                 <group class="oe_subtotal_footer oe_right">
@@ -141,7 +141,7 @@
                                 </group>
                             </page>
 
-                            <page string="Markup and Totals">
+                            <page string="Markup &amp; Totals">
                                 <group>
                                     <group string="Material Markup">
                                         <field name="material_markup_type"/>
@@ -187,7 +187,6 @@
         <record id="view_mrp_estimation_search" model="ir.ui.view">
             <field name="name">mrp.estimation.search</field>
             <field name="model">mrp.estimation</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Manufacturing Estimations">
                     <field name="name"/>
@@ -232,16 +231,6 @@
             </field>
         </record>
 
-        <!-- Settings Action -->
-        <record id="action_mrp_estimation_settings" model="ir.actions.act_window">
-            <field name="name">Manufacturing Estimation Settings</field>
-            <field name="res_model">res.config.settings</field>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="mrp_estimation_config_form"/>
-            <field name="target">inline</field>
-            <field name="context">{'module': 'mrp_estimation'}</field>
-        </record>
-
         <!-- Menu Items -->
         <menuitem id="menu_mrp_estimation_root"
                   name="Manufacturing Estimation"
@@ -259,6 +248,7 @@
                   action="action_mrp_estimation"
                   sequence="10"/>
 
+        <!-- Configuration Menu -->
         <menuitem id="menu_mrp_estimation_config"
                   name="Configuration"
                   parent="menu_mrp_estimation_root"
@@ -268,7 +258,7 @@
         <menuitem id="menu_mrp_estimation_settings"
                   name="Settings"
                   parent="menu_mrp_estimation_config"
-                  action="action_mrp_estimation_settings"
+                  action="base.action_res_config"
                   sequence="10"/>
 
     </data>
