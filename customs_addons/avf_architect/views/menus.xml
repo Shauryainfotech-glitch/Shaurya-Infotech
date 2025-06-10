@@ -8,8 +8,8 @@
               parent="menu_architect_root" sequence="90"/>
 
     <!-- Reports Menu -->
-    <menuitem id="menu_architect_reports" name="Reports" 
-              parent="menu_architect_root" sequence="85"/>
+<!--    <menuitem id="menu_architect_reports" name="Reports" -->
+<!--              parent="menu_architect_root" sequence="85"/>-->
 
     <!-- Dashboard Menu -->
     <menuitem id="menu_architect_dashboard" name="Dashboard" 
