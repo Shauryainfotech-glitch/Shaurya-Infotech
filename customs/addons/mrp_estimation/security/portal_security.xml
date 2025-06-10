@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
+    <data noupdate="0">
         
         <!-- Portal Rules for Estimations -->
         <record id="estimation_portal_rule" model="ir.rule">
