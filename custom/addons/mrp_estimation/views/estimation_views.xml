@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
         <!-- Form View -->
@@ -59,7 +58,7 @@
                                 <field name="estimation_line_ids" readonly="state != 'draft'">
                                     <tree editable="bottom">
                                         <field name="product_id"/>
-                                        <field name="quantity"/>
+                                        <!-- Removed quantity field -->
                                         <field name="subtotal" sum="Total"/>
                                     </tree>
                                 </field>
