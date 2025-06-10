@@ -93,11 +93,11 @@
     ],
     'assets': {
         'web.assets_backend': [
-            'avf_architect/static/src/scss/architect_style.scss',
+            'avf_architect/static/src/css/architect_style.css',
             'avf_architect/static/src/js/architect_dashboard.js',
         ],
         'web.assets_frontend': [
-            'avf_architect/static/src/scss/portal_style.scss',
+            'avf_architect/static/src/css/architect_style.css',
             'avf_architect/static/src/js/portal_dashboard.js',
         ],
     },
