@@ -82,12 +82,12 @@
                                 <field name="approval_notes" placeholder="Approval comments..."/>
                             </group>
                         </page>
-                        <page string="Related Records" name="related_records">
-                            <group>
-                                <field name="invoice_id"/>
-                                <field name="payment_id"/>
-                            </group>
-                        </page>
+<!--                        <page string="Related Records" name="related_records">-->
+<!--                            <group>-->
+<!--                                <field name="invoice_id"/>-->
+<!--                                <field name="payment_id"/>-->
+<!--                            </group>-->
+<!--                        </page>-->
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
