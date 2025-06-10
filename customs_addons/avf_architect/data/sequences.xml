@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Project Sequence -->
+        <record id="seq_architect_project" model="ir.sequence">
+            <field name="name">Architect Project</field>
+            <field name="code">architect.project</field>
+            <field name="prefix">PROJ-</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <!-- Drawing Sequence -->
+        <record id="seq_architect_drawing" model="ir.sequence">
+            <field name="name">Architect Drawing</field>
+            <field name="code">architect.drawing</field>
+            <field name="prefix">DRW-</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <!-- Survey Sequence -->
+        <record id="seq_architect_survey" model="ir.sequence">
+            <field name="name">Architect Survey</field>
+            <field name="code">architect.survey</field>
+            <field name="prefix">SUR-</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <!-- DPR Sequence -->
+        <record id="seq_architect_dpr" model="ir.sequence">
+            <field name="name">Architect DPR</field>
+            <field name="code">architect.dpr</field>
+            <field name="prefix">DPR-</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <!-- Compliance Sequence -->
+        <record id="seq_architect_compliance" model="ir.sequence">
+            <field name="name">Architect Compliance</field>
+            <field name="code">architect.compliance</field>
+            <field name="prefix">COMP-</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <!-- Rate Schedule Sequence -->
+        <record id="seq_architect_rate_schedule" model="ir.sequence">
+            <field name="name">Architect Rate Schedule</field>
+            <field name="code">architect.rate.schedule</field>
+            <field name="prefix">RATE-</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <!-- Estimation Sequence -->
+        <record id="seq_architect_estimation" model="ir.sequence">
+            <field name="name">Architect Estimation</field>
+            <field name="code">architect.estimation</field>
+            <field name="prefix">EST-</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <!-- Team Sequence -->
+        <record id="seq_architect_team" model="ir.sequence">
+            <field name="name">Architect Team</field>
+            <field name="code">architect.team</field>
+            <field name="prefix">TEAM-</field>
+            <field name="padding">3</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <!-- Financial Tracking Sequence -->
+        <record id="seq_architect_financial" model="ir.sequence">
+            <field name="name">Architect Financial Tracking</field>
+            <field name="code">architect.financial.tracking</field>
+            <field name="prefix">FIN-</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- AI Assistant Form View -->
+    <record id="view_architect_ai_assistant_form" model="ir.ui.view">
+        <field name="name">architect.ai.assistant.form</field>
+        <field name="model">architect.ai.assistant</field>
+        <field name="arch" type="xml">
+            <form string="AI Assistant Session">
+                <header>
+                    <button name="clear_conversation" string="Clear History" 
+                            type="object" class="btn-warning"
+                            confirm="Are you sure you want to clear the conversation history?"/>
+                    <button name="export_conversation" string="Export Chat" 
+                            type="object" class="btn-secondary"/>
+                    <field name="active" widget="boolean_button" 
+                           options="{'terminology': {'string_true': 'Active', 'string_false': 'Inactive'}}"/>
+                </header>
+                <sheet>
+
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Session Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="project_id"/>
+                            <field name="session_type"/>
+                            <field name="user_id"/>
+                            <field name="last_activity"/>
+                        </group>
+                        <group>
+                            <field name="ai_model"/>
+                            <field name="temperature"/>
+                            <field name="max_tokens"/>
+                            <field name="satisfaction_rating" widget="priority"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Conversation" name="conversation">
+                            <div class="o_ai_chat_container" style="height: 400px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; background: #f9f9f9;">
+                                <field name="conversation_ids" nolabel="1" readonly="1">
+                                    <list create="false" edit="false" delete="false">
+                                        <field name="timestamp"/>
+                                        <field name="message_type"/>
+                                        <field name="message"/>
+                                        <field name="response_time" modifiers="{'invisible': [('message_type', '!=', 'assistant')]}"/>
+                                    </list>
+                                </field>
+                            </div>
+                            <div class="o_ai_input_container mt-3">
+                                <div class="row">
+                                    <div class="col-10">
+                                        <field name="temp_message" placeholder="Type your message here..." nolabel="1"/>
+                                    </div>
+                                    <div class="col-2">
+                                        <button name="send_message" string="Send" type="object" class="btn btn-primary"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </page>
+                        <page string="Context" name="context">
+                            <group>
+                                <field name="project_context" placeholder="Additional project context..."/>
+                                <field name="context_data" placeholder="JSON context data..."/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- AI Assistant Tree View -->
+    <record id="view_architect_ai_assistant_list" model="ir.ui.view">
+        <field name="name">architect.ai.assistant.list</field>
+        <field name="model">architect.ai.assistant</field>
+        <field name="arch" type="xml">
+            <list string="AI Assistant Sessions" decoration-success="active==True"
+                  decoration-muted="active==False">
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="session_type"/>
+                <field name="user_id"/>
+                <field name="total_queries"/>
+                <field name="last_activity"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- AI Assistant Search View -->
+    <record id="view_architect_ai_assistant_search" model="ir.ui.view">
+        <field name="name">architect.ai.assistant.search</field>
+        <field name="model">architect.ai.assistant</field>
+        <field name="arch" type="xml">
+            <search string="Search AI Sessions">
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="user_id"/>
+                <filter string="My Sessions" name="my_sessions" 
+                        domain="[('user_id', '=', uid)]"/>
+                <filter string="Active Sessions" name="active_sessions" 
+                        domain="[('active', '=', True)]"/>
+                <separator/>
+                <filter string="Design Assistance" name="design_assistance" 
+                        domain="[('session_type', '=', 'design_assistance')]"/>
+                <filter string="Code Compliance" name="code_compliance" 
+                        domain="[('session_type', '=', 'code_compliance')]"/>
+                <filter string="Cost Estimation" name="cost_estimation" 
+                        domain="[('session_type', '=', 'cost_estimation')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Project" name="group_project" 
+                            context="{'group_by': 'project_id'}"/>
+                    <filter string="Session Type" name="group_type" 
+                            context="{'group_by': 'session_type'}"/>
+                    <filter string="User" name="group_user" 
+                            context="{'group_by': 'user_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- AI Template Views -->
+    <record id="view_architect_ai_template_form" model="ir.ui.view">
+        <field name="name">architect.ai.template.form</field>
+        <field name="model">architect.ai.template</field>
+        <field name="arch" type="xml">
+            <form string="AI Template">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button" options="{'terminology': 'archive'}"/>
+                        </button>
+                        <button name="use_template" type="object" class="oe_stat_button" icon="fa-play">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="usage_count"/>
+                                </span>
+                                <span class="o_stat_text">Uses</span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Template Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="category"/>
+                    </group>
+                    <notebook>
+                        <page string="Prompt Template" name="prompt">
+                            <field name="prompt_template" placeholder="Enter your prompt template here..."/>
+                        </page>
+                        <page string="Response Template" name="response">
+                            <field name="response_template" placeholder="Enter response template..."/>
+                        </page>
+                        <page string="Variables" name="variables">
+                            <field name="variables" placeholder="JSON object defining template variables"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- AI Template Tree View -->
+    <record id="view_architect_ai_template_list" model="ir.ui.view">
+        <field name="name">architect.ai.template.list</field>
+        <field name="model">architect.ai.template</field>
+        <field name="arch" type="xml">
+            <list string="AI Templates">
+                <field name="name"/>
+                <field name="category"/>
+                <field name="usage_count"/>
+                <field name="active"/>
+                <button name="use_template" type="object" string="Use" class="btn-link"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- AI Knowledge Base Views -->
+    <record id="view_architect_ai_knowledge_form" model="ir.ui.view">
+        <field name="name">architect.ai.knowledge.form</field>
+        <field name="model">architect.ai.knowledge</field>
+        <field name="arch" type="xml">
+            <form string="Knowledge Base Item">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button" options="{'terminology': 'archive'}"/>
+                        </button>
+                        <button name="mark_accessed" type="object" class="oe_stat_button" icon="fa-eye">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="access_count"/>
+                                </span>
+                                <span class="o_stat_text">Views</span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Knowledge Item Title"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="category"/>
+                            <field name="tags"/>
+                            <field name="source"/>
+                        </group>
+                        <group>
+                            <field name="last_updated"/>
+                            <field name="verified"/>
+                            <field name="relevance_score"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Content" name="content">
+                            <field name="content" placeholder="Enter knowledge content..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- AI Knowledge Base Tree View -->
+    <record id="view_architect_ai_knowledge_list" model="ir.ui.view">
+        <field name="name">architect.ai.knowledge.list</field>
+        <field name="model">architect.ai.knowledge</field>
+        <field name="arch" type="xml">
+            <list string="Knowledge Base" decoration-success="verified==True">
+                <field name="name"/>
+                <field name="category"/>
+                <field name="tags"/>
+                <field name="access_count"/>
+                <field name="verified"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Menu Actions -->
+    <record id="action_architect_ai_assistant" model="ir.actions.act_window">
+        <field name="name">AI Assistant</field>
+        <field name="res_model">architect.ai.assistant</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_my_sessions': 1, 'search_default_active_sessions': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Start your first AI assistant session
+            </p>
+            <p>
+                Get AI-powered assistance for your architectural projects.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_architect_ai_template" model="ir.actions.act_window">
+        <field name="name">AI Templates</field>
+        <field name="res_model">architect.ai.template</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first AI template
+            </p>
+            <p>
+                Create reusable templates for common AI interactions.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_architect_ai_knowledge" model="ir.actions.act_window">
+        <field name="name">Knowledge Base</field>
+        <field name="res_model">architect.ai.knowledge</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add your first knowledge item
+            </p>
+            <p>
+                Build a comprehensive knowledge base for AI assistance.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem id="menu_ai_root" name="AI Assistant" 
+              parent="menu_architect_root" sequence="80"/>
+    
+    <menuitem id="menu_ai_assistant" name="AI Sessions" 
+              parent="menu_ai_root" 
+              action="action_architect_ai_assistant" sequence="10"/>
+    
+    <menuitem id="menu_ai_template" name="Templates" 
+              parent="menu_ai_root" 
+              action="action_architect_ai_template" sequence="20"/>
+    
+    <menuitem id="menu_ai_knowledge" name="Knowledge Base" 
+              parent="menu_ai_root" 
+              action="action_architect_ai_knowledge" sequence="30"/>
+</odoo>

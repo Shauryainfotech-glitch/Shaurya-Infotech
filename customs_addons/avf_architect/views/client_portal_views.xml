@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Client Portal Form View -->
+    <record id="view_architect_client_portal_form" model="ir.ui.view">
+        <field name="name">architect.client.portal.form</field>
+        <field name="model">architect.client.portal</field>
+        <field name="arch" type="xml">
+            <form string="Client Portal">
+                <header>
+                    <button name="reset_access_token" string="Reset Access Token" 
+                            type="object" class="btn-warning"
+                            confirm="Are you sure you want to reset the access token?"/>
+                    <button name="track_login" string="Track Login" type="object" 
+                            class="btn-secondary"/>
+                    <field name="active" widget="boolean_button" 
+                           options="{'terminology': {'string_true': 'Active', 'string_false': 'Inactive'}}"/>
+                </header>
+                <sheet>
+                    <field name="company_logo" widget="image" class="oe_avatar" options="{'preview_image': 'company_logo', 'size': [90, 90]}"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Portal Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="project_ids" widget="many2many_tags"/>
+                            <field name="last_login"/>
+                            <field name="last_activity"/>
+                        </group>
+                        <group>
+                            <field name="theme"/>
+                            <field name="email_notifications"/>
+                            <field name="notification_frequency"
+                                   modifiers="{'invisible': [('email_notifications', '=', False)]}"/>
+                            <field name="access_token" readonly="1" password="True"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Portal Features" name="features">
+                            <group>
+                                <group string="Visibility Settings">
+                                    <field name="show_progress"/>
+                                    <field name="show_timeline"/>
+                                    <field name="show_documents"/>
+                                    <field name="show_financial"/>
+                                    <field name="show_messages"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Customization" name="customization">
+                            <group>
+                                <field name="custom_css" placeholder="Custom CSS styles..."/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Client Portal Tree View -->
+    <record id="view_architect_client_portal_list" model="ir.ui.view">
+        <field name="name">architect.client.portal.list</field>
+        <field name="model">architect.client.portal</field>
+        <field name="arch" type="xml">
+            <list string="Client Portals" decoration-success="active==True"
+                  decoration-muted="active==False">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="theme"/>
+                <field name="last_login"/>
+                <field name="login_count"/>
+                <field name="visit_count"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Client Portal Search View -->
+    <record id="view_architect_client_portal_search" model="ir.ui.view">
+        <field name="name">architect.client.portal.search</field>
+        <field name="model">architect.client.portal</field>
+        <field name="arch" type="xml">
+            <search string="Search Client Portals">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="project_ids"/>
+                <filter string="Active" name="active" domain="[('active', '=', True)]"/>
+                <filter string="Recent Activity" name="recent_activity"
+                        domain="[('last_activity', '>=', (context_today() - datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Client" name="group_client"
+                            context="{'group_by': 'partner_id'}"/>
+                    <filter string="Theme" name="group_theme"
+                            context="{'group_by': 'theme'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Client Dashboard Form View -->
+    <record id="view_architect_client_dashboard_form" model="ir.ui.view">
+        <field name="name">architect.client.dashboard.form</field>
+        <field name="model">architect.client.dashboard</field>
+        <field name="arch" type="xml">
+            <form string="Client Dashboard">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Dashboard Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="portal_id"/>
+                            <field name="layout"/>
+                            <field name="is_default"/>
+                            <field name="sequence"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Widgets" name="widgets">
+                            <field name="widget_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="widget_type"/>
+                                    <field name="size"/>
+                                    <field name="show_title"/>
+                                    <field name="collapsible"/>
+                                    <field name="auto_refresh"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Customization" name="customization">
+                            <group>
+                                <field name="custom_css" placeholder="Custom CSS..."/>
+                                <field name="custom_js" placeholder="Custom JavaScript..."/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Client Dashboard Tree View -->
+    <record id="view_architect_client_dashboard_list" model="ir.ui.view">
+        <field name="name">architect.client.dashboard.list</field>
+        <field name="model">architect.client.dashboard</field>
+        <field name="arch" type="xml">
+            <list string="Client Dashboards">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="portal_id"/>
+                <field name="layout"/>
+                <field name="is_default"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Menu Actions -->
+    <record id="action_architect_client_portal" model="ir.actions.act_window">
+        <field name="name">Client Portals</field>
+        <field name="res_model">architect.client.portal</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first client portal
+            </p>
+            <p>
+                Provide clients with secure access to their project information.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_architect_client_dashboard" model="ir.actions.act_window">
+        <field name="name">Client Dashboards</field>
+        <field name="res_model">architect.client.dashboard</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first client dashboard
+            </p>
+            <p>
+                Design custom dashboards for your client portals.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem id="menu_client_portal_root" name="Client Portal"
+              parent="menu_architect_root" sequence="60"/>
+
+    <menuitem id="menu_client_portal" name="Portals"
+              parent="menu_client_portal_root"
+              action="action_architect_client_portal" sequence="10"/>
+
+    <menuitem id="menu_client_dashboard" name="Dashboards"
+              parent="menu_client_portal_root"
+              action="action_architect_client_dashboard" sequence="20"/>
+</odoo>

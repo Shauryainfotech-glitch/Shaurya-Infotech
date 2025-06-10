@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Survey Form View -->
+    <record id="view_architect_survey_form" model="ir.ui.view">
+        <field name="name">architect.survey.form</field>
+        <field name="model">architect.survey</field>
+        <field name="arch" type="xml">
+            <form string="Site Survey">
+                <header>
+                    <button name="action_start_survey" string="Start Survey" 
+                            type="object" class="oe_highlight"
+                            modifiers="{'invisible': [('state', 'not in', ['draft'])]}"/>
+                    <button name="action_complete_survey" string="Complete Survey" 
+                            type="object" class="oe_highlight"
+                            modifiers="{'invisible': [('state', 'not in', ['in_progress'])]}"/>
+                    <button name="action_review_survey" string="Review" 
+                            type="object" class="btn-primary"
+                            modifiers="{'invisible': [('state', 'not in', ['completed'])]}"/>
+                    <button name="action_approve_survey" string="Approve" 
+                            type="object" class="oe_highlight"
+                            modifiers="{'invisible': [('state', 'not in', ['reviewed'])]}"/>
+                    <button name="action_generate_report" string="Generate Report" 
+                            type="object" class="btn-secondary"
+                            modifiers="{'invisible': [('state', 'in', ['draft'])]}"/>
+                    <field name="state" widget="statusbar" 
+                           statusbar_visible="draft,in_progress,completed,reviewed,approved"/>
+                </header>
+                <sheet>
+<!--                    <div class="oe_button_box" name="button_box">-->
+<!--                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">-->
+<!--                            <field name="active" widget="boolean_button" options="{'terminology': 'archive'}"/>-->
+<!--                        </button>-->
+<!--                    </div>-->
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Survey Reference"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="project_id"/>
+                            <field name="survey_type"/>
+                            <field name="survey_date"/>
+                            <field name="location"/>
+                            <field name="area_surveyed" widget="float"/>
+                        </group>
+                        <group>
+                            <field name="surveyor_id"/>
+                            <field name="team_member_ids" widget="many2many_tags"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="equipment_ids" widget="many2many_tags"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Weather Conditions" name="weather">
+                            <group>
+                                <group>
+                                    <field name="weather_condition"/>
+                                    <field name="temperature"/>
+                                </group>
+                                <group>
+                                    <field name="humidity"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Survey Data" name="survey_data">
+                            <group>
+                                <field name="site_features" placeholder="Describe site features..."/>
+                                <field name="observations" placeholder="Record observations..."/>
+                                <field name="measurements" placeholder="Key measurements..."/>
+                                <field name="constraints" placeholder="Site constraints..."/>
+                                <field name="recommendations" placeholder="Recommendations..."/>
+                            </group>
+                        </page>
+                        <page string="Technical Data" name="technical_data">
+                            <group>
+                                <field name="elevation_data"/>
+                                <field name="soil_conditions"/>
+                                <field name="ground_water"/>
+                                <field name="existing_structures"/>
+                            </group>
+                        </page>
+                        <page string="Utilities" name="utilities">
+                            <group>
+                                <field name="water_supply"/>
+                                <field name="electricity"/>
+                                <field name="drainage"/>
+                                <field name="telecom"/>
+                            </group>
+                        </page>
+                        <page string="Environmental Factors" name="environmental">
+                            <group>
+                                <field name="vegetation"/>
+                                <field name="water_bodies"/>
+                                <field name="special_features"/>
+                            </group>
+                        </page>
+                        <page string="Location" name="location">
+                            <group>
+                                <group>
+                                    <field name="latitude"/>
+                                    <field name="longitude"/>
+                                </group>
+                            </group>
+                            <!-- Map widget will be added here in future versions -->
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Survey Kanban View -->
+    <record id="view_architect_survey_kanban" model="ir.ui.view">
+        <field name="name">architect.survey.kanban</field>
+        <field name="model">architect.survey</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_example" default_group_by="state">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click {{ record.state.raw_value }}">
+                            <strong><field name="name"/></strong><br/>
+                            <span><field name="project_id"/></span><br/>
+                            <span><field name="survey_type"/></span><br/>
+                            <span><field name="survey_date"/></span><br/>
+                            <span><field name="location"/></span><br/>
+                            <span><field name="surveyor_id"/></span><br/>
+                            <small>Status: <field name="state"/></small>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Survey Search View -->
+    <record id="view_architect_survey_search" model="ir.ui.view">
+        <field name="name">architect.survey.search</field>
+        <field name="model">architect.survey</field>
+        <field name="arch" type="xml">
+            <search string="Search Surveys">
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="location"/>
+                <field name="surveyor_id"/>
+                <filter string="My Surveys" name="my_surveys"
+                        domain="[('surveyor_id', '=', uid)]"/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="In Progress" name="in_progress"
+                        domain="[('state', '=', 'in_progress')]"/>
+                <filter string="Completed" name="completed"
+                        domain="[('state', '=', 'completed')]"/>
+                <filter string="Approved" name="approved"
+                        domain="[('state', '=', 'approved')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Project" name="group_project"
+                            context="{'group_by': 'project_id'}"/>
+                    <filter string="Survey Type" name="group_type"
+                            context="{'group_by': 'survey_type'}"/>
+                    <filter string="Surveyor" name="group_surveyor"
+                            context="{'group_by': 'surveyor_id'}"/>
+                    <filter string="Status" name="group_state"
+                            context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Survey Equipment Form View -->
+    <record id="view_architect_survey_equipment_form" model="ir.ui.view">
+        <field name="name">architect.survey.equipment.form</field>
+        <field name="model">architect.survey.equipment</field>
+        <field name="arch" type="xml">
+            <form string="Survey Equipment">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button" options="{'terminology': 'archive'}"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Equipment Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="equipment_type"/>
+                            <field name="description"/>
+                            <field name="specifications"/>
+                        </group>
+                        <group>
+                            <field name="calibration_date"/>
+                            <field name="next_calibration"/>
+                            <field name="notes"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Survey Equipment Kanban View -->
+    <record id="view_architect_survey_equipment_kanban" model="ir.ui.view">
+        <field name="name">architect.survey.equipment.kanban</field>
+        <field name="model">architect.survey.equipment</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_example">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click {{ record.active.raw_value and 'active' or 'inactive' }}">
+                            <strong><field name="name"/></strong><br/>
+                            <span>Type: <field name="equipment_type"/></span><br/>
+                            <span>Calibration Date: <field name="calibration_date"/></span><br/>
+                            <span>Next Calibration: <field name="next_calibration"/></span><br/>
+                            <small>Status: <field name="active"/></small>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Menu Actions -->
+    <record id="action_architect_survey" model="ir.actions.act_window">
+        <field name="name">Site Surveys</field>
+        <field name="res_model">architect.survey</field>
+        <field name="view_mode">kanban,form</field>
+        <field name="context">{'search_default_my_surveys': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first site survey
+            </p>
+            <p>
+                Record and manage site surveys for your architectural projects.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_architect_survey_equipment" model="ir.actions.act_window">
+        <field name="name">Survey Equipment</field>
+        <field name="res_model">architect.survey.equipment</field>
+        <field name="view_mode">kanban,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add your first survey equipment
+            </p>
+            <p>
+                Manage your survey equipment inventory and maintenance schedule.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem id="menu_survey_root" name="Surveys" 
+              parent="menu_architect_root" sequence="40"/>
+    
+    <menuitem id="menu_survey" name="Site Surveys" 
+              parent="menu_survey_root" 
+              action="action_architect_survey" sequence="10"/>
+    
+    <menuitem id="menu_survey_equipment" name="Equipment" 
+              parent="menu_survey_root" 
+              action="action_architect_survey_equipment" sequence="20"/>
+</odoo>
