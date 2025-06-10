@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="estimation_widget_template" name="Estimation Widget Template">
+            <t t-name="mrp_estimation.CostAnalysisWidget">
+                <div class="o_cost_analysis_chart">
+                    <canvas t-ref="canvas" width="400" height="300"></canvas>
+                </div>
+            </t>
+        </template>
+    </data>
+</odoo>
