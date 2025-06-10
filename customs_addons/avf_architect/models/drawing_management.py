@@ -186,12 +186,14 @@ class ArchitectDrawingSet(models.Model):
     description = fields.Text(string='Description')
     drawing_ids = fields.One2many('architect.drawing', 'drawing_set_id', string='Drawings')
     drawing_count = fields.Integer(compute='_compute_drawing_count', store=True)
+
     company_id = fields.Many2one(
         'res.company',
         string='Company',
         default=lambda self: self.env.company,
         index=True
     )
+
     @api.depends('drawing_ids')
     def _compute_drawing_count(self):
         for record in self:

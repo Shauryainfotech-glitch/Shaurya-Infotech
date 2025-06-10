@@ -455,6 +455,7 @@ class ArchitectCostEstimate(models.Model):
 
     @api.depends('estimate_line_ids.total_amount', 'contingency_percentage',
                  'overhead_percentage', 'profit_percentage')
+
     def _compute_totals(self):
         for estimate in self:
             subtotal = sum(estimate.estimate_line_ids.mapped('total_amount'))
