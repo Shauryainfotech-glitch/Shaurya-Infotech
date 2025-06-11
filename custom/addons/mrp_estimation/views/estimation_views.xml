@@ -29,25 +29,33 @@
                     <header>
                         <!-- Header buttons -->
                         <button name="action_submit_for_approval" string="Submit for Approval" type="object"
-                                attrs="{'invisible': [('state', '!=', 'draft')]}" class="btn-primary"/>
+                                class="btn-primary"
+                                attrs="{'invisible': [('state', '!=', 'draft')]}" />
                         <button name="action_approve" string="Approve" type="object"
-                                attrs="{'invisible': [('state', '!=', 'waiting_approval')]}" class="btn-primary"/>
+                                class="btn-primary"
+                                attrs="{'invisible': [('state', '!=', 'waiting_approval')]}" />
                         <button name="action_reject" string="Reject" type="object"
-                                attrs="{'invisible': [('state', '!=', 'waiting_approval')]}" class="btn-secondary"/>
+                                class="btn-secondary"
+                                attrs="{'invisible': [('state', '!=', 'waiting_approval')]}" />
                         <button name="action_send_estimation" string="Send to Customer" type="object"
-                                attrs="{'invisible': [('state', '!=', 'approved')]}" class="btn-primary"/>
+                                class="btn-primary"
+                                attrs="{'invisible': [('state', '!=', 'approved')]}" />
                         <button name="action_confirm" string="Confirm" type="object"
-                                attrs="{'invisible': [('state', '!=', 'sent')]}" class="btn-primary"/>
+                                class="btn-primary"
+                                attrs="{'invisible': [('state', '!=', 'sent')]}" />
                         <button name="action_create_sale_order" string="Create Sales Order" type="object"
-                                attrs="{'invisible': [('state', 'not in', ['confirmed', 'done'])]}" class="btn-secondary"/>
+                                class="btn-secondary"
+                                attrs="{'invisible': [('state', 'not in', ['confirmed', 'done'])]}" />
                         <button name="action_create_bom" string="Create BOM" type="object"
-                                attrs="{'invisible': [('state', 'not in', ['confirmed', 'done'])]}" class="btn-secondary"/>
+                                class="btn-secondary"
+                                attrs="{'invisible': [('state', 'not in', ['confirmed', 'done'])]}" />
                         <button name="action_done" string="Mark as Done" type="object"
-                                attrs="{'invisible': [('state', '!=', 'confirmed')]}" class="btn-primary"/>
+                                class="btn-primary"
+                                attrs="{'invisible': [('state', '!=', 'confirmed')]}" />
                         <button name="action_cancel" string="Cancel" type="object"
-                                attrs="{'invisible': [('state', 'in', ['cancel', 'done'])]}"/>
+                                attrs="{'invisible': [('state', 'in', ['cancel', 'done'])]}" />
                         <button name="action_reset_to_draft" string="Reset to Draft" type="object"
-                                attrs="{'invisible': [('state', '!=', 'cancel')]}"/>
+                                attrs="{'invisible': [('state', '!=', 'cancel')]}" />
                         <field name="state" widget="statusbar" statusbar_visible="draft,waiting_approval,approved,sent,confirmed,done"/>
                     </header>
                     <sheet>
