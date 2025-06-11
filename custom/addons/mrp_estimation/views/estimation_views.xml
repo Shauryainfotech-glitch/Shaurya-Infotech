@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-
-        <!-- List View (replacing Tree View) -->
+        
+        <!-- List View -->
         <record id="view_mrp_estimation_list" model="ir.ui.view">
             <field name="name">mrp.estimation.list</field>
             <field name="model">mrp.estimation</field>
             <field name="arch" type="xml">
-                <list string="Manufacturing Estimations">
+                <list string="Manufacturing Estimations" decoration-muted="state=='cancel'" decoration-success="state=='done'">
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="product_id"/>
                     <field name="product_qty"/>
                     <field name="estimation_date"/>
                     <field name="estimation_total" sum="Total"/>
-                    <field name="state"/>
+                    <field name="state" decoration-success="state=='done'" decoration-danger="state=='cancel'" decoration-warning="state=='waiting_approval'"/>
                     <field name="user_id"/>
                 </list>
             </field>
@@ -27,46 +27,151 @@
             <field name="arch" type="xml">
                 <form string="Manufacturing Estimation">
                     <header>
-                        <!-- Header buttons -->
                         <button name="action_submit_for_approval" string="Submit for Approval" type="object"
-                                class="btn-primary"
-                                attrs="{'invisible': [('state', '!=', 'draft')]}" />
+                                invisible="state != 'draft'" class="btn-primary"/>
                         <button name="action_approve" string="Approve" type="object"
-                                class="btn-primary"
-                                attrs="{'invisible': [('state', '!=', 'waiting_approval')]}" />
+                                invisible="state != 'waiting_approval'" class="btn-primary"/>
                         <button name="action_reject" string="Reject" type="object"
-                                class="btn-secondary"
-                                attrs="{'invisible': [('state', '!=', 'waiting_approval')]}" />
+                                invisible="state != 'waiting_approval'" class="btn-secondary"/>
                         <button name="action_send_estimation" string="Send to Customer" type="object"
-                                class="btn-primary"
-                                attrs="{'invisible': [('state', '!=', 'approved')]}" />
+                                invisible="state != 'approved'" class="btn-primary"/>
                         <button name="action_confirm" string="Confirm" type="object"
-                                class="btn-primary"
-                                attrs="{'invisible': [('state', '!=', 'sent')]}" />
+                                invisible="state != 'sent'" class="btn-primary"/>
                         <button name="action_create_sale_order" string="Create Sales Order" type="object"
-                                class="btn-secondary"
-                                attrs="{'invisible': [('state', 'not in', ['confirmed', 'done'])]}" />
+                                invisible="state not in ['confirmed', 'done']" class="btn-secondary"/>
                         <button name="action_create_bom" string="Create BOM" type="object"
-                                class="btn-secondary"
-                                attrs="{'invisible': [('state', 'not in', ['confirmed', 'done'])]}" />
+                                invisible="state not in ['confirmed', 'done']" class="btn-secondary"/>
                         <button name="action_done" string="Mark as Done" type="object"
-                                class="btn-primary"
-                                attrs="{'invisible': [('state', '!=', 'confirmed')]}" />
+                                invisible="state != 'confirmed'" class="btn-primary"/>
                         <button name="action_cancel" string="Cancel" type="object"
-                                attrs="{'invisible': [('state', 'in', ['cancel', 'done'])]}" />
+                                invisible="state in ['cancel', 'done']"/>
                         <button name="action_reset_to_draft" string="Reset to Draft" type="object"
-                                attrs="{'invisible': [('state', '!=', 'cancel')]}" />
+                                invisible="state != 'cancel'"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,waiting_approval,approved,sent,confirmed,done"/>
                     </header>
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_view_boms" type="object" class="oe_stat_button" icon="fa-list-alt"
+                                    invisible="bom_count == 0">
+                                <field name="bom_count" widget="statinfo" string="BOMs"/>
+                            </button>
+                            <button name="action_view_manufacturing_orders" type="object" class="oe_stat_button" icon="fa-wrench"
+                                    invisible="mo_count == 0">
+                                <field name="mo_count" widget="statinfo" string="Manufacturing Orders"/>
+                            </button>
+                            <button name="action_view_sale_orders" type="object" class="oe_stat_button" icon="fa-usd"
+                                    invisible="so_count == 0">
+                                <field name="so_count" widget="statinfo" string="Sales Orders"/>
+                            </button>
+                            <button name="action_view_versions" type="object" class="oe_stat_button" icon="fa-code-fork"
+                                    invisible="version_count == 0">
+                                <field name="version_count" widget="statinfo" string="Versions"/>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
                         <group>
-                            <field name="partner_id"/>
-                            <field name="product_id"/>
-                            <field name="product_qty"/>
-                            <field name="estimation_date"/>
-                            <!-- Other fields here -->
+                            <group>
+                                <field name="partner_id" options="{'no_create': True}"/>
+                                <field name="product_id" options="{'no_create': True}"/>
+                                <field name="product_qty"/>
+                                <field name="product_uom_id" options="{'no_create': True}"/>
+                                <field name="user_id"/>
+                            </group>
+                            <group>
+                                <field name="estimation_date"/>
+                                <field name="validity_date"/>
+                                <field name="version"/>
+                                <field name="currency_id" options="{'no_create': True}"/>
+                                <field name="company_id" options="{'no_create': True}"/>
+                            </group>
                         </group>
+                        <notebook>
+                            <page string="Material Lines">
+                                <field name="estimation_line_ids" context="{'default_estimation_id': active_id}">
+                                    <list string="Material Lines" editable="bottom">
+                                        <field name="product_id" options="{'no_create': True}"/>
+                                        <field name="product_qty"/>
+                                        <field name="product_uom_id" options="{'no_create': True}"/>
+                                        <field name="product_cost"/>
+                                        <field name="markup_percentage"/>
+                                        <field name="marked_up_cost"/>
+                                        <field name="subtotal" sum="Total"/>
+                                    </list>
+                                </field>
+                                <group class="oe_subtotal_footer oe_right">
+                                    <div class="oe_subtotal_footer_separator oe_inline o_td">
+                                        <label for="material_total"/>
+                                        <field name="material_total" nolabel="1" class="oe_subtotal_footer_separator"/>
+                                    </div>
+                                </group>
+                            </page>
+                            <page string="Cost Breakdown">
+                                <field name="estimation_cost_ids" context="{'default_estimation_id': active_id}">
+                                    <list string="Cost Lines" editable="bottom">
+                                        <field name="name"/>
+                                        <field name="cost_type"/>
+                                        <field name="unit_cost"/>
+                                        <field name="quantity"/>
+                                        <field name="total_cost" sum="Total"/>
+                                    </list>
+                                </field>
+                                <group class="oe_subtotal_footer oe_right">
+                                    <div class="oe_subtotal_footer_separator oe_inline o_td">
+                                        <label for="cost_total"/>
+                                        <field name="cost_total" nolabel="1" class="oe_subtotal_footer_separator"/>
+                                    </div>
+                                </group>
+                            </page>
+                            <page string="Markup &amp; Totals">
+                                <group>
+                                    <group string="Material Markup">
+                                        <field name="material_markup_type"/>
+                                        <field name="material_markup_value"/>
+                                    </group>
+                                    <group string="Cost Markup">
+                                        <field name="cost_markup_type"/>
+                                        <field name="cost_markup_value"/>
+                                    </group>
+                                </group>
+                                <group class="oe_subtotal_footer oe_right">
+                                    <div class="oe_subtotal_footer_separator oe_inline o_td">
+                                        <label for="material_total"/>
+                                        <field name="material_total" nolabel="1"/>
+                                    </div>
+                                    <div class="oe_subtotal_footer_separator oe_inline o_td">
+                                        <label for="cost_total"/>
+                                        <field name="cost_total" nolabel="1"/>
+                                    </div>
+                                    <div class="oe_subtotal_footer_separator oe_inline o_td">
+                                        <label for="markup_total"/>
+                                        <field name="markup_total" nolabel="1"/>
+                                    </div>
+                                    <div class="oe_subtotal_footer_separator oe_inline o_td">
+                                        <label for="estimation_total" style="font-weight: bold;"/>
+                                        <field name="estimation_total" nolabel="1" class="oe_subtotal_footer_separator" style="font-weight: bold;"/>
+                                    </div>
+                                </group>
+                            </page>
+                            <page string="Notes">
+                                <group>
+                                    <field name="notes" nolabel="1" placeholder="Internal notes..."/>
+                                </group>
+                                <separator string="Customer Notes"/>
+                                <group>
+                                    <field name="customer_notes" nolabel="1" placeholder="Notes visible to customer..."/>
+                                </group>
+                            </page>
+                        </notebook>
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -77,11 +182,12 @@
             <field name="model">mrp.estimation</field>
             <field name="arch" type="xml">
                 <search string="Manufacturing Estimations">
-                    <field name="name"/>
+                    <field name="name" string="Estimation" filter_domain="['|', ('name', 'ilike', self), ('partner_id', 'ilike', self)]"/>
                     <field name="partner_id"/>
                     <field name="product_id"/>
                     <field name="user_id"/>
                     <separator/>
+                    <filter string="My Estimations" name="my_estimations" domain="[('user_id', '=', uid)]"/>
                     <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
                     <filter string="Waiting Approval" name="waiting_approval" domain="[('state', '=', 'waiting_approval')]"/>
                     <filter string="Approved" name="approved" domain="[('state', '=', 'approved')]"/>
@@ -104,7 +210,16 @@
             <field name="name">Manufacturing Estimations</field>
             <field name="res_model">mrp.estimation</field>
             <field name="view_mode">list,form</field>
+            <field name="view_id" ref="view_mrp_estimation_list"/>
             <field name="search_view_id" ref="view_mrp_estimation_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first manufacturing estimation
+                </p>
+                <p>
+                    Create estimations for manufacturing products to analyze costs and provide quotes to customers.
+                </p>
+            </field>
         </record>
 
     </data>
