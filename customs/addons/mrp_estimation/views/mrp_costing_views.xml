@@ -31,13 +31,13 @@
                 <form string="Manufacturing Costing">
                     <header>
                         <button name="action_start_costing" type="object" string="Start Costing"
-                                class="oe_highlight" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                                class="oe_highlight" invisible="state != 'draft'"/>
                         <button name="action_complete_costing" type="object" string="Complete"
-                                class="oe_highlight" attrs="{'invisible': [('state', '!=', 'in_progress')]}"/>
+                                class="oe_highlight" invisible="state != 'in_progress'"/>
                         <button name="action_cancel_costing" type="object" string="Cancel"
-                                attrs="{'invisible': [('state', 'in', ['done', 'cancelled'])]}"/>
+                                invisible="state in ('done', 'cancelled')"/>
                         <button name="action_reset_to_draft" type="object" string="Reset to Draft"
-                                attrs="{'invisible': [('state', 'not in', ['cancelled', 'done'])]}"/>
+                                invisible="state not in ('cancelled', 'done')"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,done"/>
                     </header>
                     <sheet>

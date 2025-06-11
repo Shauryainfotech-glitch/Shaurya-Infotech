@@ -5,7 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bcaffbf5-c748-4b43-bf7a-64e417495db0" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/customs/addons/mrp_estimation/views/estimation_menus.xml" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/mrp_estimation/views/estimation_menus.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/mrp_estimation/views/mrp_costing_views.xml" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/mrp_estimation/views/mrp_costing_views.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -84,7 +85,7 @@
       <workItem from="1749460626175" duration="3554000" />
       <workItem from="1749464337494" duration="6516000" />
       <workItem from="1749524202079" duration="29523000" />
-      <workItem from="1749611350969" duration="1795000" />
+      <workItem from="1749611350969" duration="2517000" />
     </task>
     <servers />
   </component>
