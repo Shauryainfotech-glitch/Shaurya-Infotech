@@ -640,4 +640,4 @@ class MrpEstimation(models.Model):
             'client_order_ref': self.name,
             'date_order': fields.Datetime.now(),
             'user_id': self.user_id.id,
-            'company_id
+            'company_id'
