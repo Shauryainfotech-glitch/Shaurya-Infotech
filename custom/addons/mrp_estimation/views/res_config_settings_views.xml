@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Settings Form View -->
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.mrp.estimation</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="50"/>
+            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('settings')]" position="inside">
+                    <div class="app_settings_block" data-string="Manufacturing Estimation" string="Manufacturing Estimation" data-key="mrp_estimation">
+                        <h2>Estimation Configuration</h2>
+                        <div class="row mt16 o_settings_container">
+                            <!-- Sequence Settings -->
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane"/>
+                                <div class="o_setting_right_pane">
+                                    <span class="o_form_label">Sequence Configuration</span>
+                                    <div class="text-muted">
+                                        Configure estimation sequence prefix
+                                    </div>
+                                    <div class="content-group">
+                                        <div class="mt16">
+                                            <field name="estimation_sequence_prefix" class="o_light_label"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Markup Settings -->
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="auto_markup_enabled"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="auto_markup_enabled"/>
+                                    <div class="text-muted">
+                                        Automatically apply default markup percentages
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('auto_markup_enabled', '=', False)]}">
+                                        <div class="mt16 row">
+                                            <label class="col-lg-4" for="default_material_markup"/>
+                                            <field name="default_material_markup" class="col-lg-8"/>
+                                        </div>
+                                        <div class="mt16 row">
+                                            <label class="col-lg-4" for="default_cost_markup"/>
+                                            <field name="default_cost_markup" class="col-lg-8"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Approval Settings -->
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="approval_required"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="approval_required"/>
+                                    <div class="text-muted">
+                                        Require approval workflow for estimations
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Version Control Settings -->
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane"/>
+                                <div class="o_setting_right_pane">
+                                    <span class="o_form_label">Version Control</span>
+                                    <div class="text-muted">
+                                        Configure version increment value
+                                    </div>
+                                    <div class="content-group">
+                                        <div class="mt16">
+                                            <field name="version_increment" class="o_light_label"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Settings Action -->
+        <record id="action_mrp_estimation_config_settings" model="ir.actions.act_window">
+            <field name="name">Settings</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+            <field name="context">{'module' : 'mrp_estimation', 'bin_size': False}</field>
+        </record>
+    </data>
+</odoo>

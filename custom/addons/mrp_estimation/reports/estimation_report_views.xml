@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_estimation_document">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <h2>Manufacturing Estimation</h2>
+                    <!-- Report content -->
+                </div>
+            </t>
+        </template>
+
+        <template id="action_report_estimation">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="mrp_estimation.report_estimation_document"/>
+            </t>
+        </template>
+    </data>
+</odoo>

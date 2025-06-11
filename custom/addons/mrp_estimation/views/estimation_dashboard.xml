@@ -1,0 +1,40 @@
+<odoo>
+    <data>
+
+        <!-- Estimation Dashboard View -->
+        <record id="view_estimation_dashboard" model="ir.ui.view">
+            <field name="name">mrp.estimation.dashboard</field>
+            <field name="model">mrp.estimation</field>
+            <field name="arch" type="xml">
+                <form string="Estimation Dashboard">
+                    <h2>Estimation Dashboard</h2>
+                    <group>
+                        <div>
+                            <strong>Total Estimations: </strong>
+                            <span><t t-esc="estimations_count"/></span>
+                        </div>
+                        <div>
+                            <strong>Total Pending: </strong>
+                            <span><t t-esc="pending_estimations_count"/></span>
+                        </div>
+                        <div>
+                            <strong>Total Approved: </strong>
+                            <span><t t-esc="approved_estimations_count"/></span>
+                        </div>
+                    </group>
+                    <!-- Button to view all estimations -->
+                    <button name="action_view_estimations" string="View All Estimations" type="action" class="btn-primary"/>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action to view all estimations -->
+        <record id="action_view_estimations" model="ir.actions.act_window">
+            <field name="name">View All Estimations</field>
+            <field name="res_model">mrp.estimation</field>
+            <field name="view_mode">tree,form</field>
+            <field name="target">current</field>
+        </record>
+
+    </data>
+</odoo>

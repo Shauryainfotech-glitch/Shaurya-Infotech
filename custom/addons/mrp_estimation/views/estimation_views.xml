@@ -1,0 +1,108 @@
+<odoo>
+    <data>
+        <!-- Form View -->
+        <record id="view_mrp_estimation_form" model="ir.ui.view">
+            <field name="name">mrp.estimation.form</field>
+            <field name="model">mrp.estimation</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="action_submit_for_approval"
+                                string="Submit for Approval"
+                                type="object"
+                                invisible="state != 'draft'"/>
+                        <button name="action_approve"
+                                string="Approve"
+                                type="object"
+                                invisible="state != 'waiting_approval'"/>
+                        <button name="action_send_estimation"
+                                string="Send to Customer"
+                                type="object"
+                                invisible="state not in ('approved', 'sent')"/>
+                        <field name="state" widget="statusbar"
+                               statusbar_visible="draft,waiting_approval,approved,sent,confirmed,done"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_view_boms" type="object" class="oe_stat_button" icon="fa-list">
+                                <field name="bom_count" widget="statinfo" string="BOMs"/>
+                            </button>
+                            <button name="action_view_manufacturing_orders" type="object" class="oe_stat_button" icon="fa-industry">
+                                <field name="mo_count" widget="statinfo" string="MOs"/>
+                            </button>
+                            <button name="action_view_sale_orders" type="object" class="oe_stat_button" icon="fa-usd">
+                                <field name="so_count" widget="statinfo" string="SOs"/>
+                            </button>
+                            <button name="action_view_versions" type="object" class="oe_stat_button" icon="fa-code-fork">
+                                <field name="version_count" widget="statinfo" string="Versions"/>
+                            </button>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="name" readonly="state != 'draft'"/>
+                                <field name="partner_id" readonly="state != 'draft'"/>
+                                <field name="estimation_date" readonly="state != 'draft'"/>
+                                <field name="validity_date" readonly="state != 'draft'"/>
+                                <field name="version"/>
+                            </group>
+                            <group>
+                                <field name="product_id" readonly="state != 'draft'"/>
+                                <field name="product_qty" readonly="state != 'draft'"/>
+                                <field name="product_uom_id" readonly="state != 'draft'"/>
+                                <field name="currency_id" groups="base.group_multi_currency"/>
+                                <field name="user_id"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Materials" name="materials">
+                                <field name="estimation_line_ids" readonly="state != 'draft'">
+                                    <tree editable="bottom">
+                                        <field name="product_id"/>
+                                        <!-- Corrected reference: 'subtotal' from mrp.estimation.line -->
+                                        <field name="subtotal" sum="Total"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Costs" name="costs">
+                                <field name="estimation_cost_ids" readonly="state != 'draft'">
+                                    <tree editable="bottom">
+                                        <field name="total_cost" sum="Total"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Markup" name="markup">
+                                <group>
+                                    <group>
+                                        <field name="material_markup_type"/>
+                                        <field name="material_markup_value"/>
+                                    </group>
+                                    <group>
+                                        <field name="cost_markup_type"/>
+                                        <field name="cost_markup_value"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Notes" name="notes">
+                                <group>
+                                    <field name="notes" placeholder="Internal notes..."/>
+                                    <field name="customer_notes" placeholder="Notes visible to customer..."/>
+                                </group>
+                            </page>
+                        </notebook>
+                        <group class="oe_subtotal_footer">
+                            <field name="material_total"/>
+                            <field name="cost_total"/>
+                            <field name="markup_total"/>
+                            <field name="estimation_total" class="oe_subtotal_footer_separator"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>
