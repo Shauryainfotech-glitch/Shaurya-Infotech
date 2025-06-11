@@ -67,7 +67,7 @@
     'assets': {
         'web.assets_backend': [
             'mrp_estimation/static/src/css/estimation.css',
-            'mrp_estimation/static/src/js/estimation_widget.js',
+            # 'mrp_estimation/static/src/js/estimation_widget.js',
         ],
         'web.assets_frontend': [
             'mrp_estimation/static/src/css/portal.css',
