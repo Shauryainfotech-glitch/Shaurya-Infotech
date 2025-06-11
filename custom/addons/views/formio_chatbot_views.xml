@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- Chatbot Templates -->
+        <template id="formio_chatbot_template" name="Form.io Chatbot">
+            <div class="chatbot_container">
+                <div class="chatbot_header">
+                    <h3>Form Assistant</h3>
+                    <div class="chatbot_controls">
+                        <button class="minimize_chat" title="Minimize">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                        <button class="close_chat" title="Close">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="chatbot_messages"></div>
+                <div class="chatbot_input">
+                    <input type="text" placeholder="Type your message..." />
+                    <button class="send_message" title="Send">
+                        <i class="fa fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="chatbot_toggle" title="Open Chat">
+                <i class="fa fa-comments"></i>
+            </div>
+        </template>
+
+        <template id="formio_chatbot_message" name="Form.io Chatbot Message">
+            <div class="message" t-att-class="sender">
+                <div class="content" t-esc="message"/>
+                <span class="time" t-esc="time"/>
+            </div>
+        </template>
+
+        <!-- Form Builder Extension -->
+        <record id="formio_builder_form_view_chatbot" model="ir.ui.view">
+            <field name="name">formio.builder.form.chatbot</field>
+            <field name="model">formio.builder</field>
+            <field name="inherit_id" ref="formio.view_formio_builder_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page string="Chatbot Settings" name="chatbot_settings">
+                        <group>
+                            <field name="enable_ai_chat"/>
+                            <field name="ai_model" attrs="{'invisible': [('enable_ai_chat', '=', False)]}"/>
+                            <field name="ai_api_key" password="True" attrs="{'invisible': [('enable_ai_chat', '=', False)], 'required': [('enable_ai_chat', '=', True)]}"/>
+                            <field name="chat_prompt" attrs="{'invisible': [('enable_ai_chat', '=', False)]}"/>
+                        </group>
+                    </page>
+                </xpath>
+                <xpath expr="//header" position="inside">
+                    <button name="action_open_chatbot" 
+                            string="Open Chatbot" 
+                            type="object" 
+                            class="oe_highlight"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Chat Message List View -->
+        <record id="formio_chat_message_tree" model="ir.ui.view">
+            <field name="name">formio.chat.message.tree</field>
+            <field name="model">formio.chat.message</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="create_date"/>
+                    <field name="form_id"/>
+                    <field name="sender"/>
+                    <field name="message"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Chat Message Form View -->
+        <record id="formio_chat_message_form" model="ir.ui.view">
+            <field name="name">formio.chat.message.form</field>
+            <field name="model">formio.chat.message</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="form_id"/>
+                            <field name="sender"/>
+                            <field name="message"/>
+                            <field name="create_date" readonly="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Chat Message Search View -->
+        <record id="formio_chat_message_search" model="ir.ui.view">
+            <field name="name">formio.chat.message.search</field>
+            <field name="model">formio.chat.message</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="message"/>
+                    <field name="form_id"/>
+                    <filter string="User Messages" name="user_messages" domain="[('sender', '=', 'user')]"/>
+                    <filter string="Bot Messages" name="bot_messages" domain="[('sender', '=', 'bot')]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Form" name="group_by_form" context="{'group_by': 'form_id'}"/>
+                        <filter string="Sender" name="group_by_sender" context="{'group_by': 'sender'}"/>
+                        <filter string="Date" name="group_by_date" context="{'group_by': 'create_date:day'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Chat Message Action -->
+        <record id="action_formio_chat_message" model="ir.actions.act_window">
+            <field name="name">Chat Messages</field>
+            <field name="res_model">formio.chat.message</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_group_by_form': 1}</field>
+        </record>
+
+        <!-- Menu Item -->
+        <menuitem id="menu_formio_chat_message"
+                  name="Chat Messages"
+                  parent="formio.menu_formio_root"
+                  action="action_formio_chat_message"
+                  sequence="50"/>
+    </data>
+</odoo> 
