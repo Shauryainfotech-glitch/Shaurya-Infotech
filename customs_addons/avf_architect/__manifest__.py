@@ -72,6 +72,7 @@
         'security/security.xml',
         'security/ir.model.access.csv',
         'data/sequences.xml',
+        'data/dpr_sequence.xml',
         'data/project_stages.xml',
         'data/compliance_types.xml',
         'data/document_categories.xml',
