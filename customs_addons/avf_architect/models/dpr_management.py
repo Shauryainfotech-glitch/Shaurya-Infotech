@@ -98,14 +98,12 @@ class ArchitectDPR(models.Model):
     approval_date = fields.Date(string='Approval Date')
 
     @api.model
-    # def create(self, vals):
-    #     if 'code' not in vals or not vals['code']:
-    #         vals['code'] = self.env['ir.sequence'].next_by_code('architect.dpr') or 'New'
-    #     return super().create(vals)
     def create(self, vals):
-        if vals.get('code', 'New') == 'New':
+        if 'code' not in vals or not vals['code']:
             vals['code'] = self.env['ir.sequence'].next_by_code('architect.dpr') or 'New'
         return super().create(vals)
+
+
 
     def _compute_document_count(self):
         for dpr in self:
