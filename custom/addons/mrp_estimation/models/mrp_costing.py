@@ -9,20 +9,6 @@ class MrpCosting(models.Model):
     name = fields.Char(string='Costing Reference', required=True, copy=False, readonly=True,
                        default=lambda self: _('New'))
 
-    mo_id = fields.Many2one(
-        'mrp.production',
-        string='Manufacturing Order',
-        required=True,
-        tracking=True
-    )
-
-    product_id = fields.Many2one(
-        related='mo_id.product_id',
-        string='Product',
-        store=True,
-        readonly=True
-    )
-
     estimation_id = fields.Many2one(
         'mrp.estimation',
         string='Related Estimation',
