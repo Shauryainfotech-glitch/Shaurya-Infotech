@@ -13,7 +13,8 @@ class ArchitectDPR(models.Model):
     _order = 'create_date desc'
 
     name = fields.Char(string='DPR Title', required=True, tracking=True)
-    code = fields.Char(string='DPR Code', required=True, copy=False)
+    # code = fields.Char(string='DPR Code', required=True, copy=False)
+    code = fields.Char(string='DPR Code', readonly=True, copy=False, default='New')
     project_id = fields.Many2one('architect.project', string='Project', required=True, tracking=True)
 
     # DPR Type and Classification
