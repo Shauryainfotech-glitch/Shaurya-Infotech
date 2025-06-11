@@ -30,7 +30,7 @@
                             <field name="name" placeholder="DPR Title"/>
                         </h1>
                         <h2>
-                            <field name="code" readonly="1"/>
+                            <field name="code" placeholder="Enter code"/>
                         </h2>
                     </div>
                     <group>
