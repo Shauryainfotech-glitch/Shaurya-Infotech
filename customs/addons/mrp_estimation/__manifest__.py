@@ -49,7 +49,7 @@
         # Views and Menus
         'views/estimation_menus.xml',
         'views/mrp_costing_views.xml',
-        'views/res_config_settings_views.xml',
+        # 'views/res_config_settings_views.xml',
         'views/portal_templates.xml',
 
         # Reports
