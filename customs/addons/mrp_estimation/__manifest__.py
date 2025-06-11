@@ -49,7 +49,6 @@
         # Views and Menus
         'views/estimation_menus.xml',
         'views/mrp_costing_views.xml',
-        # 'views/res_config_settings_views.xml',
         'views/portal_templates.xml',
 
         # Reports
@@ -67,7 +66,6 @@
     'assets': {
         'web.assets_backend': [
             'mrp_estimation/static/src/css/estimation.css',
-            # 'mrp_estimation/static/src/js/estimation_widget.js',
         ],
         'web.assets_frontend': [
             'mrp_estimation/static/src/css/portal.css',
