@@ -32,13 +32,20 @@
         </record>
 
         <!-- DPR Sequence -->
+<!--        <record id="seq_architect_dpr" model="ir.sequence">-->
+<!--            <field name="name">Architect DPR</field>-->
+<!--            <field name="code">architect.dpr</field>-->
+<!--            <field name="prefix">DPR-</field>-->
+<!--            <field name="padding">4</field>-->
+<!--            <field name="number_next">1</field>-->
+<!--            <field name="number_increment">1</field>-->
+<!--        </record>-->
         <record id="seq_architect_dpr" model="ir.sequence">
-            <field name="name">Architect DPR</field>
-            <field name="code">architect.dpr</field>
-            <field name="prefix">DPR-</field>
+            <field name="name">Architect DPR Sequence</field>
+            <field name="code">architect.dpr</field>  <!-- Must match your Python sequence code -->
+            <field name="prefix">DPR/</field>
             <field name="padding">4</field>
             <field name="number_next">1</field>
-            <field name="number_increment">1</field>
         </record>
 
         <!-- Compliance Sequence -->
