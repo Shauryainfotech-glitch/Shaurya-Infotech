@@ -40,13 +40,13 @@
 <!--            <field name="number_next">1</field>-->
 <!--            <field name="number_increment">1</field>-->
 <!--        </record>-->
-<!--        <record id="seq_architect_dpr" model="ir.sequence">-->
-<!--            <field name="name">Architect DPR Sequence</field>-->
-<!--            <field name="code">architect.dpr</field>  &lt;!&ndash; Must match your Python sequence code &ndash;&gt;-->
-<!--            <field name="prefix">DPR/</field>-->
-<!--            <field name="padding">4</field>-->
-<!--            <field name="number_next">1</field>-->
-<!--        </record>-->
+        <record id="seq_architect_dpr" model="ir.sequence">
+            <field name="name">Architect DPR Sequence</field>
+            <field name="code">architect.dpr</field>  <!-- Must match your Python sequence code -->
+            <field name="prefix">DPR/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+        </record>
 
         <!-- Compliance Sequence -->
         <record id="seq_architect_compliance" model="ir.sequence">
