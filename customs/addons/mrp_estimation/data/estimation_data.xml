@@ -78,9 +78,6 @@
     </p>
 </div>
             </field>
-            <!-- Removed deprecated report_template field -->
-            <!-- <field name="report_template" ref="action_report_estimation"/> -->
-            <field name="report_name">Estimation_${(object.name or '').replace('/','_')}</field>
             <field name="lang">${object.partner_id.lang}</field>
             <field name="auto_delete" eval="True"/>
         </record>
