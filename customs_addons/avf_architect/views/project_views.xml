@@ -72,11 +72,11 @@
                             <page string="Project Details">
                                 <group>
                                     <group string="Location Information">
-                                        <field name="location"/>
-                                        <field name="state_id"/>
-                                        <field name="district"/>
-                                        <field name="pin_code"/>
-                                        <field name="gps_coordinates"/>
+                                        <field name="location" placeholder="Enter your project location"/>
+                                        <field name="state_id" placeholder="Enter your state"/>
+                                        <field name="district" placeholder="Enter your district"/>
+                                        <field name="pin_code" placeholder="Enter your pin code"/>
+                                        <field name="gps_coordinates" placeholder="Enter your gps coordinates"/>
                                     </group>
                                     <group string="Financial Information">
                                         <field name="budget"/>
