@@ -22,8 +22,6 @@
                            decoration-warning="state=='waiting_approval'"
                            decoration-success="state=='approved'"/>
                     <field name="user_id"/>
-                    <!-- Removed company_id field since we don't have it in the model -->
-                    <!-- <field name="company_id" groups="base.group_multi_company"/> -->
                 </list>
             </field>
         </record>
@@ -56,7 +54,6 @@
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <!-- Updated BOM button to use correct action -->
                             <button name="action_view_boms" type="object"
                                     class="oe_stat_button" icon="fa-list-alt" string="View BOMs">
                                 <field name="bom_count" widget="statinfo" string="BOMs"/>
@@ -94,8 +91,6 @@
                                 <field name="version"/>
                                 <field name="user_id"/>
                                 <field name="currency_id"/>
-                                <!-- Removed company_id field since we don't have it in the model -->
-                                <!-- <field name="company_id" groups="base.group_multi_company"/> -->
                             </group>
                         </group>
 
@@ -251,18 +246,7 @@
                   action="action_mrp_estimation"
                   sequence="10"/>
 
-        <!-- Configuration Menu -->
-        <menuitem id="menu_mrp_estimation_config"
-                  name="Configuration"
-                  parent="menu_mrp_estimation_root"
-                  sequence="90"
-                  groups="mrp_estimation.group_estimation_manager"/>
-
-        <menuitem id="menu_mrp_estimation_settings"
-                  name="Settings"
-                  parent="menu_mrp_estimation_config"
-                  action="base.action_res_config"
-                  sequence="10"/>
+        <!-- Removed Configuration Menu to avoid settings issues -->
 
     </data>
 </odoo>
