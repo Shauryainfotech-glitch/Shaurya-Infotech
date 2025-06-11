@@ -17,7 +17,8 @@
                     <field name="cost_variance"/>
                     <field name="cost_variance_percentage"/>
                     <field name="state"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
+                    <!-- Removed company_id field since we don't have it in the model -->
+                    <!-- <field name="company_id" groups="base.group_multi_company"/> -->
                 </list>
             </field>
         </record>
@@ -50,7 +51,8 @@
                                 <field name="mo_id" required="1"/>
                                 <field name="product_id" readonly="1"/>
                                 <field name="estimation_id"/>
-                                <field name="company_id" groups="base.group_multi_company"/>
+                                <!-- Removed company_id field since we don't have it in the model -->
+                                <!-- <field name="company_id" groups="base.group_multi_company"/> -->
                             </group>
                             <group>
                                 <field name="planned_cost"/>
@@ -114,7 +116,7 @@
         <record id="action_mrp_costing" model="ir.actions.act_window">
             <field name="name">Manufacturing Costing</field>
             <field name="res_model">mrp.costing</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">list,form</field>
             <field name="search_view_id" ref="view_mrp_costing_search"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">

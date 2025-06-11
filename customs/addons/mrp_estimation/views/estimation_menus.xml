@@ -22,7 +22,8 @@
                            decoration-warning="state=='waiting_approval'"
                            decoration-success="state=='approved'"/>
                     <field name="user_id"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
+                    <!-- Removed company_id field since we don't have it in the model -->
+                    <!-- <field name="company_id" groups="base.group_multi_company"/> -->
                 </list>
             </field>
         </record>
@@ -93,7 +94,8 @@
                                 <field name="version"/>
                                 <field name="user_id"/>
                                 <field name="currency_id"/>
-                                <field name="company_id" groups="base.group_multi_company"/>
+                                <!-- Removed company_id field since we don't have it in the model -->
+                                <!-- <field name="company_id" groups="base.group_multi_company"/> -->
                             </group>
                         </group>
 
