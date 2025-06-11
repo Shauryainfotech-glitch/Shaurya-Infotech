@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+        <!-- Report Action -->
         <record id="action_report_estimation" model="ir.actions.report">
             <field name="name">Estimation Report</field>
             <field name="model">mrp.estimation</field>
@@ -9,27 +10,6 @@
             <field name="report_file">mrp_estimation.report_estimation</field>
             <field name="binding_model_id" ref="model_mrp_estimation"/>
             <field name="binding_type">report</field>
-        </record>
-
-        <!-- Email Template for Estimation Approval Request -->
-        <record id="email_template_estimation_approval" model="mail.template">
-            <!-- ... template fields ... -->
-        </record>
-
-        <!-- Email Template for Sending Estimation to Customer -->
-        <record id="email_template_estimation" model="mail.template">
-            <!-- ... template fields ... -->
-        </record>
-
-        <!-- Mail Activity for Estimation Approval -->
-        <record id="mail_activity_estimation_approval" model="mail.activity.type">
-            <field name="name">Estimation Approval</field>
-            <field name="summary">Review and approve manufacturing estimation</field>
-            <field name="category">default</field>
-            <field name="res_model">mrp.estimation</field>
-            <field name="icon">fa-check-square-o</field>
-            <field name="delay_count">1</field>
-            <field name="delay_unit">days</field>
         </record>
     </data>
 </odoo>

@@ -426,24 +426,25 @@ class MrpEstimation(models.Model):
         self.ensure_one()
 
         # Generate PDF report
-        report = self.env.ref('mrp_estimation.action_report_estimation')
-        pdf_content = report._render_qweb_pdf([self.id])[0]
+        report = self.env.ref('mrp_estimation.action_report_estimation', raise_if_not_found=False)
+        if report:
+            pdf_content = report._render_qweb_pdf([self.id])[0]
 
-        # Create attachment
-        attachment = self.env['ir.attachment'].create({
-            'name': f'Estimation_{self.name}.pdf',
-            'type': 'binary',
-            'datas': base64.b64encode(pdf_content),
-            'res_model': self._name,
-            'res_id': self.id,
-            'mimetype': 'application/pdf'
-        })
+            # Create attachment
+            attachment = self.env['ir.attachment'].create({
+                'name': f'Estimation_{self.name}.pdf',
+                'type': 'binary',
+                'datas': base64.b64encode(pdf_content),
+                'res_model': self._name,
+                'res_id': self.id,
+                'mimetype': 'application/pdf'
+            })
 
-        # Send email
-        template = self.env.ref('mrp_estimation.email_template_estimation', raise_if_not_found=False)
-        if template:
-            template.attachment_ids = [(6, 0, [attachment.id])]
-            template.send_mail(self.id, force_send=True)
+            # Send email
+            template = self.env.ref('mrp_estimation.email_template_estimation', raise_if_not_found=False)
+            if template:
+                template.attachment_ids = [(6, 0, [attachment.id])]
+                template.send_mail(self.id, force_send=True)
 
         self.state = 'sent'
         self.message_post(body=_("Estimation sent to customer"))
@@ -696,11 +697,11 @@ class MrpEstimation(models.Model):
 
     def _notify_approvers(self):
         """Send notification to estimation approvers"""
-        approvers = self.env.ref('mrp_estimation.group_estimation_manager').users
-        if approvers:
+        approvers = self.env.ref('mrp_estimation.group_estimation_manager', raise_if_not_found=False)
+        if approvers and approvers.users:
             self.activity_schedule(
                 'mail.mail_activity_data_todo',
-                user_id=approvers[0].id,
+                user_id=approvers.users[0].id,
                 summary=_('Estimation Approval Required'),
                 note=_('Estimation %s requires approval') % self.name
             )

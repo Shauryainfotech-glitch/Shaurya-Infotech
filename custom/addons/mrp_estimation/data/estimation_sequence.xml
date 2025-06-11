@@ -1,30 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
-    <!-- Sequence for Manufacturing Estimations -->
-    <record id="seq_mrp_estimation" model="ir.sequence">
-        <field name="name">Manufacturing Estimation</field>
-        <field name="code">mrp.estimation</field>
-        <field name="prefix">EST/%(year)s/</field>
-        <field name="padding">5</field>
-        <field name="company_id" eval="False"/>
-    </record>
+    <data>
+        <!-- Sequence for Manufacturing Estimations -->
+        <record id="seq_mrp_estimation" model="ir.sequence">
+            <field name="name">Manufacturing Estimation</field>
+            <field name="code">mrp.estimation</field>
+            <field name="prefix">EST/%(year)s/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
 
-    <!-- Sequence for Manufacturing Costing -->
-    <record id="seq_mrp_costing" model="ir.sequence">
-        <field name="name">Manufacturing Costing</field>
-        <field name="code">mrp.costing</field>
-        <field name="prefix">COST/%(year)s/</field>
-        <field name="padding">5</field>
-        <field name="company_id" eval="False"/>
-    </record>
-
-    <!-- Mail Activity for Estimation Approval -->
-    <record id="mail_activity_estimation_approval" model="mail.activity.type">
-        <field name="name">Estimation Approval</field>
-        <field name="summary">Estimation needs approval</field>
-        <field name="icon">fa-check-circle</field>
-        <field name="decoration_type">warning</field>
-        <field name="delay_count">1</field>
-        <field name="delay_unit">days</field>
-    </record>
+        <!-- Sequence for Manufacturing Costing -->
+        <record id="seq_mrp_costing" model="ir.sequence">
+            <field name="name">Manufacturing Costing</field>
+            <field name="code">mrp.costing</field>
+            <field name="prefix">COST/%(year)s/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
 </odoo>

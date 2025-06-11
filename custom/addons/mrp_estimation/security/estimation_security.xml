@@ -61,17 +61,6 @@
             <field name="perm_unlink" eval="True"/>
         </record>
 
-        <record id="rule_estimation_approver" model="ir.rule">
-            <field name="name">Estimation Approver Rule</field>
-            <field name="model_id" ref="model_mrp_estimation"/>
-            <field name="groups" eval="[(4, ref('group_estimation_approver'))]"/>
-            <field name="domain_force">[('state', 'in', ['waiting_approval', 'approved']), '|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
-        </record>
-
         <!-- Multi-company rules for related models -->
         <record id="rule_estimation_line_company" model="ir.rule">
             <field name="name">Estimation Line Multi-Company Rule</field>

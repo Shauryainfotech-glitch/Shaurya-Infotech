@@ -6,69 +6,13 @@
             <field name="name">mrp.estimation.version.list</field>
             <field name="model">mrp.estimation.version</field>
             <field name="arch" type="xml">
-                <list string="Estimation Versions">
+                <tree string="Estimation Versions">
                     <field name="parent_estimation_id"/>
                     <field name="version_number"/>
                     <field name="created_by"/>
                     <field name="creation_date"/>
                     <field name="is_active_version" widget="boolean_toggle"/>
-                    <field name="version_notes"/>
-                </list>
-            </field>
-        </record>
-
-        <!-- Form View -->
-        <record id="view_estimation_version_form" model="ir.ui.view">
-            <field name="name">mrp.estimation.version.form</field>
-            <field name="model">mrp.estimation.version</field>
-            <field name="arch" type="xml">
-                <form string="Estimation Version">
-                    <sheet>
-                        <group>
-                            <group name="version_info">
-                                <field name="parent_estimation_id"/>
-                                <field name="version_number"/>
-                                <field name="created_by"/>
-                                <field name="creation_date"/>
-                                <field name="is_active_version"/>
-                            </group>
-                        </group>
-                        <notebook>
-                            <page string="Change Notes" name="change_notes">
-                                <field name="version_notes" nolabel="1" placeholder="Document changes made in this version..."/>
-                            </page>
-                        </notebook>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
-        <!-- Search View -->
-        <record id="view_estimation_version_search" model="ir.ui.view">
-            <field name="name">mrp.estimation.version.search</field>
-            <field name="model">mrp.estimation.version</field>
-            <field name="arch" type="xml">
-                <search string="Search Estimation Versions">
-                    <field name="parent_estimation_id"/>
-                    <field name="version_number"/>
-                    <field name="created_by"/>
-                    <field name="version_notes"/>
-
-                    <filter string="Active Versions" name="active_versions"
-                            domain="[('is_active_version', '=', True)]"/>
-
-                    <filter string="Created Today" name="created_today"
-                            domain="[('creation_date', '&gt;=', context_today().strftime('%Y-%m-%d'))]"/>
-
-                    <group expand="0" string="Group By">
-                        <filter string="Estimation" name="group_estimation"
-                                context="{'group_by': 'parent_estimation_id'}"/>
-                        <filter string="Created By" name="group_created_by"
-                                context="{'group_by': 'created_by'}"/>
-                        <filter string="Creation Date" name="group_creation_date"
-                                context="{'group_by': 'creation_date:day'}"/>
-                    </group>
-                </search>
+                </tree>
             </field>
         </record>
 
@@ -77,18 +21,8 @@
             <field name="name">Estimation Versions</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.estimation.version</field>
-            <field name="view_mode">list,form</field>
-            <field name="search_view_id" ref="view_estimation_version_search"/>
+            <field name="view_mode">tree,form</field>
             <field name="context">{}</field>
-            <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">
-                    No estimation versions found!
-                </p>
-                <p>
-                    Version control helps track changes and revisions made to
-                    manufacturing estimations over time.
-                </p>
-            </field>
         </record>
 
     </data>

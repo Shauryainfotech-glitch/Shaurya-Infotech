@@ -31,8 +31,6 @@
         'sale',
         'mrp',
         'stock',
-        'account',
-        'hr',
         'mail',
         'portal',
     ],
@@ -53,12 +51,9 @@
         'views/mrp_costing_views.xml',
         'views/res_config_settings_views.xml',
         'views/estimation_menus.xml',
-        'views/estimation_dashboard.xml',  # Missing dashboard view
-        'views/portal_estimation_views.xml',  # Missing portal view
-        'views/estimation_actions.xml',
+
         # Reports
         'reports/estimation_templates.xml',
-        'reports/estimation_report_views.xml',
 
         # Wizards
         'wizard/estimation_wizard_views.xml',
@@ -66,18 +61,7 @@
     'demo': [
         'demo/estimation_demo.xml',
     ],
-    'assets': {
-        'web.assets_backend': [
-            'mrp_estimation/static/src/css/estimation.css',
-            'mrp_estimation/static/src/js/estimation_widget.js',
-            'mrp_estimation/static/src/js/estimation_dashboard.js',  # Add dashboard JS if created
-            'mrp_estimation/static/src/js/field_widgets.js',
-        ],
-    },
     'installable': True,
     'application': True,
     'auto_install': False,
-    'external_dependencies': {
-        'python': ['xlsxwriter'],
-    },
 }
