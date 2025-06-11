@@ -3,8 +3,19 @@
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { Component, useRef, onMounted, onWillUpdateProps } from "@odoo/owl";
+import { xml } from "@odoo/owl";
 
 export class CostAnalysisWidget extends Component {
+    static template = xml`
+        <div class="o_cost_analysis_chart">
+            <canvas t-ref="canvas" width="400" height="300"></canvas>
+        </div>
+    `;
+
+    static props = {
+        ...standardFieldProps,
+    };
+
     setup() {
         super.setup();
         this.canvasRef = useRef("canvas");
@@ -14,7 +25,7 @@ export class CostAnalysisWidget extends Component {
         });
 
         onWillUpdateProps((nextProps) => {
-            if (this.props.value !== nextProps.value) {
+            if (this.props.record !== nextProps.record) {
                 this._renderChart();
             }
         });
@@ -117,11 +128,6 @@ export class CostAnalysisWidget extends Component {
         });
     }
 }
-
-CostAnalysisWidget.template = "mrp_estimation.CostAnalysisWidget";
-CostAnalysisWidget.props = {
-    ...standardFieldProps
-};
 
 // Register the widget
 registry.category("fields").add("cost_analysis_chart", CostAnalysisWidget);
