@@ -14,7 +14,7 @@ class MrpEstimation(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
     _order = 'name desc'
     _rec_name = 'name'
-    _check_company_auto = True
+    # Removed _check_company_auto since we're not using company_id field
 
     # ======================
     # HEADER FIELDS
@@ -590,10 +590,163 @@ class MrpEstimation(models.Model):
             'domain': [('res_model', '=', self._name), ('res_id', '=', self.id)],
         }
 
-    # [Previous action methods remain the same...]
-    # action_view_boms, action_view_manufacturing_orders, action_view_sale_orders,
-    # action_view_versions, action_create_version, action_create_bom,
-    # action_create_sale_order, action_create_manufacturing_order
+    def action_view_boms(self):
+        """View related BOMs"""
+        self.ensure_one()
+        boms = self.env['mrp.bom'].search([
+            ('product_tmpl_id', '=', self.product_id.product_tmpl_id.id)
+        ])
+        return {
+            'name': _('Bills of Materials'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'mrp.bom',
+            'view_mode': 'list,form',
+            'domain': [('id', 'in', boms.ids)],
+            'context': {'default_product_tmpl_id': self.product_id.product_tmpl_id.id},
+        }
+
+    def action_view_manufacturing_orders(self):
+        """View related manufacturing orders"""
+        self.ensure_one()
+        mos = self.env['mrp.production'].search([
+            ('product_id', '=', self.product_id.id),
+            ('origin', 'ilike', self.name)
+        ])
+        return {
+            'name': _('Manufacturing Orders'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'mrp.production',
+            'view_mode': 'list,form',
+            'domain': [('id', 'in', mos.ids)],
+        }
+
+    def action_view_sale_orders(self):
+        """View related sale orders"""
+        self.ensure_one()
+        sales = self.env['sale.order'].search([
+            ('partner_id', '=', self.partner_id.id),
+            ('origin', 'ilike', self.name)
+        ])
+        return {
+            'name': _('Sales Orders'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'sale.order',
+            'view_mode': 'list,form',
+            'domain': [('id', 'in', sales.ids)],
+        }
+
+    def action_view_versions(self):
+        """View estimation versions"""
+        self.ensure_one()
+        return {
+            'name': _('Estimation Versions'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'mrp.estimation.version',
+            'view_mode': 'list,form',
+            'domain': [('parent_estimation_id', '=', self.id)],
+        }
+
+    def action_create_version(self):
+        """Create new version of estimation"""
+        self.ensure_one()
+        return {
+            'name': _('Create New Version'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'create.estimation.version.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_estimation_id': self.id,
+                'active_id': self.id,
+                'active_model': self._name,
+            }
+        }
+
+    def action_create_bom(self):
+        """Create BOM from estimation"""
+        self.ensure_one()
+        if not self.estimation_line_ids:
+            raise UserError(_("Cannot create BOM without material lines."))
+
+        bom_lines = []
+        for line in self.estimation_line_ids:
+            bom_lines.append((0, 0, {
+                'product_id': line.product_id.id,
+                'product_qty': line.product_qty / self.product_qty,  # Calculate per unit
+                'product_uom_id': line.product_uom_id.id,
+            }))
+
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': self.product_id.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'product_uom_id': self.product_uom_id.id,
+            'bom_line_ids': bom_lines,
+            'type': 'normal',
+        })
+
+        return {
+            'name': _('Bill of Materials'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'mrp.bom',
+            'res_id': bom.id,
+            'view_mode': 'form',
+            'target': 'current',
+        }
+
+    def action_create_sale_order(self):
+        """Create sale order from estimation"""
+        self.ensure_one()
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_id.id,
+            'origin': self.name,
+            'order_line': [(0, 0, {
+                'product_id': self.product_id.id,
+                'product_uom_qty': self.product_qty,
+                'product_uom': self.product_uom_id.id,
+                'price_unit': self.estimation_total / self.product_qty,
+            })]
+        })
+
+        return {
+            'name': _('Sale Order'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'sale.order',
+            'res_id': sale_order.id,
+            'view_mode': 'form',
+            'target': 'current',
+        }
+
+    def action_create_manufacturing_order(self):
+        """Create manufacturing order from estimation"""
+        self.ensure_one()
+
+        # Check if BOM exists
+        bom = self.env['mrp.bom']._bom_find(
+            product=self.product_id,
+            bom_type='normal'
+        )
+
+        if not bom:
+            raise UserError(
+                _("No Bill of Materials found for product %s. Please create a BOM first.") % self.product_id.name)
+
+        mo = self.env['mrp.production'].create({
+            'product_id': self.product_id.id,
+            'product_qty': self.product_qty,
+            'product_uom_id': self.product_uom_id.id,
+            'bom_id': bom.id,
+            'origin': self.name,
+        })
+
+        return {
+            'name': _('Manufacturing Order'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'mrp.production',
+            'res_id': mo.id,
+            'view_mode': 'form',
+            'target': 'current',
+        }
 
     # ======================
     # BUSINESS LOGIC METHODS
@@ -606,7 +759,6 @@ class MrpEstimation(models.Model):
 
         bom = self.env['mrp.bom']._bom_find(
             product=self.product_id,
-            # company_id=self.company_id.id,
             bom_type='normal'
         )
 
@@ -674,21 +826,3 @@ class MrpEstimationTag(models.Model):
     _sql_constraints = [
         ('name_unique', 'unique(name)', 'Tag name must be unique!')
     ]
-from odoo import models, fields, api
-
-class MrpEstimation(models.Model):
-    _name = 'mrp.estimation'
-    _description = 'Manufacturing Estimation'
-
-    # Adding the BOM count field for the button
-    bom_count = fields.Integer(string="BOM Count", compute='_compute_bom_count')
-
-    @api.depends('bom_ids')
-    def _compute_bom_count(self):
-        for record in self:
-            record.bom_count = len(record.bom_ids)
-
-    def action_view_boms(self):
-        # Example action to view related BOMs
-        bom_action = self.env.ref('mrp.mrp_bom_action')
-        return bom_action.read()[0]  # Returning the action for the BOMs view

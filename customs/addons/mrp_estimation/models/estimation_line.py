@@ -10,13 +10,14 @@ class MrpEstimationLine(models.Model):
     sequence = fields.Integer(string='Sequence', default=10)
     estimation_id = fields.Many2one('mrp.estimation', string='Estimation', required=True, ondelete='cascade')
 
-    company_id = fields.Many2one(
-        'res.company',
-        string='Company',
-        related='estimation_id.company_id',
-        store=True,
-        readonly=True
-    )
+    # Removed company_id related field since estimation model doesn't have company_id
+    # company_id = fields.Many2one(
+    #     'res.company',
+    #     string='Company',
+    #     related='estimation_id.company_id',
+    #     store=True,
+    #     readonly=True
+    # )
 
     product_id = fields.Many2one(
         'product.product',
