@@ -103,7 +103,7 @@ class ArchitectDPR(models.Model):
     #         vals['code'] = self.env['ir.sequence'].next_by_code('architect.dpr') or 'New'
     #     return super().create(vals)
     def create(self, vals):
-        if 'code' not in vals or not vals['code']:
+        if vals.get('code', 'New') == 'New':
             vals['code'] = self.env['ir.sequence'].next_by_code('architect.dpr') or 'New'
         return super().create(vals)
 
