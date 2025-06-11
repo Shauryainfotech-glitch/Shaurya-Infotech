@@ -640,4 +640,67 @@ class MrpEstimation(models.Model):
             'client_order_ref': self.name,
             'date_order': fields.Datetime.now(),
             'user_id': self.user_id.id,
-            'company_id'
+            'company_id': self.company_id.id,
+            'currency_id': self.currency_id.id,
+        })
+
+        # Create sale order line for the main product
+        self.env['sale.order.line'].create({
+            'order_id': sale_order.id,
+            'product_id': self.product_id.id,
+            'product_uom_qty': self.product_qty,
+            'product_uom': self.product_uom_id.id,
+            'price_unit': self.estimation_total / self.product_qty if self.product_qty else 0.0,
+            'name': f'[{self.product_id.default_code}] {self.product_id.name}' if self.product_id.default_code else self.product_id.name,
+        })
+
+        # Post message
+        self.message_post(body=_("Sales Order %s created from estimation") % sale_order.name)
+
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Sales Order'),
+            'res_model': 'sale.order',
+            'res_id': sale_order.id,
+            'view_mode': 'form',
+            'target': 'current',
+        }
+
+    # ======================
+    # HELPER METHODS
+    # ======================
+
+    def _auto_populate_from_bom(self):
+        """Auto-populate estimation lines from existing BOM"""
+        if not self.product_id:
+            return
+
+        # Find existing BOM
+        bom = self.env['mrp.bom']._bom_find(
+            product=self.product_id,
+            company_id=self.company_id.id
+        )
+
+        if bom and bom.bom_line_ids:
+            # Clear existing lines
+            self.estimation_line_ids.unlink()
+
+            # Create new lines from BOM
+            for bom_line in bom.bom_line_ids:
+                self.env['mrp.estimation.line'].create({
+                    'estimation_id': self.id,
+                    'product_id': bom_line.product_id.id,
+                    'product_qty': bom_line.product_qty * self.product_qty,
+                    'product_uom_id': bom_line.product_uom_id.id,
+                })
+
+    def _notify_approvers(self):
+        """Send notification to estimation approvers"""
+        approvers = self.env.ref('mrp_estimation.group_estimation_manager').users
+        if approvers:
+            self.activity_schedule(
+                'mail.mail_activity_data_todo',
+                user_id=approvers[0].id,
+                summary=_('Estimation Approval Required'),
+                note=_('Estimation %s requires approval') % self.name
+            )
