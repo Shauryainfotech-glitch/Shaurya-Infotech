@@ -50,12 +50,12 @@
 
         <!-- Compliance Sequence -->
         <record id="seq_architect_compliance" model="ir.sequence">
-            <field name="name">Architect Compliance</field>
-            <field name="code">architect.compliance</field>
+            <field name="name">Architect Compliance Type</field>
+            <field name="code">architect.compliance.type</field>
             <field name="prefix">COMP-</field>
-            <field name="padding">4</field>
+            <field name="padding">5</field>
             <field name="number_next">1</field>
-            <field name="number_increment">1</field>
+
         </record>
 
         <!-- Rate Schedule Sequence -->

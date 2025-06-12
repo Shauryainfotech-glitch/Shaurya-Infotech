@@ -219,7 +219,15 @@ class ArchitectComplianceType(models.Model):
     _order = 'sequence, name'
 
     name = fields.Char(string='Compliance Type', required=True)
-    code = fields.Char(string='Code', required=True)
+    #code = fields.Char(string='Code', required=True)
+    code = fields.Char(
+        string='Compliance Code',
+        required=True,
+        copy=False,
+        readonly=True,
+        tracking=True,
+        default=lambda self: self.env['ir.sequence'].next_by_code('architect.compliance.type') or 'new'
+    )
     description = fields.Text(string='Description')
     category = fields.Selection([
         ('environmental', 'Environmental'),
