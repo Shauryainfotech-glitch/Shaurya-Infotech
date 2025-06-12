@@ -492,6 +492,19 @@ class Builder(models.Model):
             "context": {}
         }
 
+    def action_open_chatbot(self):
+        """Open chatbot interface"""
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Chatbot'),
+                'message': _('Chatbot feature is currently under development.'),
+                'type': 'info',
+                'sticky': False,
+            }
+        }
+
     def action_view_server_actions(self):
         list_view = self.env.ref('formio.view_server_action_tree')
         return {
