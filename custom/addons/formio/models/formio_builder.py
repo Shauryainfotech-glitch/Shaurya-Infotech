@@ -51,11 +51,13 @@ class Builder(models.Model):
         'formio.version', string='formio.js version', required=True,
         default=lambda self: self._default_formio_version_id(), tracking=True,
         help="""Loads the specific formio.js Javascript libraries version (sourcecode: https://github.com/formio/formio.js)""")
-    formio_version_name = fields.Char(related='formio_version_id.name', string='formio.js version name', tracking=False)  # silly, but avoids duplicate tracking message
+    formio_version_name = fields.Char(related='formio_version_id.name', string='formio.js version name',
+                                      tracking=False)  # silly, but avoids duplicate tracking message
     formio_version_is_dummy = fields.Boolean(related='formio_version_id.is_dummy')
     formio_css_assets = fields.One2many(related='formio_version_id.css_assets', string='formio.js CSS')
     formio_js_assets = fields.One2many(related='formio_version_id.js_assets', string='formio.js Javascript')
-    formio_js_options_id = fields.Many2one('formio.builder.js.options', string='formio.js Javascript Options template', store=False)
+    formio_js_options_id = fields.Many2one('formio.builder.js.options', string='formio.js Javascript Options template',
+                                           store=False)
     formio_js_options = fields.Text(
         default=lambda self: self._default_formio_js_options(),
         string='formio.js Javascript Options')
@@ -83,7 +85,8 @@ class Builder(models.Model):
         - Current: Live and in use (published).
         - Obsolete: Was current but obsolete (unpublished)""")
     display_state = fields.Char("Display State", compute='_compute_display_fields', store=False)
-    display_name_full = fields.Char("Display Name Full", compute='_compute_display_fields', search='_search_display_name_full', store=False)
+    display_name_full = fields.Char("Display Name Full", compute='_compute_display_fields',
+                                    search='_search_display_name_full', store=False)
     auto_save = fields.Boolean(
         string="Auto Save",
         default=True,
@@ -147,7 +150,8 @@ class Builder(models.Model):
         tracking=True,
         help="Especially for long wizard pages upon prev/next page. This scrolls an element (CSS selector) into the visible area of the browser window."
     )
-    public = fields.Boolean("Public", tracking=True, help="Form is public accessible (e.g. used in Shop checkout, Events registration")
+    public = fields.Boolean("Public", tracking=True,
+                            help="Form is public accessible (e.g. used in Shop checkout, Events registration")
     public_url = fields.Char(
         string='Public URL',
         compute='_compute_public_url',
@@ -189,7 +193,8 @@ class Builder(models.Model):
         string='Public Access Rule Type',
         default='time_interval',
         tracking=True)
-    public_access_interval_number = fields.Integer(default=30, tracking=True, help="Public access to submitted Form shall be rejected after expiration of the configured time interval.")
+    public_access_interval_number = fields.Integer(default=30, tracking=True,
+                                                   help="Public access to submitted Form shall be rejected after expiration of the configured time interval.")
     public_access_interval_type = fields.Selection(list(_interval_selection.items()), default='minutes', tracking=True)
     public_scroll_into_view_selector = fields.Char(
         string='Public Scroll Into View Selector',
@@ -198,13 +203,17 @@ class Builder(models.Model):
         tracking=True,
         help="Especially for long wizard pages upon prev/next page. This scrolls an element (CSS selector) into the visible area of the browser window."
     )
-    view_as_html = fields.Boolean("View as HTML", tracking=True, help="View submission as a HTML view instead of disabled webform.")
-    show_form_title = fields.Boolean("Show Form Title", tracking=True, help="Show Form Title in the Form header.", default=True)
+    view_as_html = fields.Boolean("View as HTML", tracking=True,
+                                  help="View submission as a HTML view instead of disabled webform.")
+    show_form_title = fields.Boolean("Show Form Title", tracking=True, help="Show Form Title in the Form header.",
+                                     default=True)
     show_form_id = fields.Boolean("Show Form ID", tracking=True, help="Show Form ID in the Form header.", default=True)
     show_form_uuid = fields.Boolean("Show Form UUID", tracking=True, help="Show Form UUID in the Form.", default=True)
-    show_form_state = fields.Boolean("Show Form State", tracking=True, help="Show the state in the Form header.", default=True)
+    show_form_state = fields.Boolean("Show Form State", tracking=True, help="Show the state in the Form header.",
+                                     default=True)
     show_form_user_metadata = fields.Boolean(
-        "Show User Metadata", tracking=True, help="Show submission and assigned user metadata in the Form header.", default=True)
+        "Show User Metadata", tracking=True, help="Show submission and assigned user metadata in the Form header.",
+        default=True)
     full_width = fields.Boolean(default=False)
     iframe_resizer_body_margin = fields.Char(
         "iFrame Resizer bodyMargin", tracking=True,
@@ -249,10 +258,14 @@ class Builder(models.Model):
     component_partner_name = fields.Char(string='Component Partner Name', tracking=True)
     component_partner_email = fields.Char(string='Component Partner Email', tracking=True)
     component_partner_add_follower = fields.Boolean(
-        string='Component Partner Add to Followers', tracking=True, help='Add determined partner to followers of the Form.')
+        string='Component Partner Add to Followers', tracking=True,
+        help='Add determined partner to followers of the Form.')
     component_partner_activity_user_id = fields.Many2one('res.users', tracking=True)
-    form_allow_copy = fields.Boolean(string='Allow Copies', help='Allow copying form submissions.', tracking=True, default=True)
-    form_copy_to_current = fields.Boolean(string='Copy To Current', help='When copying a form, always link it to the current version of the builder instead of the original builder.', tracking=True, default=True)
+    form_allow_copy = fields.Boolean(string='Allow Copies', help='Allow copying form submissions.', tracking=True,
+                                     default=True)
+    form_copy_to_current = fields.Boolean(string='Copy To Current',
+                                          help='When copying a form, always link it to the current version of the builder instead of the original builder.',
+                                          tracking=True, default=True)
     server_action_ids = fields.Many2many(
         comodel_name='ir.actions.server',
         string='Server Actions',
@@ -265,6 +278,21 @@ class Builder(models.Model):
         string='Overlay Change API', default=False, copy=True)
     show_api_alert = fields.Boolean(compute='_compute_show_api_alert')
     api_alert = fields.Text(compute='_compute_api_alert')
+
+    # Chatbot fields
+    enable_ai_chat = fields.Boolean(string='Enable AI Chat', default=False, tracking=True,
+                                    help='Enable AI chatbot for this form')
+    ai_model = fields.Selection([
+        ('gpt-3.5-turbo', 'GPT-3.5 Turbo'),
+        ('gpt-4', 'GPT-4'),
+        ('gpt-4-turbo', 'GPT-4 Turbo'),
+        ('claude-3-sonnet', 'Claude 3 Sonnet'),
+        ('claude-3-opus', 'Claude 3 Opus'),
+    ], string='AI Model', default='gpt-3.5-turbo', tracking=True, help='AI model to use for chatbot responses')
+    ai_api_key = fields.Char(string='AI API Key', tracking=True, help='API key for AI service')
+    chat_prompt = fields.Text(string='Chat Prompt',
+                              default='You are a helpful assistant for form filling. Help users understand and complete their forms.',
+                              tracking=True, help='System prompt for the AI chatbot')
 
     def _states_selection(self):
         return STATES
@@ -308,7 +336,7 @@ class Builder(models.Model):
         res = self.search([
             ("name", "=", self.name),
             ("state", "=", STATE_CURRENT)
-            ])
+        ])
         if len(res) > 1:
             msg = _('Only one Form Builder with name "{name}" can be in state Current.').format(
                 name=self.name)
