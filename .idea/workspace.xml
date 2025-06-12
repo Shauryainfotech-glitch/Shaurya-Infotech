@@ -5,28 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bb8d3834-a9d5-46fe-88d0-5604683b5087" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/__manifest__.py" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/__manifest__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/controllers/dashboard.py" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/controllers/dashboard.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/models/ai_analysis.py" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/models/ai_analysis.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/models/dashboard.py" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/models/dashboard.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/models/dashboard_alias.py" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/models/dashboard_alias.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/models/day_plan_task.py" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/models/day_plan_task.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/security/ir.model.access.csv" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/security/ir.model.access.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/security/record_rules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/security/record_rules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/static/src/components/dashboard/productivity_dashboard.js" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/static/src/components/dashboard/productivity_dashboard.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/static/src/new_dashboard_client_action.js" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/static/src/new_dashboard_client_action.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/views/ai_analysis_views.xml" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/views/ai_analysis_views.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/views/assets_bundle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/views/assets_bundle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/views/dashboard_actions.xml" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/views/dashboard_actions.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/views/dashboard_menu.xml" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/views/dashboard_menu.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/views/day_plan_task_views.xml" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/views/day_plan_task_views.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/views/day_plan_views.xml" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/views/day_plan_views.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/views/enhanced_plan_views.xml" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/views/enhanced_plan_views.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/views/new_plan_views.xml" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/views/new_plan_views.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/views/plan_creation_views.xml" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/views/plan_creation_views.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/views/work_report_views.xml" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/views/work_report_views.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -131,7 +110,7 @@
       <workItem from="1749285188869" duration="259000" />
       <workItem from="1749295406357" duration="2003000" />
       <workItem from="1749531596394" duration="2470000" />
-      <workItem from="1749707644576" duration="2223000" />
+      <workItem from="1749707644576" duration="2933000" />
     </task>
     <servers />
   </component>
