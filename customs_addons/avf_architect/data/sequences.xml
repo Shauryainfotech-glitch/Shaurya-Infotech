@@ -93,6 +93,15 @@
             <field name="number_increment">1</field>
         </record>
 
+        <record id="seq_architect_rate_item" model="ir.sequence">
+            <field name="name">Architect Rate item</field>
+            <field name="code">architect.rate.item</field>
+            <field name="prefix">ITEM-</field>
+            <field name="padding">5</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
         <record id="seq_architect_rate_category" model="ir.sequence">
             <field name="name">Architect Rate Category</field>
             <field name="code">architect.rate.category</field>

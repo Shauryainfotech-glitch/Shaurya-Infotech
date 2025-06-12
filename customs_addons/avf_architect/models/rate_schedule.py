@@ -109,7 +109,15 @@ class ArchitectRateItem(models.Model):
     _order = 'item_code'
 
     name = fields.Char(string='Item Description', required=True)
-    item_code = fields.Char(string='Item Code', required=True)
+    #code = fields.Char(string='Item Code', required=True)
+    code = fields.Char(
+        string='Item Code',
+        required=True,
+        copy=False,
+        readonly=True,
+        tracking=True,
+        default=lambda self: self.env['ir.sequence'].next_by_code('architect.rate.item') or 'new'
+    )
     rate_schedule_id = fields.Many2one('architect.rate.schedule', string='Rate Schedule',
                                        required=True, ondelete='cascade')
 

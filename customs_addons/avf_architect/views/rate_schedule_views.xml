@@ -51,7 +51,7 @@
                         <page string="Rate Items" name="rate_items">
                             <field name="rate_item_ids">
                                 <list editable="bottom">
-                                    <field name="item_code"/>
+                                    <field name="code"/>
                                     <field name="name"/>
                                     <field name="category_id"/>
                                     <field name="work_type"/>
@@ -128,7 +128,7 @@
                             <field name="name" placeholder="Item Description"/>
                         </h1>
                         <h2>
-                            <field name="item_code" placeholder="Item Code"/>
+                            <field name="code" placeholder="Item Code"/>
                         </h2>
                     </div>
                     <group>
