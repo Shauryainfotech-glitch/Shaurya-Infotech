@@ -11,7 +11,15 @@ class ArchitectRateSchedule(models.Model):
     _order = 'effective_date desc, state_id, district'
 
     name = fields.Char(string='Rate Schedule Name', required=True, tracking=True)
-    code = fields.Char(string='Schedule Code', required=True)
+    #code = fields.Char(string='Schedule Code', required=True)
+    code = fields.Char(
+        string='Schedule Code',
+        required=True,
+        copy=False,
+        readonly=True,
+        tracking=True,
+        default=lambda self: self.env['ir.sequence'].next_by_code('architect.rate.schedule') or 'new'
+    )
     quality_rating = fields.Float(string="Quality Rating")
     schedule_type = fields.Selection([
         ('dsr', 'District Schedule of Rates (DSR)'),
