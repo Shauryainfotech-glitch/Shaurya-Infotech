@@ -5,13 +5,97 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bb8d3834-a9d5-46fe-88d0-5604683b5087" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/models/ai_prompt_template.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/static/src/xml/templates.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/views/menu_views.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/wizards/report_generator_views.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/__manifest__.py" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/__manifest__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/controllers/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/controllers/dashboard.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/controllers/main.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/data/ai_analysis_data.xml" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/data/ai_analysis_data.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/data/sequence.xml" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/data/sequence.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/models/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/models/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/models/ai_analysis.py" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/models/ai_analysis.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/models/dashboard.py" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/models/dashboard.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/models/dashboard_alias.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/models/day_plan.py" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/models/day_plan.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/models/day_plan_task.py" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/models/day_plan_task.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/models/work_report.py" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/models/work_report.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/report/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/report/dashboard_pdf_report.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/report/dashboard_report.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/report/dashboard_report.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/report/dashboard_report_templates.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/security/ir.model.access.csv" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/security/ir.model.access.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/security/record_rules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/security/record_rules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/security/security_groups.xml" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/security/security_groups.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/static/lib/chart.js/chart.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/static/src/client_action_templates.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/static/src/components/dashboard/dashboard.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/static/src/components/dashboard/productivity_dashboard.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/static/src/components/dashboard/productivity_dashboard.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/static/src/components/dashboard/productivity_dashboard_action.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/static/src/components/dashboard_chart.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/static/src/dashboard.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/static/src/dashboard.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/static/src/dashboard_client_action.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/static/src/dashboard_client_action.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/static/src/dashboard_new.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/static/src/day_plan_templates.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/static/src/guaranteed_chart_dashboard.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/static/src/guaranteed_chart_dashboard.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/static/src/js/dashboard.js" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/static/src/js/dashboard.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/static/src/js/dashboard.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/static/src/js/dashboard_main.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/static/src/new_client_action_templates.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/static/src/new_dashboard_client_action.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/static/src/views/day_plan_calendar/day_plan_calendar.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/static/src/views/day_plan_calendar/day_plan_calendar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/static/src/views/day_plan_calendar/day_plan_calendar_controller.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/static/src/views/day_plan_calendar/day_plan_calendar_model.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/static/src/views/day_plan_calendar/day_plan_calendar_renderer.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/static/src/views/day_plan_calendar/day_plan_calendar_view.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/views/ai_analysis_views.xml" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/views/ai_analysis_views.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/views/assets.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/views/assets_bundle.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/views/dashboard_actions.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/views/dashboard_assets.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/views/dashboard_menu.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/views/dashboard_templates.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/views/dashboard_views.xml" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/views/dashboard_views.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/views/day_plan_task_views.xml" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/views/day_plan_task_views.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/views/day_plan_views.xml" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/views/day_plan_views.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/views/dynamic_dashboard_views.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/views/enhanced_dashboard_views.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/views/enhanced_plan_views.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/views/new_dashboard_assets.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/views/new_plan_views.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/views/plan_creation_views.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/views/wizard_views.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/views/work_report_views.xml" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/views/work_report_views.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/wizard/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/wizard/ai_config.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/wizard/report_generator.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/wizard/report_review.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/wizards/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/wizards/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/wizards/report_generator.py" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/wizards/report_generator.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/wizards/report_review.py" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/hooks.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+        <option value="JavaScript File" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/customs/addons/custom/addons" />
@@ -111,7 +195,7 @@
       <workItem from="1749285188869" duration="259000" />
       <workItem from="1749295406357" duration="2003000" />
       <workItem from="1749531596394" duration="2470000" />
-      <workItem from="1749707644576" duration="6681000" />
+      <workItem from="1749707644576" duration="8597000" />
     </task>
     <servers />
   </component>
