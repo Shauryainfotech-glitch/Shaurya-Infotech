@@ -64,6 +64,7 @@
         <record id="formio_chat_message_tree" model="ir.ui.view">
             <field name="name">formio.chat.message.tree</field>
             <field name="model">formio.chat.message</field>
+            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree>
                     <field name="create_date"/>
