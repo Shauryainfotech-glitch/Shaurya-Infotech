@@ -13,8 +13,14 @@ class ArchitectDPR(models.Model):
     _order = 'create_date desc'
 
     name = fields.Char(string='DPR Title', required=True, tracking=True)
-    code = fields.Char(string='DPR Code', required=True, copy=False)
-   # code = fields.Char(string='DPR Code', readonly=True, copy=False, default='New')
+    #code = fields.Char(string='DPR Code', required=True, copy=False)
+    code = fields.Char(
+        string='DPR Code',
+        required=True,
+        copy=False,
+        readonly=True,
+        default=lambda self: self.env['ir.sequence'].next_by_code('architect.dpr') or 'New'
+    )
     project_id = fields.Many2one('architect.project', string='Project', required=True, tracking=True)
 
     # DPR Type and Classification
@@ -98,10 +104,10 @@ class ArchitectDPR(models.Model):
     approval_date = fields.Date(string='Approval Date')
 
     @api.model
-    def create(self, vals):
-        if 'code' not in vals or not vals['code']:
-            vals['code'] = self.env['ir.sequence'].next_by_code('architect.dpr') or 'New'
-        return super().create(vals)
+    # def create(self, vals):
+    #     if 'code' not in vals or not vals['code']:
+    #         vals['code'] = self.env['ir.sequence'].next_by_code('architect.dpr') or 'New'
+    #     return super().create(vals)
 
 
 
