@@ -6,7 +6,11 @@ from odoo import fields, models
 
 FORMIO_VIEW_TYPES = [
     ('formio_builder', 'formio builder'),
-    ('formio_form', 'formio form')
+    ('formio_form', 'formio form'),
+    ('tree', 'Tree'),
+    ('kanban', 'Kanban'),
+    ('form', 'Form'),
+    ('search', 'Search'),
 ]
 
 
