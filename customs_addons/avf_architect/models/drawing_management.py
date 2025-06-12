@@ -10,7 +10,15 @@ class ArchitectDrawing(models.Model):
     _order = 'create_date desc'
 
     name = fields.Char(string='Drawing Title', required=True, tracking=True)
-    code = fields.Char(string='Drawing Number', required=True, copy=False, tracking=True)
+    #code = fields.Char(string='Drawing Number', required=True, copy=False, tracking=True)
+    code = fields.Char(
+        string='Drawing Number',
+        required=True,
+        copy=False,
+        readonly=True,
+        tracking=True,
+        default=lambda self: self.env['ir.sequence'].next_by_code('architect.drawing') or 'New'
+    )
     project_id = fields.Many2one('architect.project', string='Project', required=True)
     company_id = fields.Many2one('res.company', string='Company', required=True, 
                                 default=lambda self: self.env.company)
@@ -108,13 +116,13 @@ class ArchitectDrawing(models.Model):
     ]
 
     @api.model_create_multi
-    def create(self, vals_list):
-        for vals in vals_list:
-            if 'code' not in vals or not vals['code']:
-                vals['code'] = self.env['ir.sequence'].next_by_code('architect.drawing')
-            if not vals.get('access_token'):
-                vals['access_token'] = self._generate_access_token()
-        return super().create(vals_list)
+    # def create(self, vals_list):
+    #     for vals in vals_list:
+    #         if 'code' not in vals or not vals['code']:
+    #             vals['code'] = self.env['ir.sequence'].next_by_code('architect.drawing')
+    #         if not vals.get('access_token'):
+    #             vals['access_token'] = self._generate_access_token()
+    #     return super().create(vals_list)
     
     def _generate_access_token(self):
         return self.env['ir.config_parameter'].sudo().get_param(

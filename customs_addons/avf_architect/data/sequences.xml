@@ -16,7 +16,7 @@
             <field name="name">Architect Drawing</field>
             <field name="code">architect.drawing</field>
             <field name="prefix">DRW-</field>
-            <field name="padding">4</field>
+            <field name="padding">5</field>
             <field name="number_next">1</field>
             <field name="number_increment">1</field>
         </record>
