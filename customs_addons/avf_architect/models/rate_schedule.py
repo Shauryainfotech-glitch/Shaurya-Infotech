@@ -308,10 +308,10 @@ class ArchitectEstimation(models.Model):
             estimation.total_amount = estimation.total_before_tax + estimation.tax_amount
 
     @api.model
-    def create(self, vals):
-        if 'code' not in vals or not vals['code']:
-            vals['code'] = self.env['ir.sequence'].next_by_code('architect.estimation') or 'New'
-        return super().create(vals)
+    # def create(self, vals):
+    #     if 'code' not in vals or not vals['code']:
+    #         vals['code'] = self.env['ir.sequence'].next_by_code('architect.estimation') or 'New'
+    #     return super().create(vals)
 
     def action_submit(self):
         self.state = 'submitted'
