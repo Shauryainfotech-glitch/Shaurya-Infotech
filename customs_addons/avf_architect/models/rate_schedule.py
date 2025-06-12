@@ -224,7 +224,16 @@ class ArchitectRateSubcategory(models.Model):
     _order = 'category_id, sequence, name'
 
     name = fields.Char(string='Subcategory Name', required=True)
-    code = fields.Char(string='Subcategory Code', required=True)
+    #code = fields.Char(string='Subcategory Code', required=True)
+    code = fields.Char(
+        string='Subcategory Code',
+        required=True,
+        copy=False,
+        readonly=True,
+        tracking=True,
+        default=lambda self: self.env['ir.sequence'].next_by_code('architect.rate.subcategory') or 'new'
+    )
+
     category_id = fields.Many2one('architect.rate.category', string='Category', required=True)
     description = fields.Text(string='Description')
     sequence = fields.Integer(string='Sequence', default=10)
@@ -239,7 +248,16 @@ class ArchitectEstimation(models.Model):
     _order = 'create_date desc'
 
     name = fields.Char(string='Estimation Name', required=True, tracking=True)
-    code = fields.Char(string='Estimation Code', required=True, copy=False)
+    #code = fields.Char(string='Estimation Code', required=True, copy=False)
+    code = fields.Char(
+        string='Estimation Code',
+        required=True,
+        copy=False,
+        readonly=True,
+        tracking=True,
+        default=lambda self: self.env['ir.sequence'].next_by_code('architect.estimation') or 'new'
+    )
+
     project_id = fields.Many2one('architect.project', string='Project', required=True)
 
     rate_schedule_id = fields.Many2one('architect.rate.schedule', string='Rate Schedule', required=True)
