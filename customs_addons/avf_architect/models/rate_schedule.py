@@ -68,10 +68,10 @@ class ArchitectRateSchedule(models.Model):
             schedule.item_count = len(schedule.rate_item_ids)
 
     @api.model
-    def create(self, vals):
-        if 'code' not in vals or not vals['code']:
-            vals['code'] = self.env['ir.sequence'].next_by_code('architect.rate.schedule') or 'New'
-        return super().create(vals)
+    # def create(self, vals):
+    #     if 'code' not in vals or not vals['code']:
+    #         vals['code'] = self.env['ir.sequence'].next_by_code('architect.rate.schedule') or 'New'
+    #     return super().create(vals)
 
     def action_publish(self):
         self.state = 'published'
@@ -200,7 +200,16 @@ class ArchitectRateCategory(models.Model):
     _order = 'sequence, name'
 
     name = fields.Char(string='Category Name', required=True)
-    code = fields.Char(string='Category Code', required=True)
+    #code = fields.Char(string='Category Code', required=True)
+    code = fields.Char(
+        string='Category Code',
+        required=True,
+        copy=False,
+        readonly=True,
+        tracking=True,
+        default=lambda self: self.env['ir.sequence'].next_by_code('architect.rate.category') or 'new'
+    )
+
     description = fields.Text(string='Description')
     sequence = fields.Integer(string='Sequence', default=10)
     parent_id = fields.Many2one('architect.rate.category', string='Parent Category')
