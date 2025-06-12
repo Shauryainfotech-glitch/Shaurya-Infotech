@@ -5,6 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bb8d3834-a9d5-46fe-88d0-5604683b5087" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/__manifest__.py" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/__manifest__.py" afterDir="false" />
@@ -130,7 +131,7 @@
       <workItem from="1749270524224" duration="8221000" />
       <workItem from="1749285188869" duration="259000" />
       <workItem from="1749295406357" duration="2003000" />
-      <workItem from="1749531596394" duration="785000" />
+      <workItem from="1749531596394" duration="2470000" />
     </task>
     <servers />
   </component>
