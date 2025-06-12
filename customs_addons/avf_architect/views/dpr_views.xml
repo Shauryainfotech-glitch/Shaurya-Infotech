@@ -40,6 +40,7 @@
                             <field name="classification"/>
                             <field name="department"/>
                             <field name="scheme_name"/>
+                            <field name="location"/>
                         </group>
                         <group>
                             <field name="implementation_period"/>
