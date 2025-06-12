@@ -5,7 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bb8d3834-a9d5-46fe-88d0-5604683b5087" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/__manifest__.py" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/custom/addons/day_plan_work_report_ai/__manifest__.py" afterDir="false" />
@@ -35,7 +34,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/customs/addons/custom/addons" />
     <option name="ROOT_SYNC" value="DONT_SYNC" />
   </component>
   <component name="ProjectColorInfo">{
@@ -52,7 +51,7 @@
     "Python.odoo-bin.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "Rushikesh__Day-work-report",
+    "git-widget-placeholder": "day__work__report",
     "ignore.virus.scanning.warn.message": "true",
     "last_opened_file_path": "C:/Users/Admin/Desktop/Project",
     "node.js.detected.package.eslint": "true",
@@ -132,7 +131,7 @@
       <workItem from="1749285188869" duration="259000" />
       <workItem from="1749295406357" duration="2003000" />
       <workItem from="1749531596394" duration="2470000" />
-      <workItem from="1749707644576" duration="1459000" />
+      <workItem from="1749707644576" duration="1766000" />
     </task>
     <servers />
   </component>
