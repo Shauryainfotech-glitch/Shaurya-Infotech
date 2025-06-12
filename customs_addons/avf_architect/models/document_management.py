@@ -38,7 +38,16 @@ class ArchitectDocument(models.Model):
     file_size = fields.Float(string='File Size (bytes)', compute='_compute_file_info', store=True)
     file_type = fields.Char(string='File Type', compute='_compute_file_info', store=True)
     mime_type = fields.Char(string='MIME Type', compute='_compute_file_info', store=True)
-    code = fields.Char(string="Document Code")
+    #code = fields.Char(string="Document Code")
+    code = fields.Char(
+        string='Document Code',
+        required=True,
+        copy=False,
+        readonly=True,
+        tracking=True,
+        default=lambda self: self.env['ir.sequence'].next_by_code('architect.document') or 'New'
+    )
+
     document_file = fields.Binary(string="Document File", attachment=True)
     document_date = fields.Date(string="Document Date")
     expiry_date = fields.Date(string="Expiry Date")
@@ -224,7 +233,15 @@ class ArchitectDocumentCategory(models.Model):
     _order = 'sequence, name'
 
     name = fields.Char(string='Category Name', required=True)
-    code = fields.Char(string='Category Code')
+    #code = fields.Char(string='Category Code')
+    code = fields.Char(
+        string='Category Code',
+        required=True,
+        copy=False,
+        readonly=True,
+        tracking=True,
+        default=lambda self: self.env['ir.sequence'].next_by_code('architect.document.category') or 'New'
+    )
     description = fields.Text(string='Description')
     sequence = fields.Integer(string='Sequence', default=10)
     parent_id = fields.Many2one('architect.document.category', string='Parent Category')
