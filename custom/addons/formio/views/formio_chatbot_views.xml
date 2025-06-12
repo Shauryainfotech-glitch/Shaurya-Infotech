@@ -105,7 +105,7 @@
                     <group expand="0" string="Group By">
                         <filter string="Form" name="group_by_form" context="{'group_by': 'form_id'}"/>
                         <filter string="Sender" name="group_by_sender" context="{'group_by': 'sender'}"/>
-                        <filter string="Date" name="group_by_date" context="{'group_by': 'create_date:day'}"/>
+                        <filter string="Date" name="group_by_date" context="{'group__by': 'create_date:day'}"/>
                     </group>
                 </search>
             </field>
@@ -126,4 +126,4 @@
                   action="action_formio_chat_message"
                   sequence="50"/>
     </data>
-</odoo> 
+</odoo>
