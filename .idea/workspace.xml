@@ -5,15 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bb8d3834-a9d5-46fe-88d0-5604683b5087" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/customs/addons/day_plan_work_report_ai/controllers/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/customs/addons/day_plan_work_report_ai/controllers/dashboard_controller.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/customs/addons/day_plan_work_report_ai/controllers/main.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/customs/addons/day_plan_work_report_ai/controllers/report_controller.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/customs/addons/day_plan_work_report_ai/report/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/customs/addons/day_plan_work_report_ai/report/dashboard_pdf_report.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/customs/addons/day_plan_work_report_ai/report/dashboard_report.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/customs/addons/day_plan_work_report_ai/report/dashboard_report.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/customs/addons/day_plan_work_report_ai/report/dashboard_report_templates.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/customs/addons/day_plan_work_report_ai/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/day_plan_work_report_ai/__init__.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -127,7 +118,7 @@
       <workItem from="1749285188869" duration="259000" />
       <workItem from="1749295406357" duration="2003000" />
       <workItem from="1749531596394" duration="2470000" />
-      <workItem from="1749707644576" duration="13316000" />
+      <workItem from="1749707644576" duration="13476000" />
     </task>
     <servers />
   </component>

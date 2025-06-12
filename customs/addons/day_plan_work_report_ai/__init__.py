@@ -2,9 +2,14 @@ from . import models
 from . import wizards
 from . import controllers
 from . import report
-from . import hooks
 
-def post_init_hook(cr, registry):
-    """Post-installation hook"""
-    from . import hooks
-    hooks.post_init_hook(cr, registry)
+
+def post_init_hook(env):
+    """Post-installation hook for Odoo 18.0"""
+    import logging
+    _logger = logging.getLogger(__name__)
+
+    try:
+        _logger.info("Day Plan module post-installation hook completed")
+    except Exception as e:
+        _logger.error("Error in post-installation hook: %s", str(e))
