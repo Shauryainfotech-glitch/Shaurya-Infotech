@@ -45,9 +45,9 @@
                     <page string="Chatbot Settings" name="chatbot_settings">
                         <group>
                             <field name="enable_ai_chat"/>
-                            <field name="ai_model" attrs="{'invisible': [('enable_ai_chat', '=', False)]}"/>
-                            <field name="ai_api_key" password="True" attrs="{'invisible': [('enable_ai_chat', '=', False)], 'required': [('enable_ai_chat', '=', True)]}"/>
-                            <field name="chat_prompt" attrs="{'invisible': [('enable_ai_chat', '=', False)]}"/>
+                            <field name="ai_model" invisible="not enable_ai_chat"/>
+                            <field name="ai_api_key" password="True" invisible="not enable_ai_chat" required="enable_ai_chat"/>
+                            <field name="chat_prompt" invisible="not enable_ai_chat"/>
                         </group>
                     </page>
                 </xpath>
