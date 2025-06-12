@@ -1,5 +1,7 @@
 from . import models
 from . import wizards
+from . import controllers
+from . import report
 from . import hooks
 
 def post_init_hook(cr, registry):

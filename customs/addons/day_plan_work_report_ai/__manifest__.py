@@ -27,6 +27,10 @@
 
         # Wizards
         "wizards/report_generator_views.xml",
+
+        # Reports
+        "report/dashboard_report.xml",
+        "report/dashboard_report_templates.xml",
     ],
     "assets": {
         "web.assets_backend": [
@@ -52,5 +56,7 @@
     * Comprehensive analysis types (daily, weekly, monthly)
     * Intelligent prompt engineering
     * Actionable metrics generation
+    * PDF report generation
+    * Web API endpoints for dashboard data
     """
 }

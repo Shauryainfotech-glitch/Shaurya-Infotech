@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_dashboard">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div class="oe_structure"/>
+
+                        <!-- Header -->
+                        <div class="row">
+                            <div class="col-12">
+                                <h2 class="text-center">Productivity Dashboard Report</h2>
+                                <p class="text-center">
+                                    <span>Report Period: </span>
+                                    <span t-field="doc.date_from"/>
+                                    <span> to </span>
+                                    <span t-field="doc.date_to"/>
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- KPIs Section -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h3>Key Performance Indicators</h3>
+                                <table class="table table-bordered">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Metric</th>
+                                            <th>Value</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Total Plans</td>
+                                            <td t-field="doc.total_plans"/>
+                                        </tr>
+                                        <tr>
+                                            <td>Completion Rate</td>
+                                            <td>
+                                                <span t-field="doc.completion_rate"/>%
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Average Productivity</td>
+                                            <td t-field="doc.avg_productivity"/>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Recent Activity -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h3>Recent Plans</h3>
+                                <t t-set="recent_plans" t-value="request.env['day.plan'].search([('date', '&gt;=', doc.date_from), ('date', '&lt;=', doc.date_to)], limit=10)"/>
+                                <t t-if="recent_plans">
+                                    <table class="table table-striped">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Plan Title</th>
+                                                <th>Employee</th>
+                                                <th>Completion</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr t-foreach="recent_plans" t-as="plan">
+                                                <td t-field="plan.date"/>
+                                                <td t-field="plan.name"/>
+                                                <td t-field="plan.employee_id.name"/>
+                                                <td>
+                                                    <span t-field="plan.completion_ratio"/>%
+                                                </td>
+                                                <td>
+                                                    <span class="badge"
+                                                          t-attf-class="badge-#{plan.state == 'completed' and 'success' or plan.state == 'active' and 'primary' or 'secondary'}">
+                                                        <t t-esc="plan.state.title()"/>
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </t>
+                                <t t-else="">
+                                    <p class="text-muted">No plans found for the selected period.</p>
+                                </t>
+                            </div>
+                        </div>
+
+                        <!-- Footer -->
+                        <div class="row mt-5">
+                            <div class="col-12 text-center">
+                                <small class="text-muted">
+                                    Generated on <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M:%S')"/>
+                                    by Day Plan &amp; Work Report AI System
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="oe_structure"/>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <!-- Dashboard Web Template for Controller -->
+    <template id="dashboard_template" name="Dashboard Web View">
+        <t t-call="web.layout">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <h1>Productivity Dashboard</h1>
+                        <div id="dashboard_content">
+                            <!-- Dashboard content will be loaded here via JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>
