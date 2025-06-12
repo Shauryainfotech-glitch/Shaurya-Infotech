@@ -1,55 +1,120 @@
-/* Dashboard Container Styling */
+/* Dashboard Container Styling - Simplified Version */
 .o_productivity_dashboard_container {
     padding: 20px;
+    background-color: #f8f9fc;
+    min-height: 100vh;
 }
 
 .o_productivity_dashboard_header {
     margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e3e6f0;
 }
 
-.o_productivity_dashboard_content .card {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    border-radius: 8px;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    margin-bottom: 15px;
-    transition: transform 0.3s, box-shadow 0.3s;
-}
-
-.o_productivity_dashboard_content .card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.o_productivity_dashboard_content .card-body {
-    padding: 20px;
-}
-
-.o_productivity_dashboard_content .card h2 {
-    font-size: 24px;
+.o_productivity_dashboard_header h1 {
+    color: #4e73df;
     font-weight: 600;
     margin-bottom: 5px;
 }
 
-.o_productivity_dashboard_content .card-title {
-    font-size: 14px;
-    color: #6c757d;
-    margin-bottom: 10px;
+/* Enhanced Card Styling */
+.o_productivity_dashboard_content .card {
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+    border-radius: 8px;
+    border: none;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+    background: #ffffff;
 }
 
-/* Progress bar styling */
+.o_productivity_dashboard_content .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0.25rem 2rem 0 rgba(58, 59, 69, 0.2);
+}
+
+.o_productivity_dashboard_content .card-body {
+    padding: 24px;
+}
+
+/* KPI Card Variations */
+.o_productivity_dashboard_content .card.border-left-primary {
+    border-left: 4px solid #4e73df;
+}
+
+.o_productivity_dashboard_content .card.border-left-success {
+    border-left: 4px solid #1cc88a;
+}
+
+.o_productivity_dashboard_content .card.border-left-warning {
+    border-left: 4px solid #f6c23e;
+}
+
+.o_productivity_dashboard_content .card.border-left-info {
+    border-left: 4px solid #36b9cc;
+}
+
+/* Typography Improvements */
+.o_productivity_dashboard_content .card h2 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #5a5c69;
+}
+
+.o_productivity_dashboard_content .card-title {
+    font-size: 0.875rem;
+    color: #858796;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.o_productivity_dashboard_content .card-subtitle {
+    font-size: 0.75rem;
+    color: #6c757d;
+    margin-top: 5px;
+}
+
+/* Better Progress Bar Styling */
 .o_productivity_dashboard_content .progress {
-    background-color: #e9ecef;
+    background-color: #eaecf4;
+    border-radius: 10rem;
+    height: 6px;
+    margin-top: 10px;
 }
 
 .o_productivity_dashboard_content .progress-bar {
-    background-color: #4CAF50;
+    background-color: #4e73df;
+    border-radius: 10rem;
+    transition: width 0.6s ease;
 }
 
-/* Attention items styling */
+.o_productivity_dashboard_content .progress-bar.bg-success {
+    background-color: #1cc88a;
+}
+
+.o_productivity_dashboard_content .progress-bar.bg-warning {
+    background-color: #f6c23e;
+}
+
+.o_productivity_dashboard_content .progress-bar.bg-danger {
+    background-color: #e74a3b;
+}
+
+/* Improved List Group Styling */
+.o_productivity_dashboard_content .list-group {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
 .o_productivity_dashboard_content .list-group-item {
     border-left: none;
     border-right: none;
-    padding: 12px 20px;
+    padding: 15px 20px;
+    background-color: #ffffff;
+    border-color: #e3e6f0;
+    transition: all 0.2s ease;
 }
 
 .o_productivity_dashboard_content .list-group-item:first-child {
@@ -60,23 +125,167 @@
     border-bottom: none;
 }
 
-/* Responsive adjustments */
-@media (max-width: 767px) {
-    .o_productivity_dashboard_content .row > div {
-        margin-bottom: 15px;
+.o_productivity_dashboard_content .list-group-item:hover {
+    background-color: #f8f9fc;
+    transform: translateX(2px);
+    border-left: 3px solid #4e73df;
+    padding-left: 17px;
+}
+
+/* Enhanced Loading Spinner */
+.o_productivity_loading {
+    height: 350px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff;
+    border-radius: 8px;
+    border: 1px solid #e3e6f0;
+}
+
+.o_productivity_loading .spinner-border {
+    width: 2.5rem;
+    height: 2.5rem;
+    color: #4e73df;
+    margin-bottom: 15px;
+}
+
+.o_productivity_loading .loading-text {
+    color: #858796;
+    font-size: 0.9rem;
+}
+
+/* Better Chart Containers */
+.o_productivity_dashboard_content .chart-container {
+    position: relative;
+    height: 320px;
+    padding: 15px;
+    background: #ffffff;
+    border-radius: 8px;
+    margin-top: 15px;
+}
+
+.o_productivity_dashboard_content canvas {
+    width: 100% !important;
+    height: 100% !important;
+    max-height: 300px;
+}
+
+/* Button Improvements */
+.o_productivity_dashboard_content .btn {
+    border-radius: 6px;
+    font-weight: 500;
+    padding: 8px 16px;
+    transition: all 0.2s ease;
+}
+
+.o_productivity_dashboard_content .btn-primary {
+    background-color: #4e73df;
+    border-color: #4e73df;
+}
+
+.o_productivity_dashboard_content .btn-primary:hover {
+    background-color: #2e59d9;
+    border-color: #2653d4;
+    transform: translateY(-1px);
+}
+
+/* Alert Styling */
+.o_productivity_dashboard_content .alert {
+    border-radius: 8px;
+    border: none;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+}
+
+.o_productivity_dashboard_content .alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.o_productivity_dashboard_content .alert-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .o_productivity_dashboard_content .card h2 {
+        font-size: 1.8rem;
     }
 }
 
-/* Loading spinner */
-.o_productivity_loading {
-    height: 300px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+@media (max-width: 992px) {
+    .o_productivity_dashboard_container {
+        padding: 15px;
+    }
+
+    .o_productivity_dashboard_content .chart-container {
+        height: 280px;
+    }
 }
 
-/* Chart containers */
-.o_productivity_dashboard_content canvas {
-    width: 100% !important;
-    height: 300px !important;
+@media (max-width: 767px) {
+    .o_productivity_dashboard_container {
+        padding: 10px;
+    }
+
+    .o_productivity_dashboard_content .row > div {
+        margin-bottom: 20px;
+    }
+
+    .o_productivity_dashboard_content .card h2 {
+        font-size: 1.5rem;
+    }
+
+    .o_productivity_dashboard_content .card-body {
+        padding: 18px;
+    }
+
+    .o_productivity_dashboard_content .chart-container {
+        height: 250px;
+        padding: 12px;
+    }
+
+    .o_productivity_dashboard_content .list-group-item {
+        padding: 12px 15px;
+    }
+}
+
+@media (max-width: 576px) {
+    .o_productivity_dashboard_container {
+        padding: 8px;
+    }
+
+    .o_productivity_dashboard_content .card h2 {
+        font-size: 1.3rem;
+    }
+
+    .o_productivity_dashboard_content .chart-container {
+        height: 220px;
+        padding: 10px;
+    }
+
+    .o_productivity_dashboard_content .btn {
+        font-size: 0.8rem;
+        padding: 6px 12px;
+    }
+}
+
+/* Utility Classes */
+.text-xs {
+    font-size: 0.75rem;
+}
+
+.font-weight-bold {
+    font-weight: 700;
+}
+
+.text-gray-800 {
+    color: #5a5c69;
+}
+
+.text-gray-300 {
+    color: #dddfeb;
 }

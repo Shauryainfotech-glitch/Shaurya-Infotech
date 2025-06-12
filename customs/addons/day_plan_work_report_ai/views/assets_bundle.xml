@@ -51,7 +51,6 @@
                 <!-- Include productivity dashboard XML template -->
                 <t t-call="day_plan_work_report_ai.ProductivityDashboard"/>
                 
-                
                 <!-- Main Dashboard Template -->
                 <t t-name="day_plan_work_report_ai.NewProductivityDashboard">
                     <div class="o_new_productivity_dashboard py-3">
@@ -85,101 +84,56 @@
                                     <div class="card bg-primary text-white">
                                         <div class="card-body">
                                             <h6 class="card-title">Total Plans</h6>
-                                            <h2 class="mb-0"><t t-esc="state.totalPlans"/></h2>
-                                            <small class="text-white-50"><t t-esc="state.plansChange"/> from last period</small>
+                                            <h2 class="mb-0" t-esc="state.totalPlans || 0"/>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="card bg-success text-white">
                                         <div class="card-body">
-                                            <h6 class="card-title">Completion Rate</h6>
-                                            <h2 class="mb-0"><t t-esc="state.completionRate"/>%</h2>
-                                            <small class="text-white-50">of tasks completed on time</small>
+                                            <h6 class="card-title">Completed Plans</h6>
+                                            <h2 class="mb-0" t-esc="state.completedPlans || 0"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="card bg-warning text-white">
+                                        <div class="card-body">
+                                            <h6 class="card-title">Plans Today</h6>
+                                            <h2 class="mb-0" t-esc="state.plansToday || 0"/>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="card bg-info text-white">
                                         <div class="card-body">
-                                            <h6 class="card-title">Avg. Productivity</h6>
-                                            <h2 class="mb-0"><t t-esc="state.productivityScore"/></h2>
-                                            <small class="text-white-50">based on AI analysis</small>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="card bg-warning text-dark">
-                                        <div class="card-body">
-                                            <h6 class="card-title">Attention Needed</h6>
-                                            <h2 class="mb-0"><t t-esc="state.attentionItems"/></h2>
-                                            <small class="text-dark-50">items require your attention</small>
+                                            <h6 class="card-title">Productivity Score</h6>
+                                            <h2 class="mb-0" t-esc="state.productivityScore || 0"/>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Charts -->
+                            <!-- Charts Section -->
                             <div class="row">
-                                <!-- Left Column -->
-                                <div class="col-md-8">
-                                    <!-- Productivity Trend -->
-                                    <div class="card mb-4">
-                                        <div class="card-header">
-                                            <h5 class="card-title mb-0">Productivity Trend</h5>
-                                        </div>
-                                        <div class="card-body">
-                                            <t t-if="state.chartData">
-                                                <DashboardChart data="state.chartData" type="'line'" style="'height: 300px;'"/>
-                                            </t>
-                                            <div t-else="" class="text-center py-4">
-                                                <p class="text-muted">No productivity data available</p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Task Distribution -->
+                                <div class="col-md-6 mb-4" t-if="state.chartData">
                                     <div class="card">
                                         <div class="card-header">
-                                            <h5 class="card-title mb-0">Task Distribution</h5>
+                                            <h5 class="card-title mb-0">Productivity Chart</h5>
                                         </div>
-                                        <div class="card-body">
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <t t-if="state.pieChartData">
-                                                        <DashboardChart data="state.pieChartData" type="'pie'" style="'height: 250px;'"/>
-                                                    </t>
-                                                    <div t-else="" class="text-center py-4">
-                                                        <p class="text-muted">No task status data available</p>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <t t-if="state.radarChartData">
-                                                        <DashboardChart data="state.radarChartData" type="'radar'" style="'height: 250px;'"/>
-                                                    </t>
-                                                    <div t-else="" class="text-center py-4">
-                                                        <p class="text-muted">No task priority data available</p>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                        <div class="card-body" style="height: 300px;">
+                                            <t t-component="DashboardChart" data="state.chartData" type="'line'"/>
                                         </div>
                                     </div>
                                 </div>
 
-                                <!-- Right Column -->
-                                <div class="col-md-4">
-                                    <!-- Productivity Overview -->
-                                    <div class="card mb-4">
+                                <div class="col-md-6 mb-4" t-if="state.pieChartData">
+                                    <div class="card">
                                         <div class="card-header">
-                                            <h5 class="card-title mb-0">Productivity Overview</h5>
+                                            <h5 class="card-title mb-0">Task Distribution</h5>
                                         </div>
-                                        <div class="card-body">
-                                            <t t-if="state.lineChartData">
-                                                <DashboardChart data="state.lineChartData" type="'bar'" style="'height: 250px;'"/>
-                                            </t>
-                                            <div t-else="" class="text-center py-4">
-                                                <p class="text-muted">No overview data available</p>
-                                            </div>
+                                        <div class="card-body" style="height: 300px;">
+                                            <t t-component="DashboardChart" data="state.pieChartData" type="'pie'"/>
                                         </div>
                                     </div>
                                 </div>
@@ -188,6 +142,57 @@
                     </div>
                 </t>
             </templates>
+        </template>
+
+        <!-- CSS Styles for Dashboard -->
+        <template id="dashboard_styles" name="Dashboard Styles" inherit_id="web.assets_common">
+            <xpath expr="." position="inside">
+                <style type="text/css">
+                    .o_guaranteed_chart_dashboard {
+                        background-color: #f8f9fc;
+                        min-height: 100vh;
+                    }
+
+                    .card {
+                        border: none;
+                        border-radius: 0.35rem;
+                        box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+                    }
+
+                    .border-left-primary {
+                        border-left: 0.25rem solid #4e73df;
+                    }
+
+                    .border-left-success {
+                        border-left: 0.25rem solid #1cc88a;
+                    }
+
+                    .border-left-info {
+                        border-left: 0.25rem solid #36b9cc;
+                    }
+
+                    .border-left-warning {
+                        border-left: 0.25rem solid #f6c23e;
+                    }
+
+                    .text-xs {
+                        font-size: 0.7rem;
+                    }
+
+                    .progress-sm {
+                        height: 0.5rem;
+                    }
+
+                    .chart-area, .chart-pie, .chart-bar {
+                        position: relative;
+                    }
+
+                    .chart-area canvas, .chart-pie canvas, .chart-bar canvas {
+                        width: 100% !important;
+                        height: 100% !important;
+                    }
+                </style>
+            </xpath>
         </template>
     </data>
 </odoo>
