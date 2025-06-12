@@ -6,7 +6,7 @@
             <field name="name">work.report.tree</field>
             <field name="model">work.report</field>
             <field name="arch" type="xml">
-                <tree string="Work Reports">
+                <list string="Work Reports">
                     <field name="sequence"/>
                     <field name="name"/>
                     <field name="date"/>
@@ -14,7 +14,7 @@
                     <field name="day_plan_id"/>
                     <field name="state"/>
                     <field name="self_productivity"/>
-                </tree>
+                </list>
             </field>
         </record>
 

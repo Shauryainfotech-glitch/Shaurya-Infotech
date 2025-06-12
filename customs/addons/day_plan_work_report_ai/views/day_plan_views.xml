@@ -6,7 +6,7 @@
             <field name="name">day.plan.tree</field>
             <field name="model">day.plan</field>
             <field name="arch" type="xml">
-                <tree string="Day Plans" decoration-success="state=='completed'" decoration-info="state=='active'">
+                <list string="Day Plans" decoration-success="state=='completed'" decoration-info="state=='active'">
                     <field name="sequence"/>
                     <field name="name"/>
                     <field name="date"/>
@@ -15,7 +15,7 @@
                     <field name="total_tasks"/>
                     <field name="tasks_completed"/>
                     <field name="completion_ratio" widget="percentage"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -74,14 +74,14 @@
                                     <field name="completion_ratio" widget="percentage"/>
                                 </group>
                                 <field name="task_ids">
-                                    <tree editable="bottom">
+                                    <list editable="bottom">
                                         <field name="sequence" widget="handle"/>
                                         <field name="name"/>
                                         <field name="status"/>
                                         <field name="priority"/>
                                         <field name="estimated_hours"/>
                                         <field name="progress" widget="percentage"/>
-                                    </tree>
+                                    </list>
                                 </field>
                             </page>
                         </notebook>

@@ -6,7 +6,7 @@
             <field name="name">ai.analysis.tree</field>
             <field name="model">ai.analysis</field>
             <field name="arch" type="xml">
-                <tree string="AI Analysis">
+                <list string="AI Analysis">
                     <field name="sequence"/>
                     <field name="name"/>
                     <field name="analysis_type"/>
@@ -15,7 +15,7 @@
                     <field name="efficiency_rating"/>
                     <field name="state"/>
                     <field name="create_date"/>
-                </tree>
+                </list>
             </field>
         </record>
 

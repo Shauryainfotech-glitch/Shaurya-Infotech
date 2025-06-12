@@ -6,7 +6,7 @@
             <field name="name">day.plan.task.tree</field>
             <field name="model">day.plan.task</field>
             <field name="arch" type="xml">
-                <tree string="Tasks" decoration-success="status=='done'" decoration-info="status=='in_progress'">
+                <list string="Tasks" decoration-success="status=='done'" decoration-info="status=='in_progress'">
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="day_plan_id"/>
@@ -17,7 +17,7 @@
                     <field name="actual_hours"/>
                     <field name="progress" widget="percentage"/>
                     <field name="deadline"/>
-                </tree>
+                </list>
             </field>
         </record>
 
