@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Parent menu root for the module -->
+        <menuitem
+            id="menu_day_plan_root"
+            name="Day Plan Work Report"
+            sequence="10"
+            groups="base.group_user"/>
+
+        <!-- Main Dashboard Menu - Using the consolidated dashboard with charts -->
+        <menuitem
+            id="menu_dashboard"
+            name="Advanced Dashboard"
+            parent="day_plan_work_report_ai.menu_day_plan_root"
+            action="day_plan_work_report_ai.action_guaranteed_chart_dashboard"
+            sequence="1"/>
+
+        <!-- Backup dashboard menu using original dashboard -->
+        <menuitem
+            id="menu_original_dashboard"
+            name="Original Dashboard"
+            parent="day_plan_work_report_ai.menu_day_plan_root"
+            action="day_plan_work_report_ai.action_advanced_dashboard"
+            sequence="2"/>
+
+        <!-- Remove the old dashboard menu if it exists -->
+        <delete id="menu_day_plan_dashboard" model="ir.ui.menu"/>
+    </data>
+</odoo>

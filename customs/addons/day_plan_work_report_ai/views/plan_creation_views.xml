@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Plan Creation Form View -->
+    <record id="view_day_plan_creation_form" model="ir.ui.view">
+        <field name="name">day.plan.creation.form</field>
+        <field name="model">day.plan</field>
+        <field name="arch" type="xml">
+            <form string="Create Day Plan" create="true" edit="true">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,completed,cancelled"/>
+                    <button name="action_start_plan" string="Start Plan" type="object" class="oe_highlight" invisible="state != 'draft'"/>
+                    <button name="action_complete_plan" string="Mark as Completed" type="object" class="oe_highlight" invisible="state != 'in_progress'"/>
+                    <button name="action_cancel_plan" string="Cancel" type="object" class="btn-secondary" invisible="state in ['completed', 'cancelled']"/>
+                </header>
+                <sheet>
+                    <!-- Hide system and related document fields -->
+                    <field name="id" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
+                    
+                    <!-- Explicitly hide related document fields -->
+                    <div class="d-none" invisible="1">
+                        <field name="message_follower_ids" invisible="1"/>
+                        <field name="activity_ids" invisible="1"/>
+                        <field name="message_ids" invisible="1"/>
+                    </div>
+                    
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Enter plan title" class="o_field_char"/>
+                        </h1>
+                        <div class="o_row">
+                            <field name="date" class="o_inline_field"/>
+                            <span class="o_field_widget o_inline_field">•</span>
+                            <field name="employee_id" class="o_inline_field"/>
+                        </div>
+                    </div>
+                    <notebook>
+                        <page string="Plan Details">
+                            <group>
+                                <group string="Time Tracking">
+                                    <field name="planned_start"/>
+                                    <field name="planned_end"/>
+                                    <field name="estimated_hours"/>
+                                </group>
+                                <group string="Goals &amp; Focus Areas">
+                                    <field name="main_goals" placeholder="What are your main goals for today?" nolabel="1"/>
+                                </group>
+                            </group>
+                            <group>
+                                <group string="Key Results" colspan="2">
+                                    <field name="key_results" placeholder="What key results do you want to achieve?" nolabel="1"/>
+                                </group>
+                                <group string="Focus Areas" colspan="2">
+                                    <field name="focus_areas" placeholder="What areas will you focus on today?" nolabel="1"/>
+                                </group>
+                                <group string="Potential Blockers" colspan="2">
+                                    <field name="potential_blockers" placeholder="List any potential blockers" nolabel="1"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Tasks">
+                            <div class="oe_button_box" name="button_box">
+                                <button name="action_view_tasks" string="Manage Tasks" type="object" 
+                                        class="oe_stat_button" icon="fa-tasks"/>
+                            </div>
+                            <group>
+                                <field name="total_tasks" string="Total Tasks"/>
+                                <field name="tasks_completed" string="Completed Tasks"/>
+                                <field name="completion_ratio" string="Completion Ratio"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" invisible="1"/>
+                    <field name="activity_ids" invisible="1"/>
+                    <field name="message_ids" invisible="1"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Task Form View -->
+    <record id="view_day_plan_task_form" model="ir.ui.view">
+        <field name="name">day.plan.task.form</field>
+        <field name="model">day.plan.task</field>
+        <field name="arch" type="xml">
+            <form string="Task">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="status"/>
+                        <field name="priority"/>
+                        <field name="estimated_hours"/>
+                        <field name="progress"/>
+                        <field name="day_plan_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Task List View -->
+    <record id="view_day_plan_task_list" model="ir.ui.view">
+        <field name="name">day.plan.task.list</field>
+        <field name="model">day.plan.task</field>
+        <field name="arch" type="xml">
+            <list string="Tasks" editable="bottom">
+                <field name="name"/>
+                <field name="status"/>
+                <field name="priority" widget="priority"/>
+                <field name="estimated_hours"/>
+                <field name="progress" widget="progressbar"/>
+                <field name="day_plan_id"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Plan Creation Action -->
+    <record id="action_day_plan_creation" model="ir.actions.act_window">
+        <field name="name">Create Plan</field>
+        <field name="res_model">day.plan</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_day_plan_creation_form"/>
+        <field name="target">current</field>
+        <field name="context">{'default_employee_id': uid, 'form_view_ref': 'day_plan_work_report_ai.view_day_plan_creation_form', 'form_view_initial_mode': 'edit', 'create': True, 'hide_chatter': True, 'hide_message': True}</field>
+        <field name="domain">[]</field>
+    </record>
+
+    <!-- Plan Creation Menu Item -->
+    <menuitem id="menu_day_plan_creation" 
+              name="Create Plan" 
+              parent="menu_day_plan_root" 
+              action="action_day_plan_creation"
+              sequence="2"
+              groups="day_plan_work_report_ai.group_user,day_plan_work_report_ai.group_manager,day_plan_work_report_ai.group_admin"/>
+</odoo>

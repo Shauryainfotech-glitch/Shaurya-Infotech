@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Enhanced List View for Day Plan -->
+    <record id="view_enhanced_day_plan_list" model="ir.ui.view">
+        <field name="name">enhanced.day.plan.list</field>
+        <field name="model">day.plan</field>
+        <field name="inherit_id" ref="day_plan_work_report_ai.view_day_plan_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="replace">
+                <list string="Day Plans" class="o_enhanced_day_plan_list">
+                    <control>
+                        <create string="New Plan" name="action_new_plan" class="btn-primary"/>
+                        <div class="o_list_buttons" name="buttons">
+                            <button name="action_import" string="Import" type="action" class="btn-secondary" icon="fa-download"/>
+                            <button name="action_export" string="Export" type="action" class="btn-secondary" icon="fa-upload"/>
+                            <div class="btn-group" role="group">
+                                <button name="action_kanban_view" type="action" class="btn btn-secondary" icon="fa-th-large" attrs="{'invisible': [('view_mode', '=', 'kanban')]}"/>
+                                <button name="action_list_view" type="action" class="btn btn-secondary" icon="fa-list-ul" attrs="{'invisible': [('view_mode', '!=', 'kanban')]}"/>
+                            </div>
+                        </div>
+                    </control>
+                    <field name="sequence" string="#" widget="handle"/>
+                    <field name="name" string="Title" widget="char_emphasize"/>
+                    <field name="date" string="Date" widget="date"/>
+                    <field name="employee_id" string="Owner" groups="hr.group_hr_user"/>
+                    <field name="priority" widget="priority" invisible="1"/>
+                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" string="Tags"/>
+                    <field name="completion_ratio" string="Progress" widget="progressbar" options="{'editable': true}"/>
+                    <field name="productivity_score" string="Score" widget="progressbar" options="{'editable': false, 'title': 'Productivity Score'}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,completed,cancelled" statusbar_colors='{"draft": "warning", "in_progress": "info", "completed": "success", "cancelled": "danger"}'/>
+                </list>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Enhanced Form View for Day Plan -->
+    <record id="view_enhanced_day_plan_form" model="ir.ui.view">
+        <field name="name">enhanced.day.plan.form</field>
+        <field name="model">day.plan</field>
+        <field name="inherit_id" ref="day_plan_work_report_ai.view_day_plan_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="replace">
+                <form string="Day Plan" class="o_enhanced_day_plan_form">
+                    <header>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,completed,cancelled" statusbar_colors='{"draft": "warning", "in_progress": "info", "completed": "success", "cancelled": "danger"}'/>
+                        <div class="o_form_buttons_view">
+                            <button name="action_start_plan" string="Start Plan" type="object" class="oe_highlight btn-primary" invisible="state != 'draft'" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                            <button name="action_complete_plan" string="Mark as Completed" type="object" class="oe_highlight btn-success" attrs="{'invisible': [('state', '!=', 'in_progress')]}"/>
+                            <button name="action_cancel_plan" string="Cancel" type="object" class="btn-secondary" attrs="{'invisible': ['|', ('state', '=', 'completed'), ('state', '=', 'cancelled')]}"/>
+                            <button name="action_duplicate_plan" string="Duplicate" type="object" class="btn-secondary" attrs="{'invisible': [('state', 'in', ['draft', 'cancelled'])]}"/>
+                            <button name="action_print_report" string="Print" type="object" class="btn-secondary" icon="fa-print"/>
+                            <button name="action_share" string="Share" type="action" class="btn-secondary" icon="fa-share-alt"/>
+                        </div>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_view_tasks" type="object" class="oe_stat_button" icon="fa-tasks">
+                                <field name="total_tasks" widget="statinfo" string="Tasks"/>
+                            </button>
+                            <button type="object" name="action_view_tasks" class="oe_stat_button" icon="fa-check-square-o">
+                                <field name="tasks_completed" widget="statinfo" string="Completed"/>
+                            </button>
+                            <button type="object" name="action_view_ai_insights" class="oe_stat_button" icon="fa-lightbulb-o">
+                                <field name="ai_insights_count" widget="statinfo" string="AI Insights"/>
+                            </button>
+                            <div class="oe_stat_button" icon="fa-clock-o">
+                                <field name="progress" widget="progressbar" nolabel="1" class="oe_inline" options="{'current_value': progress, 'max_value': 100, 'editable': true}"/>
+                            </div>
+                        </div>
+                        <div class="oe_title">
+                            <h1 class="d-flex flex-row align-items-center">
+                                <field name="priority" widget="priority" class="mr-2"/>
+                                <field name="name" placeholder="Enter plan title" class="o_field_char flex-grow-1"/>
+                            </h1>
+                            <div class="o_row">
+                                <field name="date" class="o_inline_field" required="1"/>
+                                <span class="o_field_widget o_inline_field">•</span>
+                                <field name="employee_id" class="o_inline_field" options="{'no_open': True}" groups="hr.group_hr_user"/>
+                                <span class="o_field_widget o_inline_field">•</span>
+                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" class="o_inline_field"/>
+                            </div>
+                        </div>
+                        <notebook>
+                            <page string="Overview" name="overview">
+                                <group>
+                                    <group string="Time Tracking">
+                                        <field name="planned_start" widget="float_time" options="{'format': 'hh:mm a'}"/>
+                                        <field name="actual_start" widget="float_time" options="{'format': 'hh:mm a'}" readonly="1"/>
+                                        <field name="estimated_hours" widget="float_time" options="{'format': 'hh:mm'}"/>
+                                    </group>
+                                    <group string="Progress">
+                                        <field name="planned_end" widget="float_time" options="{'format': 'hh:mm a'}"/>
+                                        <field name="actual_end" widget="float_time" options="{'format': 'hh:mm a'}" readonly="1"/>
+                                        <field name="actual_hours" widget="float_time" options="{'format': 'hh:mm'}" readonly="1"/>
+                                    </group>
+                                </group>
+                                <group>
+                                    <group string="Goals &amp; Focus Areas" colspan="2">
+                                        <field name="main_goals" placeholder="Enter main goals for the day" nolabel="1" class="o_field_text"/>
+                                        <field name="key_results" placeholder="Enter key results to achieve" nolabel="1" class="o_field_text"/>
+                                        <field name="focus_areas" placeholder="Enter focus areas" nolabel="1" class="o_field_text"/>
+                                        <field name="potential_blockers" placeholder="List any potential blockers" nolabel="1" class="o_field_text"/>
+                                    </group>
+                                </group>
+                            </page>
+                            
+                            <page string="Tasks" name="tasks">
+                                <field name="task_ids" context="{'default_day_plan_id': id}">
+                                    <list editable="bottom" create="1" delete="1" decoration-muted="state == 'cancelled'" decoration-success="state == 'completed'">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="name" required="1"/>
+                                        <field name="description" invisible="1"/>
+                                        <field name="priority" widget="priority" invisible="1"/>
+                                        <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,completed,cancelled"/>
+                                        <field name="assigned_to" options="{'no_open': True}"/>
+                                        <field name="planned_hours" widget="float_time" options="{'format': 'hh:mm'}"/>
+                                        <field name="progress" widget="progressbar" options="{'editable': true}"/>
+                                        <field name="deadline" widget="date"/>
+                                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                    </list>
+                                    <form>
+                                        <group>
+                                            <group>
+                                                <field name="name"/>
+                                                <field name="description" placeholder="Add task description..."/>
+                                                <field name="assigned_to"/>
+                                            </group>
+                                            <group>
+                                                <field name="planned_hours" widget="float_time" options="{'format': 'hh:mm'}"/>
+                                                <field name="progress" widget="progressbar" options="{'editable': true}"/>
+                                                <field name="deadline"/>
+                                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                            </group>
+                                        </group>
+                                    </form>
+                                </field>
+                            </page>
+                            
+                            <page string="Notes" name="notes">
+                                <field name="note" nolabel="1" class="o_field_text" placeholder="Add your notes here..."/>
+                            </page>
+                            
+                            <page string="AI Insights" name="ai_insights" attrs="{'invisible': [('ai_analysis_ids', '=', [])]}">
+                                <field name="ai_analysis_ids" nolabel="1">
+                                    <list>
+                                        <field name="create_date" string="Analysis Time"/>
+                                        <field name="productivity_score" widget="progressbar"/>
+                                        <field name="efficiency_rating" widget="percentage"/>
+                                        <field name="wellbeing_assessment" widget="percentage"/>
+                                    </list>
+                                    <form>
+                                        <group>
+                                            <group>
+                                                <field name="create_date" readonly="1"/>
+                                                <field name="productivity_score" widget="progressbar" options="{'editable': false}"/>
+                                                <field name="efficiency_rating" widget="percentage" options="{'editable': false}"/>
+                                                <field name="wellbeing_assessment" widget="percentage" options="{'editable': false}"/>
+                                            </group>
+                                            <group>
+                                                <field name="key_insights" widget="text" readonly="1" nolabel="1"/>
+                                                <field name="recommendations" widget="text" readonly="1" nolabel="1"/>
+                                                <field name="potential_risks" widget="text" readonly="1" nolabel="1"/>
+                                            </group>
+                                        </group>
+                                    </form>
+                                </field>
+                            </page>
+                            
+                            <page string="Activity" name="activity" groups="mail.group_mail_activity">
+                                <field name="activity_ids" nolabel="1">
+                                    <list>
+                                        <field name="activity_type_id"/>
+                                        <field name="summary"/>
+                                        <field name="user_id"/>
+                                        <field name="date_deadline"/>
+                                        <field name="note" invisible="1"/>
+                                    </list>
+                                </field>
+                                <div class="oe_chatter">
+                                    <field name="message_follower_ids" widget="mail_followers" groups="mail.group_mail_activity"/>
+                                    <field name="activity_ids" widget="mail_activity"/>
+                                    <field name="message_ids" widget="mail_thread"/>
+                                </div>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Kanban View for Day Plan -->
+    <record id="view_enhanced_day_plan_kanban" model="ir.ui.view">
+        <field name="name">enhanced.day.plan.kanban</field>
+        <field name="model">day.plan</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="employee_id" class="o_kanban_mobile o_kanban_ungrouped">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="o_kanban_record_top mb16" name="div_top">
+                                <div class="o_kanban_record_title">
+                                    <field name="name"/>
+                                </div>
+                                <div class="o_kanban_record_subtitle">
+                                    <field name="date" widget="date"/>
+                                    <field name="employee_id" invisible="1"/>
+                                    <field name="employee_id" widget="many2one_avatar_user" invisible="context.get('default_employee_id')"/>
+                                </div>
+                            </div>
+                            <div class="o_kanban_record_bottom">
+                                <div class="o_kanban_record_bottom_left">
+                                    <field name="priority" widget="priority"/>
+                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                </div>
+                                <div class="o_kanban_record_bottom_right">
+                                    <field name="progress" widget="progressbar" options="{'editable': false}" class="o_kanban_counter_progress"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Actions -->
+    <record id="action_enhanced_day_plan" model="ir.actions.act_window">
+        <field name="name">Enhanced Day Plans</field>
+        <field name="res_model">day.plan</field>
+        <field name="view_mode">kanban,list,form,calendar,pivot,graph</field>
+        <field name="context">{'search_default_my_plans': 1, 'default_employee_id': uid}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first day plan
+            </p>
+            <p>
+                Plan your day, track your tasks, and improve your productivity with our enhanced day planning system.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem id="menu_enhanced_day_plan_root"
+              name="Enhanced Planning"
+              parent="day_plan_work_report_ai.menu_day_plan_root"
+              sequence="10"/>
+              
+    <menuitem id="menu_enhanced_day_plan"
+              name="My Plans"
+              parent="day_plan_work_report_ai.menu_enhanced_day_plan_root"
+              action="action_enhanced_day_plan"
+              sequence="10"/>
+              
+    <menuitem id="menu_enhanced_day_plan_team"
+              name="Team Plans"
+              parent="day_plan_work_report_ai.menu_enhanced_day_plan_root"
+              action="action_enhanced_day_plan"
+              groups="hr.group_hr_user"
+              sequence="20"/>
+</odoo>

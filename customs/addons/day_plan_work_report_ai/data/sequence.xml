@@ -1,31 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data noupdate="1">
-        <!-- Day Plan Sequence -->
-        <record id="seq_day_plan" model="ir.sequence">
-            <field name="name">Day Plan Sequence</field>
-            <field name="code">day.plan</field>
-            <field name="prefix">DP/</field>
-            <field name="padding">5</field>
-            <field name="company_id" eval="False"/>
-        </record>
-
-        <!-- Work Report Sequence -->
-        <record id="seq_work_report" model="ir.sequence">
-            <field name="name">Work Report Sequence</field>
-            <field name="code">work.report</field>
-            <field name="prefix">WR/</field>
-            <field name="padding">5</field>
-            <field name="company_id" eval="False"/>
-        </record>
-
-        <!-- AI Analysis Sequence -->
-        <record id="seq_ai_analysis" model="ir.sequence">
-            <field name="name">AI Analysis Sequence</field>
-            <field name="code">ai.analysis</field>
-            <field name="prefix">AI/</field>
-            <field name="padding">5</field>
-            <field name="company_id" eval="False"/>
-        </record>
-    </data>
+    <!-- Sequence for Day Plan References -->
+    <record id="sequence_day_plan" model="ir.sequence">
+        <field name="name">Day Plan Reference</field>
+        <field name="code">day.plan</field>
+        <field name="prefix">PLAN/</field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False"/>
+    </record>
 </odoo>

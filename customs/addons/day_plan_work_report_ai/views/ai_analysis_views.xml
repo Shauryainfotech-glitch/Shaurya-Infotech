@@ -1,89 +1,410 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
-        <!-- AI Analysis Tree View -->
-        <record id="view_ai_analysis_tree" model="ir.ui.view">
-            <field name="name">ai.analysis.tree</field>
-            <field name="model">ai.analysis</field>
-            <field name="arch" type="xml">
-                <list string="AI Analysis">
-                    <field name="sequence"/>
-                    <field name="name"/>
-                    <field name="analysis_type"/>
-                    <field name="employee_id"/>
-                    <field name="productivity_score"/>
-                    <field name="efficiency_rating"/>
-                    <field name="state"/>
-                    <field name="create_date"/>
-                </list>
-            </field>
-        </record>
-
-        <!-- AI Analysis Form View -->
-        <record id="view_ai_analysis_form" model="ir.ui.view">
-            <field name="name">ai.analysis.form</field>
-            <field name="model">ai.analysis</field>
-            <field name="arch" type="xml">
-                <form string="AI Analysis">
-                    <header>
-                        <button name="action_process_analysis" string="Process Analysis"
-                                type="object" class="oe_highlight" invisible="state != 'pending'"/>
-                        <field name="state" widget="statusbar"/>
-                    </header>
-                    <sheet>
-                        <div class="oe_title">
-                            <h1>
-                                <field name="name"/>
-                            </h1>
-                            <h2>
-                                <field name="sequence" readonly="1"/>
-                            </h2>
-                        </div>
+    <!-- Clean Form View for New AI Analysis -->
+    <!-- Completely standalone form view to replace document-related form -->
+    <record id="view_ai_analysis_clean_form" model="ir.ui.view">
+        <field name="name">ai.analysis.clean.form</field>
+        <field name="model">ai.analysis</field>
+        <field name="priority">9999</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <form string="AI Analysis" create="true" edit="true">
+                <header>
+                    <button name="action_process" string="Process Analysis" type="object" 
+                            class="oe_highlight"
+                            invisible="state not in ('draft', 'failed')"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,processing,done"/>
+                </header>
+                <sheet>
+                    <!-- Title -->
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Analysis Name"/>
+                        </h1>
+                    </div>
+                    <group>
                         <group>
-                            <group>
-                                <field name="analysis_type"/>
-                                <field name="employee_id"/>
-                                <field name="ai_provider"/>
-                            </group>
-                            <group>
-                                <field name="day_plan_id" invisible="analysis_type not in ('daily', 'weekly', 'monthly')"/>
-                                <field name="work_report_id" invisible="analysis_type != 'work_report'"/>
-                            </group>
+                            <field name="user_id"/>
+                            <field name="date"/>
+                            <field name="analysis_type"/>
+                            <field name="day_plan_id" 
+                                   invisible="analysis_type != 'daily'"
+                                   required="analysis_type == 'daily'"/>
+                            <field name="prompt_template_id" domain="[('analysis_type', '=', analysis_type)]"/>
                         </group>
                         <group>
-                            <group string="Scores">
-                                <field name="productivity_score"/>
-                                <field name="efficiency_rating"/>
-                                <field name="wellbeing_assessment"/>
-                            </group>
+                            <field name="provider"
+                                   readonly="state != 'draft'"/>
+                            <field name="model_version" readonly="1"/>
+                            <field name="productivity_score" widget="percentage"/>
+                            <field name="efficiency_rating" widget="percentage"/>
+                            <field name="wellbeing_assessment" widget="percentage"/>
+                            <field name="focus_score" widget="percentage"/>
+                            <field name="task_completion_rate" widget="percentage"
+                                   invisible="analysis_type not in ('daily', 'weekly', 'monthly')"/>
                         </group>
-                        <notebook>
-                            <page string="Analysis Results">
-                                <group>
-                                    <field name="summary"/>
-                                    <field name="strengths"/>
-                                    <field name="improvement_areas"/>
-                                    <field name="recommendations"/>
+                    </group>
+                    <notebook>
+                        <page string="Analysis Results">
+                            <group>
+                                <field name="summary" placeholder="Brief overview of the analysis..."/>
+                            </group>
+                            <group>
+                                <group string="Strengths">
+                                    <field name="strengths" nolabel="1" placeholder="Areas where performance was strong..."/>
                                 </group>
-                            </page>
-                            <page string="Technical" groups="base.group_system">
-                                <group>
-                                    <field name="raw_prompt"/>
-                                    <field name="raw_response"/>
-                                    <field name="error_message" invisible="not error_message"/>
+                                <group string="Areas for Improvement">
+                                    <field name="improvement_areas" nolabel="1" placeholder="Areas needing improvement..."/>
                                 </group>
-                            </page>
-                        </notebook>
-                    </sheet>
-                </form>
-            </field>
-        </record>
+                            </group>
+                            <group string="Recommendations">
+                                <field name="recommendations" nolabel="1" placeholder="Actionable suggestions for improvement..."/>
+                            </group>
+                        </page>
+                        <page string="Trend Analysis" invisible="analysis_type != 'trend'">
+                            <field name="trend_analysis" nolabel="1"/>
+                        </page>
+                        <page string="Time Allocation" invisible="time_allocation == False">
+                            <field name="time_allocation" widget="json_viewer"/>
+                        </page>
+                        <page string="Technical Information" groups="base.group_system">
+                            <group>
+                                <field name="raw_prompt"/>
+                                <field name="raw_response"/>
+                                <field name="error_message"
+                                       invisible="error_message == False"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <!-- Action for New AI Analysis (With Menu Bar) -->
+    <record id="action_new_ai_analysis" model="ir.actions.act_window">
+        <field name="name">New AI Analysis</field>
+        <field name="res_model">ai.analysis</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_ai_analysis_clean_form"/>
+        <field name="target">current</field>
+        <field name="context">{'hide_chatter': True, 'hide_message': True, 'form_view_initial_mode': 'edit'}</field>
+    </record>
 
-        <!-- AI Analysis Action -->
-        <record id="action_ai_analysis" model="ir.actions.act_window">
-            <field name="name">AI Analysis</field>
-            <field name="res_model">ai.analysis</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-    </data>
+    <!-- AI Analysis List View -->
+    <record id="view_ai_analysis_list" model="ir.ui.view">
+        <field name="name">ai.analysis.list</field>
+        <field name="model">ai.analysis</field>
+        <field name="arch" type="xml">
+            <list string="AI Analysis">
+                <header>
+                    <button name="%(action_new_ai_analysis)d" string="New" type="action" class="btn btn-primary"/>
+                </header>
+                <field name="name"/>
+                <field name="date"/>
+                <field name="analysis_type"/>
+                <field name="work_report_id"/>
+                <field name="day_plan_id"/>
+                <field name="provider"/>
+                <field name="state" widget="badge" 
+                       decoration-success="state == 'done'" 
+                       decoration-info="state == 'draft'" 
+                       decoration-warning="state == 'processing'"
+                       decoration-danger="state == 'failed'"/>
+                <field name="productivity_score" widget="progressbar" options="{'editable': false}"/>
+                <field name="efficiency_rating" widget="percentage"/>
+                <field name="wellbeing_assessment" widget="percentage"/>
+                <field name="focus_score" widget="percentage"/>
+                <field name="task_completion_rate" widget="percentage" invisible="analysis_type not in ('daily', 'weekly', 'monthly')"/>
+                <button name="action_process" string="Process" type="object" 
+                        icon="fa-cogs" class="oe_highlight"
+                        invisible="state not in ('draft', 'failed')"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- AI Analysis Form View -->
+    <record id="view_ai_analysis_form" model="ir.ui.view">
+        <field name="name">ai.analysis.form</field>
+        <field name="model">ai.analysis</field>
+        <field name="priority">999</field>
+        <field name="arch" type="xml">
+            <form string="AI Analysis" class="o_form_full_width oe_form_sheet_width_wider" create="true" edit="true" delete="false">
+                <header>
+                    <button name="action_process" string="Process Analysis" type="object" 
+                            class="oe_highlight"
+                            invisible="state not in ('draft', 'failed')"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,processing,done"/>
+                </header>
+                <sheet>
+                    <!-- System fields -->
+                    <field name="id" invisible="1"/>
+                    <field name="work_report_id" invisible="1"/>
+                    <field name="day_plan_id" invisible="1"/>
+                    
+                    <!-- Title -->
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Analysis Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="date"/>
+                            <field name="analysis_type"/>
+                            <field name="work_report_id" options="{'no_open': False}"
+                                   invisible="analysis_type not in ('work_report')"
+                                   required="analysis_type == 'work_report'"/>
+                            <field name="day_plan_id" options="{'no_open': False}"
+                                   invisible="analysis_type not in ('daily')"
+                                   required="analysis_type == 'daily'"/>
+                            <field name="prompt_template_id" domain="[('analysis_type', '=', analysis_type)]"/>
+                        </group>
+                        <group>
+                            <field name="provider"
+                                   readonly="state != 'draft'"/>
+                            <field name="model_version" readonly="1"/>
+                            <field name="productivity_score" widget="progressbar" options="{'editable': false}"/>
+                            <field name="efficiency_rating" widget="percentage"/>
+                            <field name="wellbeing_assessment" widget="percentage"/>
+                            <field name="focus_score" widget="percentage"/>
+                            <field name="task_completion_rate" widget="percentage"
+                                   invisible="analysis_type not in ('daily', 'weekly', 'monthly')"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Analysis Results">
+                            <group>
+                                <field name="summary" placeholder="Brief overview of the analysis..."/>
+                            </group>
+                            <group>
+                                <group string="Strengths">
+                                    <field name="strengths" nolabel="1" placeholder="Areas where performance was strong..."/>
+                                </group>
+                                <group string="Areas for Improvement">
+                                    <field name="improvement_areas" nolabel="1" placeholder="Areas needing improvement..."/>
+                                </group>
+                            </group>
+                            <group string="Recommendations">
+                                <field name="recommendations" nolabel="1" placeholder="Actionable suggestions for improvement..."/>
+                            </group>
+                        </page>
+                        <page string="Trend Analysis" invisible="analysis_type != 'trend'">
+                            <field name="trend_analysis" nolabel="1"/>
+                        </page>
+                        <page string="Time Allocation" invisible="time_allocation == False">
+                            <field name="time_allocation" widget="json_viewer"/>
+                        </page>
+                        <page string="Technical Information" groups="base.group_system">
+                            <group>
+                                <field name="raw_prompt"/>
+                                <field name="raw_response"/>
+                                <field name="error_message"
+                                       invisible="error_message == False"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- AI Analysis Calendar View -->
+    <record id="view_ai_analysis_calendar" model="ir.ui.view">
+        <field name="name">ai.analysis.calendar</field>
+        <field name="model">ai.analysis</field>
+        <field name="arch" type="xml">
+            <calendar string="AI Analysis" date_start="date" color="provider" mode="month">
+                <field name="name"/>
+                <field name="analysis_type"/>
+                <field name="provider"/>
+                <field name="productivity_score"/>
+            </calendar>
+        </field>
+    </record>
+
+    <!-- AI Analysis Search View -->
+    <record id="view_ai_analysis_search" model="ir.ui.view">
+        <field name="name">ai.analysis.search</field>
+        <field name="model">ai.analysis</field>
+        <field name="arch" type="xml">
+            <search string="Search AI Analysis">
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="date"/>
+                <field name="work_report_id"/>
+                <field name="day_plan_id"/>
+                <field name="analysis_type"/>
+                <field name="provider"/>
+                <filter string="My Analyses" name="my_analyses" domain="[('user_id', '=', uid)]"/>
+                <filter string="High Productivity" name="high_productivity" domain="[('productivity_score','>=',70)]"/>
+                <filter string="Medium Productivity" name="medium_productivity" domain="[('productivity_score','>=',40), ('productivity_score','&lt;',70)]"/>
+                <filter string="Low Productivity" name="low_productivity" domain="[('productivity_score','&lt;',40)]"/>
+                <separator/>
+                <filter string="Draft" name="draft" domain="[('state','=','draft')]"/>
+                <filter string="Processing" name="processing" domain="[('state','=','processing')]"/>
+                <filter string="Completed" name="done" domain="[('state','=','done')]"/>
+                <filter string="Failed" name="failed" domain="[('state','=','failed')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Analysis Type" name="group_type" context="{'group_by':'analysis_type'}"/>
+                    <filter string="Provider" name="group_provider" context="{'group_by':'provider'}"/>
+                    <filter string="Status" name="group_state" context="{'group_by':'state'}"/>
+                    <filter string="Date" name="group_date" context="{'group_by':'date'}"/>
+                    <filter string="User" name="group_user" context="{'group_by':'user_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- AI Analysis Graph View -->
+    <record id="view_ai_analysis_graph" model="ir.ui.view">
+        <field name="name">ai.analysis.graph</field>
+        <field name="model">ai.analysis</field>
+        <field name="arch" type="xml">
+            <graph string="AI Analysis" sample="1">
+                <field name="date"/>
+                <field name="provider"/>
+                <field name="productivity_score" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- AI Analysis Pivot View -->
+    <record id="view_ai_analysis_pivot" model="ir.ui.view">
+        <field name="name">ai.analysis.pivot</field>
+        <field name="model">ai.analysis</field>
+        <field name="arch" type="xml">
+            <pivot string="AI Analysis" sample="1">
+                <field name="date" interval="day" type="row"/>
+                <field name="analysis_type" type="row"/>
+                <field name="provider" type="col"/>
+                <field name="productivity_score" type="measure"/>
+                <field name="efficiency_rating" type="measure"/>
+                <field name="wellbeing_assessment" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Action for AI Analysis -->
+    <record id="action_ai_analysis" model="ir.actions.act_window">
+        <field name="name">AI Analysis</field>
+        <field name="res_model">ai.analysis</field>
+        <field name="view_mode">list,form,calendar,graph,pivot</field>
+        <field name="target">current</field>
+        <field name="view_id" ref="view_ai_analysis_list"/>
+        <field name="context">{'search_default_my_analyses': 1, 'hide_chatter': True, 'hide_message': True, 'form_view_ref': 'day_plan_work_report_ai.view_ai_analysis_form'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No AI analysis yet
+            </p>
+            <p>
+                Create a new AI analysis to gain insights into your productivity,
+                efficiency, and wellbeing based on your day plans and work reports.
+            </p>
+        </field>
+    </record>
+    
+    <!-- AI Prompt Template Views -->
+    <record id="view_ai_prompt_template_list" model="ir.ui.view">
+        <field name="name">ai.prompt.template.list</field>
+        <field name="model">ai.prompt.template</field>
+        <field name="arch" type="xml">
+            <list string="AI Prompt Templates">
+                <field name="name"/>
+                <field name="analysis_type"/>
+                <field name="is_default"/>
+                <field name="description"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_ai_prompt_template_form" model="ir.ui.view">
+        <field name="name">ai.prompt.template.form</field>
+        <field name="model">ai.prompt.template</field>
+        <field name="arch" type="xml">
+            <form string="AI Prompt Template">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Template Name..."/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="analysis_type"/>
+                            <field name="is_default"/>
+                        </group>
+                        <group>
+                            <field name="description" placeholder="Brief description of this template..."/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Template">
+                            <field name="template" widget="ace" options="{'mode': 'text'}" placeholder="Enter your AI prompt template here...&#10;Use {placeholders} for dynamic content."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_ai_prompt_template" model="ir.actions.act_window">
+        <field name="name">AI Prompt Templates</field>
+        <field name="res_model">ai.prompt.template</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No prompt templates yet
+            </p>
+            <p>
+                Create a new AI prompt template to customize how AI analyses are generated.
+                Templates can include placeholders like {user_name} that will be replaced
+                with actual data when the analysis is processed.
+            </p>
+        </field>
+    </record>
+
+    <!-- AI Provider Configuration -->
+    <record id="action_ai_provider_config" model="ir.actions.act_window">
+        <field name="name">AI Provider Configuration</field>
+        <field name="res_model">ir.config_parameter</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('key', 'in', ['ai_analysis.openai_api_key', 'ai_analysis.anthropic_api_key', 'ai_analysis.google_api_key'])]</field>
+        <field name="context">{'default_key': 'ai_analysis.openai_api_key'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No API keys configured
+            </p>
+            <p>
+                Configure API keys for different AI providers:
+                <ul>
+                    <li>OpenAI (GPT-4): ai_analysis.openai_api_key</li>
+                    <li>Anthropic (Claude): ai_analysis.anthropic_api_key</li>
+                    <li>Google (Gemini): ai_analysis.google_api_key</li>
+                </ul>
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem id="menu_ai_analysis_root" name="AI Analysis" 
+              parent="menu_day_plan_root" 
+              sequence="30"/>
+
+    <menuitem id="menu_ai_analysis" name="AI Analysis" 
+              parent="menu_ai_analysis_root" 
+              action="action_ai_analysis" 
+              sequence="10"/>
+
+    <menuitem id="menu_ai_prompt_template" name="Prompt Templates" 
+              parent="menu_ai_analysis_root" 
+              action="action_ai_prompt_template" 
+              sequence="20"/>
+
+    <menuitem id="menu_ai_provider_config" name="Provider Configuration" 
+              parent="menu_ai_analysis_root" 
+              action="action_ai_provider_config" 
+              sequence="30"
+              groups="base.group_system"/>
 </odoo>

@@ -1,87 +1,77 @@
-import logging
-from datetime import date, datetime
-
-from odoo import models, fields, api, _
-from odoo.exceptions import UserError, ValidationError
-
-_logger = logging.getLogger(__name__)
-
+from odoo import models, fields, api
 
 class WorkReport(models.Model):
     _name = "work.report"
-    _description = "Daily Work Report"
+    _description = "End of Day Work Report"
     _inherit = ['mail.thread', 'mail.activity.mixin']
-    _order = 'date desc, id desc'
+    _order = "create_date desc"
 
-    name = fields.Char(string="Report Title", required=True, default="Work Report")
-    sequence = fields.Char(string="Reference", readonly=True, copy=False, index=True)
-    date = fields.Date(string="Report Date", required=True, default=fields.Date.context_today, tracking=True)
-    employee_id = fields.Many2one('hr.employee', string="Employee", required=True,
-                                  default=lambda self: self.env.user.employee_id, tracking=True)
-    day_plan_id = fields.Many2one('day.plan', string="Related Day Plan")
-
-    # Report Content
-    accomplishments = fields.Text(string="Accomplishments", help="What did you accomplish today?")
-    challenges = fields.Text(string="Challenges", help="What challenges did you face?")
-    solutions = fields.Text(string="Solutions", help="How did you solve the challenges?")
-    learnings = fields.Text(string="Key Learnings", help="What did you learn today?")
-    next_steps = fields.Text(string="Next Steps", help="What are your next steps?")
-
-    # Self Assessment
-    self_productivity = fields.Selection([
-        ('1', 'Very Low'),
-        ('2', 'Low'),
-        ('3', 'Average'),
-        ('4', 'Good'),
-        ('5', 'Excellent')
-    ], string="Productivity Self-Assessment", default='3')
-
-    self_quality = fields.Selection([
-        ('1', 'Very Low'),
-        ('2', 'Low'),
-        ('3', 'Average'),
-        ('4', 'Good'),
-        ('5', 'Excellent')
-    ], string="Quality Self-Assessment", default='3')
-
-    self_satisfaction = fields.Selection([
-        ('1', 'Very Low'),
-        ('2', 'Low'),
-        ('3', 'Average'),
-        ('4', 'Good'),
-        ('5', 'Excellent')
-    ], string="Satisfaction Self-Assessment", default='3')
-
-    # Status
+    day_plan_id = fields.Many2one('day.plan', string="Day Plan", required=True, tracking=True)
+    
+    # Accomplishments section
+    accomplishments = fields.Text(string="Accomplishments", 
+                                 help="Document completed tasks and achievements")
+    
+    # Challenges & Solutions section
+    challenges = fields.Text(string="Challenges", 
+                            help="Record obstacles encountered during work")
+    solutions = fields.Text(string="Solutions", 
+                           help="Document implemented fixes for challenges")
+    
+    # Self-Assessment section
+    self_assessment_productivity = fields.Selection([
+        ('low', 'Low'),
+        ('medium', 'Medium'),
+        ('high', 'High')
+    ], string="Productivity Rating", tracking=True, 
+       help="Rate your productivity level for the day")
+    
+    self_assessment_quality = fields.Selection([
+        ('low', 'Low'),
+        ('medium', 'Medium'),
+        ('high', 'High')
+    ], string="Quality Rating", tracking=True,
+       help="Rate the quality of your work for the day")
+    
+    self_assessment_satisfaction = fields.Selection([
+        ('low', 'Low'),
+        ('medium', 'Medium'),
+        ('high', 'High')
+    ], string="Satisfaction Rating", tracking=True,
+       help="Rate your overall satisfaction with the day's work")
+    
+    # Learnings & Next Steps section
+    learnings = fields.Text(string="Learnings", 
+                           help="Document insights gained during the day")
+    next_steps = fields.Text(string="Next Steps",
+                            help="Document future priorities and action items")
+    
+    # Manager review fields
+    manager_review_comments = fields.Text(string="Manager Review Comments")
+    manager_review_rating = fields.Selection([
+        ('approved', 'Approved'),
+        ('needs_revision', 'Needs Revision')
+    ], string="Review Rating", tracking=True)
+    
     state = fields.Selection([
         ('draft', 'Draft'),
         ('submitted', 'Submitted'),
-        ('reviewed', 'Reviewed')
+        ('analyzed', 'Analyzed'),
+        ('approved', 'Approved')
     ], string="Status", default='draft', tracking=True)
 
-    # AI Analysis
-    ai_analysis_ids = fields.One2many('ai.analysis', 'work_report_id', string="AI Analysis")
-
-    @api.model
-    def create(self, vals):
-        if vals.get('sequence', 'New') == 'New':
-            vals['sequence'] = self.env['ir.sequence'].next_by_code('work.report') or 'New'
-        return super(WorkReport, self).create(vals)
-
     def action_submit(self):
-        """Submit the work report"""
-        self.state = 'submitted'
+        self.write({'state': 'submitted'})
+        return True
 
-    def action_request_ai_analysis(self):
-        """Request AI analysis for this work report"""
-        return {
-            'name': _('Request AI Analysis'),
-            'view_mode': 'form',
-            'res_model': 'ai.analysis',
-            'type': 'ir.actions.act_window',
-            'context': {
-                'default_work_report_id': self.id,
-                'default_analysis_type': 'work_report'
-            },
-            'target': 'new'
-        }
+    def action_analyze(self):
+        self.write({'state': 'analyzed'})
+        return True
+
+    def action_approve(self):
+        self.write({'state': 'approved'})
+        return True
+
+    def action_print_report(self):
+        # This method will be implemented for PDF generation
+        return True

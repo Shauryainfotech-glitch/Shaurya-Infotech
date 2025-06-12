@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="day_plan_work_report_ai.GuaranteedChartDashboard" owl="1">
+        <Layout className="'o_guaranteed_chart_dashboard'" display="{ controlPanel: { 'top-right': false, 'bottom-right': false } }">
+            <div class="container pt-4">
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h1>Dashboard Charts</h1>
+                        </div>
+                        <p class="text-muted">View your productivity data in real-time</p>
+                    </div>
+                </div>
+                
+                <!-- Loading Indicator -->
+                <div t-if="state.loading" class="d-flex justify-content-center py-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                
+                <!-- Dashboard Content -->
+                <div t-else="" class="row">
+                    <!-- Top KPIs -->
+                    <div class="col-md-3 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">Total Plans</h5>
+                                <h2 class="mb-0">24</h2>
+                                <p class="text-success"><i class="fa fa-arrow-up"></i> 12% vs last week</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">Completion Rate</h5>
+                                <h2 class="mb-0">75%</h2>
+                                <div class="progress mt-2" style="height: 6px;">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">Productivity Score</h5>
+                                <h2 class="mb-0">8.4/10</h2>
+                                <p class="text-success"><i class="fa fa-arrow-up"></i> 5% improvement</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">Tasks Pending</h5>
+                                <h2 class="mb-0">12</h2>
+                                <p class="text-danger">3 overdue</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Productivity Chart -->
+                    <div class="col-12 mb-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Productivity Trend</h5>
+                            </div>
+                            <div class="card-body">
+                                <div style="height: 400px;">
+                                    <canvas t-ref="chartCanvas"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </Layout>
+    </t>
+</templates>
