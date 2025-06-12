@@ -48,7 +48,7 @@
             <field name="number_next">1</field>
         </record>
 
-        <record id="seq_architect_dpr" model="ir.sequence">
+        <record id="seq_architect_document" model="ir.sequence">
             <field name="name">Architect Document</field>
             <field name="code">architect.document</field>  <!-- Must match your Python sequence code -->
             <field name="prefix">DOCU-</field>
@@ -56,13 +56,22 @@
             <field name="number_next">1</field>
         </record>
 
-        <record id="seq_architect_dpr" model="ir.sequence">
+        <record id="seq_architect_document_category" model="ir.sequence">
             <field name="name">Architect Document</field>
             <field name="code">architect.document.category</field>  <!-- Must match your Python sequence code -->
             <field name="prefix">CATE-</field>
             <field name="padding">5</field>
             <field name="number_next">1</field>
         </record>
+
+        <record id="seq_architect_financial_category" model="ir.sequence">
+            <field name="name">Architect Financial Category</field>
+            <field name="code">architect.financial.category</field>  <!-- Must match your Python sequence code -->
+            <field name="prefix">CATE-</field>
+            <field name="padding">5</field>
+            <field name="number_next">1</field>
+        </record>
+
 
         <!-- Compliance Sequence -->
         <record id="seq_architect_compliance" model="ir.sequence">

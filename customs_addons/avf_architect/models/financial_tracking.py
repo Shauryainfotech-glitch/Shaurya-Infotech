@@ -117,7 +117,15 @@ class ArchitectFinancialCategory(models.Model):
     _order = 'sequence, name'
 
     name = fields.Char(string='Category Name', required=True)
-    code = fields.Char(string='Category Code')
+    #code = fields.Char(string='Category Code')
+    code = fields.Char(
+        string='Category Code',
+        required=True,
+        copy=False,
+        readonly=True,
+        tracking=True,
+        default=lambda self: self.env['ir.sequence'].next_by_code('architect.financial.category') or 'new'
+    )
     description = fields.Text(string='Description')
     sequence = fields.Integer(string='Sequence', default=10)
 
