@@ -17,7 +17,9 @@ FORMIO_VIEW_TYPES = [
 class IrUIView(models.Model):
     _inherit = 'ir.ui.view'
 
-    type = fields.Selection(selection_add=FORMIO_VIEW_TYPES)
+    type = fields.Selection(
+        selection_add=FORMIO_VIEW_TYPES,
+        ondelete={'formio_builder': 'cascade', 'formio_form': 'cascade'})
 
     def _get_view_info(self):
         return {
