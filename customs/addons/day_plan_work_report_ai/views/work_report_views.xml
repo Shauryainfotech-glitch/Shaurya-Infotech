@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Work Report Tree View -->
+        <record id="view_work_report_tree" model="ir.ui.view">
+            <field name="name">work.report.tree</field>
+            <field name="model">work.report</field>
+            <field name="arch" type="xml">
+                <tree string="Work Reports">
+                    <field name="sequence"/>
+                    <field name="name"/>
+                    <field name="date"/>
+                    <field name="employee_id"/>
+                    <field name="day_plan_id"/>
+                    <field name="state"/>
+                    <field name="self_productivity"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Work Report Form View -->
+        <record id="view_work_report_form" model="ir.ui.view">
+            <field name="name">work.report.form</field>
+            <field name="model">work.report</field>
+            <field name="arch" type="xml">
+                <form string="Work Report">
+                    <header>
+                        <button name="action_submit" string="Submit Report" type="object"
+                                class="oe_highlight" invisible="state != 'draft'"/>
+                        <button name="action_request_ai_analysis" string="Request AI Analysis"
+                                type="object" class="btn-secondary"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                            <h2>
+                                <field name="sequence" readonly="1"/>
+                            </h2>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="date"/>
+                                <field name="employee_id"/>
+                                <field name="day_plan_id"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Report Content">
+                                <group>
+                                    <field name="accomplishments" placeholder="What did you accomplish today?"/>
+                                    <field name="challenges" placeholder="What challenges did you face?"/>
+                                    <field name="solutions" placeholder="How did you solve the challenges?"/>
+                                    <field name="learnings" placeholder="What did you learn today?"/>
+                                    <field name="next_steps" placeholder="What are your next steps?"/>
+                                </group>
+                            </page>
+                            <page string="Self Assessment">
+                                <group>
+                                    <field name="self_productivity"/>
+                                    <field name="self_quality"/>
+                                    <field name="self_satisfaction"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Work Report Action -->
+        <record id="action_work_report" model="ir.actions.act_window">
+            <field name="name">Work Reports</field>
+            <field name="res_model">work.report</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</odoo>

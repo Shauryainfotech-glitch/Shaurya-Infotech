@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Default Prompt Templates -->
+        <record id="ai_prompt_template_daily" model="ai.prompt.template">
+            <field name="name">Default Daily Plan Analysis</field>
+            <field name="analysis_type">daily</field>
+            <field name="is_default" eval="True"/>
+            <field name="description">Analyzes daily plan completion and task performance</field>
+            <field name="template"><![CDATA[
+Analyze the following day plan and completed tasks:
+
+User: {user_name}
+Date: {date}
+Plan Title: {plan_title}
+Goals: {goals}
+
+Tasks: {tasks}
+Task Completion Rate: {completion_rate}%
+
+Please provide:
+1. A productivity score (0-100)
+2. An efficiency rating (0-100)
+3. A wellbeing assessment (0-100)
+4. Key strengths observed
+5. Areas for improvement
+6. Specific actionable recommendations
+
+Format your response as JSON with the following structure:
+{
+    "productivity_score": 85,
+    "efficiency_rating": 80,
+    "wellbeing_assessment": 75,
+    "summary": "Brief overview...",
+    "strengths": "Areas of strong performance...",
+    "improvement_areas": "Areas needing improvement...",
+    "recommendations": "Specific actionable suggestions..."
+}
+]]></field>
+        </record>
+
+        <record id="ai_prompt_template_work_report" model="ai.prompt.template">
+            <field name="name">Default Work Report Analysis</field>
+            <field name="analysis_type">work_report</field>
+            <field name="is_default" eval="True"/>
+            <field name="description">Analyzes work report content for insights</field>
+            <field name="template"><![CDATA[
+Analyze the following work report:
+
+User: {user_name}
+Date: {date}
+Accomplishments: {accomplishments}
+Challenges: {challenges}
+Solutions: {solutions}
+
+Self-Assessment:
+- Productivity: {self_productivity}
+- Quality: {self_quality}
+- Satisfaction: {self_satisfaction}
+
+Please provide analysis and recommendations.
+]]></field>
+        </record>
+    </data>
+</odoo>

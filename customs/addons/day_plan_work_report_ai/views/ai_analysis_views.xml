@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- AI Analysis Tree View -->
+        <record id="view_ai_analysis_tree" model="ir.ui.view">
+            <field name="name">ai.analysis.tree</field>
+            <field name="model">ai.analysis</field>
+            <field name="arch" type="xml">
+                <tree string="AI Analysis">
+                    <field name="sequence"/>
+                    <field name="name"/>
+                    <field name="analysis_type"/>
+                    <field name="employee_id"/>
+                    <field name="productivity_score"/>
+                    <field name="efficiency_rating"/>
+                    <field name="state"/>
+                    <field name="create_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- AI Analysis Form View -->
+        <record id="view_ai_analysis_form" model="ir.ui.view">
+            <field name="name">ai.analysis.form</field>
+            <field name="model">ai.analysis</field>
+            <field name="arch" type="xml">
+                <form string="AI Analysis">
+                    <header>
+                        <button name="action_process_analysis" string="Process Analysis"
+                                type="object" class="oe_highlight" invisible="state != 'pending'"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                            <h2>
+                                <field name="sequence" readonly="1"/>
+                            </h2>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="analysis_type"/>
+                                <field name="employee_id"/>
+                                <field name="ai_provider"/>
+                            </group>
+                            <group>
+                                <field name="day_plan_id" invisible="analysis_type not in ('daily', 'weekly', 'monthly')"/>
+                                <field name="work_report_id" invisible="analysis_type != 'work_report'"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Scores">
+                                <field name="productivity_score"/>
+                                <field name="efficiency_rating"/>
+                                <field name="wellbeing_assessment"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Analysis Results">
+                                <group>
+                                    <field name="summary"/>
+                                    <field name="strengths"/>
+                                    <field name="improvement_areas"/>
+                                    <field name="recommendations"/>
+                                </group>
+                            </page>
+                            <page string="Technical" groups="base.group_system">
+                                <group>
+                                    <field name="raw_prompt"/>
+                                    <field name="raw_response"/>
+                                    <field name="error_message" invisible="not error_message"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- AI Analysis Action -->
+        <record id="action_ai_analysis" model="ir.actions.act_window">
+            <field name="name">AI Analysis</field>
+            <field name="res_model">ai.analysis</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</odoo>

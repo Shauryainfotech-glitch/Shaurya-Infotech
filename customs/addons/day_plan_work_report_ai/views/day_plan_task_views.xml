@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Task Tree View -->
+        <record id="view_day_plan_task_tree" model="ir.ui.view">
+            <field name="name">day.plan.task.tree</field>
+            <field name="model">day.plan.task</field>
+            <field name="arch" type="xml">
+                <tree string="Tasks" decoration-success="status=='done'" decoration-info="status=='in_progress'">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="day_plan_id"/>
+                    <field name="task_type"/>
+                    <field name="status"/>
+                    <field name="priority"/>
+                    <field name="estimated_hours"/>
+                    <field name="actual_hours"/>
+                    <field name="progress" widget="percentage"/>
+                    <field name="deadline"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Task Form View -->
+        <record id="view_day_plan_task_form" model="ir.ui.view">
+            <field name="name">day.plan.task.form</field>
+            <field name="model">day.plan.task</field>
+            <field name="arch" type="xml">
+                <form string="Task">
+                    <header>
+                        <button name="action_start_task" string="Start Task" type="object"
+                                class="oe_highlight" invisible="status != 'todo'"/>
+                        <button name="action_complete_task" string="Complete Task" type="object"
+                                class="oe_highlight" invisible="status != 'in_progress'"/>
+                        <field name="status" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="day_plan_id"/>
+                                <field name="task_type"/>
+                                <field name="priority"/>
+                                <field name="project_id"/>
+                            </group>
+                            <group>
+                                <field name="estimated_hours"/>
+                                <field name="actual_hours"/>
+                                <field name="progress"/>
+                                <field name="deadline"/>
+                                <field name="tag_ids" widget="many2many_tags"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Description">
+                                <field name="description"/>
+                            </page>
+                            <page string="Time Tracking">
+                                <group>
+                                    <field name="start_time"/>
+                                    <field name="end_time"/>
+                                </group>
+                            </page>
+                            <page string="Notes">
+                                <group>
+                                    <field name="blocker_notes"/>
+                                    <field name="completion_notes"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Task Kanban View -->
+        <record id="view_day_plan_task_kanban" model="ir.ui.view">
+            <field name="name">day.plan.task.kanban</field>
+            <field name="model">day.plan.task</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="status" class="o_kanban_small_column">
+                    <field name="name"/>
+                    <field name="status"/>
+                    <field name="priority"/>
+                    <field name="progress"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_card oe_kanban_global_click">
+                                <div class="oe_kanban_content">
+                                    <strong><field name="name"/></strong>
+                                    <div>Priority: <field name="priority"/></div>
+                                    <progressbar field="progress" title="Progress"/>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Task Action -->
+        <record id="action_day_plan_task" model="ir.actions.act_window">
+            <field name="name">Tasks</field>
+            <field name="res_model">day.plan.task</field>
+            <field name="view_mode">tree,kanban,form</field>
+        </record>
+    </data>
+</odoo>

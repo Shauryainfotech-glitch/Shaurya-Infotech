@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Main Menu -->
+        <menuitem id="menu_day_plan_main"
+                  name="Day Planning"
+                  sequence="10"/>
+
+        <!-- Planning Menu -->
+        <menuitem id="menu_day_plan_planning"
+                  name="Planning"
+                  parent="menu_day_plan_main"
+                  sequence="10"/>
+
+        <menuitem id="menu_day_plan_plans"
+                  name="Day Plans"
+                  parent="menu_day_plan_planning"
+                  action="action_day_plan"
+                  sequence="10"/>
+
+        <menuitem id="menu_day_plan_tasks"
+                  name="Tasks"
+                  parent="menu_day_plan_planning"
+                  action="action_day_plan_task"
+                  sequence="20"/>
+
+        <!-- Reporting Menu -->
+        <menuitem id="menu_day_plan_reporting"
+                  name="Reporting"
+                  parent="menu_day_plan_main"
+                  sequence="20"/>
+
+        <menuitem id="menu_work_reports"
+                  name="Work Reports"
+                  parent="menu_day_plan_reporting"
+                  action="action_work_report"
+                  sequence="10"/>
+
+        <menuitem id="menu_ai_analysis"
+                  name="AI Analysis"
+                  parent="menu_day_plan_reporting"
+                  action="action_ai_analysis"
+                  sequence="20"/>
+
+        <!-- Dashboard Menu -->
+        <menuitem id="menu_dashboard"
+                  name="Dashboard"
+                  parent="menu_day_plan_main"
+                  action="action_dashboard"
+                  sequence="5"/>
+
+        <!-- Configuration Menu -->
+        <menuitem id="menu_day_plan_config"
+                  name="Configuration"
+                  parent="menu_day_plan_main"
+                  groups="day_plan_work_report_ai.group_manager"
+                  sequence="90"/>
+    </data>
+</odoo>
