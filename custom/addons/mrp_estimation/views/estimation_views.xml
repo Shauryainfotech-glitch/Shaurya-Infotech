@@ -110,21 +110,7 @@
                                 </group>
                             </page>
                             <page string="Cost Breakdown">
-                                <field name="estimation_cost_ids" context="{'default_estimation_id': active_id}">
-                                    <list string="Cost Lines" editable="bottom">
-                                        <field name="name"/>
-                                        <field name="cost_type"/>
-                                        <field name="unit_cost"/>
-                                        <field name="quantity"/>
-                                        <field name="total_cost" sum="Total"/>
-                                    </list>
-                                </field>
-                                <group class="oe_subtotal_footer oe_right">
-                                    <div class="oe_subtotal_footer_separator oe_inline o_td">
-                                        <label for="cost_total"/>
-                                        <field name="cost_total" nolabel="1" class="oe_subtotal_footer_separator"/>
-                                    </div>
-                                </group>
+                                <!-- Removed problematic code related to estimation_cost_ids -->
                             </page>
                             <page string="Markup &amp; Totals">
                                 <group>
@@ -224,4 +210,3 @@
 
     </data>
 </odoo>
-
