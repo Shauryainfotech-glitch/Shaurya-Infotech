@@ -177,7 +177,7 @@ class ArchitectProject(models.Model):
             'type': 'ir.actions.act_window',
             'name': _('Project Tasks'),
             'res_model': 'project.task',
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'domain': [('architect_project_id', '=', self.id)],
             'context': {'default_architect_project_id': self.id}
         }
@@ -187,7 +187,7 @@ class ArchitectProject(models.Model):
             'type': 'ir.actions.act_window',
             'name': _('Project Drawings'),
             'res_model': 'architect.drawing',
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'domain': [('project_id', '=', self.id)],
             'context': {'default_project_id': self.id}
         }
@@ -197,7 +197,7 @@ class ArchitectProject(models.Model):
             'type': 'ir.actions.act_window',
             'name': _('DPR Documents'),
             'res_model': 'architect.dpr',
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'domain': [('project_id', '=', self.id)],
             'context': {'default_project_id': self.id}
         }
@@ -207,7 +207,7 @@ class ArchitectProject(models.Model):
             'type': 'ir.actions.act_window',
             'name': _('Compliance Tracking'),
             'res_model': 'architect.compliance',
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'domain': [('project_id', '=', self.id)],
             'context': {'default_project_id': self.id}
         }
