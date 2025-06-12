@@ -11,7 +11,15 @@ class ArchitectProject(models.Model):
     _order = 'create_date desc'
 
     name = fields.Char(string='Project Name', required=True, tracking=True)
-    code = fields.Char(string='Project Code', required=True, copy=False, tracking=True)
+    #code = fields.Char(string='Project Code', required=True, copy=False, tracking=True)
+    code = fields.Char(
+        string='Project Code',
+        required=True,
+        copy=False,
+        readonly=True,
+        tracking=True,
+        default=lambda self: self.env['ir.sequence'].next_by_code('architect.project') or 'New'
+    )
     description = fields.Text(string='Description')
     company_id = fields.Many2one(
         'res.company',
@@ -142,10 +150,10 @@ class ArchitectProject(models.Model):
             project.actual_cost = project.estimated_cost * 0.85
 
     @api.model
-    def create(self, vals):
-        if 'code' not in vals or not vals['code']:
-            vals['code'] = self.env['ir.sequence'].next_by_code('architect.project') or 'New'
-        return super().create(vals)
+    # def create(self, vals):
+    #     if 'code' not in vals or not vals['code']:
+    #         vals['code'] = self.env['ir.sequence'].next_by_code('architect.project') or 'New'
+    #     return super().create(vals)
 
     def action_confirm(self):
         self.state = 'confirmed'
