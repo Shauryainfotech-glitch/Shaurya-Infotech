@@ -81,12 +81,12 @@ class ArchitectRateSchedule(models.Model):
     #     self.state = 'archived'
     #     self.message_post(body=_("Rate schedule archived."))
 
-    def action_publish(self, *args, **kwargs):
+    def action_publish(self):
         for record in self:
             record.state = 'published'
             record.message_post(body=_("Rate schedule published."))
 
-    def action_archive(self, *args, **kwargs):
+    def action_archive(self):
         for record in self:
             record.state = 'archived'
             record.message_post(body=_("Rate schedule archived."))
