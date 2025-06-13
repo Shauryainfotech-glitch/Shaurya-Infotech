@@ -28,8 +28,7 @@
                         </group>
                         <group>
                             <field name="fold"/>
-
-                            <field name="approval_user_ids" widget="many2many_tags" 
+                            <field name="approval_user_ids" widget="many2many_tags"
                                    modifiers="{'invisible': [('requires_approval', '=', False)]}"/>
                             <field name="previous_stage_id"/>
                             <field name="next_stage_id"/>
@@ -51,6 +50,15 @@
                                     <field name="responsible_role"/>
                                     <field name="verification_method"/>
                                     <field name="is_mandatory"/>
+                                    <templates>
+                                        <t t-name="kanban-box">
+                                            <div class="oe_kanban_card">
+                                                <strong><field name="name"/></strong>
+                                                <div>Type: <field name="item_type"/></div>
+                                                <div>Role: <field name="responsible_role"/></div>
+                                            </div>
+                                        </t>
+                                    </templates>
                                 </kanban>
                             </field>
                         </page>
@@ -59,7 +67,6 @@
             </form>
         </field>
     </record>
-
 
     <!-- Project Stage Kanban View -->
     <record id="view_architect_project_stage_list" model="ir.ui.view">
@@ -72,8 +79,17 @@
                 <field name="stage_type"/>
                 <field name="progress" widget="progressbar"/>
                 <field name="expected_duration"/>
-
                 <field name="active"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card">
+                            <strong><field name="name"/></strong>
+                            <div>Stage Type: <field name="stage_type"/></div>
+                            <div>Progress: <field name="progress"/></div>
+                            <div>Duration: <field name="expected_duration"/></div>
+                        </div>
+                    </t>
+                </templates>
             </kanban>
         </field>
     </record>
@@ -154,6 +170,17 @@
                 <field name="item_type"/>
                 <field name="responsible_role"/>
                 <field name="is_mandatory"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card">
+                            <strong><field name="name"/></strong>
+                            <div>Stage: <field name="stage_id"/></div>
+                            <div>Type: <field name="item_type"/></div>
+                            <div>Role: <field name="responsible_role"/></div>
+                            <div t-if="record.is_mandatory.raw_value" style="color: green;">Mandatory</div>
+                        </div>
+                    </t>
+                </templates>
             </kanban>
         </field>
     </record>
@@ -167,7 +194,6 @@
                 <header>
                     <button name="action_verify" string="Verify" type="object" class="btn btn-primary"
                             modifiers="{'invisible': ['|', ('verified', '=', True), ('completed', '=', False)]}" />
-
                 </header>
                 <sheet>
                     <div class="oe_title">
@@ -203,7 +229,6 @@
                         </page>
                     </notebook>
                 </sheet>
-
             </form>
         </field>
     </record>
@@ -222,6 +247,17 @@
                 <field name="completed"/>
                 <field name="verified"/>
                 <field name="completion_date"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card">
+                            <strong><field name="name"/></strong>
+                            <div>Project: <field name="project_id"/></div>
+                            <div>Stage: <field name="stage_id"/></div>
+                            <div t-if="record.completed.raw_value">Completed on <field name="completion_date"/></div>
+                            <div t-if="record.verified.raw_value" style="color: green;">Verified</div>
+                        </div>
+                    </t>
+                </templates>
             </kanban>
         </field>
     </record>
@@ -256,13 +292,13 @@
     </record>
 
     <!-- Menu Items -->
-    <menuitem id="menu_project_config" name="Project Configuration" 
+    <menuitem id="menu_project_config" name="Project Configuration"
               parent="menu_architect_config" sequence="10"/>
-    
-    <menuitem id="menu_project_stage" name="Project Stages" 
-              parent="menu_project_config" 
+
+    <menuitem id="menu_project_stage" name="Project Stages"
+              parent="menu_project_config"
               action="action_architect_project_stage" sequence="10"/>
-    
+
     <menuitem id="menu_checklist_template" name="Checklist Templates" 
               parent="menu_project_config" 
               action="action_architect_stage_checklist_template" sequence="20"/>
