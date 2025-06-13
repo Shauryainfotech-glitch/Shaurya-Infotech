@@ -100,14 +100,16 @@
         ],
         'web.assets_common': [
             # XML Templates
-            'day_plan_work_report_ai/static/src/guaranteed_chart_dashboard.xml',
+            # 'day_plan_work_report_ai/static/src/guaranteed_chart_dashboard.xml',
             'day_plan_work_report_ai/static/src/day_plan_templates.xml',
             'day_plan_work_report_ai/static/src/client_action_templates.xml',
+        ],'web.assets_qweb': [  # FIXED: Templates must be in QWeb bundle for Owl
+            'day_plan_work_report_ai/static/src/guaranteed_chart_dashboard.xml',
         ],
     },
-    # 'demo': [
-    #     'demo/day_plan_demo.xml',
-    # ],
+    'demo': [
+        'demo/day_plan_demo.xml',
+    ],
     'installable': True,
     'application': True,
     'auto_install': False,

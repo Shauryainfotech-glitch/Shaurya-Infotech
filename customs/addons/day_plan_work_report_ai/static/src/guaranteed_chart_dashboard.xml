@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<templates xml:space="preserve">
+<templates>
     <t t-name="day_plan_work_report_ai.GuaranteedChartDashboard" owl="1">
-        <Layout className="'o_guaranteed_chart_dashboard'" display="{ controlPanel: { 'top-right': false, 'bottom-right': false } }">
+        <Layout className="'o_guaranteed_chart_dashboard'">
             <div class="container-fluid pt-4">
                 <!-- Header Section -->
                 <div class="row mb-4">
@@ -143,11 +143,6 @@
                                         <i class="fa fa-chart-line me-2"></i>
                                         Productivity Trend Analysis
                                     </h6>
-                                    <div class="dropdown no-arrow">
-                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="fa fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                        </a>
-                                    </div>
                                 </div>
                                 <div class="card-body">
                                     <div class="chart-area" style="height: 320px; position: relative;">
