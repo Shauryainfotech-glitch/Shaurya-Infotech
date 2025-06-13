@@ -49,6 +49,8 @@
         'board',
         'resource',
         'web_enterprise',
+        'iap',
+
     ],
     'data': [
         # Security
