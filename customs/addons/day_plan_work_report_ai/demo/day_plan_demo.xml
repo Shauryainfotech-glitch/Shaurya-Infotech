@@ -38,7 +38,7 @@
             <field name="employee_id" ref="demo_employee_2"/>
             <field name="main_goals">Prepare comprehensive presentation for client review meeting</field>
             <field name="key_results">Complete slide deck, practice presentation, prepare demo environment</field>
-            <field name="focus_areas">Presentation design, demo preparation, Q&A scenarios</field>
+            <field name="focus_areas">Presentation design, demo preparation, Q&amp;A scenarios</field>
             <field name="potential_blockers">Demo environment stability issues</field>
             <field name="estimated_hours">7</field>
             <field name="planned_start" eval="(DateTime.now() - timedelta(days=1)).replace(hour=9, minute=0)"/>
@@ -118,7 +118,7 @@
         <record id="demo_task_6" model="day.plan.task">
             <field name="name">Practice presentation</field>
             <field name="day_plan_id" ref="demo_day_plan_2"/>
-            <field name="description">Rehearse presentation and prepare for Q&A</field>
+            <field name="description">Rehearse presentation and prepare for Q&amp;A</field>
             <field name="priority">medium</field>
             <field name="estimated_hours">1</field>
             <field name="actual_hours">0.5</field>
