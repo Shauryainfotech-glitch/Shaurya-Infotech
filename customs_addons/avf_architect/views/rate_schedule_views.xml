@@ -198,7 +198,7 @@
         <field name="arch" type="xml">
             <list string="Rate Items" decoration-warning="rate_variance &gt; 20"
                   decoration-danger="rate_variance &gt; 50">
-                <field name="item_code"/>
+                <field name="code"/>
                 <field name="name"/>
                 <field name="category_id"/>
                 <field name="work_type"/>
