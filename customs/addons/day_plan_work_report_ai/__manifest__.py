@@ -58,7 +58,7 @@
         # Data
         'data/sequence.xml',
         'data/ai_analysis_data.xml',
-        'data/day_plan_data.xml',
+        # 'data/day_plan_data.xml',
 
         # Views
         'views/day_plan_views.xml',
