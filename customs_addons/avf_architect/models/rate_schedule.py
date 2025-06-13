@@ -106,7 +106,7 @@ class ArchitectRateSchedule(models.Model):
 class ArchitectRateItem(models.Model):
     _name = 'architect.rate.item'
     _description = 'Rate Schedule Item'
-    _order = 'item_code'
+    _order = 'code'
 
     name = fields.Char(string='Item Description', required=True)
     #code = fields.Char(string='Item Code', required=True)
