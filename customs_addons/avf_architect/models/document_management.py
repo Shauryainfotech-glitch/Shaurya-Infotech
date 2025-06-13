@@ -14,7 +14,7 @@ class ArchitectDocument(models.Model):
     project_id = fields.Many2one('architect.project', string='Project', required=True)
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
 
-    # Document Details
+    # Document Details - FIXED: Added default value
     document_type = fields.Selection([
         ('drawing', 'Drawing'),
         ('specification', 'Specification'),
@@ -26,7 +26,7 @@ class ArchitectDocument(models.Model):
         ('photo', 'Photo'),
         ('video', 'Video'),
         ('other', 'Other')
-    ], string='Document Type', required=True)
+    ], string='Document Type', required=True, default='drawing', tracking=True)
 
     category_id = fields.Many2one('architect.document.category', string='Category')
     subcategory_id = fields.Many2one('architect.document.subcategory', string='Subcategory')
@@ -158,6 +158,19 @@ class ArchitectDocument(models.Model):
                 doc.checksum = hashlib.md5(doc.file_data).hexdigest()
             else:
                 doc.checksum = ''
+
+    @api.model
+    def create(self, vals):
+        """Override create to ensure document_type is always set"""
+        if 'document_type' not in vals or not vals.get('document_type'):
+            vals['document_type'] = 'drawing'
+        return super(ArchitectDocument, self).create(vals)
+
+    def write(self, vals):
+        """Override write to ensure document_type is never empty"""
+        if 'document_type' in vals and not vals.get('document_type'):
+            vals['document_type'] = 'drawing'
+        return super(ArchitectDocument, self).write(vals)
 
     def action_submit_for_review(self):
         self.ensure_one()
@@ -294,7 +307,7 @@ class ArchitectDocumentTemplate(models.Model):
         ('report', 'Report'),
         ('contract', 'Contract'),
         ('other', 'Other')
-    ], string='Document Type', required=True)
+    ], string='Document Type', required=True, default='drawing')
 
     template_file = fields.Binary(string='Template File', attachment=True)
     template_filename = fields.Char(string='Template Filename')
@@ -305,6 +318,13 @@ class ArchitectDocumentTemplate(models.Model):
     default_tags = fields.Many2many('architect.document.tag', string='Default Tags')
     active = fields.Boolean(default=True)
     usage_count = fields.Integer(string='Usage Count', default=0)
+
+    @api.model
+    def create(self, vals):
+        """Override create to ensure document_type is always set"""
+        if 'document_type' not in vals or not vals.get('document_type'):
+            vals['document_type'] = 'drawing'
+        return super(ArchitectDocumentTemplate, self).create(vals)
 
     def use_template(self):
         self.usage_count += 1
