@@ -12,7 +12,15 @@ class ArchitectTeam(models.Model):
     _order = 'name'
 
     name = fields.Char(string='Team Name', required=True, tracking=True)
-    code = fields.Char(string='Team Code', required=True, copy=False)
+    #code = fields.Char(string='Team Code', required=True, copy=False)
+    code = fields.Char(
+        string='Team Code',
+        required=True,
+        copy=False,
+        readonly=True,
+        tracking=True,
+        default=lambda self: self.env['ir.sequence'].next_by_code('architect.team') or 'New'
+    )
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
     leader_id = fields.Many2one('res.users', string='Team Leader', required=True, tracking=True)
 
@@ -73,11 +81,11 @@ class ArchitectTeam(models.Model):
                 team.quality_rating = 0.0
 
     @api.model_create_multi
-    def create(self, vals_list):
-        for vals in vals_list:
-            if not vals.get('code'):
-                vals['code'] = self.env['ir.sequence'].next_by_code('architect.team') or 'TEAM-' + str(self.env['ir.sequence'].next_by_code('architect.team.sequence') or '001')
-        return super().create(vals_list)
+    # def create(self, vals_list):
+    #     for vals in vals_list:
+    #         if not vals.get('code'):
+    #             vals['code'] = self.env['ir.sequence'].next_by_code('architect.team') or 'TEAM-' + str(self.env['ir.sequence'].next_by_code('architect.team.sequence') or '001')
+    #     return super().create(vals_list)
 
     def action_set_active(self):
         self.state = 'active'

@@ -59,7 +59,7 @@
         <record id="seq_architect_document_category" model="ir.sequence">
             <field name="name">Architect Document</field>
             <field name="code">architect.document.category</field>  <!-- Must match your Python sequence code -->
-            <field name="prefix">CATE-</field>
+            <field name="prefix">DCATE-</field>
             <field name="padding">5</field>
             <field name="number_next">1</field>
         </record>
@@ -67,7 +67,7 @@
         <record id="seq_architect_financial_category" model="ir.sequence">
             <field name="name">Architect Financial Category</field>
             <field name="code">architect.financial.category</field>  <!-- Must match your Python sequence code -->
-            <field name="prefix">CATE-</field>
+            <field name="prefix">FCATE-</field>
             <field name="padding">5</field>
             <field name="number_next">1</field>
         </record>
@@ -136,7 +136,7 @@
             <field name="name">Architect Team</field>
             <field name="code">architect.team</field>
             <field name="prefix">TEAM-</field>
-            <field name="padding">3</field>
+            <field name="padding">5</field>
             <field name="number_next">1</field>
             <field name="number_increment">1</field>
         </record>
