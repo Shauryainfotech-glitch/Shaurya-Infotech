@@ -6,7 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="1f42e310-412d-45da-a505-aa14b50fcb8c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customs/addons/day_plan_work_report_ai/demo/day_plan_demo.xml" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/day_plan_work_report_ai/demo/day_plan_demo.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/day_plan_work_report_ai/__manifest__.py" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/day_plan_work_report_ai/__manifest__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/day_plan_work_report_ai/static/src/components/dashboard/dashboard.css" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/day_plan_work_report_ai/static/src/components/dashboard/dashboard.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/day_plan_work_report_ai/static/src/guaranteed_chart_dashboard.js" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/day_plan_work_report_ai/static/src/guaranteed_chart_dashboard.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,7 +57,7 @@
       <option name="presentableId" value="Default" />
       <updated>1749726847538</updated>
       <workItem from="1749726856771" duration="3491000" />
-      <workItem from="1749784015547" duration="9308000" />
+      <workItem from="1749784015547" duration="10302000" />
     </task>
     <servers />
   </component>

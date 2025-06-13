@@ -289,3 +289,58 @@
 .text-gray-300 {
     color: #dddfeb;
 }
+
+/* Backward Compatibility - Support both class naming conventions */
+.o_guaranteed_chart_dashboard {
+    background-color: #f8f9fc;
+    min-height: 100vh;
+}
+
+.o_guaranteed_chart_dashboard .card {
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+    border-radius: 8px;
+    border: none;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+}
+
+.o_guaranteed_chart_dashboard .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0.25rem 2rem 0 rgba(58, 59, 69, 0.2);
+}
+
+/* Border colors for KPI cards - backward compatibility */
+.border-left-primary {
+    border-left: 4px solid #4e73df !important;
+}
+
+.border-left-success {
+    border-left: 4px solid #1cc88a !important;
+}
+
+.border-left-info {
+    border-left: 4px solid #36b9cc !important;
+}
+
+.border-left-warning {
+    border-left: 4px solid #f6c23e !important;
+}
+
+/* Chart containers - backward compatibility */
+.chart-area,
+.chart-pie,
+.chart-bar {
+    position: relative;
+    height: 320px;
+    padding: 15px;
+    background: #ffffff;
+    border-radius: 8px;
+}
+
+.chart-area canvas,
+.chart-pie canvas,
+.chart-bar canvas {
+    width: 100% !important;
+    height: 100% !important;
+    max-height: 300px;
+}

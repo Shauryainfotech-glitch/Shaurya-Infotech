@@ -1,6 +1,6 @@
 {
     'name': 'Day Plan Work Report AI',
-    'version': '18.0.1.0.0',  # ALTERNATIVE: For Odoo 18 format
+    'version': '18.0.1.0.0',
     'category': 'Productivity',
     'summary': 'AI-powered day planning and work reporting with advanced dashboard',
     'description': """
@@ -58,7 +58,6 @@
         # Data
         'data/sequence.xml',
         'data/ai_analysis_data.xml',
-        # 'data/day_plan_data.xml',
 
         # Views
         'views/day_plan_views.xml',
@@ -97,14 +96,11 @@
 
             # CSS Styles
             'day_plan_work_report_ai/static/src/components/dashboard/dashboard.css',
-        ],
-        'web.assets_common': [
-            # XML Templates
-            # 'day_plan_work_report_ai/static/src/guaranteed_chart_dashboard.xml',
+
+            # XML Templates - MOVED FROM web.assets_qweb to web.assets_backend
+            'day_plan_work_report_ai/static/src/guaranteed_chart_dashboard.xml',
             'day_plan_work_report_ai/static/src/day_plan_templates.xml',
             'day_plan_work_report_ai/static/src/client_action_templates.xml',
-        ],'web.assets_qweb': [  # FIXED: Templates must be in QWeb bundle for Owl
-            'day_plan_work_report_ai/static/src/guaranteed_chart_dashboard.xml',
         ],
     },
     'demo': [
