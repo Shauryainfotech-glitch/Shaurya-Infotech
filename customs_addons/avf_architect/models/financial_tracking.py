@@ -27,9 +27,11 @@ class ArchitectFinancialTracking(models.Model):
     ], string='Transaction Type', required=True)
 
     amount = fields.Monetary(string='Amount', currency_field='currency_id', required=True)
-    currency_id = fields.Many2one('res.currency', string='Currency',
-                                  default=lambda self: self.env.company.currency_id)
-
+    currency_id = fields.Many2one(
+        'res.currency',
+        string='Currency',
+        default=lambda self: self.env.ref('base.₹')  # Ensure 'base.INR' is the XML ID for INR currency
+    )
     # Dates
     date = fields.Date(string='Date', required=True, default=fields.Date.today)
     due_date = fields.Date(string='Due Date')
