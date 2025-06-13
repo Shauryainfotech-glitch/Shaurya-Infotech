@@ -68,28 +68,16 @@ class ArchitectRateSchedule(models.Model):
             schedule.item_count = len(schedule.rate_item_ids)
 
     @api.model
-    # def create(self, vals):
-    #     if 'code' not in vals or not vals['code']:
-    #         vals['code'] = self.env['ir.sequence'].next_by_code('architect.rate.schedule') or 'New'
-    #     return super().create(vals)
-
-    # def action_publish(self):
-    #     self.state = 'published'
-    #     self.message_post(body=_("Rate schedule published."))
-    #
-    # def action_archive(self):
-    #     self.state = 'archived'
-    #     self.message_post(body=_("Rate schedule archived."))
-
-    def action_publish(self):
-        for record in self:
-            record.state = 'published'
-            record.message_post(body=_("Rate schedule published."))
+    def action_publish(self, *args, **kwargs):
+        # Fix to handle extra arguments
+        self.state = 'published'
+        self.message_post(body=_("Rate schedule published."))
 
     def action_archive(self):
-        for record in self:
-            record.state = 'archived'
-            record.message_post(body=_("Rate schedule archived."))
+        self.state = 'archived'
+        self.message_post(body=_("Rate schedule archived."))
+
+
 
     def action_duplicate_for_new_period(self):
         new_schedule = self.copy({
@@ -266,7 +254,6 @@ class ArchitectEstimation(models.Model):
     _order = 'create_date desc'
 
     name = fields.Char(string='Estimation Name', required=True, tracking=True)
-    #code = fields.Char(string='Estimation Code', required=True, copy=False)
     code = fields.Char(
         string='Estimation Code',
         required=True,
@@ -326,11 +313,6 @@ class ArchitectEstimation(models.Model):
             estimation.total_amount = estimation.total_before_tax + estimation.tax_amount
 
     @api.model
-    # def create(self, vals):
-    #     if 'code' not in vals or not vals['code']:
-    #         vals['code'] = self.env['ir.sequence'].next_by_code('architect.estimation') or 'New'
-    #     return super().create(vals)
-
     def action_submit(self):
         self.state = 'submitted'
         self.message_post(body=_("Estimation submitted for approval."))
