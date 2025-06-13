@@ -67,19 +67,23 @@ class ArchitectRateSchedule(models.Model):
         for schedule in self:
             schedule.item_count = len(schedule.rate_item_ids)
 
-    @api.model
-    def action_publish(self, *args, **kwargs):
-        # Fix to handle extra arguments
+    def action_publish(self):
+        """Publish the rate schedule"""
+        self.ensure_one()  # Ensure this is called on a single record
         self.state = 'published'
         self.message_post(body=_("Rate schedule published."))
+        return True
 
     def action_archive(self):
+        """Archive the rate schedule"""
+        self.ensure_one()  # Ensure this is called on a single record
         self.state = 'archived'
         self.message_post(body=_("Rate schedule archived."))
-
-
+        return True
 
     def action_duplicate_for_new_period(self):
+        """Create a duplicate rate schedule for a new period"""
+        self.ensure_one()  # Ensure this is called on a single record
         new_schedule = self.copy({
             'name': f"{self.name} - New Period",
             'effective_date': fields.Date.today(),
@@ -95,6 +99,8 @@ class ArchitectRateSchedule(models.Model):
         }
 
     def action_apply_escalation(self):
+        """Apply price escalation to all rate items"""
+        self.ensure_one()  # Ensure this is called on a single record
         if self.price_escalation_factor > 0:
             for item in self.rate_item_ids:
                 item.unit_rate = item.unit_rate * (1 + self.price_escalation_factor / 100)
@@ -312,18 +318,26 @@ class ArchitectEstimation(models.Model):
             estimation.tax_amount = estimation.total_before_tax * 0.18
             estimation.total_amount = estimation.total_before_tax + estimation.tax_amount
 
-    @api.model
     def action_submit(self):
+        """Submit estimation for approval"""
+        self.ensure_one()
         self.state = 'submitted'
         self.message_post(body=_("Estimation submitted for approval."))
+        return True
 
     def action_approve(self):
+        """Approve estimation"""
+        self.ensure_one()
         self.state = 'approved'
         self.message_post(body=_("Estimation approved."))
+        return True
 
     def action_reject(self):
+        """Reject estimation"""
+        self.ensure_one()
         self.state = 'rejected'
         self.message_post(body=_("Estimation rejected."))
+        return True
 
 
 class ArchitectEstimationLine(models.Model):
