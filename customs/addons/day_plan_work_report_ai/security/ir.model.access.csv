@@ -1,14 +1,17 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_day_plan_dashboard_clean_user,day.plan.dashboard.clean user access,model_day_plan_dashboard_clean,base.group_user,1,1,1,1
-access_day_plan_dashboard_clean_manager,day.plan.dashboard.clean manager access,model_day_plan_dashboard_clean,base.group_system,1,1,1,1
 access_day_plan_user,day.plan user access,model_day_plan,base.group_user,1,1,1,1
 access_day_plan_manager,day.plan manager access,model_day_plan,base.group_system,1,1,1,1
-access_day_plan_dashboard_user,day.plan.dashboard user access,model_day_plan_dashboard,base.group_user,1,1,1,1
-access_day_plan_dashboard_manager,day.plan.dashboard manager access,model_day_plan_dashboard,base.group_system,1,1,1,1
 access_day_plan_task_user,day.plan.task user access,model_day_plan_task,base.group_user,1,1,1,1
 access_day_plan_task_manager,day.plan.task manager access,model_day_plan_task,base.group_system,1,1,1,1
-access_day_plan_category_user,day.plan.category user access,model_day_plan_category,base.group_user,1,1,1,1
-access_day_plan_category_manager,day.plan.category manager access,model_day_plan_category,base.group_system,1,1,1,1
-access_day_plan_priority_user,day.plan.priority user access,model_day_plan_priority,base.group_user,1,1,1,1
-access_day_plan_priority_manager,day.plan.priority manager access,model_day_plan_priority,base.group_system,1,1,1,1
-access_day_plan_settings_user,day.plan.settings user access,model_day_plan_settings,base.group_user,1,0,0,0
+access_work_report_user,work.report user access,model_work_report,base.group_user,1,1,1,1
+access_work_report_manager,work.report manager access,model_work_report,base.group_system,1,1,1,1
+access_ai_analysis_user,ai.analysis user access,model_ai_analysis,base.group_user,1,1,1,1
+access_ai_analysis_manager,ai.analysis manager access,model_ai_analysis,base.group_system,1,1,1,1
+access_day_plan_dashboard_user,day.plan.dashboard user access,model_day_plan_dashboard,base.group_user,1,1,1,1
+access_day_plan_dashboard_manager,day.plan.dashboard manager access,model_day_plan_dashboard,base.group_system,1,1,1,1
+access_day_plan_dashboard_clean_user,day.plan.dashboard.clean user access,model_day_plan_dashboard_clean,base.group_user,1,1,1,1
+access_day_plan_dashboard_clean_manager,day.plan.dashboard.clean manager access,model_day_plan_dashboard_clean,base.group_system,1,1,1,1
+access_day_plan_recent_activity_user,day.plan.recent.activity user access,model_day_plan_recent_activity,base.group_user,1,1,1,0
+access_day_plan_recent_activity_manager,day.plan.recent.activity manager access,model_day_plan_recent_activity,base.group_system,1,1,1,1
+access_day_plan_team_performance_user,day.plan.team.performance user access,model_day_plan_team_performance,base.group_user,1,1,1,0
+access_day_plan_team_performance_manager,day.plan.team.performance manager access,model_day_plan_team_performance,base.group_system,1,1,1,1
