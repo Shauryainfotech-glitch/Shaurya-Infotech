@@ -7,11 +7,12 @@
                 <!-- Include Chart.js library (using Odoo's own Chart.js) -->
                 <script type="text/javascript" src="/web/static/lib/Chart/Chart.js"/>
                 
-                <!-- Include our JavaScript components (remove duplicate entries) -->
-                <script type="text/javascript" src="/day_plan_work_report_ai/static/src/components/dashboard/productivity_dashboard_action.js"/>
-
-                <!-- Include dashboard chart only once -->
+                <!-- Include our JavaScript components -->
+                <script type="text/javascript" src="/day_plan_work_report_ai/static/src/new_dashboard_client_action.js"/>
                 <script type="text/javascript" src="/day_plan_work_report_ai/static/src/components/dashboard_chart.js"/>
+
+                <!-- Include productivity dashboard components -->
+                <script type="text/javascript" src="/day_plan_work_report_ai/static/src/components/dashboard/productivity_dashboard_action.js"/>
             </xpath>
         </template>
     </data>

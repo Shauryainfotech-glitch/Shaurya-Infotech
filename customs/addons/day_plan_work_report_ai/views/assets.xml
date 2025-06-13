@@ -4,14 +4,8 @@
         <!-- Include assets for Day Plan Dashboard -->
         <template id="assets_backend" name="Day Plan Dashboard Assets" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
-                <!-- Include Chart.js library -->
-                <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
-
                 <!-- Include Dashboard JS -->
-                <script type="text/javascript" src="/day_plan_work_report_ai/static/src/new_dashboard_client_action.js"></script>
-
-                <!-- Include IAP JS (If needed for IAP related features, adjust if necessary) -->
-                <script type="text/javascript" src="/iap/static/src/js/iap.js"></script>
+                <script type="text/javascript" src="/day_plan_work_report_ai/static/src/new_dashboard_client_action.js"/>
             </xpath>
         </template>
     </data>
