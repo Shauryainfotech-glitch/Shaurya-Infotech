@@ -3,60 +3,38 @@
     <data noupdate="1">
         <!-- Demo data for Day Plan Work Report AI -->
 
-        <!-- Demo Employees (if hr module is available) -->
-        <record id="demo_employee_1" model="hr.employee">
-            <field name="name">John Smith</field>
-            <field name="work_email">john.smith@company.com</field>
-            <field name="user_id" ref="base.user_demo"/>
-        </record>
-
-        <record id="demo_employee_2" model="hr.employee">
-            <field name="name">Sarah Johnson</field>
-            <field name="work_email">sarah.johnson@company.com</field>
-            <field name="user_id" ref="base.user_admin"/>
-        </record>
-
-        <!-- Demo Day Plan Records -->
+        <!-- Demo Day Plan Records - No employee assignment to avoid conflicts -->
         <record id="demo_day_plan_1" model="day.plan">
             <field name="name">Daily Plan - Sprint Planning Session</field>
             <field name="sequence">DP/00001</field>
             <field name="date" eval="(DateTime.now() - timedelta(days=2)).strftime('%Y-%m-%d')"/>
-            <field name="employee_id" ref="demo_employee_1"/>
             <field name="main_goals">Finalize sprint backlog and assign tasks to team members</field>
             <field name="key_results">Complete sprint planning, define acceptance criteria for all stories</field>
             <field name="focus_areas">Agile planning, team coordination, backlog refinement</field>
             <field name="potential_blockers">Unclear requirements for some user stories</field>
             <field name="estimated_hours">8</field>
-            <field name="planned_start" eval="(DateTime.now() - timedelta(days=2)).replace(hour=9, minute=0)"/>
-            <field name="planned_end" eval="(DateTime.now() - timedelta(days=2)).replace(hour=17, minute=0)"/>
         </record>
 
         <record id="demo_day_plan_2" model="day.plan">
             <field name="name">Daily Plan - Client Presentation Preparation</field>
             <field name="sequence">DP/00002</field>
             <field name="date" eval="(DateTime.now() - timedelta(days=1)).strftime('%Y-%m-%d')"/>
-            <field name="employee_id" ref="demo_employee_2"/>
             <field name="main_goals">Prepare comprehensive presentation for client review meeting</field>
             <field name="key_results">Complete slide deck, practice presentation, prepare demo environment</field>
             <field name="focus_areas">Presentation design, demo preparation, Q&amp;A scenarios</field>
             <field name="potential_blockers">Demo environment stability issues</field>
             <field name="estimated_hours">7</field>
-            <field name="planned_start" eval="(DateTime.now() - timedelta(days=1)).replace(hour=9, minute=0)"/>
-            <field name="planned_end" eval="(DateTime.now() - timedelta(days=1)).replace(hour=16, minute=0)"/>
         </record>
 
         <record id="demo_day_plan_3" model="day.plan">
             <field name="name">Daily Plan - Code Review and Testing</field>
             <field name="sequence">DP/00003</field>
             <field name="date" eval="DateTime.now().strftime('%Y-%m-%d')"/>
-            <field name="employee_id" ref="demo_employee_1"/>
             <field name="main_goals">Review pending pull requests and conduct thorough testing</field>
             <field name="key_results">Complete 5 code reviews, execute test suite, fix identified bugs</field>
             <field name="focus_areas">Code quality, testing, bug fixes</field>
             <field name="potential_blockers">Complex merge conflicts</field>
             <field name="estimated_hours">8</field>
-            <field name="planned_start" eval="DateTime.now().replace(hour=9, minute=0)"/>
-            <field name="planned_end" eval="DateTime.now().replace(hour=17, minute=0)"/>
         </record>
 
         <!-- Demo Day Plan Tasks -->
@@ -212,11 +190,6 @@
             <field name="improvement_areas">Earlier testing of technical setups, more time allocated for rehearsal.</field>
             <field name="recommendations">1. Test demo environments 24 hours before presentations, 2. Schedule practice sessions with colleagues, 3. Create standard presentation checklists.</field>
             <field name="state">done</field>
-        </record>
-
-        <!-- Demo Dashboard Data -->
-        <record id="demo_dashboard_1" model="day.plan.dashboard.clean">
-            <field name="name">Main Dashboard</field>
         </record>
 
     </data>
