@@ -73,13 +73,23 @@ class ArchitectRateSchedule(models.Model):
     #         vals['code'] = self.env['ir.sequence'].next_by_code('architect.rate.schedule') or 'New'
     #     return super().create(vals)
 
-    def action_publish(self):
-        self.state = 'published'
-        self.message_post(body=_("Rate schedule published."))
+    # def action_publish(self):
+    #     self.state = 'published'
+    #     self.message_post(body=_("Rate schedule published."))
+    #
+    # def action_archive(self):
+    #     self.state = 'archived'
+    #     self.message_post(body=_("Rate schedule archived."))
 
-    def action_archive(self):
-        self.state = 'archived'
-        self.message_post(body=_("Rate schedule archived."))
+    def action_publish(self, *args, **kwargs):
+        for record in self:
+            record.state = 'published'
+            record.message_post(body=_("Rate schedule published."))
+
+    def action_archive(self, *args, **kwargs):
+        for record in self:
+            record.state = 'archived'
+            record.message_post(body=_("Rate schedule archived."))
 
     def action_duplicate_for_new_period(self):
         new_schedule = self.copy({
