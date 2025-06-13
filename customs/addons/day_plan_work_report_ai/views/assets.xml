@@ -1,14 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+        <!-- Include assets for Day Plan Dashboard -->
         <template id="assets_backend" name="Day Plan Dashboard Assets" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
                 <!-- Include Chart.js library -->
-                <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"/>
-                
+                <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+
                 <!-- Include Dashboard JS -->
-                <script type="text/javascript" src="/day_plan_work_report_ai/static/src/new_dashboard_client_action.js"/>
+                <script type="text/javascript" src="/day_plan_work_report_ai/static/src/new_dashboard_client_action.js"></script>
+
+                <!-- Include web_enterprise assets for EnterpriseNavBar template -->
+                <script type="text/javascript" src="/web_enterprise/static/src/js/enterprise_navbar.js"></script>
             </xpath>
+        </template>
+
+        <!-- Include any other assets as needed -->
+        <template id="assets_frontend" name="Day Plan Frontend Assets" inherit_id="web.assets_frontend">
+            <!-- Add any additional frontend assets here -->
         </template>
     </data>
 </odoo>
