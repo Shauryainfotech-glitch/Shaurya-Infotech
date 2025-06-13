@@ -12,8 +12,7 @@ class ArchitectAIAssistant(models.Model):
 
     name = fields.Char(string='Session Name', required=True)
     project_id = fields.Many2one('architect.project', string='Project')
-    user_id = fields.Many2one('res.users', string='User',
-                              default=lambda self: self.env.user, required=True)
+    user_id = fields.Many2one('res.users', string='User', default=lambda self: self.env.user, required=True)
 
     # AI Session Details
     session_type = fields.Selection([
@@ -27,12 +26,8 @@ class ArchitectAIAssistant(models.Model):
     ], string='Session Type', required=True, default='general')
 
     # Conversation
-    conversation_ids = fields.One2many('architect.ai.conversation', 'session_id',
-                                       string='Conversation History')
+    conversation_ids = fields.One2many('architect.ai.conversation', 'session_id', string='Conversation History')
     temp_message = fields.Text(string='Temporary Message')
-    # Context Information
-    context_data = fields.Text(string='Context Data (JSON)')
-    project_context = fields.Html(string='Project Context')
 
     # AI Configuration
     ai_model = fields.Selection([
@@ -42,8 +37,7 @@ class ArchitectAIAssistant(models.Model):
         ('custom', 'Custom Model')
     ], string='AI Model', default='gpt4')
 
-    temperature = fields.Float(string='Temperature', default=0.7,
-                               help="Controls randomness in AI responses")
+    temperature = fields.Float(string='Temperature', default=0.7, help="Controls randomness in AI responses")
     max_tokens = fields.Integer(string='Max Tokens', default=2000)
 
     # Status
@@ -53,7 +47,6 @@ class ArchitectAIAssistant(models.Model):
     # Analytics
     total_queries = fields.Integer(string='Total Queries', compute='_compute_analytics')
     avg_response_time = fields.Float(string='Avg Response Time (s)', compute='_compute_analytics')
-    satisfaction_rating = fields.Float(string='Satisfaction Rating')
 
     @api.depends('conversation_ids')
     def _compute_analytics(self):
@@ -68,6 +61,9 @@ class ArchitectAIAssistant(models.Model):
     def send_message(self, message, message_type='user'):
         """Send a message to AI and get response"""
         self.ensure_one()
+
+        if not message:
+            raise ValidationError("Message cannot be empty.")
 
         # Create user message
         user_msg = self.env['architect.ai.conversation'].create({
@@ -94,14 +90,18 @@ class ArchitectAIAssistant(models.Model):
 
     def action_send_message(self):
         """Action to send a message from the form view"""
-        # This method would be called from a button, but since we don't have
-        # a temp_message field defined in the view, we'll skip this implementation
-        # In a real implementation, you'd add a temp field to store the message
-        pass
+        if not self.temp_message:
+            raise ValidationError("Temporary message cannot be empty.")
+
+        # Call the send_message function with the temp_message value
+        self.send_message(self.temp_message, message_type='user')
+
+        # Clear the temp_message field after sending
+        self.temp_message = False
 
     def _generate_ai_response(self, user_message):
         """Generate AI response based on user message and context"""
-        # This is a placeholder - integrate with actual AI service
+        # Placeholder function - integrate with actual AI service
         context = self._prepare_context()
 
         # Sample responses based on session type
@@ -138,7 +138,6 @@ class ArchitectAIAssistant(models.Model):
                 pass
 
         return context
-
 
     def clear_conversation(self):
         """Clear conversation history"""
