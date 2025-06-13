@@ -96,7 +96,7 @@
             'day_plan_work_report_ai/static/src/views/day_plan_calendar/day_plan_calendar_model.js',
 
             # CSS Styles
-            'day_plan_work_report_ai/static/src/css/dashboard_styles.css',
+            'day_plan_work_report_ai/static/src/components/dashboard/dashboard.css',
         ],
         'web.assets_common': [
             # XML Templates
