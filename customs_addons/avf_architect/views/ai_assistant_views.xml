@@ -33,7 +33,8 @@
                             <field name="ai_model"/>
                             <field name="temperature"/>
                             <field name="max_tokens"/>
-                            <field name="satisfaction_rating" widget="priority"/>
+                            <!-- Updated field widget: Remove priority widget if it's causing the error -->
+                            <field name="satisfaction_rating"/>
                         </group>
                     </group>
                     <notebook>
@@ -67,10 +68,6 @@
                         </page>
                     </notebook>
                 </sheet>
-<!--                <div class="oe_chatter">-->
-<!--                    <field name="message_follower_ids"/>-->
-<!--                    <field name="message_ids"/>-->
-<!--                </div>-->
             </form>
         </field>
     </record>
