@@ -103,9 +103,9 @@
             'day_plan_work_report_ai/static/src/client_action_templates.xml',
         ],
     },
-    'demo': [
-        'demo/day_plan_demo.xml',
-    ],
+    # 'demo': [
+    #     'demo/day_plan_demo.xml',
+    # ],
     'installable': True,
     'application': True,
     'auto_install': False,
