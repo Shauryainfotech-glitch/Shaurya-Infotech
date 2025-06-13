@@ -48,6 +48,7 @@
         'project',
         'board',
         'resource',
+        'web_enterprise',
     ],
     'data': [
         # Security
