@@ -12,7 +12,6 @@ class ArchitectTeam(models.Model):
     _order = 'name'
 
     name = fields.Char(string='Team Name', required=True, tracking=True)
-    #code = fields.Char(string='Team Code', required=True, copy=False)
     code = fields.Char(
         string='Team Code',
         required=True,
@@ -74,24 +73,24 @@ class ArchitectTeam(models.Model):
             completed_projects = team.project_ids.filtered(lambda p: p.state == 'completed')
             if completed_projects:
                 team.efficiency_rating = sum(completed_projects.mapped('progress')) / len(completed_projects)
-                # Use a default quality rating since the field might not exist
                 team.quality_rating = 85.0  # Default value
             else:
                 team.efficiency_rating = 0.0
                 team.quality_rating = 0.0
 
-    @api.model_create_multi
-    # def create(self, vals_list):
-    #     for vals in vals_list:
-    #         if not vals.get('code'):
-    #             vals['code'] = self.env['ir.sequence'].next_by_code('architect.team') or 'TEAM-' + str(self.env['ir.sequence'].next_by_code('architect.team.sequence') or '001')
-    #     return super().create(vals_list)
-
     def action_set_active(self, *args, **kwargs):
+        """Set the team's state to active."""
+        if not self:
+            raise ValidationError("Team record not found.")
         self.state = 'active'
+        return self
 
     def action_set_inactive(self, *args, **kwargs):
+        """Set the team's state to inactive."""
+        if not self:
+            raise ValidationError("Team record not found.")
         self.state = 'inactive'
+        return self
 
     def check_allocation(self):
         self.ensure_one()
@@ -99,7 +98,6 @@ class ArchitectTeam(models.Model):
             self.state = 'overallocated'
         elif self.state == 'overallocated':
             self.state = 'active'
-
 
 class ArchitectTeamAllocation(models.Model):
     _name = 'architect.team.allocation'
