@@ -87,10 +87,10 @@ class ArchitectTeam(models.Model):
     #             vals['code'] = self.env['ir.sequence'].next_by_code('architect.team') or 'TEAM-' + str(self.env['ir.sequence'].next_by_code('architect.team.sequence') or '001')
     #     return super().create(vals_list)
 
-    def action_set_active(self):
+    def action_set_active(self, *args, **kwargs):
         self.state = 'active'
 
-    def action_set_inactive(self):
+    def action_set_inactive(self, *args, **kwargs):
         self.state = 'inactive'
 
     def check_allocation(self):
