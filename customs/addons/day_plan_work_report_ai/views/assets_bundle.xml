@@ -4,11 +4,7 @@
         <!-- Assets for the web backend -->
         <template id="assets_backend" name="Day Plan Dashboard Backend Assets" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
-                <!-- Include Chart.js library (using Odoo's own Chart.js) -->
-                <script type="text/javascript" src="/web/static/lib/Chart/Chart.js"/>
-                
                 <!-- Include our JavaScript components -->
-                <script type="text/javascript" src="/day_plan_work_report_ai/static/src/new_dashboard_client_action.js"/>
                 <script type="text/javascript" src="/day_plan_work_report_ai/static/src/components/dashboard_chart.js"/>
 
                 <!-- Include productivity dashboard components -->
