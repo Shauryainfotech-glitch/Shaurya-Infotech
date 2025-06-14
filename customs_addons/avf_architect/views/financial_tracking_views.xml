@@ -61,17 +61,17 @@
             <form string="Financial Tracking">
                 <header>
                     <button name="action_submit" string="Submit" type="object"
-                            class="oe_highlight" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                            class="oe_highlight" modifiers="{'invisible': [('state', '!=', 'draft')]}"/>
                     <button name="action_approve" string="Approve" type="object"
-                            class="oe_highlight" attrs="{'invisible': [('state', '!=', 'submitted')]}"/>
+                            class="oe_highlight" modifiers="{'invisible': [('state', '!=', 'submitted')]}"/>
                     <button name="action_reject" string="Reject" type="object"
-                            class="btn-warning" attrs="{'invisible': [('state', '!=', 'submitted')]}"/>
+                            class="btn-warning" modifiers="{'invisible': [('state', '!=', 'submitted')]}"/>
                     <button name="action_pay" string="Mark as Paid" type="object"
-                            class="btn-success" attrs="{'invisible': ['|', ('transaction_type', '!=', 'expense'), ('state', '!=', 'approved')]}"/>
+                            class="btn-success" modifiers="{'invisible': ['|', ('transaction_type', '!=', 'expense'), ('state', '!=', 'approved')]}"/>
                     <button name="action_receive" string="Mark as Received" type="object"
-                            class="btn-success" attrs="{'invisible': ['|', ('transaction_type', '!=', 'income'), ('state', '!=', 'approved')]}"/>
+                            class="btn-success" modifiers="{'invisible': ['|', ('transaction_type', '!=', 'income'), ('state', '!=', 'approved')]}"/>
                     <button name="action_cancel" string="Cancel" type="object"
-                            class="btn-secondary" attrs="{'invisible': [('state', 'in', ['cancelled', 'paid'])]}"/>
+                            class="btn-secondary" modifiers="{'invisible': [('state', 'in', ['cancelled', 'paid'])]}"/>
                     <field name="state" widget="statusbar"
                            statusbar_visible="draft,submitted,approved,paid,rejected"/>
                 </header>
@@ -92,7 +92,7 @@
                         </group>
                         <group>
                             <field name="date"/>
-                            <field name="due_date" attrs="{'invisible': [('transaction_type', '!=', 'expense')]}"/>
+                            <field name="due_date" modifiers="{'invisible': [('transaction_type', '!=', 'expense')]}"/>
                             <field name="user_id"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
@@ -244,15 +244,15 @@
             <form string="Project Budget">
                 <header>
                     <button name="action_submit" string="Submit" type="object"
-                            class="oe_highlight" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                            class="oe_highlight" modifiers="{'invisible': [('state', '!=', 'draft')]}"/>
                     <button name="action_approve" string="Approve" type="object"
-                            class="oe_highlight" attrs="{'invisible': [('state', '!=', 'submitted')]}"/>
+                            class="oe_highlight" modifiers="{'invisible': [('state', '!=', 'submitted')]}"/>
                     <button name="action_activate" string="Activate" type="object"
-                            class="oe_highlight" attrs="{'invisible': [('state', '!=', 'approved')]}"/>
+                            class="oe_highlight" modifiers="{'invisible': [('state', '!=', 'approved')]}"/>
                     <button name="action_close" string="Close" type="object"
-                            class="btn-secondary" attrs="{'invisible': [('state', '!=', 'active')]}"/>
+                            class="btn-secondary" modifiers="{'invisible': [('state', '!=', 'active')]}"/>
                     <button name="action_revise" string="Revise" type="object"
-                            class="btn-warning" attrs="{'invisible': [('state', 'not in', ['approved', 'active'])]}"/>
+                            class="btn-warning" modifiers="{'invisible': [('state', 'not in', ['approved', 'active'])]}"/>
                     <field name="state" widget="statusbar"
                            statusbar_visible="draft,submitted,approved,active,closed"/>
                 </header>
@@ -407,11 +407,11 @@
             <form string="Cost Estimate">
                 <header>
                     <button name="action_submit" string="Submit" type="object"
-                            class="oe_highlight" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                            class="oe_highlight" modifiers="{'invisible': [('state', '!=', 'draft')]}"/>
                     <button name="action_approve" string="Approve" type="object"
-                            class="oe_highlight" attrs="{'invisible': [('state', '!=', 'submitted')]}"/>
+                            class="oe_highlight" modifiers="{'invisible': [('state', '!=', 'submitted')]}"/>
                     <button name="action_reject" string="Reject" type="object"
-                            class="btn-warning" attrs="{'invisible': [('state', '!=', 'submitted')]}"/>
+                            class="btn-warning" modifiers="{'invisible': [('state', '!=', 'submitted')]}"/>
 
                     <field name="state" widget="statusbar"
                            statusbar_visible="draft,submitted,approved,rejected"/>
