@@ -30,7 +30,7 @@ class ArchitectFinancialTracking(models.Model):
     currency_id = fields.Many2one(
         'res.currency',
         string='Currency',
-        default=lambda self: self.env.ref('base.₹')  # Ensure 'base.INR' is the XML ID for INR currency
+        default=lambda self: self.env.ref('base.INR')  # Ensure 'base.INR' is the XML ID for INR currency
     )
     # Dates
     date = fields.Date(string='Date', required=True, default=fields.Date.today)
