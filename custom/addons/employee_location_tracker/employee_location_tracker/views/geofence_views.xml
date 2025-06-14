@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Geofence Form View -->
+        <record id="view_geofence_form" model="ir.ui.view">
+            <field name="name">hr.location.geofence.form</field>
+            <field name="model">hr.location.geofence</field>
+            <field name="arch" type="xml">
+                <form string="Geofence">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" type="object"
+                                    name="action_view_locations" icon="fa-map-marker">
+                                <field name="entry_count" widget="statinfo"
+                                       string="Locations"/>
+                            </button>
+                            <button class="oe_stat_button" type="object"
+                                    name="action_view_current_occupants" icon="fa-users">
+                                <field name="current_occupancy" widget="statinfo"
+                                       string="Current"/>
+                            </button>
+                        </div>
+
+                        <widget name="web_ribbon" title="Archived"
+                                bg_color="bg-danger"/>
+
+                        <group>
+                            <group name="basic_info">
+                                <field name="name" required="1"/>
+                                <field name="code"/>
+                                <field name="geofence_type" required="1"/>
+                                <field name="active"/>
+                                <field name="color" widget="color"/>
+                            </group>
+                            <group name="company_info">
+                                <field name="company_id"/>
+                                <field name="description"/>
+                            </group>
+                        </group>
+
+                        <!-- Circular Geofence Settings -->
+                        <group string="Circular Geofence">
+                            <group>
+                                <field name="center_latitude" required="1"/>
+                                <field name="center_longitude" required="1"/>
+                            </group>
+                            <group>
+                                <field name="radius" required="1"/>
+                            </group>
+                        </group>
+
+                        <!-- Polygon/Rectangle Geofence Settings -->
+                        <group string="Boundary Points">
+                            <field name="boundary_points" widget="text" colspan="2"
+                                   placeholder='[{"lat": 12.3456, "lng": 78.9012}, {"lat": 12.3457, "lng": 78.9013}, ...]'
+                                   help="JSON array of latitude/longitude coordinates defining the boundary"/>
+                        </group>
+
+                        <!-- Geofence Rules -->
+                        <group string="Automation Rules">
+                            <group>
+                                <field name="auto_attendance"/>
+                                <field name="alert_on_entry"/>
+                                <field name="alert_on_exit"/>
+                            </group>
+                            <group>
+                                <field name="restricted_hours"/>
+                                <field name="start_time" widget="float_time"/>
+                                <field name="end_time" widget="float_time"/>
+                            </group>
+                        </group>
+
+                        <group string="Allowed Employees">
+                            <field name="allowed_employees" widget="many2many_tags"
+                                   colspan="2" nolabel="1"/>
+                        </group>
+
+                        <!-- Analytics -->
+                        <group string="Analytics">
+                            <group>
+                                <field name="entry_count" readonly="1"/>
+                                <field name="current_occupancy" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="avg_duration" readonly="1"/>
+                                <field name="last_entry" readonly="1"/>
+                            </group>
+                        </group>
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Geofence Search View -->
+        <record id="view_geofence_search" model="ir.ui.view">
+            <field name="name">hr.location.geofence.search</field>
+            <field name="model">hr.location.geofence</field>
+            <field name="arch" type="xml">
+                <search string="Geofences">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="geofence_type"/>
+
+                    <filter name="active" string="Active"
+                            domain="[('active', '=', True)]"/>
+                    <filter name="inactive" string="Inactive"
+                            domain="[('active', '=', False)]"/>
+
+                    <separator/>
+                    <filter name="circle" string="Circular"
+                            domain="[('geofence_type', '=', 'circle')]"/>
+                    <filter name="polygon" string="Polygon"
+                            domain="[('geofence_type', '=', 'polygon')]"/>
+                    <filter name="rectangle" string="Rectangle"
+                            domain="[('geofence_type', '=', 'rectangle')]"/>
+
+                    <separator/>
+                    <filter name="auto_attendance" string="Auto Attendance"
+                            domain="[('auto_attendance', '=', True)]"/>
+                    <filter name="alert_entry" string="Alert on Entry"
+                            domain="[('alert_on_entry', '=', True)]"/>
+                    <filter name="alert_exit" string="Alert on Exit"
+                            domain="[('alert_on_exit', '=', True)]"/>
+
+                    <group expand="0" string="Group By">
+                        <filter name="group_type" string="Type"
+                                context="{'group_by': 'geofence_type'}"/>
+                        <filter name="group_company" string="Company"
+                                context="{'group_by': 'company_id'}"/>
+                        <filter name="group_active" string="Status"
+                                context="{'group_by': 'active'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Geofence Action -->
+        <record id="action_geofences" model="ir.actions.act_window">
+            <field name="name">Geofences</field>
+            <field name="res_model">hr.location.geofence</field>
+            <field name="view_mode">form</field>
+            <field name="search_view_id" ref="view_geofence_search"/>
+            <field name="context">{'search_default_active': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first geofence!
+                </p>
+                <p>
+                    Geofences are virtual boundaries that trigger actions when
+                    employees enter or exit defined areas. Set up circular or
+                    polygon geofences to automate attendance tracking and monitoring.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

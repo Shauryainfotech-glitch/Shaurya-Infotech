@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Analytics Dashboard Form View -->
+        <record id="view_analytics_dashboard_form" model="ir.ui.view">
+            <field name="name">hr.location.analytics.dashboard.form</field>
+            <field name="model">hr.location.analytics.dashboard</field>
+            <field name="arch" type="xml">
+                <form string="Location Analytics Dashboard">
+                    <header>
+                        <button name="action_refresh_data" type="object"
+                                string="Refresh Data" class="btn-primary"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group name="basic_info">
+                                <field name="name" required="1"/>
+                                <field name="description"/>
+                            </group>
+                            <group name="date_range">
+                                <field name="date_from" required="1"/>
+                                <field name="date_to" required="1"/>
+                            </group>
+                        </group>
+
+                        <group string="Filters">
+                            <group>
+                                <field name="employee_ids" widget="many2many_tags"/>
+                                <field name="department_ids" widget="many2many_tags"/>
+                            </group>
+                            <group>
+                                <field name="geofence_ids" widget="many2many_tags"/>
+                                <field name="company_id"/>
+                            </group>
+                        </group>
+
+                        <!-- Summary Statistics -->
+                        <group string="Summary Statistics">
+                            <group>
+                                <field name="total_employees_tracked" readonly="1"/>
+                                <field name="total_locations_recorded" readonly="1"/>
+                                <field name="total_distance_traveled" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="avg_locations_per_employee" readonly="1"/>
+                                <field name="anomalies_detected" readonly="1"/>
+                                <field name="geofence_violations" readonly="1"/>
+                            </group>
+                        </group>
+
+                        <!-- Charts Section -->
+                        <notebook>
+                            <page string="Charts" name="charts">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div id="daily_activity_chart" class="o_dashboard_chart"/>
+                                    </div>
+                                    <div class="col-6">
+                                        <div id="hourly_distribution_chart" class="o_dashboard_chart"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div id="employee_activity_chart" class="o_dashboard_chart"/>
+                                    </div>
+                                    <div class="col-6">
+                                        <div id="location_types_chart" class="o_dashboard_chart"/>
+                                    </div>
+                                </div>
+                            </page>
+
+                            <page string="Map" name="map">
+                                <div id="location_map" style="height: 600px;"/>
+                            </page>
+
+                            <page string="Raw Data" name="raw_data" groups="base.group_no_one">
+                                <group>
+                                    <field name="summary_data" widget="text" readonly="1"/>
+                                    <field name="chart_data" widget="text" readonly="1"/>
+                                    <field name="map_data" widget="text" readonly="1"/>
+                                </group>
+                            </page>
+                        </notebook>
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Analytics Dashboard Action -->
+        <record id="action_analytics_dashboard" model="ir.actions.act_window">
+            <field name="name">Analytics Dashboard</field>
+            <field name="res_model">hr.location.analytics.dashboard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_analytics_dashboard_form"/>
+            <field name="target">current</field>
+            <field name="context">{
+                'default_name': 'Main Dashboard',
+                'default_description': 'Overview of location tracking analytics'
+            }</field>
+        </record>
+
+    </data>
+</odoo>

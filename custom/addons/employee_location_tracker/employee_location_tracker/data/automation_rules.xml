@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Automated Actions for Location Tracking -->
+
+        <!-- Auto-validate high confidence locations -->
+        <record id="auto_validate_locations" model="base.automation">
+            <field name="name">Auto-validate High Confidence Locations</field>
+            <field name="res_model">hr.employee.location</field><!-- Updated model reference -->
+            <field name="active" eval="True"/>
+            <field name="trigger">on_create</field>
+            <field name="filter_pre_domain">[('ai_confidence_score', '&gt;', 0.9), ('anomaly_detected', '=', False)]</field>
+            <field name="code">
+                for record in records:
+                    record.write({
+                        'status': 'validated',
+                        'is_valid': True,
+                        'validation_notes': 'Auto-validated: High AI confidence score'
+                    })
+            </field>
+        </record>
+
+        <!-- Flag anomalies for review -->
+        <record id="flag_anomalies" model="base.automation">
+            <field name="name">Flag Location Anomalies</field>
+            <field name="res_model">hr.employee.location</field><!-- Updated model reference -->
+            <field name="active" eval="True"/>
+            <field name="trigger">on_create_or_write</field>
+            <field name="filter_pre_domain">[('anomaly_detected', '=', True)]</field>
+            <field name="code">
+                for record in records:
+                    if record.anomaly_detected and record.status == 'draft':
+                        record.write({
+                            'status': 'anomaly',
+                            'validation_notes': 'Flagged for review: Anomaly detected by AI'
+                        })
+
+                        # Send notification to managers
+                        managers = env['res.users'].search([('groups_id', 'in', [ref('employee_location_tracker.group_location_manager').id])])
+
+                        for manager in managers:
+                            record.message_post(
+                                body=f"Location anomaly detected for {record.employee_id.name}",
+                                partner_ids=[manager.partner_id.id],
+                                message_type='notification'
+                            )
+            </field>
+        </record>
+
+        <!-- Auto-create attendance records -->
+        <record id="auto_create_attendance" model="base.automation">
+            <field name="name">Auto-create Attendance from Geofence</field>
+            <field name="res_model">hr.employee.location</field><!-- Updated model reference -->
+            <field name="active" eval="True"/>
+            <field name="trigger">on_create</field>
+            <field name="filter_pre_domain">[('geofence_id', '!=', False), ('inside_geofence', '=', True)]</field>
+            <field name="code">
+                for record in records:
+                    if record.geofence_id and record.geofence_id.auto_attendance and record.inside_geofence:
+                        # Check if employee doesn't already have an open attendance
+                        existing_attendance = env['hr.attendance'].search([('employee_id', '=', record.employee_id.id), ('check_out', '=', False)], limit=1)
+
+                        if not existing_attendance and record.location_type == 'check_in':
+                            env['hr.attendance'].create({
+                                'employee_id': record.employee_id.id,
+                                'check_in': record.timestamp,
+                            })
+                        elif existing_attendance and record.location_type == 'check_out':
+                            existing_attendance.write({
+                                'check_out': record.timestamp
+                            })
+            </field>
+        </record>
+
+        <!-- Clean up old location data -->
+        <record id="cleanup_old_locations" model="ir.cron">
+            <field name="name">Cleanup Old Location Data</field>
+            <field name="model">hr.location.tracking.settings</field> <!-- Updated model reference -->
+            <field name="state">code</field>
+            <field name="code">model.cleanup_old_locations()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- Daily analytics computation -->
+        <record id="compute_daily_analytics" model="ir.cron">
+            <field name="name">Compute Daily Location Analytics</field>
+            <field name="res_model">hr.location.analytics.dashboard</field><!-- Updated model reference -->
+            <field name="state">code</field>
+            <field name="code">
+                # Refresh analytics data
+                dashboards = env['hr.location.analytics.dashboard'].search([])
+                for dashboard in dashboards:
+                    dashboard.action_refresh_data()
+            </field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="active" eval="True"/>
+        </record>
+
+
+    </data>
+</odoo>

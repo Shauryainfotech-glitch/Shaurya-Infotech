@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+    <!-- AI Dashboard Template -->
+    <t t-name="employee_location_tracker.AIDashboard">
+        <div class="o_location_dashboard o_ai_dashboard">
+            <div class="o_dashboard_header d-flex justify-content-between align-items-center mb-4">
+                <h2 class="text-primary">Location Analytics Dashboard</h2>
+                <div class="o_dashboard_actions">
+                    <select class="form-control o_dashboard_filters mr-2">
+                        <option value="7">Last 7 days</option>
+                        <option value="30" selected="selected">Last 30 days</option>
+                        <option value="90">Last 90 days</option>
+                    </select>
+                    <button class="btn btn-primary o_dashboard_refresh">
+                        <i class="fa fa-refresh"/> Refresh
+                    </button>
+                </div>
+            </div>
+
+            <!-- Summary Cards -->
+            <div class="o_dashboard_summary_cards">
+                <div class="o_summary_card o_fade_in">
+                    <div class="o_summary_total_locations">
+                        <div class="o_summary_value">0</div>
+                        <div class="o_summary_label">Total Locations</div>
+                    </div>
+                </div>
+                <div class="o_summary_card o_fade_in">
+                    <div class="o_summary_employees">
+                        <div class="o_summary_value">0</div>
+                        <div class="o_summary_label">Active Employees</div>
+                    </div>
+                </div>
+                <div class="o_summary_card distance o_fade_in">
+                    <div class="o_summary_distance">
+                        <div class="o_summary_value">0</div>
+                        <div class="o_summary_label">Total Distance</div>
+                    </div>
+                </div>
+                <div class="o_summary_card anomalies o_fade_in">
+                    <div class="o_summary_anomalies">
+                        <div class="o_summary_value">0</div>
+                        <div class="o_summary_label">Anomalies</div>
+                    </div>
+                </div>
+                <div class="o_summary_card confidence o_fade_in">
+                    <div class="o_summary_confidence">
+                        <div class="o_summary_value">0</div>
+                        <div class="o_summary_label">High Confidence</div>
+                    </div>
+                </div>
+                <div class="o_summary_card accuracy o_fade_in">
+                    <div class="o_summary_accuracy">
+                        <div class="o_summary_value">0</div>
+                        <div class="o_summary_label">Avg Accuracy</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="o_dashboard_chart o_ai_card">
+                        <h5 class="mb-3">Location Types Distribution</h5>
+                        <canvas class="o_chart_location_types"></canvas>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="o_ai_card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Recent Activities</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="o_recent_activities">
+                                <div class="text-muted text-center">
+                                    <i class="fa fa-spinner fa-spin"></i> Loading...
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Insights Section -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="o_ai_card">
+                        <h5 class="mb-3">AI Insights</h5>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="o_ai_insight">
+                                    <h6><i class="fa fa-brain"></i> Pattern Analysis</h6>
+                                    <p class="mb-0">Normal behavior patterns detected for 85% of employees</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="o_ai_insight">
+                                    <h6><i class="fa fa-exclamation-triangle"></i> Anomaly Detection</h6>
+                                    <p class="mb-0">3 unusual patterns require attention</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="o_ai_insight">
+                                    <h6><i class="fa fa-route"></i> Route Optimization</h6>
+                                    <p class="mb-0">Potential 15% improvement in travel efficiency</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <!-- Live Location Tracker Template -->
+    <t t-name="employee_location_tracker.LiveTracker">
+        <div class="o_live_tracker">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="mb-0">
+                    <span class="o_tracking_indicator"></span>
+                    <span class="o_tracking_status">Tracking Stopped</span>
+                </h5>
+                <div class="btn-group">
+                    <button class="btn btn-success btn-sm o_start_tracking">
+                        <i class="fa fa-play"></i> Start
+                    </button>
+                    <button class="btn btn-danger btn-sm o_stop_tracking" style="display: none;">
+                        <i class="fa fa-stop"></i> Stop
+                    </button>
+                    <button class="btn btn-info btn-sm o_submit_location">
+                        <i class="fa fa-map-marker"></i> Submit Location
+                    </button>
+                </div>
+            </div>
+
+            <div class="o_location_info">
+                <div class="row">
+                    <div class="col-md-8">
+                        <strong>Current Location:</strong>
+                        <div class="o_current_location">No location available</div>
+                    </div>
+                    <div class="col-md-4">
+                        <strong>Accuracy:</strong>
+                        <div class="o_location_accuracy">Unknown</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <!-- Location Widget Template -->
+    <t t-name="employee_location_tracker.LocationWidget">
+        <div class="o_field_location_widget">
+            <div class="o_location_display">
+                <!-- Content will be dynamically generated -->
+            </div>
+        </div>
+    </t>
+
+    <!-- Map Popup Template -->
+    <t t-name="employee_location_tracker.MapPopup">
+        <div class="o_map_popup">
+            <h6 t-if="employee_name" t-esc="employee_name"/>
+            <p t-if="timestamp">
+                <strong>Time:</strong> <span t-esc="timestamp"/>
+            </p>
+            <p t-if="location_type">
+                <strong>Type:</strong> <span t-esc="location_type"/>
+            </p>
+            <p t-if="address">
+                <strong>Address:</strong> <span t-esc="address"/>
+            </p>
+            <p t-if="accuracy">
+                <strong>Accuracy:</strong> ±<span t-esc="accuracy"/>m
+            </p>
+            <p t-if="anomaly_detected" class="text-warning">
+                <strong>⚠ Anomaly Detected</strong>
+            </p>
+        </div>
+    </t>
+
+    <!-- Geofence Info Template -->
+    <t t-name="employee_location_tracker.GeofenceInfo">
+        <div class="o_geofence_info">
+            <h6>
+                <span class="o_geofence_circle" t-attf-style="background-color: #{color}"></span>
+                <span t-esc="name"/>
+            </h6>
+            <p t-if="description" t-esc="description"/>
+            <div class="o_geofence_stats">
+                <small class="text-muted">
+                    <i class="fa fa-users"></i> <span t-esc="current_occupancy"/> current |
+                    <i class="fa fa-chart-line"></i> <span t-esc="entry_count"/> total entries
+                </small>
+            </div>
+        </div>
+    </t>
+
+    <!-- Confidence Score Bar Template -->
+    <t t-name="employee_location_tracker.ConfidenceBar">
+        <div class="o_confidence_bar">
+            <div class="o_confidence_fill"
+                 t-attf-class="o_confidence_#{confidence_level}"
+                 t-attf-style="width: #{confidence_percentage}%">
+            </div>
+        </div>
+        <small class="text-muted mt-1 d-block">
+            Confidence: <span t-esc="confidence_score"/>%
+        </small>
+    </t>
+
+    <!-- Activity Item Template -->
+    <t t-name="employee_location_tracker.ActivityItem">
+        <div class="o_activity_item">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <strong t-esc="employee_name"/>
+                    <div class="text-muted small" t-esc="time_ago"/>
+                </div>
+                <span t-attf-class="badge badge-#{badge_type}" t-esc="badge_text"/>
+            </div>
+        </div>
+    </t>
+
+    <!-- Loading Spinner Template -->
+    <t t-name="employee_location_tracker.LoadingSpinner">
+        <div class="text-center p-4">
+            <i class="fa fa-spinner fa-spin fa-2x text-primary"></i>
+            <div class="mt-2 text-muted">Loading location data...</div>
+        </div>
+    </t>
+
+    <!-- Error Message Template -->
+    <t t-name="employee_location_tracker.ErrorMessage">
+        <div class="alert alert-danger" role="alert">
+            <i class="fa fa-exclamation-triangle"></i>
+            <strong>Error:</strong> <span t-esc="error_message"/>
+        </div>
+    </t>
+
+    <!-- Success Message Template -->
+    <t t-name="employee_location_tracker.SuccessMessage">
+        <div class="alert alert-success" role="alert">
+            <i class="fa fa-check-circle"></i>
+            <span t-esc="success_message"/>
+        </div>
+    </t>
+
+</templates>

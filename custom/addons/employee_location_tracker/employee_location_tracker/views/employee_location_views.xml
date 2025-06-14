@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Employee Location Form View -->
+        <record id="view_employee_location_form" model="ir.ui.view">
+            <field name="name">hr.employee.location.form</field>
+            <field name="model">hr.employee.location</field>
+            <field name="arch" type="xml">
+                <form string="Employee Location">
+                    <header>
+                        <button name="action_validate_location" type="object"
+                                string="Validate with AI" class="btn-primary"/>
+                        <button name="action_reject_location" type="object"
+                                string="Reject" class="btn-secondary"/>
+                        <button name="action_show_on_map" type="object"
+                                string="Show on Map" class="btn-secondary"/>
+                        <field name="status" widget="statusbar"
+                               statusbar_visible="draft,validated,rejected,anomaly"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" type="object"
+                                    name="action_show_on_map" icon="fa-map-marker">
+                                <div class="o_stat_info">
+                                    <span class="o_stat_text">View on</span>
+                                    <span class="o_stat_text">Map</span>
+                                </div>
+                            </button>
+                        </div>
+
+                        <group>
+                            <group name="basic_info">
+                                <field name="employee_id" required="1"/>
+                                <field name="timestamp" required="1"/>
+                                <field name="location_type"/>
+                                <field name="is_valid"/>
+                            </group>
+                            <group name="location_data">
+                                <field name="latitude" required="1"/>
+                                <field name="longitude" required="1"/>
+                                <field name="accuracy"/>
+                                <field name="altitude"/>
+                                <field name="speed"/>
+                                <field name="heading"/>
+                            </group>
+                        </group>
+
+                        <group string="Address &amp; Geofence">
+                            <field name="address" colspan="2"/>
+                            <field name="geofence_id"/>
+                            <field name="inside_geofence" readonly="1"/>
+                            <field name="geofence_entry"/>
+                            <field name="geofence_exit"/>
+                        </group>
+
+                        <group string="Movement Analysis">
+                            <group>
+                                <field name="distance_from_last"/>
+                                <field name="time_since_last"/>
+                            </group>
+                            <group>
+                                <field name="weather_condition"/>
+                                <field name="temperature"/>
+                            </group>
+                        </group>
+
+                        <group string="AI Analysis">
+                            <group>
+                                <field name="ai_confidence_score" widget="progressbar"/>
+                                <field name="behavior_pattern"/>
+                                <field name="anomaly_detected"/>
+                            </group>
+                            <group>
+                                <field name="anomaly_details" widget="text"/>
+                                <field name="validation_notes" widget="text"/>
+                            </group>
+                        </group>
+
+                        <group string="Technical Information" groups="base.group_no_one">
+                            <group>
+                                <field name="device_info"/>
+                                <field name="ip_address"/>
+                                <field name="battery_level"/>
+                                <field name="network_type"/>
+                            </group>
+                            <group>
+                                <field name="company_id"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Employee Location Search View -->
+        <record id="view_employee_location_search" model="ir.ui.view">
+            <field name="name">hr.employee.location.search</field>
+            <field name="model">hr.employee.location</field>
+            <field name="arch" type="xml">
+                <search string="Employee Locations">
+                    <field name="employee_id"/>
+                    <field name="location_type"/>
+                    <field name="geofence_id"/>
+                    <field name="address"/>
+
+                    <filter name="today" string="Today"
+                            domain="[('timestamp', '&gt;=', datetime.datetime.now().replace(hour=0, minute=0, second=0)),
+                                    ('timestamp', '&lt;', datetime.datetime.now().replace(hour=23, minute=59, second=59))]"/>
+                    <filter name="this_week" string="This Week"
+                            domain="[('timestamp', '&gt;=', (datetime.datetime.now() - datetime.timedelta(days=7)).strftime('%Y-%m-%d 00:00:00'))]"/>
+                    <filter name="this_month" string="This Month"
+                            domain="[('timestamp', '&gt;=', (datetime.datetime.now() - datetime.timedelta(days=30)).strftime('%Y-%m-%d 00:00:00'))]"/>
+
+                    <separator/>
+                    <filter name="work_locations" string="Work Locations"
+                            domain="[('location_type', '=', 'work_location')]"/>
+                    <filter name="check_ins" string="Check Ins"
+                            domain="[('location_type', '=', 'check_in')]"/>
+                    <filter name="travel" string="Travel"
+                            domain="[('location_type', '=', 'travel')]"/>
+
+                    <separator/>
+                    <filter name="inside_geofence" string="Inside Geofence"
+                            domain="[('inside_geofence', '=', True)]"/>
+                    <filter name="outside_geofence" string="Outside Geofence"
+                            domain="[('inside_geofence', '=', False)]"/>
+
+                    <separator/>
+                    <filter name="anomalies" string="Anomalies Detected"
+                            domain="[('anomaly_detected', '=', True)]"/>
+                    <filter name="high_confidence" string="High Confidence"
+                            domain="[('ai_confidence_score', '&gt;', 0.8)]"/>
+                    <filter name="low_confidence" string="Low Confidence"
+                            domain="[('ai_confidence_score', '&lt;', 0.5)]"/>
+
+                    <separator/>
+                    <filter name="validated" string="Validated"
+                            domain="[('status', '=', 'validated')]"/>
+                    <filter name="draft" string="Draft"
+                            domain="[('status', '=', 'draft')]"/>
+                    <filter name="rejected" string="Rejected"
+                            domain="[('status', '=', 'rejected')]"/>
+
+                    <group expand="0" string="Group By">
+                        <filter name="group_employee" string="Employee"
+                                context="{'group_by': 'employee_id'}"/>
+                        <filter name="group_location_type" string="Location Type"
+                                context="{'group_by': 'location_type'}"/>
+                        <filter name="group_geofence" string="Geofence"
+                                context="{'group_by': 'geofence_id'}"/>
+                        <filter name="group_date" string="Date"
+                                context="{'group_by': 'timestamp:day'}"/>
+                        <filter name="group_status" string="Status"
+                                context="{'group_by': 'status'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Employee Location Actions -->
+        <record id="action_employee_locations" model="ir.actions.act_window">
+            <field name="name">Employee Locations</field>
+            <field name="res_model">hr.employee.location</field>
+            <field name="view_mode">form</field>
+            <field name="search_view_id" ref="view_employee_location_search"/>
+            <field name="context">{'search_default_this_week': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No location data found!
+                </p>
+                <p>
+                    Employee locations will appear here once location tracking is enabled
+                    and employees start submitting their location data.
+                </p>
+            </field>
+        </record>
+
+        <record id="action_location_dashboard" model="ir.actions.act_window">
+            <field name="name">Location Dashboard</field>
+            <field name="res_model">hr.location.analytics.dashboard</field>
+            <field name="view_mode">form</field>
+            <field name="target">current</field>
+        </record>
+
+    </data>
+</odoo>

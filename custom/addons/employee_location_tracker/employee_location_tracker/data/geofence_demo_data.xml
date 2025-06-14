@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Demo Geofences -->
+        <record id="geofence_main_office" model="hr.location.geofence">
+            <field name="name">Main Office</field>
+            <field name="code">MAIN_OFFICE</field>
+            <field name="description">Main office building geofence</field>
+            <field name="geofence_type">circle</field>
+            <field name="center_latitude">37.7749</field>
+            <field name="center_longitude">-122.4194</field>
+            <field name="radius">100</field>
+            <field name="color">#007BFF</field>
+            <field name="auto_attendance" eval="True"/>
+            <field name="alert_on_entry" eval="True"/>
+            <field name="alert_on_exit" eval="True"/>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="geofence_warehouse" model="hr.location.geofence">
+            <field name="name">Warehouse</field>
+            <field name="code">WAREHOUSE</field>
+            <field name="description">Warehouse facility geofence</field>
+            <field name="geofence_type">rectangle</field>
+            <field name="boundary_points">[
+                {"lat": 37.7849, "lng": -122.4094},
+                {"lat": 37.7849, "lng": -122.4044},
+                {"lat": 37.7799, "lng": -122.4044},
+                {"lat": 37.7799, "lng": -122.4094}
+            ]</field>
+            <field name="color">#28A745</field>
+            <field name="auto_attendance" eval="True"/>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="geofence_client_site" model="hr.location.geofence">
+            <field name="name">Client Site A</field>
+            <field name="code">CLIENT_A</field>
+            <field name="description">Major client site location</field>
+            <field name="geofence_type">circle</field>
+            <field name="center_latitude">37.7649</field>
+            <field name="center_longitude">-122.4294</field>
+            <field name="radius">50</field>
+            <field name="color">#FFC107</field>
+            <field name="alert_on_entry" eval="True"/>
+            <field name="active" eval="True"/>
+        </record>
+
+    </data>
+</odoo>

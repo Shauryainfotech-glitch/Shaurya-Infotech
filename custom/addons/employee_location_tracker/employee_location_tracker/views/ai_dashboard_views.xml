@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- AI Analysis Dashboard View -->
+        <record id="view_ai_analysis_dashboard" model="ir.ui.view">
+            <field name="name">hr.location.ai.analysis.dashboard</field>
+            <field name="model">hr.location.ai.analysis</field>
+            <field name="arch" type="xml">
+                <form string="AI Analysis Dashboard" create="false" edit="false">
+                    <sheet>
+                        <!-- AI Status Header -->
+                        <div class="oe_title">
+                            <h1>AI Location Analysis Dashboard</h1>
+                            <div class="o_row">
+                                <span class="text-muted">Powered by Advanced Machine Learning</span>
+                            </div>
+                        </div>
+
+                        <!-- Quick Stats -->
+                        <div class="row mt-4 mb-4">
+                            <div class="col-lg-3 col-md-6">
+                                <div class="o_ai_card text-center">
+                                    <div class="o_ai_metric_value text-primary">
+                                        <field name="total_analyzed_today" widget="statinfo"/>
+                                    </div>
+                                    <div class="o_ai_metric_label">Locations Analyzed Today</div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <div class="o_ai_card text-center">
+                                    <div class="o_ai_metric_value text-danger">
+                                        <field name="anomalies_detected_today" widget="statinfo"/>
+                                    </div>
+                                    <div class="o_ai_metric_label">Anomalies Detected</div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <div class="o_ai_card text-center">
+                                    <div class="o_ai_metric_value text-success">
+                                        <field name="avg_confidence_score" widget="percentage"/>
+                                    </div>
+                                    <div class="o_ai_metric_label">Average Confidence</div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <div class="o_ai_card text-center">
+                                    <div class="o_ai_metric_value text-info">
+                                        <field name="patterns_identified" widget="statinfo"/>
+                                    </div>
+                                    <div class="o_ai_metric_label">Patterns Identified</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Analysis Controls -->
+                        <group>
+                            <group string="Analysis Parameters">
+                                <field name="analysis_date_from" widget="date"/>
+                                <field name="analysis_date_to" widget="date"/>
+                                <field name="analysis_scope" widget="selection"/>
+                            </group>
+                            <group string="AI Configuration">
+                                <field name="confidence_threshold" widget="percentage"/>
+                                <field name="anomaly_sensitivity" widget="selection"/>
+                                <field name="auto_validation_enabled" widget="boolean_toggle"/>
+                            </group>
+                        </group>
+
+                        <!-- Pattern Analysis Section -->
+                        <notebook>
+                            <page string="Pattern Analysis" name="patterns">
+                                <group string="Behavior Patterns">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <widget name="pattern_distribution_chart"/>
+                                        </div>
+                                    </div>
+                                    <field name="pattern_summary" widget="html" readonly="1"/>
+                                </group>
+                            </page>
+
+                            <page string="Anomaly Detection" name="anomalies">
+                                <group string="Recent Anomalies">
+                                    <field name="recent_anomalies" nolabel="1"/>
+                                </group>
+                            </page>
+
+                            <page string="Route Optimization" name="routes">
+                                <group string="Route Efficiency Analysis">
+                                    <field name="route_optimization_suggestions" widget="html" readonly="1"/>
+                                    <group>
+                                        <field name="avg_route_efficiency" widget="percentage"/>
+                                        <field name="potential_distance_savings" string="Potential Savings (km)"/>
+                                        <field name="optimized_routes_count"/>
+                                    </group>
+                                </group>
+                            </page>
+
+                            <page string="Predictions" name="predictions">
+                                <group string="Location Predictions">
+                                    <field name="prediction_accuracy" widget="gauge"
+                                           options="{'max_value': 100, 'green_max': 80, 'yellow_max': 60}"/>
+                                    <field name="next_location_predictions" widget="one2many_list"/>
+                                </group>
+                            </page>
+
+                            <page string="AI Insights" name="insights">
+                                <div class="o_ai_insights_container">
+                                    <div class="alert alert-info" role="alert">
+                                        <h4 class="alert-heading">AI-Generated Insights</h4>
+                                        <field name="ai_insights" widget="html" readonly="1"/>
+                                    </div>
+                                </div>
+                            </page>
+                        </notebook>
+
+                        <footer>
+                            <button name="action_run_analysis" type="object"
+                                    string="Run Analysis" class="btn-primary"/>
+                            <button name="action_export_report" type="object"
+                                    string="Export AI Report" class="btn-secondary"/>
+                        </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- AI Confidence Score Widget View -->
+        <record id="view_ai_confidence_widget" model="ir.ui.view">
+            <field name="name">hr.location.ai.confidence.widget</field>
+            <field name="model">hr.employee.location</field>
+            <field name="inherit_id" ref="employee_location_views.view_employee_location_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='basic_info']" position="after">
+                    <group string="AI Analysis Results">
+                        <div class="row">
+                            <div class="col-6">
+                                <label for="ai_confidence_score"/>
+                                <div class="o_row">
+                                    <field name="ai_confidence_score" widget="percentage" nolabel="1"/>
+                                    <span class="badge badge-success">High</span>
+                                    <span class="badge badge-warning">Medium</span>
+                                    <span class="badge badge-danger">Low</span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <field name="behavior_pattern" widget="badge"/>
+                            </div>
+                        </div>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- AI Pattern Recognition View -->
+        <record id="view_ai_pattern_form" model="ir.ui.view">
+            <field name="name">hr.location.ai.pattern.form</field>
+            <field name="model">hr.location.ai.pattern</field>
+            <field name="arch" type="xml">
+                <form string="AI Pattern Recognition">
+                    <header>
+                        <field name="state" widget="statusbar"
+                               statusbar_visible="draft,analyzing,completed"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_view_locations" type="object"
+                                    class="oe_stat_button" icon="fa-map-marker">
+                                <field name="location_count" widget="statinfo" string="Locations"/>
+                            </button>
+                            <button name="action_view_employees" type="object"
+                                    class="oe_stat_button" icon="fa-users">
+                                <field name="employee_count" widget="statinfo" string="Employees"/>
+                            </button>
+                        </div>
+
+                        <group>
+                            <group>
+                                <field name="pattern_name"/>
+                                <field name="pattern_type"/>
+                                <field name="confidence_level" widget="percentage"/>
+                            </group>
+                            <group>
+                                <field name="first_detected"/>
+                                <field name="last_detected"/>
+                                <field name="occurrence_count"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Pattern Details">
+                                <field name="pattern_description" widget="html"/>
+                                <group>
+                                    <field name="pattern_characteristics" widget="text"/>
+                                    <field name="detection_algorithm"/>
+                                </group>
+                            </page>
+                            <page string="Affected Locations">
+                                <field name="location_ids"/>
+                            </page>
+                            <page string="Recommendations">
+                                <field name="ai_recommendations" widget="html"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- AI Anomaly Investigation View -->
+        <record id="view_ai_anomaly_investigation" model="ir.ui.view">
+            <field name="name">hr.location.ai.anomaly.investigation</field>
+            <field name="model">hr.location.anomaly.investigation</field>
+            <field name="arch" type="xml">
+                <form string="Anomaly Investigation">
+                    <header>
+                        <button name="action_validate_anomaly" type="object"
+                                string="Validate as Anomaly" class="btn-primary"/>
+                        <button name="action_dismiss_anomaly" type="object"
+                                string="Dismiss" class="btn-secondary"/>
+                        <field name="investigation_status" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="location_id"/>
+                                <field name="employee_id"/>
+                                <field name="anomaly_type"/>
+                                <field name="severity" widget="priority"/>
+                            </group>
+                            <group>
+                                <field name="detected_at"/>
+                                <field name="ai_confidence" widget="percentage"/>
+                                <field name="investigator_id"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Anomaly Details">
+                                <group>
+                                    <field name="anomaly_description" widget="text"/>
+                                    <field name="ai_analysis_details" widget="html"/>
+                                </group>
+                            </page>
+                            <page string="Context">
+                                <group string="Location Context">
+                                    <field name="previous_locations" widget="one2many_list" readonly="1"/>
+                                </group>
+                                <group string="Environmental Context">
+                                    <field name="weather_condition"/>
+                                    <field name="time_of_day"/>
+                                    <field name="day_of_week"/>
+                                </group>
+                            </page>
+                            <page string="Investigation Notes">
+                                <field name="investigation_notes" widget="html"
+                                       placeholder="Add your investigation findings here..."/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- AI Dashboard Action -->
+        <record id="action_ai_dashboard" model="ir.actions.act_window">
+            <field name="name">AI Analysis Dashboard</field>
+            <field name="res_model">hr.location.ai.analysis</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_ai_analysis_dashboard"/>
+            <field name="target">main</field>
+        </record>
+
+        <!-- AI Pattern Recognition Action -->
+        <record id="action_ai_patterns" model="ir.actions.act_window">
+            <field name="name">Pattern Recognition</field>
+            <field name="res_model">hr.location.ai.pattern</field>
+            <field name="view_mode">form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No patterns detected yet
+                </p>
+                <p>
+                    AI pattern recognition will identify recurring behaviors
+                    and movement patterns as more location data is collected.
+                </p>
+            </field>
+        </record>
+
+        <!-- AI Anomaly Investigations Action -->
+        <record id="action_anomaly_investigations" model="ir.actions.act_window">
+            <field name="name">Anomaly Investigations</field>
+            <field name="res_model">hr.location.anomaly.investigation</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'search_default_pending': 1}</field>
+        </record>
+
+    </data>
+</odoo>

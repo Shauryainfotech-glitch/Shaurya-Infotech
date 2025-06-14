@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Main Menu -->
+        <menuitem id="menu_location_tracking_root"
+                  name="Location Tracking"
+                  web_icon="employee_location_tracker,static/description/icon.png"
+                  sequence="50"/>
+
+        <!-- Dashboard Menu -->
+        <menuitem id="menu_location_dashboard"
+                  name="Dashboard"
+                  parent="menu_location_tracking_root"
+                  action="action_location_dashboard"
+                  sequence="10"/>
+
+        <!-- Locations Menu -->
+        <menuitem id="menu_locations"
+                  name="Locations"
+                  parent="menu_location_tracking_root"
+                  sequence="20"/>
+
+        <menuitem id="menu_employee_locations"
+                  name="Employee Locations"
+                  parent="menu_locations"
+                  action="action_employee_locations"
+                  sequence="10"/>
+
+        <menuitem id="menu_tracking_sessions"
+                  name="Tracking Sessions"
+                  parent="menu_locations"
+                  action="action_tracking_sessions"
+                  sequence="20"/>
+
+        <!-- Geofences Menu -->
+        <menuitem id="menu_geofences"
+                  name="Geofences"
+                  parent="menu_location_tracking_root"
+                  action="action_geofences"
+                  sequence="30"/>
+
+        <!-- Analytics Menu -->
+        <menuitem id="menu_analytics"
+                  name="Analytics"
+                  parent="menu_location_tracking_root"
+                  sequence="40"/>
+
+        <menuitem id="menu_analytics_dashboard"
+                  name="Analytics Dashboard"
+                  parent="menu_analytics"
+                  action="action_analytics_dashboard"
+                  sequence="10"/>
+
+        <menuitem id="menu_location_reports"
+                  name="Location Reports"
+                  parent="menu_analytics"
+                  action="action_location_report_wizard"
+                  sequence="20"/>
+
+        <!-- Configuration Menu -->
+        <menuitem id="menu_configuration"
+                  name="Configuration"
+                  parent="menu_location_tracking_root"
+                  groups="group_location_manager"
+                  sequence="50"/>
+
+        <menuitem id="menu_tracking_settings"
+                  name="Tracking Settings"
+                  parent="menu_configuration"
+                  action="action_tracking_settings"
+                  sequence="10"/>
+
+        <menuitem id="menu_ai_analysis"
+                  name="AI Analysis"
+                  parent="menu_configuration"
+                  action="action_ai_analysis"
+                  groups="group_location_admin"
+                  sequence="20"/>
+
+    </data>
+</odoo>

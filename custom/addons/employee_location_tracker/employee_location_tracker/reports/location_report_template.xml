@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="location_report_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs.ids" t-as="doc_id">
+                    <t t-set="wizard" t-value="docs.browse(doc_id)"/>
+                    <t t-call="web.external_layout">
+                        <div class="page">
+
+                            <!-- Report Header -->
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <h2 class="text-center">
+                                        <t t-if="wizard.report_type == 'summary'">Location Summary Report</t>
+                                        <t t-elif="wizard.report_type == 'detailed'">Detailed Location Report</t>
+                                        <t t-elif="wizard.report_type == 'analytics'">Location Analytics Report</t>
+                                        <t t-elif="wizard.report_type == 'anomaly'">Location Anomaly Report</t>
+                                        <t t-else="wizard.report_type == 'geofence'">Geofence Report</t>
+                                    </h2>
+                                    <p class="text-center text-muted">
+                                        <span t-field="wizard.date_from"/> to <span t-field="wizard.date_to"/>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Summary Statistics -->
+                            <t t-set="locations" t-value="env['hr.employee.location'].search(wizard._get_report_domain())"/>
+                            <t t-if="locations">
+                                <div class="row mb-4">
+                                    <div class="col-12">
+                                        <h4>Executive Summary</h4>
+                                        <table class="table table-sm table-borderless">
+                                            <tr>
+                                                <td><strong>Total Locations Recorded:</strong></td>
+                                                <td><span t-esc="len(locations)"/></td>
+                                                <td><strong>Employees Tracked:</strong></td>
+                                                <td><span t-esc="len(locations.mapped('employee_id'))"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Total Distance Traveled:</strong></td>
+                                                <td><span t-esc="'%.2f km' % sum(locations.mapped('distance_from_last'))"/></td>
+                                                <td><strong>Anomalies Detected:</strong></td>
+                                                <td><span t-esc="len(locations.filtered('anomaly_detected'))"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Average GPS Accuracy:</strong></td>
+                                                <td><span t-esc="'%.1f m' % (sum(locations.mapped('accuracy')) / len(locations) if locations else 0)"/></td>
+                                                <td><strong>High Confidence Locations:</strong></td>
+                                                <td><span t-esc="len(locations.filtered(lambda l: l.ai_confidence_score > 0.8))"/></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <!-- Employee Breakdown -->
+                                <t t-if="wizard.report_type in ['summary', 'detailed']">
+                                    <div class="row mb-4">
+                                        <div class="col-12">
+                                            <h4>Employee Performance Summary</h4>
+                                            <table class="table table-striped table-sm">
+                                                <thead class="thead-dark">
+                                                    <tr>
+                                                        <th>Employee</th>
+                                                        <th>Department</th>
+                                                        <th>Total Locations</th>
+                                                        <th>Distance (km)</th>
+                                                        <th>Anomalies</th>
+                                                        <th>Avg Confidence</th>
+                                                        <th>GPS Accuracy</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <t t-foreach="locations.mapped('employee_id')" t-as="employee">
+                                                        <t t-set="emp_locations" t-value="locations.filtered(lambda l: l.employee_id == employee)"/>
+                                                        <tr>
+                                                            <td><span t-field="employee.name"/></td>
+                                                            <td><span t-field="employee.department_id.name"/></td>
+                                                            <td><span t-esc="len(emp_locations)"/></td>
+                                                            <td><span t-esc="'%.2f' % sum(emp_locations.mapped('distance_from_last'))"/></td>
+                                                            <td>
+                                                                <span t-esc="len(emp_locations.filtered('anomaly_detected'))"/>
+                                                                <t t-if="len(emp_locations.filtered('anomaly_detected')) > 0">
+                                                                    <span class="badge badge-warning ml-1">⚠</span>
+                                                                </t>
+                                                            </td>
+                                                            <td><span t-esc="'%.2f' % (sum(emp_locations.mapped('ai_confidence_score')) / len(emp_locations) if emp_locations else 0)"/></td>
+                                                            <td><span t-esc="'%.1f m' % (sum(emp_locations.mapped('accuracy')) / len(emp_locations) if emp_locations else 0)"/></td>
+                                                        </tr>
+                                                    </t>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </t>
+
+                                <!-- Detailed Location Data -->
+                                <t t-if="wizard.report_type == 'detailed'">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <h4>Detailed Location Records</h4>
+                                            <table class="table table-sm">
+                                                <thead class="thead-light">
+                                                    <tr>
+                                                        <th>Employee</th>
+                                                        <th>Date/Time</th>
+                                                        <th>Location</th>
+                                                        <th>Type</th>
+                                                        <th>Accuracy</th>
+                                                        <th>Geofence</th>
+                                                        <th>Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <t t-foreach="locations.sorted('timestamp')[:50]" t-as="location">
+                                                        <tr>
+                                                            <td><span t-field="location.employee_id.name"/></td>
+                                                            <td><span t-field="location.timestamp" t-options="{'widget': 'datetime'}"/></td>
+                                                            <td>
+                                                                <small><span t-esc="'%.6f, %.6f' % (location.latitude, location.longitude)"/></small>
+                                                                <t t-if="location.address">
+                                                                    <br/><small class="text-muted" t-field="location.address"/>
+                                                                </t>
+                                                            </td>
+                                                            <td><span t-field="location.location_type"/></td>
+                                                            <td>
+                                                                <span t-esc="'%.1f m' % (location.accuracy or 0)"/>
+                                                                <t t-if="location.accuracy and location.accuracy > 100">
+                                                                    <span class="badge badge-warning">Poor</span>
+                                                                </t>
+                                                            </td>
+                                                            <td>
+                                                                <span t-field="location.geofence_id.name"/>
+                                                                <t t-if="location.inside_geofence">
+                                                                    <span class="badge badge-success">✓</span>
+                                                                </t>
+                                                            </td>
+                                                            <td>
+                                                                <span t-field="location.status"/>
+                                                                <t t-if="location.anomaly_detected">
+                                                                    <span class="badge badge-danger ml-1">Anomaly</span>
+                                                                </t>
+                                                            </td>
+                                                        </tr>
+                                                    </t>
+                                                </tbody>
+                                            </table>
+                                            <t t-if="len(locations) > 50">
+                                                <p class="text-muted"><em>Showing first 50 records of <span t-esc="len(locations)"/> total locations.</em></p>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </t>
+
+                                <!-- Analytics Charts Section -->
+                                <t t-if="wizard.report_type == 'analytics'">
+                                    <div class="row mb-4">
+                                        <div class="col-12">
+                                            <h4>Location Analytics</h4>
+                                        </div>
+                                    </div>
+
+                                    <!-- Location Type Distribution -->
+                                    <div class="row mb-3">
+                                        <div class="col-6">
+                                            <h5>Location Types Distribution</h5>
+                                            <table class="table table-sm">
+                                                <t t-set="type_counts" t-value="{}"/>
+                                                <t t-foreach="locations" t-as="location">
+                                                    <t t-set="type_counts" t-value="type_counts.update({location.location_type: type_counts.get(location.location_type, 0) + 1}) or type_counts"/>
+                                                </t>
+                                                <t t-foreach="type_counts.items()" t-as="item">
+                                                    <tr>
+                                                        <td><span t-esc="item[0]"/></td>
+                                                        <td><span t-esc="item[1]"/></td>
+                                                        <td><span t-esc="'%.1f%%' % (item[1] * 100.0 / len(locations))"/></td>
+                                                    </tr>
+                                                </t>
+                                            </table>
+                                        </div>
+                                        <div class="col-6">
+                                            <h5>Accuracy Distribution</h5>
+                                            <t t-set="excellent" t-value="len(locations.filtered(lambda l: l.accuracy and l.accuracy < 5))"/>
+                                            <t t-set="good" t-value="len(locations.filtered(lambda l: l.accuracy and 5 <= l.accuracy < 20))"/>
+                                            <t t-set="fair" t-value="len(locations.filtered(lambda l: l.accuracy and 20 <= l.accuracy < 100))"/>
+                                            <t t-set="poor" t-value="len(locations.filtered(lambda l: l.accuracy and l.accuracy >= 100))"/>
+                                            <table class="table table-sm">
+                                                <tr>
+                                                    <td>Excellent (&lt;5m)</td>
+                                                    <td><span t-esc="excellent"/></td>
+                                                    <td class="text-success">
+                                                        <span t-esc="'%.1f%%' % (excellent * 100.0 / len(locations) if locations else 0)"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Good (5-20m)</td>
+                                                    <td><span t-esc="good"/></td>
+                                                    <td class="text-info">
+                                                        <span t-esc="'%.1f%%' % (good * 100.0 / len(locations) if locations else 0)"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Fair (20-100m)</td>
+                                                    <td><span t-esc="fair"/></td>
+                                                    <td class="text-warning">
+                                                        <span t-esc="'%.1f%%' % (fair * 100.0 / len(locations) if locations else 0)"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Poor (&gt;100m)</td>
+                                                    <td><span t-esc="poor"/></td>
+                                                    <td class="text-danger">
+                                                        <span t-esc="'%.1f%%' % (poor * 100.0 / len(locations) if locations else 0)"/>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </t>
+
+                                <!-- Anomaly Details -->
+                                <t t-if="wizard.report_type == 'anomaly' or wizard.include_anomalies_only">
+                                    <t t-set="anomaly_locations" t-value="locations.filtered('anomaly_detected')"/>
+                                    <t t-if="anomaly_locations">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <h4>Location Anomalies Analysis</h4>
+                                                <div class="alert alert-warning">
+                                                    <strong>⚠ Warning:</strong> <span t-esc="len(anomaly_locations)"/> anomalies detected out of <span t-esc="len(locations)"/> total locations.
+                                                    This represents <span t-esc="'%.1f%%' % (len(anomaly_locations) * 100.0 / len(locations))"/> of all location data.
+                                                </div>
+                                                <table class="table table-sm table-bordered">
+                                                    <thead class="thead-danger">
+                                                        <tr>
+                                                            <th>Employee</th>
+                                                            <th>Date/Time</th>
+                                                            <th>Location</th>
+                                                            <th>Anomaly Details</th>
+                                                            <th>AI Confidence</th>
+                                                            <th>Action Required</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <t t-foreach="anomaly_locations.sorted('timestamp')" t-as="location">
+                                                            <tr>
+                                                                <td><span t-field="location.employee_id.name"/></td>
+                                                                <td><span t-field="location.timestamp" t-options="{'widget': 'datetime'}"/></td>
+                                                                <td><span t-esc="'%.6f, %.6f' % (location.latitude, location.longitude)"/></td>
+                                                                <td>
+                                                                    <t t-if="location.anomaly_details">
+                                                                        <t t-try="details = json.loads(location.anomaly_details)" t-catch="Exception">
+                                                                            <t t-set="details" t-value="[location.anomaly_details]"/>
+                                                                        </t>
+                                                                        <ul class="mb-0 list-unstyled">
+                                                                            <t t-foreach="details" t-as="detail">
+                                                                                <li>• <span t-esc="detail"/></li>
+                                                                            </t>
+                                                                        </ul>
+                                                                    </t>
+                                                                    <t t-else="">Unknown anomaly type</t>
+                                                                </td>
+                                                                <td>
+                                                                    <span t-esc="'%.2f' % (location.ai_confidence_score or 0)"/>
+                                                                    <t t-if="location.ai_confidence_score and location.ai_confidence_score < 0.5">
+                                                                        <span class="badge badge-danger">Low</span>
+                                                                    </t>
+                                                                </td>
+                                                                <td>
+                                                                    <t t-if="location.status == 'anomaly'">
+                                                                        <span class="badge badge-warning">Review Required</span>
+                                                                    </t>
+                                                                    <t t-elif="location.status == 'validated'">
+                                                                        <span class="badge badge-success">Resolved</span>
+                                                                    </t>
+                                                                    <t t-else="">
+                                                                        <span class="badge badge-secondary">Pending</span>
+                                                                    </t>
+                                                                </td>
+                                                            </tr>
+                                                        </t>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </t>
+                                    <t t-else="">
+                                        <div class="alert alert-success">
+                                            <strong>✓ Excellent:</strong> No anomalies detected in the selected time period.
+                                        </div>
+                                    </t>
+                                </t>
+
+                                <!-- Geofence Report -->
+                                <t t-if="wizard.report_type == 'geofence'">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <h4>Geofence Activity Report</h4>
+                                            <t t-set="geofences" t-value="locations.mapped('geofence_id')"/>
+                                            <t t-if="geofences">
+                                                <table class="table table-striped">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Geofence</th>
+                                                            <th>Total Visits</th>
+                                                            <th>Unique Visitors</th>
+                                                            <th>Avg Duration</th>
+                                                            <th>Last Activity</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <t t-foreach="geofences" t-as="geofence">
+                                                            <t t-set="gf_locations" t-value="locations.filtered(lambda l: l.geofence_id == geofence)"/>
+                                                            <tr>
+                                                                <td><span t-field="geofence.name"/></td>
+                                                                <td><span t-esc="len(gf_locations)"/></td>
+                                                                <td><span t-esc="len(gf_locations.mapped('employee_id'))"/></td>
+                                                                <td>-</td>
+                                                                <td><span t-esc="max(gf_locations.mapped('timestamp')).strftime('%Y-%m-%d %H:%M') if gf_locations else 'N/A'"/></td>
+                                                            </tr>
+                                                        </t>
+                                                    </tbody>
+                                                </table>
+                                            </t>
+                                            <t t-else="">
+                                                <div class="alert alert-info">
+                                                    No geofence activity found in the selected period.
+                                                </div>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </t>
+
+                            </t>
+                            <t t-else="">
+                                <div class="row">
+                                    <div class="col-12 text-center">
+                                        <div class="alert alert-warning">
+                                            <h4>No Data Found</h4>
+                                            <p>No location data found for the selected criteria and time period.</p>
+                                            <p class="mb-0">Please adjust your filters and try again.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+
+                            <!-- Report Footer -->
+                            <div class="row mt-5">
+                                <div class="col-12">
+                                    <hr/>
+                                    <small class="text-muted">
+                                        Report generated on <span t-esc="datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')"/> |
+                                        Employee Location Tracker with AI |
+                                        <span t-field="wizard.company_id.name"/>
+                                    </small>
+                                </div>
+                            </div>
+
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>
