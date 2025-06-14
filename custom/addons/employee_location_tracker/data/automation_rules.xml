@@ -3,11 +3,12 @@
     <data noupdate="1">
 
         <!-- Automated Actions for Location Tracking -->
+        <!-- Note: These require base_automation module to be installed -->
 
         <!-- Auto-validate high confidence locations -->
         <record id="auto_validate_locations" model="base.automation">
             <field name="name">Auto-validate High Confidence Locations</field>
-            <field name="res_model">hr.employee.location</field><!-- Updated model reference -->
+            <field name="model_id" ref="model_hr_employee_location"/>
             <field name="active" eval="True"/>
             <field name="trigger">on_create</field>
             <field name="filter_pre_domain">[('ai_confidence_score', '&gt;', 0.9), ('anomaly_detected', '=', False)]</field>
@@ -24,7 +25,7 @@
         <!-- Flag anomalies for review -->
         <record id="flag_anomalies" model="base.automation">
             <field name="name">Flag Location Anomalies</field>
-            <field name="res_model">hr.employee.location</field><!-- Updated model reference -->
+            <field name="model_id" ref="model_hr_employee_location"/>
             <field name="active" eval="True"/>
             <field name="trigger">on_create_or_write</field>
             <field name="filter_pre_domain">[('anomaly_detected', '=', True)]</field>
@@ -51,7 +52,7 @@
         <!-- Auto-create attendance records -->
         <record id="auto_create_attendance" model="base.automation">
             <field name="name">Auto-create Attendance from Geofence</field>
-            <field name="res_model">hr.employee.location</field><!-- Updated model reference -->
+            <field name="model_id" ref="model_hr_employee_location"/>
             <field name="active" eval="True"/>
             <field name="trigger">on_create</field>
             <field name="filter_pre_domain">[('geofence_id', '!=', False), ('inside_geofence', '=', True)]</field>
@@ -76,7 +77,7 @@
         <!-- Clean up old location data -->
         <record id="cleanup_old_locations" model="ir.cron">
             <field name="name">Cleanup Old Location Data</field>
-            <field name="model">hr.location.tracking.settings</field> <!-- Updated model reference -->
+            <field name="model_id" ref="model_hr_location_tracking_settings"/>
             <field name="state">code</field>
             <field name="code">model.cleanup_old_locations()</field>
             <field name="interval_number">1</field>
@@ -88,7 +89,7 @@
         <!-- Daily analytics computation -->
         <record id="compute_daily_analytics" model="ir.cron">
             <field name="name">Compute Daily Location Analytics</field>
-            <field name="res_model">hr.location.analytics.dashboard</field><!-- Updated model reference -->
+            <field name="model_id" ref="model_hr_location_analytics_dashboard"/>
             <field name="state">code</field>
             <field name="code">
                 # Refresh analytics data
@@ -101,7 +102,6 @@
             <field name="numbercall">-1</field>
             <field name="active" eval="True"/>
         </record>
-
 
     </data>
 </odoo>

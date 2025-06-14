@@ -23,6 +23,7 @@
         'mail',
         'web',
         'portal',
+        'base_automation'
     ],
     'data': [
         'security/security.xml',
