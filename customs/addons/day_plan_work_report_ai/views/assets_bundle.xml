@@ -4,11 +4,27 @@
         <!-- Assets for the web backend -->
         <template id="assets_backend" name="Day Plan Dashboard Backend Assets" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
-                <!-- Include our JavaScript components -->
-                <script type="text/javascript" src="/day_plan_work_report_ai/static/src/components/dashboard_chart.js"/>
+                <!-- Include Chart.js library -->
+                <script type="text/javascript" src="/web/static/lib/Chart/Chart.js"/>
 
-                <!-- Include productivity dashboard components -->
-                <script type="text/javascript" src="/day_plan_work_report_ai/static/src/components/dashboard/productivity_dashboard_action.js"/>
+                <!-- Include our JavaScript components - ORDER MATTERS -->
+                <script type="text/javascript" src="/day_plan_work_report_ai/static/src/components/dashboard_chart.js"/>
+                <script type="text/javascript" src="/day_plan_work_report_ai/static/src/new_dashboard_client_action.js"/>
+                <script type="text/javascript" src="/day_plan_work_report_ai/static/src/guaranteed_chart_dashboard.js"/>
+
+                <!-- Include calendar view components -->
+                <script type="text/javascript" src="/day_plan_work_report_ai/static/src/views/day_plan_calendar/day_plan_calendar_view.js"/>
+                <script type="text/javascript" src="/day_plan_work_report_ai/static/src/views/day_plan_calendar/day_plan_calendar_controller.js"/>
+                <script type="text/javascript" src="/day_plan_work_report_ai/static/src/views/day_plan_calendar/day_plan_calendar_renderer.js"/>
+                <script type="text/javascript" src="/day_plan_work_report_ai/static/src/views/day_plan_calendar/day_plan_calendar_model.js"/>
+            </xpath>
+        </template>
+
+        <!-- XML Templates - SINGLE SOURCE -->
+        <template id="assets_dashboard_templates" name="Day Plan Dashboard Templates" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <!-- Include ONLY the main template file -->
+                <script type="text/javascript" src="/day_plan_work_report_ai/static/src/day_plan_templates.xml"/>
             </xpath>
         </template>
     </data>

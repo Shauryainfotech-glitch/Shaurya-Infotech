@@ -6,8 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="1f42e310-412d-45da-a505-aa14b50fcb8c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customs/addons/day_plan_work_report_ai/views/assets.xml" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/day_plan_work_report_ai/views/assets.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/day_plan_work_report_ai/static/src/day_plan_templates.xml" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/day_plan_work_report_ai/static/src/day_plan_templates.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/day_plan_work_report_ai/static/src/new_dashboard_client_action.js" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/day_plan_work_report_ai/static/src/new_dashboard_client_action.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/day_plan_work_report_ai/views/assets.xml" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/day_plan_work_report_ai/views/assets.xml.bak" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/customs/addons/day_plan_work_report_ai/views/assets_bundle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/day_plan_work_report_ai/views/assets_bundle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customs/addons/day_plan_work_report_ai/views/new_dashboard_assets.xml" beforeDir="false" afterPath="$PROJECT_DIR$/customs/addons/day_plan_work_report_ai/views/new_dashboard_assets.xml.bak" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,7 +60,8 @@
       <updated>1749726847538</updated>
       <workItem from="1749726856771" duration="3491000" />
       <workItem from="1749784015547" duration="16429000" />
-      <workItem from="1749810979013" duration="4515000" />
+      <workItem from="1749810979013" duration="5262000" />
+      <workItem from="1749870231622" duration="255000" />
     </task>
     <servers />
   </component>
