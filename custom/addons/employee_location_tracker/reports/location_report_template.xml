@@ -48,7 +48,7 @@
                                                 <td><strong>Average GPS Accuracy:</strong></td>
                                                 <td><span t-esc="'%.1f m' % (sum(locations.mapped('accuracy')) / len(locations) if locations else 0)"/></td>
                                                 <td><strong>High Confidence Locations:</strong></td>
-                                                <td><span t-esc="len(locations.filtered(lambda l: l.ai_confidence_score > 0.8))"/></td>
+                                                <td><span t-esc="len(locations.filtered(lambda l: l.ai_confidence_score and l.ai_confidence_score &gt; 0.8))"/></td>
                                             </tr>
                                         </table>
                                     </div>
@@ -81,7 +81,7 @@
                                                             <td><span t-esc="'%.2f' % sum(emp_locations.mapped('distance_from_last'))"/></td>
                                                             <td>
                                                                 <span t-esc="len(emp_locations.filtered('anomaly_detected'))"/>
-                                                                <t t-if="len(emp_locations.filtered('anomaly_detected')) > 0">
+                                                                <t t-if="len(emp_locations.filtered('anomaly_detected')) &gt; 0">
                                                                     <span class="badge badge-warning ml-1">⚠</span>
                                                                 </t>
                                                             </td>
@@ -126,7 +126,7 @@
                                                             <td><span t-field="location.location_type"/></td>
                                                             <td>
                                                                 <span t-esc="'%.1f m' % (location.accuracy or 0)"/>
-                                                                <t t-if="location.accuracy and location.accuracy > 100">
+                                                                <t t-if="location.accuracy and location.accuracy &gt; 100">
                                                                     <span class="badge badge-warning">Poor</span>
                                                                 </t>
                                                             </td>
@@ -146,7 +146,7 @@
                                                     </t>
                                                 </tbody>
                                             </table>
-                                            <t t-if="len(locations) > 50">
+                                            <t t-if="len(locations) &gt; 50">
                                                 <p class="text-muted"><em>Showing first 50 records of <span t-esc="len(locations)"/> total locations.</em></p>
                                             </t>
                                         </div>
@@ -181,10 +181,10 @@
                                         </div>
                                         <div class="col-6">
                                             <h5>Accuracy Distribution</h5>
-                                            <t t-set="excellent" t-value="len(locations.filtered(lambda l: l.accuracy and l.accuracy < 5))"/>
-                                            <t t-set="good" t-value="len(locations.filtered(lambda l: l.accuracy and 5 <= l.accuracy < 20))"/>
-                                            <t t-set="fair" t-value="len(locations.filtered(lambda l: l.accuracy and 20 <= l.accuracy < 100))"/>
-                                            <t t-set="poor" t-value="len(locations.filtered(lambda l: l.accuracy and l.accuracy >= 100))"/>
+                                            <t t-set="excellent" t-value="len(locations.filtered(lambda l: l.accuracy and l.accuracy &lt; 5))"/>
+                                            <t t-set="good" t-value="len(locations.filtered(lambda l: l.accuracy and 5 &lt;= l.accuracy and l.accuracy &lt; 20))"/>
+                                            <t t-set="fair" t-value="len(locations.filtered(lambda l: l.accuracy and 20 &lt;= l.accuracy and l.accuracy &lt; 100))"/>
+                                            <t t-set="poor" t-value="len(locations.filtered(lambda l: l.accuracy and l.accuracy &gt;= 100))"/>
                                             <table class="table table-sm">
                                                 <tr>
                                                     <td>Excellent (&lt;5m)</td>
@@ -249,20 +249,13 @@
                                                                 <td><span t-esc="'%.6f, %.6f' % (location.latitude, location.longitude)"/></td>
                                                                 <td>
                                                                     <t t-if="location.anomaly_details">
-                                                                        <t t-try="details = json.loads(location.anomaly_details)" t-catch="Exception">
-                                                                            <t t-set="details" t-value="[location.anomaly_details]"/>
-                                                                        </t>
-                                                                        <ul class="mb-0 list-unstyled">
-                                                                            <t t-foreach="details" t-as="detail">
-                                                                                <li>• <span t-esc="detail"/></li>
-                                                                            </t>
-                                                                        </ul>
+                                                                        <span t-esc="location.anomaly_details"/>
                                                                     </t>
                                                                     <t t-else="">Unknown anomaly type</t>
                                                                 </td>
                                                                 <td>
                                                                     <span t-esc="'%.2f' % (location.ai_confidence_score or 0)"/>
-                                                                    <t t-if="location.ai_confidence_score and location.ai_confidence_score < 0.5">
+                                                                    <t t-if="location.ai_confidence_score and location.ai_confidence_score &lt; 0.5">
                                                                         <span class="badge badge-danger">Low</span>
                                                                     </t>
                                                                 </td>
