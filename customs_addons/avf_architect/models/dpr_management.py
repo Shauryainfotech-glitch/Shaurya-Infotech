@@ -49,7 +49,30 @@ class ArchitectDPR(models.Model):
     central_share = fields.Monetary(string='Central Share', currency_field='currency_id')
     state_share = fields.Monetary(string='State Share', currency_field='currency_id')
     beneficiary_share = fields.Monetary(string='Beneficiary Share', currency_field='currency_id')
-    currency_id = fields.Many2one('res.currency', default=lambda self: self.env.company.currency_id)
+    # currency_id = fields.Many2one('res.currency', default=lambda self: self.env.company.currency_id)
+    @api.model
+    def _get_inr_currency(self):
+        """Get INR currency, create if not exists"""
+        inr = self.env.ref('base.INR', raise_if_not_found=False)
+        if not inr:
+            # If INR doesn't exist, create it
+            inr = self.env['res.currency'].create({
+                'name': 'INR',
+                'symbol': '₹',
+                'position': 'before',
+                'decimal_places': 2,
+                'active': True,
+                'rounding': 0.01
+            })
+        return inr.id
+
+    currency_id = fields.Many2one(
+        'res.currency',
+        string='Currency',
+        required=True,
+        default=lambda self: self._get_inr_currency(),
+        help="Currency for this transaction"
+    )
 
     # Timeline
     implementation_period = fields.Integer(string='Implementation Period (Months)')
@@ -104,10 +127,6 @@ class ArchitectDPR(models.Model):
     approval_date = fields.Date(string='Approval Date')
 
     @api.model
-    # def create(self, vals):
-    #     if 'code' not in vals or not vals['code']:
-    #         vals['code'] = self.env['ir.sequence'].next_by_code('architect.dpr') or 'New'
-    #     return super().create(vals)
 
 
 
