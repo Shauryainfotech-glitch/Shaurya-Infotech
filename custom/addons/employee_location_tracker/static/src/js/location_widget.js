@@ -1,163 +1,59 @@
-odoo.define('employee_location_tracker.LocationWidget', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var AbstractField = require('web.AbstractField');
-var field_registry = require('web.field_registry');
-var core = require('web.core');
+import { Component, useState } from "@odoo/owl";
+import { registry } from "@web/core/registry";
+import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
-var LocationWidget = AbstractField.extend({
-    className: 'o_field_location_widget',
-    tagName: 'div',
+export class LocationWidget extends Component {
+    static template = "employee_location_tracker.LocationWidget";
+    static props = standardFieldProps;
 
-    events: {
-        'click .o_location_get_current': '_onGetCurrentLocation',
-        'click .o_location_show_map': '_onShowMap',
-    },
-
-    init: function (parent, name, record, options) {
-        this._super.apply(this, arguments);
-        this.latitude = record.data.latitude || 0;
-        this.longitude = record.data.longitude || 0;
-        this.accuracy = record.data.accuracy || 0;
-    },
-
-    _render: function () {
-        var self = this;
-        this.$el.empty();
-
-        if (this.mode === 'readonly') {
-            this._renderReadonly();
-        } else {
-            this._renderEdit();
-        }
-
-        return this._super.apply(this, arguments);
-    },
-
-    _renderReadonly: function () {
-        var $content = $('<div class="o_location_readonly">');
-
-        if (this.latitude && this.longitude) {
-            $content.append(
-                $('<div>').text('Lat: ' + this.latitude.toFixed(6) + ', Lng: ' + this.longitude.toFixed(6))
-            );
-
-            if (this.accuracy) {
-                $content.append(
-                    $('<div class="text-muted">').text('Accuracy: ±' + this.accuracy + 'm')
-                );
-            }
-
-            $content.append(
-                $('<button class="btn btn-sm btn-secondary o_location_show_map" type="button">')
-                    .text('Show on Map')
-            );
-        } else {
-            $content.append($('<div class="text-muted">').text('No location data'));
-        }
-
-        this.$el.append($content);
-    },
-
-    _renderEdit: function () {
-        var $content = $('<div class="o_location_edit">');
-
-        // Latitude input
-        var $latGroup = $('<div class="form-group">');
-        $latGroup.append($('<label>').text('Latitude'));
-        var $latInput = $('<input class="form-control o_location_latitude" type="number" step="any">');
-        $latInput.val(this.latitude);
-        $latGroup.append($latInput);
-        $content.append($latGroup);
-
-        // Longitude input
-        var $lngGroup = $('<div class="form-group">');
-        $lngGroup.append($('<label>').text('Longitude'));
-        var $lngInput = $('<input class="form-control o_location_longitude" type="number" step="any">');
-        $lngInput.val(this.longitude);
-        $lngGroup.append($lngInput);
-        $content.append($lngGroup);
-
-        // Accuracy display
-        if (this.accuracy) {
-            var $accGroup = $('<div class="form-group">');
-            $accGroup.append($('<label>').text('Accuracy (meters)'));
-            var $accInput = $('<input class="form-control" type="number" readonly>');
-            $accInput.val(this.accuracy);
-            $accGroup.append($accInput);
-            $content.append($accGroup);
-        }
-
-        // Action buttons
-        var $btnGroup = $('<div class="btn-group mt-2">');
-        $btnGroup.append(
-            $('<button class="btn btn-primary o_location_get_current" type="button">')
-                .text('Get Current Location')
-        );
-        $btnGroup.append(
-            $('<button class="btn btn-secondary o_location_show_map" type="button">')
-                .text('Show on Map')
-        );
-        $content.append($btnGroup);
-
-        this.$el.append($content);
-
-        // Bind change events
-        this.$('.o_location_latitude, .o_location_longitude').on('change', this._onLocationChange.bind(this));
-    },
-
-    _onLocationChange: function () {
-        var latitude = parseFloat(this.$('.o_location_latitude').val()) || 0;
-        var longitude = parseFloat(this.$('.o_location_longitude').val()) || 0;
-
-        this.latitude = latitude;
-        this.longitude = longitude;
-
-        this._setValue({
-            latitude: latitude,
-            longitude: longitude
+    setup() {
+        this.state = useState({
+            latitude: this.props.record.data.latitude || 0,
+            longitude: this.props.record.data.longitude || 0,
+            accuracy: this.props.record.data.accuracy || 0,
+            isGettingLocation: false
         });
-    },
+    }
 
-    _onGetCurrentLocation: function (ev) {
-        ev.preventDefault();
-        var self = this;
+    get isReadonly() {
+        return this.props.readonly;
+    }
 
+    onGetCurrentLocation() {
         if (!navigator.geolocation) {
-            this.displayNotification({
-                message: 'Geolocation is not supported by this browser.',
-                type: 'warning'
-            });
+            this.env.services.notification.add(
+                'Geolocation is not supported by this browser.',
+                { type: 'warning' }
+            );
             return;
         }
 
-        var $btn = $(ev.currentTarget);
-        $btn.prop('disabled', true).text('Getting location...');
+        this.state.isGettingLocation = true;
 
         navigator.geolocation.getCurrentPosition(
-            function (position) {
-                self.latitude = position.coords.latitude;
-                self.longitude = position.coords.longitude;
-                self.accuracy = position.coords.accuracy;
+            (position) => {
+                this.state.latitude = position.coords.latitude;
+                this.state.longitude = position.coords.longitude;
+                this.state.accuracy = position.coords.accuracy;
+                this.state.isGettingLocation = false;
 
-                self.$('.o_location_latitude').val(self.latitude);
-                self.$('.o_location_longitude').val(self.longitude);
-
-                self._setValue({
-                    latitude: self.latitude,
-                    longitude: self.longitude,
-                    accuracy: self.accuracy
+                // Update the record
+                this.props.record.update({
+                    latitude: this.state.latitude,
+                    longitude: this.state.longitude,
+                    accuracy: this.state.accuracy
                 });
 
-                $btn.prop('disabled', false).text('Get Current Location');
-
-                self.displayNotification({
-                    message: 'Location updated successfully',
-                    type: 'success'
-                });
+                this.env.services.notification.add(
+                    'Location updated successfully',
+                    { type: 'success' }
+                );
             },
-            function (error) {
-                var message = 'Error getting location: ';
+            (error) => {
+                this.state.isGettingLocation = false;
+                let message = 'Error getting location: ';
                 switch (error.code) {
                     case error.PERMISSION_DENIED:
                         message += 'Permission denied';
@@ -173,12 +69,7 @@ var LocationWidget = AbstractField.extend({
                         break;
                 }
 
-                self.displayNotification({
-                    message: message,
-                    type: 'danger'
-                });
-
-                $btn.prop('disabled', false).text('Get Current Location');
+                this.env.services.notification.add(message, { type: 'danger' });
             },
             {
                 enableHighAccuracy: true,
@@ -186,26 +77,32 @@ var LocationWidget = AbstractField.extend({
                 maximumAge: 0
             }
         );
-    },
+    }
 
-    _onShowMap: function (ev) {
-        ev.preventDefault();
-
-        if (!this.latitude || !this.longitude) {
-            this.displayNotification({
-                message: 'No location coordinates available',
-                type: 'warning'
-            });
+    onShowMap() {
+        if (!this.state.latitude || !this.state.longitude) {
+            this.env.services.notification.add(
+                'No location coordinates available',
+                { type: 'warning' }
+            );
             return;
         }
 
         // Open map in new window/tab
-        var mapUrl = 'https://www.google.com/maps?q=' + this.latitude + ',' + this.longitude;
+        const mapUrl = `https://www.google.com/maps?q=${this.state.latitude},${this.state.longitude}`;
         window.open(mapUrl, '_blank');
     }
-});
 
-field_registry.add('location_widget', LocationWidget);
+    onLocationChange(field, value) {
+        this.state[field] = parseFloat(value) || 0;
+        
+        const updateData = {
+            latitude: this.state.latitude,
+            longitude: this.state.longitude
+        };
+        
+        this.props.record.update(updateData);
+    }
+}
 
-return LocationWidget;
-});
+registry.category("fields").add("location_widget", LocationWidget);

@@ -34,16 +34,17 @@
         'views/ai_dashboard_views.xml',
         'views/geofence_views.xml',
         'views/analytics_views.xml',
-        'wizard/location_report_wizard_views.xml',  # Moved before menu_views.xml
+        'wizard/location_report_wizard_views.xml',
         'reports/location_report.xml',
         'reports/location_report_template.xml',
-        'views/menu_views.xml',  # Now loads after wizard views
+        'views/menu_views.xml',
     ],
     'assets': {
         'web.assets_backend': [
             'employee_location_tracker/static/src/js/location_widget.js',
             'employee_location_tracker/static/src/js/ai_dashboard.js',
             'employee_location_tracker/static/src/js/map_widget.js',
+            'employee_location_tracker/static/src/xml/location_templates.xml',
             'employee_location_tracker/static/src/css/location_tracker.css',
         ],
     },

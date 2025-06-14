@@ -1,78 +1,69 @@
-odoo.define('employee_location_tracker.MapWidget', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var AbstractField = require('web.AbstractField');
-var field_registry = require('web.field_registry');
-var rpc = require('web.rpc');
+import { Component, onMounted, useRef } from "@odoo/owl";
+import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
+import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
-var MapWidget = AbstractField.extend({
-    className: 'o_field_map_widget',
+export class MapWidget extends Component {
+    static template = "employee_location_tracker.MapWidget";
+    static props = standardFieldProps;
 
-    init: function (parent, name, record, options) {
-        this._super.apply(this, arguments);
+    setup() {
+        this.orm = useService("orm");
+        this.mapRef = useRef("mapContainer");
         this.map = null;
         this.markers = [];
-        this.record_data = record.data;
-    },
 
-    _render: function () {
-        var self = this;
-        this.$el.empty();
+        onMounted(() => {
+            this.initializeMap();
+        });
+    }
 
-        // Create map container
-        var $mapContainer = $('<div class="o_map_container" style="height: 400px; width: 100%;"></div>');
-        this.$el.append($mapContainer);
-
-        // Initialize map
-        this._initializeMap($mapContainer[0]);
-
-        return this._super.apply(this, arguments);
-    },
-
-    _initializeMap: function (container) {
-        var self = this;
-
-        // Check if we have location data
-        var lat = this.record_data.latitude || 0;
-        var lng = this.record_data.longitude || 0;
+    async initializeMap() {
+        const recordData = this.props.record.data;
+        const lat = recordData.latitude || 0;
+        const lng = recordData.longitude || 0;
 
         if (!lat && !lng) {
-            container.innerHTML = '<div class="text-center text-muted p-4">No location data available</div>';
+            this.mapRef.el.innerHTML = '<div class="text-center text-muted p-4">No location data available</div>';
             return;
         }
 
-        // Initialize Leaflet map (using CDN)
+        // Load Leaflet if not already loaded
         if (typeof L === 'undefined') {
-            this._loadLeaflet().then(function () {
-                self._createMap(container, lat, lng);
-            });
-        } else {
-            this._createMap(container, lat, lng);
+            await this.loadLeaflet();
         }
-    },
 
-    _loadLeaflet: function () {
-        return new Promise(function (resolve, reject) {
+        this.createMap(lat, lng);
+    }
+
+    loadLeaflet() {
+        return new Promise((resolve, reject) => {
             // Load Leaflet CSS
-            var cssLink = document.createElement('link');
-            cssLink.rel = 'stylesheet';
-            cssLink.href = 'https://unpkg.com/leaflet@1.7.1/dist/leaflet.css';
-            document.head.appendChild(cssLink);
+            if (!document.querySelector('link[href*="leaflet"]')) {
+                const cssLink = document.createElement('link');
+                cssLink.rel = 'stylesheet';
+                cssLink.href = 'https://unpkg.com/leaflet@1.7.1/dist/leaflet.css';
+                document.head.appendChild(cssLink);
+            }
 
             // Load Leaflet JS
-            var script = document.createElement('script');
-            script.src = 'https://unpkg.com/leaflet@1.7.1/dist/leaflet.js';
-            script.onload = resolve;
-            script.onerror = reject;
-            document.head.appendChild(script);
+            if (!window.L) {
+                const script = document.createElement('script');
+                script.src = 'https://unpkg.com/leaflet@1.7.1/dist/leaflet.js';
+                script.onload = resolve;
+                script.onerror = reject;
+                document.head.appendChild(script);
+            } else {
+                resolve();
+            }
         });
-    },
+    }
 
-    _createMap: function (container, lat, lng) {
-        var self = this;
-
+    createMap(lat, lng) {
         // Create map
-        this.map = L.map(container).setView([lat, lng], 15);
+        this.map = L.map(this.mapRef.el).setView([lat, lng], 15);
 
         // Add tile layer
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -80,141 +71,146 @@ var MapWidget = AbstractField.extend({
         }).addTo(this.map);
 
         // Add marker for current location
-        var marker = L.marker([lat, lng]).addTo(this.map);
+        const marker = L.marker([lat, lng]).addTo(this.map);
 
         // Add popup with location info
-        var popupContent = this._createPopupContent();
+        const popupContent = this.createPopupContent();
         marker.bindPopup(popupContent);
 
         // Load related locations if employee_id is available
-        if (this.record_data.employee_id) {
-            this._loadEmployeeLocations();
+        const recordData = this.props.record.data;
+        if (recordData.employee_id) {
+            this.loadEmployeeLocations();
         }
 
         // Load geofences
-        this._loadGeofences();
-    },
+        this.loadGeofences();
+    }
 
-    _createPopupContent: function () {
-        var content = '<div class="o_map_popup">';
+    createPopupContent() {
+        const recordData = this.props.record.data;
+        let content = '<div class="map-popup">';
 
-        if (this.record_data.employee_id && this.record_data.employee_id[1]) {
-            content += '<h6>' + this.record_data.employee_id[1] + '</h6>';
+        if (recordData.employee_id && recordData.employee_id[1]) {
+            content += `<h6>${recordData.employee_id[1]}</h6>`;
         }
 
-        if (this.record_data.timestamp) {
-            content += '<p><strong>Time:</strong> ' + moment(this.record_data.timestamp).format('YYYY-MM-DD HH:mm') + '</p>';
+        if (recordData.timestamp) {
+            const date = new Date(recordData.timestamp);
+            content += `<p><strong>Time:</strong> ${date.toLocaleString()}</p>`;
         }
 
-        if (this.record_data.location_type) {
-            content += '<p><strong>Type:</strong> ' + this.record_data.location_type + '</p>';
+        if (recordData.location_type) {
+            content += `<p><strong>Type:</strong> ${recordData.location_type}</p>`;
         }
 
-        if (this.record_data.address) {
-            content += '<p><strong>Address:</strong> ' + this.record_data.address + '</p>';
+        if (recordData.address) {
+            content += `<p><strong>Address:</strong> ${recordData.address}</p>`;
         }
 
-        if (this.record_data.accuracy) {
-            content += '<p><strong>Accuracy:</strong> ±' + this.record_data.accuracy + 'm</p>';
+        if (recordData.accuracy) {
+            content += `<p><strong>Accuracy:</strong> ±${recordData.accuracy}m</p>`;
         }
 
-        if (this.record_data.anomaly_detected) {
+        if (recordData.anomaly_detected) {
             content += '<p class="text-warning"><strong>⚠ Anomaly Detected</strong></p>';
         }
 
         content += '</div>';
         return content;
-    },
+    }
 
-    _loadEmployeeLocations: function () {
-        var self = this;
-        var employee_id = this.record_data.employee_id[0];
+    async loadEmployeeLocations() {
+        try {
+            const recordData = this.props.record.data;
+            const employeeId = recordData.employee_id[0];
 
-        // Load recent locations for the same employee
-        rpc.query({
-            model: 'hr.employee.location',
-            method: 'search_read',
-            args: [
+            // Load recent locations for the same employee (last 7 days)
+            const lastWeek = new Date();
+            lastWeek.setDate(lastWeek.getDate() - 7);
+
+            const locations = await this.orm.searchRead(
+                "hr.employee.location",
                 [
-                    ['employee_id', '=', employee_id],
-                    ['timestamp', '>=', moment().subtract(7, 'days').format('YYYY-MM-DD')],
-                    ['id', '!=', this.record_data.id]
+                    ["employee_id", "=", employeeId],
+                    ["timestamp", ">=", lastWeek.toISOString().split('T')[0]],
+                    ["id", "!=", recordData.id]
                 ],
-                ['latitude', 'longitude', 'timestamp', 'location_type', 'anomaly_detected'],
-                0, 50
-            ]
-        }).then(function (locations) {
-            self._addLocationMarkers(locations);
-        });
-    },
+                ["latitude", "longitude", "timestamp", "location_type", "anomaly_detected"],
+                { limit: 50 }
+            );
 
-    _addLocationMarkers: function (locations) {
-        var self = this;
+            this.addLocationMarkers(locations);
 
-        locations.forEach(function (location, index) {
-            var color = location.anomaly_detected ? 'red' : 'blue';
-            var marker = L.circleMarker([location.latitude, location.longitude], {
+        } catch (error) {
+            console.error("Failed to load employee locations:", error);
+        }
+    }
+
+    addLocationMarkers(locations) {
+        locations.forEach((location) => {
+            const color = location.anomaly_detected ? 'red' : 'blue';
+            const marker = L.circleMarker([location.latitude, location.longitude], {
                 color: color,
                 radius: 5,
                 opacity: 0.7
-            }).addTo(self.map);
+            }).addTo(this.map);
 
-            var popupContent = '<div>' +
-                '<p><strong>Time:</strong> ' + moment(location.timestamp).format('YYYY-MM-DD HH:mm') + '</p>' +
-                '<p><strong>Type:</strong> ' + location.location_type + '</p>' +
-                (location.anomaly_detected ? '<p class="text-warning">⚠ Anomaly</p>' : '') +
-                '</div>';
+            const date = new Date(location.timestamp);
+            const popupContent = `
+                <div>
+                    <p><strong>Time:</strong> ${date.toLocaleString()}</p>
+                    <p><strong>Type:</strong> ${location.location_type}</p>
+                    ${location.anomaly_detected ? '<p class="text-warning">⚠ Anomaly</p>' : ''}
+                </div>
+            `;
 
             marker.bindPopup(popupContent);
-            self.markers.push(marker);
+            this.markers.push(marker);
         });
-    },
+    }
 
-    _loadGeofences: function () {
-        var self = this;
+    async loadGeofences() {
+        try {
+            const geofences = await this.orm.searchRead(
+                "hr.location.geofence",
+                [["active", "=", true]],
+                ["name", "geofence_type", "center_latitude", "center_longitude", "radius", "boundary_points", "color"]
+            );
 
-        rpc.query({
-            model: 'hr.location.geofence',
-            method: 'search_read',
-            args: [
-                [['active', '=', true]],
-                ['name', 'geofence_type', 'center_latitude', 'center_longitude', 'radius', 'boundary_points', 'color']
-            ]
-        }).then(function (geofences) {
-            self._addGeofenceOverlays(geofences);
-        });
-    },
+            this.addGeofenceOverlays(geofences);
 
-    _addGeofenceOverlays: function (geofences) {
-        var self = this;
+        } catch (error) {
+            console.error("Failed to load geofences:", error);
+        }
+    }
 
-        geofences.forEach(function (geofence) {
-            var color = geofence.color || '#007BFF';
+    addGeofenceOverlays(geofences) {
+        geofences.forEach((geofence) => {
+            const color = geofence.color || '#007BFF';
 
             if (geofence.geofence_type === 'circle' && geofence.center_latitude && geofence.center_longitude) {
-                var circle = L.circle([geofence.center_latitude, geofence.center_longitude], {
+                const circle = L.circle([geofence.center_latitude, geofence.center_longitude], {
                     radius: geofence.radius || 100,
                     color: color,
                     fillColor: color,
                     fillOpacity: 0.2
-                }).addTo(self.map);
+                }).addTo(this.map);
 
-                circle.bindPopup('<strong>' + geofence.name + '</strong><br>Radius: ' + geofence.radius + 'm');
+                circle.bindPopup(`<strong>${geofence.name}</strong><br>Radius: ${geofence.radius}m`);
 
             } else if (geofence.boundary_points) {
                 try {
-                    var points = JSON.parse(geofence.boundary_points);
-                    var latLngs = points.map(function (point) {
-                        return [point.lat, point.lng];
-                    });
+                    const points = JSON.parse(geofence.boundary_points);
+                    const latLngs = points.map(point => [point.lat, point.lng]);
 
-                    var polygon = L.polygon(latLngs, {
+                    const polygon = L.polygon(latLngs, {
                         color: color,
                         fillColor: color,
                         fillOpacity: 0.2
-                    }).addTo(self.map);
+                    }).addTo(this.map);
 
-                    polygon.bindPopup('<strong>' + geofence.name + '</strong>');
+                    polygon.bindPopup(`<strong>${geofence.name}</strong>`);
 
                 } catch (e) {
                     console.warn('Invalid boundary points for geofence:', geofence.name);
@@ -222,9 +218,7 @@ var MapWidget = AbstractField.extend({
             }
         });
     }
-});
+}
 
-field_registry.add('map_widget', MapWidget);
-
-return MapWidget;
-});
+// Register the map widget component
+registry.category("fields").add("map_widget", MapWidget);
