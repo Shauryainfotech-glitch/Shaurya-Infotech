@@ -2,36 +2,5 @@
 <odoo>
     <data noupdate="1">
 
-        <!-- Scheduled Actions (Cron Jobs) for Odoo 18 -->
-
-        <!-- Clean up old location data -->
-        <record id="cleanup_old_locations" model="ir.cron">
-            <field name="name">Cleanup Old Location Data</field>
-            <field name="model_id" ref="model_hr_location_tracking_settings"/>
-            <field name="state">code</field>
-            <field name="code">model.cleanup_old_locations()</field>
-            <field name="interval_number">1</field>
-            <field name="interval_type">days</field>
-            <field name="doall" eval="False"/>
-            <field name="active" eval="True"/>
-        </record>
-
-        <!-- Daily analytics computation -->
-        <record id="compute_daily_analytics" model="ir.cron">
-            <field name="name">Compute Daily Location Analytics</field>
-            <field name="model_id" ref="model_hr_location_analytics_dashboard"/>
-            <field name="state">code</field>
-            <field name="code">
-# Refresh analytics data
-dashboards = env['hr.location.analytics.dashboard'].search([])
-for dashboard in dashboards:
-    dashboard.action_refresh_data()
-            </field>
-            <field name="interval_number">1</field>
-            <field name="interval_type">days</field>
-            <field name="doall" eval="False"/>
-            <field name="active" eval="True"/>
-        </record>
-
     </data>
 </odoo>
