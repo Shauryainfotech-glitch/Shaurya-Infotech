@@ -321,6 +321,7 @@ class ArchitectComplianceChecklist(models.Model):
             self.completed_by = False
 
 
+
 class ArchitectComplianceChecklistTemplate(models.Model):
     _name = 'architect.compliance.checklist.template'
     _description = 'Compliance Checklist Template'
