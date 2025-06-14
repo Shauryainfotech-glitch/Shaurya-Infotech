@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
     <!-- Financial Tracking Views -->
     <record id="view_architect_financial_tracking_list" model="ir.ui.view">
         <field name="name">architect.financial.tracking.list</field>
@@ -12,8 +11,8 @@
                 <field name="project_id"/>
                 <field name="transaction_type"/>
                 <field name="category_id"/>
-
                 <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="date"/>
                 <field name="date"/>
                 <field name="due_date"/>
                 <field name="user_id"/>
@@ -22,6 +21,7 @@
                        decoration-warning="state == 'submitted'"
                        decoration-success="state == 'approved'"
                        decoration-danger="state == 'rejected'"/>
+                <field name="currency_id" invisible="1"/>
             </list>
         </field>
     </record>
@@ -33,17 +33,17 @@
             <form string="Financial Tracking">
                 <header>
                     <button name="action_submit" string="Submit" type="object"
-                            class="oe_highlight" invisible="state != 'draft'"/>
+                            class="oe_highlight" modifiers="{'invisible': [('state', '!=', 'draft')]}"/>
                     <button name="action_approve" string="Approve" type="object"
-                            class="oe_highlight" invisible="state != 'submitted'"/>
+                            class="oe_highlight" modifiers="{'invisible': [('state', '!=', 'submitted')]}"/>
                     <button name="action_reject" string="Reject" type="object"
-                            class="btn-warning" invisible="state != 'submitted'"/>
+                            class="btn-warning" modifiers="{'invisible': [('state', '!=', 'submitted')]}"/>
                     <button name="action_pay" string="Mark as Paid" type="object"
-                            class="btn-success" invisible="transaction_type != 'expense' or state != 'approved'"/>
+                            class="btn-success" modifiers="{'invisible': ['|', ('transaction_type', '!=', 'expense'), ('state', '!=', 'approved')]}"/>
                     <button name="action_receive" string="Mark as Received" type="object"
-                            class="btn-success" invisible="transaction_type != 'income' or state != 'approved'"/>
+                            class="btn-success" modifiers="{'invisible': ['|', ('transaction_type', '!=', 'income'), ('state', '!=', 'approved')]}"/>
                     <button name="action_cancel" string="Cancel" type="object"
-                            class="btn-secondary" invisible="state in ['cancelled', 'paid']"/>
+                            class="btn-secondary" modifiers="{'invisible': [('state', 'in', ['cancelled', 'paid'])]}"/>
                     <field name="state" widget="statusbar"
                            statusbar_visible="draft,submitted,approved,paid,rejected"/>
                 </header>
@@ -59,12 +59,12 @@
                             <field name="transaction_type"/>
                             <field name="category_id"/>
                             <field name="subcategory_id" domain="[('category_id', '=', category_id)]"/>
-                            <field name="currency_id" options="{'no_open': True, 'no_create': True}" readonly="1"/>
                             <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="currency_id" invisible="1"/>
                         </group>
                         <group>
                             <field name="date"/>
-                            <field name="due_date" invisible="transaction_type != 'expense'"/>
+                            <field name="due_date" modifiers="{'invisible': [('transaction_type', '!=', 'expense')]}"/>
                             <field name="user_id"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
@@ -91,11 +91,11 @@
                         </page>
                     </notebook>
                 </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids"/>
-                    <field name="activity_ids"/>
-                    <field name="message_ids"/>
-                </div>
+<!--                <div class="oe_chatter">-->
+<!--                    <field name="message_follower_ids"/>-->
+<!--                    <field name="activity_ids"/>-->
+<!--                    <field name="message_ids"/>-->
+<!--                </div>-->
             </form>
         </field>
     </record>
@@ -191,10 +191,9 @@
                 <field name="name"/>
                 <field name="project_id"/>
                 <field name="budget_type"/>
-
-                <field name="total_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                <field name="spent_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                <field name="remaining_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="total_amount" widget="monetary"/>
+                <field name="spent_amount" widget="monetary"/>
+                <field name="remaining_amount" widget="monetary"/>
                 <field name="utilization_percentage" widget="percentage"/>
                 <field name="variance_percentage" widget="percentage"/>
                 <field name="start_date"/>
@@ -204,7 +203,8 @@
                        decoration-warning="state == 'submitted'"
                        decoration-success="state == 'approved'"
                        decoration-primary="state == 'active'"/>
-                <field name="is_over_budget" column_invisible="1"/>
+                <field name="is_over_budget" invisible="1"/>
+                <field name="currency_id" invisible="1"/>
             </list>
         </field>
     </record>
@@ -216,15 +216,15 @@
             <form string="Project Budget">
                 <header>
                     <button name="action_submit" string="Submit" type="object"
-                            class="oe_highlight" invisible="state != 'draft'"/>
+                            class="oe_highlight" modifiers="{'invisible': [('state', '!=', 'draft')]}"/>
                     <button name="action_approve" string="Approve" type="object"
-                            class="oe_highlight" invisible="state != 'submitted'"/>
+                            class="oe_highlight" modifiers="{'invisible': [('state', '!=', 'submitted')]}"/>
                     <button name="action_activate" string="Activate" type="object"
-                            class="oe_highlight" invisible="state != 'approved'"/>
+                            class="oe_highlight" modifiers="{'invisible': [('state', '!=', 'approved')]}"/>
                     <button name="action_close" string="Close" type="object"
-                            class="btn-secondary" invisible="state != 'active'"/>
+                            class="btn-secondary" modifiers="{'invisible': [('state', '!=', 'active')]}"/>
                     <button name="action_revise" string="Revise" type="object"
-                            class="btn-warning" invisible="state not in ['approved', 'active']"/>
+                            class="btn-warning" modifiers="{'invisible': [('state', 'not in', ['approved', 'active'])]}"/>
                     <field name="state" widget="statusbar"
                            statusbar_visible="draft,submitted,approved,active,closed"/>
                 </header>
@@ -234,12 +234,28 @@
                             <field name="name" placeholder="Budget Name"/>
                         </h1>
                     </div>
+<!--                    <div class="oe_button_box" name="button_box">-->
+<!--                        <button class="oe_stat_button" type="action" icon="fa-line-chart">-->
+<!--                            <div class="o_field_widget o_stat_info">-->
+<!--                                <span class="o_stat_value">-->
+<!--                                    <field name="utilization_percentage" widget="percentage"/>-->
+<!--                                </span>-->
+<!--                                <span class="o_stat_text">Utilized</span>-->
+<!--                            </div>-->
+<!--                        </button>-->
+<!--                        <button class="oe_stat_button" type="object" icon="fa-exclamation-triangle"-->
+<!--                                modifiers="{'invisible': [('is_over_budget', '=', False)]}">-->
+<!--                            <div class="o_field_widget o_stat_info">-->
+<!--                                <span class="o_stat_value text-danger">Over Budget</span>-->
+<!--                            </div>-->
+<!--                        </button>-->
+<!--                    </div>-->
                     <group>
                         <group>
                             <field name="project_id"/>
                             <field name="budget_type"/>
-                            <field name="currency_id" options="{'no_open': True, 'no_create': True}" readonly="1"/>
-                            <field name="total_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="total_amount" widget="monetary"/>
+                            <field name="currency_id" invisible="1"/>
                             <field name="version"/>
                         </group>
                         <group>
@@ -257,10 +273,9 @@
                                     <field name="category_id"/>
                                     <field name="subcategory_id" domain="[('category_id', '=', category_id)]"/>
                                     <field name="description"/>
-
-                                    <field name="budgeted_amount" widget="monetary" options="{'currency_field': 'currency_id'}" sum="Total Budget"/>
-                                    <field name="actual_amount" widget="monetary" options="{'currency_field': 'currency_id'}" sum="Total Actual" readonly="1"/>
-                                    <field name="variance_amount" widget="monetary" options="{'currency_field': 'currency_id'}" sum="Total Variance" readonly="1"/>
+                                    <field name="budgeted_amount" widget="monetary" sum="Total Budget"/>
+                                    <field name="actual_amount" widget="monetary" sum="Total Actual" readonly="1"/>
+                                    <field name="variance_amount" widget="monetary" sum="Total Variance" readonly="1"/>
                                     <field name="variance_percentage" widget="percentage" readonly="1"/>
                                     <field name="notes"/>
                                 </list>
@@ -271,7 +286,7 @@
                                 <list>
                                     <field name="name"/>
                                     <field name="category_id"/>
-                                    <field name="estimated_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                    <field name="estimated_amount" widget="monetary"/>
                                     <field name="confidence_level"/>
                                     <field name="date"/>
                                     <field name="is_approved"/>
@@ -281,13 +296,13 @@
                         <page string="Analysis" name="analysis">
                             <group>
                                 <group string="Budget Overview">
-                                    <field name="total_amount" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1"/>
-                                    <field name="spent_amount" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1"/>
-                                    <field name="remaining_amount" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1"/>
+                                    <field name="total_amount" widget="monetary" readonly="1"/>
+                                    <field name="spent_amount" widget="monetary" readonly="1"/>
+                                    <field name="remaining_amount" widget="monetary" readonly="1"/>
                                     <field name="utilization_percentage" widget="percentage" readonly="1"/>
                                 </group>
                                 <group string="Variance Analysis">
-                                    <field name="variance_amount" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1"/>
+                                    <field name="variance_amount" widget="monetary" readonly="1"/>
                                     <field name="variance_percentage" widget="percentage" readonly="1"/>
                                     <field name="is_over_budget" readonly="1"/>
                                 </group>
@@ -295,11 +310,11 @@
                         </page>
                     </notebook>
                 </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids"/>
-                    <field name="activity_ids"/>
-                    <field name="message_ids"/>
-                </div>
+<!--                <div class="oe_chatter">-->
+<!--                    <field name="message_follower_ids"/>-->
+<!--                    <field name="activity_ids"/>-->
+<!--                    <field name="message_ids"/>-->
+<!--                </div>-->
             </form>
         </field>
     </record>
@@ -355,8 +370,8 @@
                 <field name="name"/>
                 <field name="project_id"/>
                 <field name="category_id"/>
-                <field name="estimated_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                <field name="total_estimate" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="estimated_amount" widget="monetary"/>
+                <field name="total_estimate" widget="monetary"/>
                 <field name="confidence_level"/>
                 <field name="date"/>
                 <field name="estimator_id"/>
@@ -366,6 +381,7 @@
                        decoration-success="state == 'approved'"
                        decoration-danger="state == 'rejected'"/>
                 <field name="is_approved" widget="boolean"/>
+                <field name="currency_id" invisible="1"/>
             </list>
         </field>
     </record>
@@ -377,11 +393,12 @@
             <form string="Cost Estimate">
                 <header>
                     <button name="action_submit" string="Submit" type="object"
-                            class="oe_highlight" invisible="state != 'draft'"/>
+                            class="oe_highlight" modifiers="{'invisible': [('state', '!=', 'draft')]}"/>
                     <button name="action_approve" string="Approve" type="object"
-                            class="oe_highlight" invisible="state != 'submitted'"/>
+                            class="oe_highlight" modifiers="{'invisible': [('state', '!=', 'submitted')]}"/>
                     <button name="action_reject" string="Reject" type="object"
-                            class="btn-warning" invisible="state != 'submitted'"/>
+                            class="btn-warning" modifiers="{'invisible': [('state', '!=', 'submitted')]}"/>
+
                     <field name="state" widget="statusbar"
                            statusbar_visible="draft,submitted,approved,rejected"/>
                 </header>
@@ -391,13 +408,29 @@
                             <field name="name" placeholder="Estimate Name"/>
                         </h1>
                     </div>
+<!--                    <div class="oe_button_box" name="button_box">-->
+<!--                        <button class="oe_stat_button" type="action" icon="fa-money">-->
+<!--                            <div class="o_field_widget o_stat_info">-->
+<!--                                <span class="o_stat_value">-->
+<!--                                    <field name="total_estimate" widget="monetary"/>-->
+<!--                                </span>-->
+<!--                                <span class="o_stat_text">Total Estimate</span>-->
+<!--                            </div>-->
+<!--                        </button>-->
+<!--                        <button class="oe_stat_button" type="object" icon="fa-check-circle"-->
+<!--                                modifiers="{'invisible': [('is_approved', '=', False)]}">-->
+<!--                            <div class="o_field_widget o_stat_info">-->
+<!--                                <span class="o_stat_value text-success">Approved</span>-->
+<!--                            </div>-->
+<!--                        </button>-->
+<!--                    </div>-->
                     <group>
                         <group>
                             <field name="project_id"/>
                             <field name="category_id"/>
                             <field name="subcategory_id" domain="[('category_id', '=', category_id)]"/>
-                            <field name="currency_id" options="{'no_open': True, 'no_create': True}" readonly="1"/>
-                            <field name="estimated_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="estimated_amount" widget="monetary"/>
+                            <field name="currency_id" invisible="1"/>
                             <field name="version"/>
                         </group>
                         <group>
@@ -427,35 +460,35 @@
                                     <field name="category_id"/>
                                     <field name="quantity"/>
                                     <field name="unit"/>
-
-                                    <field name="unit_rate" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                                    <field name="total_amount" widget="monetary" options="{'currency_field': 'currency_id'}" sum="Subtotal" readonly="1"/>
+                                    <field name="unit_rate" widget="monetary"/>
+                                    <field name="total_amount" widget="monetary" sum="Subtotal" readonly="1"/>
                                     <field name="notes"/>
                                 </list>
                             </field>
                         </page>
                         <page string="Cost Breakdown" name="cost_breakdown">
                             <group>
+
                                 <group string="Additional Costs">
                                     <field name="contingency_percentage"/>
-                                    <field name="contingency_amount" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1"/>
+                                    <field name="contingency_amount" widget="monetary" readonly="1"/>
                                     <field name="overhead_percentage"/>
-                                    <field name="overhead_amount" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1"/>
+                                    <field name="overhead_amount" widget="monetary" readonly="1"/>
                                     <field name="profit_percentage"/>
-                                    <field name="profit_amount" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1"/>
+                                    <field name="profit_amount" widget="monetary" readonly="1"/>
                                 </group>
                                 <group string="Total">
-                                    <field name="total_estimate" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1" class="oe_subtotal_footer_separator"/>
+                                    <field name="total_estimate" widget="monetary" readonly="1" class="oe_subtotal_footer_separator"/>
                                 </group>
                             </group>
                         </page>
                     </notebook>
                 </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids"/>
-                    <field name="activity_ids"/>
-                    <field name="message_ids"/>
-                </div>
+<!--                <div class="oe_chatter">-->
+<!--                    <field name="message_follower_ids"/>-->
+<!--                    <field name="activity_ids"/>-->
+<!--                    <field name="message_ids"/>-->
+<!--                </div>-->
             </form>
         </field>
     </record>
