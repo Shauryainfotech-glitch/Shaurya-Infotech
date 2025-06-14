@@ -2,7 +2,7 @@
 <odoo>
     <data>
 
-        <!-- Location Report Wizard Form View -->
+        <!-- Basic Location Report Wizard (Simplified) -->
         <record id="view_location_report_wizard_form" model="ir.ui.view">
             <field name="name">hr.location.report.wizard.form</field>
             <field name="model">hr.location.report.wizard</field>
@@ -24,21 +24,6 @@
                             <group>
                                 <field name="employee_ids" widget="many2many_tags"/>
                                 <field name="department_ids" widget="many2many_tags"/>
-                            </group>
-                            <group>
-                                <field name="geofence_ids" widget="many2many_tags"/>
-                                <field name="location_types"/>
-                            </group>
-                        </group>
-
-                        <group string="Report Options">
-                            <group>
-                                <field name="include_anomalies_only"/>
-                                <field name="include_map"/>
-                            </group>
-                            <group>
-                                <field name="include_charts"/>
-                                <field name="company_id"/>
                             </group>
                         </group>
 

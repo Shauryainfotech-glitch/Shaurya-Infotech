@@ -52,6 +52,12 @@
                   action="action_analytics_dashboard"
                   sequence="10"/>
 
+        <menuitem id="menu_ai_dashboard"
+                  name="AI Dashboard"
+                  parent="menu_analytics"
+                  action="action_ai_dashboard_simple"
+                  sequence="15"/>
+
         <menuitem id="menu_location_reports"
                   name="Location Reports"
                   parent="menu_analytics"
@@ -71,10 +77,10 @@
                   action="action_tracking_settings"
                   sequence="10"/>
 
-        <menuitem id="menu_ai_analysis"
-                  name="AI Analysis"
+        <menuitem id="menu_ai_config"
+                  name="AI Configuration"
                   parent="menu_configuration"
-                  action="action_ai_analysis"
+                  action="action_ai_analysis_config"
                   groups="group_location_admin"
                   sequence="20"/>
 
