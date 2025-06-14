@@ -11,7 +11,8 @@
                 <field name="project_id"/>
                 <field name="transaction_type"/>
                 <field name="category_id"/>
-                <field name="amount" widget="monetary"/>
+                <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="date"/>
                 <field name="date"/>
                 <field name="due_date"/>
                 <field name="user_id"/>
@@ -58,7 +59,7 @@
                             <field name="transaction_type"/>
                             <field name="category_id"/>
                             <field name="subcategory_id" domain="[('category_id', '=', category_id)]"/>
-                            <field name="amount" widget="monetary"/>
+                            <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                             <field name="currency_id" invisible="1"/>
                         </group>
                         <group>
@@ -107,7 +108,7 @@
                 <field name="name"/>
                 <field name="project_id"/>
                 <field name="transaction_type"/>
-                <field name="amount"/>
+                <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                 <field name="date"/>
                 <field name="state"/>
                 <field name="currency_id"/>
@@ -146,7 +147,7 @@
                 <field name="project_id"/>
                 <field name="category_id"/>
                 <field name="user_id"/>
-                <field name="amount"/>
+                <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                 <filter string="My Records" name="my_records"
                         domain="[('user_id', '=', uid)]"/>
                 <filter string="Income" name="income"
