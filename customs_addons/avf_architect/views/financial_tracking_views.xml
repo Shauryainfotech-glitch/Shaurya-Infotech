@@ -30,7 +30,7 @@
                 <field name="project_id"/>
                 <field name="transaction_type"/>
                 <field name="category_id"/>
-                <field name="currency_id" column_invisible="1"/>
+
                 <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                 <field name="date"/>
                 <field name="due_date"/>
@@ -209,7 +209,7 @@
                 <field name="name"/>
                 <field name="project_id"/>
                 <field name="budget_type"/>
-                <field name="currency_id" column_invisible="1"/>
+
                 <field name="total_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                 <field name="spent_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                 <field name="remaining_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
@@ -275,7 +275,7 @@
                                     <field name="category_id"/>
                                     <field name="subcategory_id" domain="[('category_id', '=', category_id)]"/>
                                     <field name="description"/>
-                                    <field name="currency_id" column_invisible="1"/>
+
                                     <field name="budgeted_amount" widget="monetary" options="{'currency_field': 'currency_id'}" sum="Total Budget"/>
                                     <field name="actual_amount" widget="monetary" options="{'currency_field': 'currency_id'}" sum="Total Actual" readonly="1"/>
                                     <field name="variance_amount" widget="monetary" options="{'currency_field': 'currency_id'}" sum="Total Variance" readonly="1"/>
@@ -289,7 +289,6 @@
                                 <list>
                                     <field name="name"/>
                                     <field name="category_id"/>
-                                    <field name="currency_id" column_invisible="1"/>
                                     <field name="estimated_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                     <field name="confidence_level"/>
                                     <field name="date"/>
@@ -374,7 +373,6 @@
                 <field name="name"/>
                 <field name="project_id"/>
                 <field name="category_id"/>
-                <field name="currency_id" column_invisible="1"/>
                 <field name="estimated_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                 <field name="total_estimate" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                 <field name="confidence_level"/>
@@ -447,7 +445,7 @@
                                     <field name="category_id"/>
                                     <field name="quantity"/>
                                     <field name="unit"/>
-                                    <field name="currency_id" column_invisible="1"/>
+
                                     <field name="unit_rate" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                     <field name="total_amount" widget="monetary" options="{'currency_field': 'currency_id'}" sum="Subtotal" readonly="1"/>
                                     <field name="notes"/>
