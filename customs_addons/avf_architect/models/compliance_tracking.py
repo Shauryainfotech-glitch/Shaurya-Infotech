@@ -264,7 +264,10 @@ class ArchitectComplianceType(models.Model):
     
     # Cost and Timeline
     typical_duration = fields.Integer(string='Typical Duration (Days)')
-    typical_cost = fields.Monetary(string='Typical Cost', currency_field='currency_id')
+    typical_cost = fields.Monetary(
+        string='Typical Cost',
+        currency_field='currency_id'  # Link it to the currency_id field
+    )
     # currency_id = fields.Many2one('res.currency', default=lambda self: self.env.company.currency_id)
 @api.model
 def _get_inr_currency(self):
@@ -283,12 +286,11 @@ def _get_inr_currency(self):
     return inr.id
 
 currency_id = fields.Many2one(
-    'res.currency',
-    string='Currency',
-    required=True,
-    default=lambda self: self._get_inr_currency(),
-    help="Currency for this transaction"
-)
+        'res.currency',
+        string='Currency',
+        required=True,
+        default=lambda self: self.env.company.currency_id,
+    )
 
 class ArchitectComplianceChecklist(models.Model):
     _name = 'architect.compliance.checklist'
