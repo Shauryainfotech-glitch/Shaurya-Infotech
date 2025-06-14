@@ -25,7 +25,9 @@ class ArchitectRateSchedule(models.Model):
         ('dsr', 'District Schedule of Rates (DSR)'),
         ('ssr', 'State Schedule of Rates (SSR)'),
         ('market', 'Market Rate'),
-        ('custom', 'Custom Rate')
+        ('custom', 'Custom Rate'),
+        ('gardenssr', 'Garden SSR'),
+        ('cpwd','CPWD Rate'),
     ], string='Schedule Type', required=True, default='dsr')
 
     state_id = fields.Many2one('res.country.state', string='State', required=True)
