@@ -234,22 +234,6 @@
                             <field name="name" placeholder="Budget Name"/>
                         </h1>
                     </div>
-<!--                    <div class="oe_button_box" name="button_box">-->
-<!--                        <button class="oe_stat_button" type="action" icon="fa-line-chart">-->
-<!--                            <div class="o_field_widget o_stat_info">-->
-<!--                                <span class="o_stat_value">-->
-<!--                                    <field name="utilization_percentage" widget="percentage"/>-->
-<!--                                </span>-->
-<!--                                <span class="o_stat_text">Utilized</span>-->
-<!--                            </div>-->
-<!--                        </button>-->
-<!--                        <button class="oe_stat_button" type="object" icon="fa-exclamation-triangle"-->
-<!--                                modifiers="{'invisible': [('is_over_budget', '=', False)]}">-->
-<!--                            <div class="o_field_widget o_stat_info">-->
-<!--                                <span class="o_stat_value text-danger">Over Budget</span>-->
-<!--                            </div>-->
-<!--                        </button>-->
-<!--                    </div>-->
                     <group>
                         <group>
                             <field name="project_id"/>

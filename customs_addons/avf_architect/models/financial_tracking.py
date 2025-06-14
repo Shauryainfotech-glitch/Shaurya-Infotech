@@ -136,51 +136,6 @@ class ArchitectFinancialTracking(models.Model):
         self.message_post(body=_("Transaction cancelled."))
 
 
-class ArchitectFinancialCategory(models.Model):
-    _name = 'architect.financial.category'
-    _description = 'Financial Category'
-    _order = 'sequence, name'
-
-    name = fields.Char(string='Category Name', required=True)
-    code = fields.Char(
-        string='Category Code',
-        required=True,
-        copy=False,
-        readonly=True,
-        tracking=True,
-        default=lambda self: self.env['ir.sequence'].next_by_code('architect.financial.category') or 'new'
-    )
-    description = fields.Text(string='Description')
-    sequence = fields.Integer(string='Sequence', default=10)
-
-    # Category Type
-    category_type = fields.Selection([
-        ('income', 'Income'),
-        ('expense', 'Expense'),
-        ('both', 'Both')
-    ], string='Category Type', default='both')
-
-    # Accounting Integration
-    account_id = fields.Many2one('account.account', string='Default Account')
-
-    active = fields.Boolean(default=True)
-    color = fields.Integer(string='Color Index')
-
-
-class ArchitectFinancialSubcategory(models.Model):
-    _name = 'architect.financial.subcategory'
-    _description = 'Financial Subcategory'
-    _order = 'category_id, sequence, name'
-
-    name = fields.Char(string='Subcategory Name', required=True)
-    category_id = fields.Many2one('architect.financial.category', string='Category',
-                                  required=True)
-    description = fields.Text(string='Description')
-    sequence = fields.Integer(string='Sequence', default=10)
-
-    active = fields.Boolean(default=True)
-
-
 class ArchitectBudget(models.Model):
     _name = 'architect.budget'
     _inherit = ['mail.thread', 'mail.activity.mixin']
@@ -226,21 +181,6 @@ class ArchitectBudget(models.Model):
         store=True,
         currency_field='currency_id'
     )
-
-    @api.model
-    def _get_inr_currency(self):
-        """Get INR currency, create if not exists"""
-        inr = self.env.ref('base.INR', raise_if_not_found=False)
-        if not inr:
-            inr = self.env['res.currency'].create({
-                'name': 'INR',
-                'symbol': '₹',
-                'position': 'before',
-                'decimal_places': 2,
-                'active': True,
-                'rounding': 0.01
-            })
-        return inr.id
 
     currency_id = fields.Many2one(
         'res.currency',
@@ -433,21 +373,6 @@ class ArchitectCostEstimate(models.Model):
         currency_field='currency_id',
         required=True
     )
-
-    @api.model
-    def _get_inr_currency(self):
-        """Get INR currency, create if not exists"""
-        inr = self.env.ref('base.INR', raise_if_not_found=False)
-        if not inr:
-            inr = self.env['res.currency'].create({
-                'name': 'INR',
-                'symbol': '₹',
-                'position': 'before',
-                'decimal_places': 2,
-                'active': True,
-                'rounding': 0.01
-            })
-        return inr.id
 
     currency_id = fields.Many2one(
         'res.currency',
