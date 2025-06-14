@@ -191,7 +191,7 @@
                 <field name="name"/>
                 <field name="project_id"/>
                 <field name="budget_type"/>
-                <field name="total_amount" widget="monetary"/>
+<!--                <field name="total_amount" widget="monetary"/>-->
                 <field name="spent_amount" widget="monetary"/>
                 <field name="remaining_amount" widget="monetary"/>
                 <field name="utilization_percentage" widget="percentage"/>
