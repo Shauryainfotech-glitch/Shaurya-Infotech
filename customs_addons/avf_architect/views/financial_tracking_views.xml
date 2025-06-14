@@ -1,23 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Sequences -->
-    <record id="sequence_architect_financial_category" model="ir.sequence">
-        <field name="name">Financial Category Sequence</field>
-        <field name="code">architect.financial.category</field>
-        <field name="prefix">FC</field>
-        <field name="padding">4</field>
-        <field name="number_increment">1</field>
-        <field name="number_next">1</field>
-    </record>
-
-    <record id="sequence_architect_financial_tracking" model="ir.sequence">
-        <field name="name">Financial Tracking Sequence</field>
-        <field name="code">architect.financial.tracking</field>
-        <field name="prefix">FT</field>
-        <field name="padding">6</field>
-        <field name="number_increment">1</field>
-        <field name="number_next">1</field>
-    </record>
 
     <!-- Financial Tracking Views -->
     <record id="view_architect_financial_tracking_list" model="ir.ui.view">
