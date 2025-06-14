@@ -27,42 +27,11 @@ class ArchitectFinancialTracking(models.Model):
     ], string='Transaction Type', required=True)
 
     amount = fields.Monetary(string='Amount INR', currency_field='currency_id', required=True)
-
     @api.model
     def _get_inr_currency(self):
-        """Get INR currency, create if not exists"""
         inr = self.env.ref('base.INR', raise_if_not_found=False)
         if not inr:
-            # If INR doesn't exist, create it
-            inr = self.env['res.currency'].create({
-                'name': 'INR',
-                'symbol': '₹',
-                'position': 'before',
-                'decimal_places': 2,
-                'active': True,
-                'rounding': 0.01
-            })
-        return inr.id
-
-    currency_id = fields.Many2one(
-        'res.currency',
-        string='Currency',
-        required=True,
-        default=lambda self: self._get_inr_currency(),
-        help="Currency for this transaction"
-    )
-
-    @api.model
-    def _get_inr_currency(self):
-        """Get INR currency, create if not exists"""
-        inr = self.env.ref('base.INR', raise_if_not_found=False)
-        if not inr:
-            # If INR doesn't exist, create it
-            inr = self.env['res.currency'].create({
-                'name': 'INR',
-                'symbol': '₹',
-                'position': 'before',
-                'decimal_places': 2,
+            inr = self.env['res.currency'].create({'name': 'INR','symbol': '₹','position': 'before','decimal_places': 2,
                 'active': True,
                 'rounding': 0.01
             })
