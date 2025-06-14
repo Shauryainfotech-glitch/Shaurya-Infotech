@@ -1,18 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- INR Currency Data -->
+    <record id="base.INR" model="res.currency">
+        <field name="name">INR</field>
+        <field name="symbol">₹</field>
+        <field name="position">before</field>
+        <field name="active">True</field>
+        <field name="decimal_places">2</field>
+        <field name="rounding">0.01</field>
+    </record>
+
+    <!-- Sequences -->
+    <record id="sequence_architect_financial_category" model="ir.sequence">
+        <field name="name">Financial Category Sequence</field>
+        <field name="code">architect.financial.category</field>
+        <field name="prefix">FC</field>
+        <field name="padding">4</field>
+        <field name="number_increment">1</field>
+        <field name="number_next">1</field>
+    </record>
+
+    <record id="sequence_architect_financial_tracking" model="ir.sequence">
+        <field name="name">Financial Tracking Sequence</field>
+        <field name="code">architect.financial.tracking</field>
+        <field name="prefix">FT</field>
+        <field name="padding">6</field>
+        <field name="number_increment">1</field>
+        <field name="number_next">1</field>
+    </record>
+
     <!-- Financial Tracking Views -->
     <record id="view_architect_financial_tracking_list" model="ir.ui.view">
         <field name="name">architect.financial.tracking.list</field>
         <field name="model">architect.financial.tracking</field>
         <field name="arch" type="xml">
-            <list string="Financial Tracking" decoration-muted="state == 'cancelled'"
+            <tree string="Financial Tracking" decoration-muted="state == 'cancelled'"
                   decoration-danger="state == 'rejected'" decoration-success="state == 'approved'">
                 <field name="name"/>
                 <field name="project_id"/>
                 <field name="transaction_type"/>
                 <field name="category_id"/>
+                <field name="currency_id" invisible="1"/>
                 <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                <field name="date"/>
                 <field name="date"/>
                 <field name="due_date"/>
                 <field name="user_id"/>
@@ -21,8 +50,7 @@
                        decoration-warning="state == 'submitted'"
                        decoration-success="state == 'approved'"
                        decoration-danger="state == 'rejected'"/>
-                <field name="currency_id" invisible="1"/>
-            </list>
+            </tree>
         </field>
     </record>
 
@@ -33,17 +61,17 @@
             <form string="Financial Tracking">
                 <header>
                     <button name="action_submit" string="Submit" type="object"
-                            class="oe_highlight" modifiers="{'invisible': [('state', '!=', 'draft')]}"/>
+                            class="oe_highlight" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
                     <button name="action_approve" string="Approve" type="object"
-                            class="oe_highlight" modifiers="{'invisible': [('state', '!=', 'submitted')]}"/>
+                            class="oe_highlight" attrs="{'invisible': [('state', '!=', 'submitted')]}"/>
                     <button name="action_reject" string="Reject" type="object"
-                            class="btn-warning" modifiers="{'invisible': [('state', '!=', 'submitted')]}"/>
+                            class="btn-warning" attrs="{'invisible': [('state', '!=', 'submitted')]}"/>
                     <button name="action_pay" string="Mark as Paid" type="object"
-                            class="btn-success" modifiers="{'invisible': ['|', ('transaction_type', '!=', 'expense'), ('state', '!=', 'approved')]}"/>
+                            class="btn-success" attrs="{'invisible': ['|', ('transaction_type', '!=', 'expense'), ('state', '!=', 'approved')]}"/>
                     <button name="action_receive" string="Mark as Received" type="object"
-                            class="btn-success" modifiers="{'invisible': ['|', ('transaction_type', '!=', 'income'), ('state', '!=', 'approved')]}"/>
+                            class="btn-success" attrs="{'invisible': ['|', ('transaction_type', '!=', 'income'), ('state', '!=', 'approved')]}"/>
                     <button name="action_cancel" string="Cancel" type="object"
-                            class="btn-secondary" modifiers="{'invisible': [('state', 'in', ['cancelled', 'paid'])]}"/>
+                            class="btn-secondary" attrs="{'invisible': [('state', 'in', ['cancelled', 'paid'])]}"/>
                     <field name="state" widget="statusbar"
                            statusbar_visible="draft,submitted,approved,paid,rejected"/>
                 </header>
@@ -59,12 +87,12 @@
                             <field name="transaction_type"/>
                             <field name="category_id"/>
                             <field name="subcategory_id" domain="[('category_id', '=', category_id)]"/>
+                            <field name="currency_id" options="{'no_open': True, 'no_create': True}"/>
                             <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                            <field name="currency_id" invisible="1"/>
                         </group>
                         <group>
                             <field name="date"/>
-                            <field name="due_date" modifiers="{'invisible': [('transaction_type', '!=', 'expense')]}"/>
+                            <field name="due_date" attrs="{'invisible': [('transaction_type', '!=', 'expense')]}"/>
                             <field name="user_id"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
@@ -91,11 +119,11 @@
                         </page>
                     </notebook>
                 </sheet>
-<!--                <div class="oe_chatter">-->
-<!--                    <field name="message_follower_ids"/>-->
-<!--                    <field name="activity_ids"/>-->
-<!--                    <field name="message_ids"/>-->
-<!--                </div>-->
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
             </form>
         </field>
     </record>
@@ -108,7 +136,7 @@
                 <field name="name"/>
                 <field name="project_id"/>
                 <field name="transaction_type"/>
-                <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="amount"/>
                 <field name="date"/>
                 <field name="state"/>
                 <field name="currency_id"/>
@@ -147,7 +175,7 @@
                 <field name="project_id"/>
                 <field name="category_id"/>
                 <field name="user_id"/>
-                <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="amount"/>
                 <filter string="My Records" name="my_records"
                         domain="[('user_id', '=', uid)]"/>
                 <filter string="Income" name="income"
@@ -186,14 +214,15 @@
         <field name="name">architect.budget.list</field>
         <field name="model">architect.budget</field>
         <field name="arch" type="xml">
-            <list string="Project Budgets" decoration-danger="is_over_budget == True"
+            <tree string="Project Budgets" decoration-danger="is_over_budget == True"
                   decoration-warning="utilization_percentage &gt; 80" decoration-success="state == 'active'">
                 <field name="name"/>
                 <field name="project_id"/>
                 <field name="budget_type"/>
-                <field name="total_amount" widget="monetary"/>
-                <field name="spent_amount" widget="monetary"/>
-                <field name="remaining_amount" widget="monetary"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="total_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="spent_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="remaining_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                 <field name="utilization_percentage" widget="percentage"/>
                 <field name="variance_percentage" widget="percentage"/>
                 <field name="start_date"/>
@@ -204,8 +233,7 @@
                        decoration-success="state == 'approved'"
                        decoration-primary="state == 'active'"/>
                 <field name="is_over_budget" invisible="1"/>
-                <field name="currency_id" invisible="1"/>
-            </list>
+            </tree>
         </field>
     </record>
 
@@ -216,15 +244,15 @@
             <form string="Project Budget">
                 <header>
                     <button name="action_submit" string="Submit" type="object"
-                            class="oe_highlight" modifiers="{'invisible': [('state', '!=', 'draft')]}"/>
+                            class="oe_highlight" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
                     <button name="action_approve" string="Approve" type="object"
-                            class="oe_highlight" modifiers="{'invisible': [('state', '!=', 'submitted')]}"/>
+                            class="oe_highlight" attrs="{'invisible': [('state', '!=', 'submitted')]}"/>
                     <button name="action_activate" string="Activate" type="object"
-                            class="oe_highlight" modifiers="{'invisible': [('state', '!=', 'approved')]}"/>
+                            class="oe_highlight" attrs="{'invisible': [('state', '!=', 'approved')]}"/>
                     <button name="action_close" string="Close" type="object"
-                            class="btn-secondary" modifiers="{'invisible': [('state', '!=', 'active')]}"/>
+                            class="btn-secondary" attrs="{'invisible': [('state', '!=', 'active')]}"/>
                     <button name="action_revise" string="Revise" type="object"
-                            class="btn-warning" modifiers="{'invisible': [('state', 'not in', ['approved', 'active'])]}"/>
+                            class="btn-warning" attrs="{'invisible': [('state', 'not in', ['approved', 'active'])]}"/>
                     <field name="state" widget="statusbar"
                            statusbar_visible="draft,submitted,approved,active,closed"/>
                 </header>
@@ -234,28 +262,12 @@
                             <field name="name" placeholder="Budget Name"/>
                         </h1>
                     </div>
-<!--                    <div class="oe_button_box" name="button_box">-->
-<!--                        <button class="oe_stat_button" type="action" icon="fa-line-chart">-->
-<!--                            <div class="o_field_widget o_stat_info">-->
-<!--                                <span class="o_stat_value">-->
-<!--                                    <field name="utilization_percentage" widget="percentage"/>-->
-<!--                                </span>-->
-<!--                                <span class="o_stat_text">Utilized</span>-->
-<!--                            </div>-->
-<!--                        </button>-->
-<!--                        <button class="oe_stat_button" type="object" icon="fa-exclamation-triangle"-->
-<!--                                modifiers="{'invisible': [('is_over_budget', '=', False)]}">-->
-<!--                            <div class="o_field_widget o_stat_info">-->
-<!--                                <span class="o_stat_value text-danger">Over Budget</span>-->
-<!--                            </div>-->
-<!--                        </button>-->
-<!--                    </div>-->
                     <group>
                         <group>
                             <field name="project_id"/>
                             <field name="budget_type"/>
-                            <field name="total_amount" widget="monetary"/>
-                            <field name="currency_id" invisible="1"/>
+                            <field name="currency_id" options="{'no_open': True, 'no_create': True}"/>
+                            <field name="total_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                             <field name="version"/>
                         </group>
                         <group>
@@ -268,41 +280,43 @@
                     <notebook>
                         <page string="Budget Lines" name="budget_lines">
                             <field name="line_ids">
-                                <list editable="bottom">
+                                <tree editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="category_id"/>
                                     <field name="subcategory_id" domain="[('category_id', '=', category_id)]"/>
                                     <field name="description"/>
-                                    <field name="budgeted_amount" widget="monetary" sum="Total Budget"/>
-                                    <field name="actual_amount" widget="monetary" sum="Total Actual" readonly="1"/>
-                                    <field name="variance_amount" widget="monetary" sum="Total Variance" readonly="1"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="budgeted_amount" widget="monetary" options="{'currency_field': 'currency_id'}" sum="Total Budget"/>
+                                    <field name="actual_amount" widget="monetary" options="{'currency_field': 'currency_id'}" sum="Total Actual" readonly="1"/>
+                                    <field name="variance_amount" widget="monetary" options="{'currency_field': 'currency_id'}" sum="Total Variance" readonly="1"/>
                                     <field name="variance_percentage" widget="percentage" readonly="1"/>
                                     <field name="notes"/>
-                                </list>
+                                </tree>
                             </field>
                         </page>
                         <page string="Cost Estimates" name="cost_estimates">
                             <field name="cost_estimate_ids">
-                                <list>
+                                <tree>
                                     <field name="name"/>
                                     <field name="category_id"/>
-                                    <field name="estimated_amount" widget="monetary"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="estimated_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                     <field name="confidence_level"/>
                                     <field name="date"/>
                                     <field name="is_approved"/>
-                                </list>
+                                </tree>
                             </field>
                         </page>
                         <page string="Analysis" name="analysis">
                             <group>
                                 <group string="Budget Overview">
-                                    <field name="total_amount" widget="monetary" readonly="1"/>
-                                    <field name="spent_amount" widget="monetary" readonly="1"/>
-                                    <field name="remaining_amount" widget="monetary" readonly="1"/>
+                                    <field name="total_amount" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1"/>
+                                    <field name="spent_amount" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1"/>
+                                    <field name="remaining_amount" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1"/>
                                     <field name="utilization_percentage" widget="percentage" readonly="1"/>
                                 </group>
                                 <group string="Variance Analysis">
-                                    <field name="variance_amount" widget="monetary" readonly="1"/>
+                                    <field name="variance_amount" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1"/>
                                     <field name="variance_percentage" widget="percentage" readonly="1"/>
                                     <field name="is_over_budget" readonly="1"/>
                                 </group>
@@ -310,11 +324,11 @@
                         </page>
                     </notebook>
                 </sheet>
-<!--                <div class="oe_chatter">-->
-<!--                    <field name="message_follower_ids"/>-->
-<!--                    <field name="activity_ids"/>-->
-<!--                    <field name="message_ids"/>-->
-<!--                </div>-->
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
             </form>
         </field>
     </record>
@@ -366,12 +380,13 @@
         <field name="name">architect.cost.estimate.list</field>
         <field name="model">architect.cost.estimate</field>
         <field name="arch" type="xml">
-            <list string="Cost Estimates" decoration-success="is_approved == True" decoration-muted="state == 'rejected'">
+            <tree string="Cost Estimates" decoration-success="is_approved == True" decoration-muted="state == 'rejected'">
                 <field name="name"/>
                 <field name="project_id"/>
                 <field name="category_id"/>
-                <field name="estimated_amount" widget="monetary"/>
-                <field name="total_estimate" widget="monetary"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="estimated_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="total_estimate" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                 <field name="confidence_level"/>
                 <field name="date"/>
                 <field name="estimator_id"/>
@@ -381,8 +396,7 @@
                        decoration-success="state == 'approved'"
                        decoration-danger="state == 'rejected'"/>
                 <field name="is_approved" widget="boolean"/>
-                <field name="currency_id" invisible="1"/>
-            </list>
+            </tree>
         </field>
     </record>
 
@@ -393,11 +407,11 @@
             <form string="Cost Estimate">
                 <header>
                     <button name="action_submit" string="Submit" type="object"
-                            class="oe_highlight" modifiers="{'invisible': [('state', '!=', 'draft')]}"/>
+                            class="oe_highlight" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
                     <button name="action_approve" string="Approve" type="object"
-                            class="oe_highlight" modifiers="{'invisible': [('state', '!=', 'submitted')]}"/>
+                            class="oe_highlight" attrs="{'invisible': [('state', '!=', 'submitted')]}"/>
                     <button name="action_reject" string="Reject" type="object"
-                            class="btn-warning" modifiers="{'invisible': [('state', '!=', 'submitted')]}"/>
+                            class="btn-warning" attrs="{'invisible': [('state', '!=', 'submitted')]}"/>
 
                     <field name="state" widget="statusbar"
                            statusbar_visible="draft,submitted,approved,rejected"/>
@@ -408,29 +422,13 @@
                             <field name="name" placeholder="Estimate Name"/>
                         </h1>
                     </div>
-<!--                    <div class="oe_button_box" name="button_box">-->
-<!--                        <button class="oe_stat_button" type="action" icon="fa-money">-->
-<!--                            <div class="o_field_widget o_stat_info">-->
-<!--                                <span class="o_stat_value">-->
-<!--                                    <field name="total_estimate" widget="monetary"/>-->
-<!--                                </span>-->
-<!--                                <span class="o_stat_text">Total Estimate</span>-->
-<!--                            </div>-->
-<!--                        </button>-->
-<!--                        <button class="oe_stat_button" type="object" icon="fa-check-circle"-->
-<!--                                modifiers="{'invisible': [('is_approved', '=', False)]}">-->
-<!--                            <div class="o_field_widget o_stat_info">-->
-<!--                                <span class="o_stat_value text-success">Approved</span>-->
-<!--                            </div>-->
-<!--                        </button>-->
-<!--                    </div>-->
                     <group>
                         <group>
                             <field name="project_id"/>
                             <field name="category_id"/>
                             <field name="subcategory_id" domain="[('category_id', '=', category_id)]"/>
-                            <field name="estimated_amount" widget="monetary"/>
-                            <field name="currency_id" invisible="1"/>
+                            <field name="currency_id" options="{'no_open': True, 'no_create': True}"/>
+                            <field name="estimated_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                             <field name="version"/>
                         </group>
                         <group>
@@ -454,41 +452,41 @@
                         </page>
                         <page string="Estimate Lines" name="estimate_lines">
                             <field name="estimate_line_ids">
-                                <list editable="bottom">
+                                <tree editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="name"/>
                                     <field name="category_id"/>
                                     <field name="quantity"/>
                                     <field name="unit"/>
-                                    <field name="unit_rate" widget="monetary"/>
-                                    <field name="total_amount" widget="monetary" sum="Subtotal" readonly="1"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="unit_rate" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                    <field name="total_amount" widget="monetary" options="{'currency_field': 'currency_id'}" sum="Subtotal" readonly="1"/>
                                     <field name="notes"/>
-                                </list>
+                                </tree>
                             </field>
                         </page>
                         <page string="Cost Breakdown" name="cost_breakdown">
                             <group>
-
                                 <group string="Additional Costs">
                                     <field name="contingency_percentage"/>
-                                    <field name="contingency_amount" widget="monetary" readonly="1"/>
+                                    <field name="contingency_amount" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1"/>
                                     <field name="overhead_percentage"/>
-                                    <field name="overhead_amount" widget="monetary" readonly="1"/>
+                                    <field name="overhead_amount" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1"/>
                                     <field name="profit_percentage"/>
-                                    <field name="profit_amount" widget="monetary" readonly="1"/>
+                                    <field name="profit_amount" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1"/>
                                 </group>
                                 <group string="Total">
-                                    <field name="total_estimate" widget="monetary" readonly="1" class="oe_subtotal_footer_separator"/>
+                                    <field name="total_estimate" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1" class="oe_subtotal_footer_separator"/>
                                 </group>
                             </group>
                         </page>
                     </notebook>
                 </sheet>
-<!--                <div class="oe_chatter">-->
-<!--                    <field name="message_follower_ids"/>-->
-<!--                    <field name="activity_ids"/>-->
-<!--                    <field name="message_ids"/>-->
-<!--                </div>-->
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
             </form>
         </field>
     </record>
@@ -536,14 +534,14 @@
         <field name="name">architect.financial.category.list</field>
         <field name="model">architect.financial.category</field>
         <field name="arch" type="xml">
-            <list string="Financial Categories" decoration-muted="active == False">
+            <tree string="Financial Categories" decoration-muted="active == False">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="code"/>
                 <field name="category_type"/>
                 <field name="account_id"/>
                 <field name="active"/>
-            </list>
+            </tree>
         </field>
     </record>
 
@@ -583,12 +581,12 @@
         <field name="name">architect.financial.subcategory.list</field>
         <field name="model">architect.financial.subcategory</field>
         <field name="arch" type="xml">
-            <list string="Financial Subcategories" decoration-muted="active == False">
+            <tree string="Financial Subcategories" decoration-muted="active == False">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="category_id"/>
                 <field name="active"/>
-            </list>
+            </tree>
         </field>
     </record>
 
@@ -624,7 +622,7 @@
     <record id="action_architect_financial_tracking" model="ir.actions.act_window">
         <field name="name">Financial Tracking</field>
         <field name="res_model">architect.financial.tracking</field>
-        <field name="view_mode">list,kanban,form</field>
+        <field name="view_mode">tree,kanban,form</field>
         <field name="context">{'search_default_my_records': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -639,7 +637,7 @@
     <record id="action_architect_budget" model="ir.actions.act_window">
         <field name="name">Project Budgets</field>
         <field name="res_model">architect.budget</field>
-        <field name="view_mode">list,kanban,form</field>
+        <field name="view_mode">tree,kanban,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create your first project budget
@@ -653,7 +651,7 @@
     <record id="action_architect_cost_estimate" model="ir.actions.act_window">
         <field name="name">Cost Estimates</field>
         <field name="res_model">architect.cost.estimate</field>
-        <field name="view_mode">list,kanban,form</field>
+        <field name="view_mode">tree,kanban,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create your first cost estimate
@@ -667,7 +665,7 @@
     <record id="action_architect_financial_category" model="ir.actions.act_window">
         <field name="name">Financial Categories</field>
         <field name="res_model">architect.financial.category</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">tree,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create your first financial category
@@ -681,7 +679,7 @@
     <record id="action_architect_financial_subcategory" model="ir.actions.act_window">
         <field name="name">Financial Subcategories</field>
         <field name="res_model">architect.financial.subcategory</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">tree,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create your first financial subcategory

@@ -25,6 +25,7 @@ class ArchitectFinancialTracking(models.Model):
         ('payment', 'Payment'),
         ('adjustment', 'Adjustment')
     ], string='Transaction Type', required=True)
+
     amount = fields.Monetary(string='Amount', currency_field='currency_id', required=True)
 
     @api.model
@@ -40,8 +41,7 @@ class ArchitectFinancialTracking(models.Model):
         default=lambda self: self._get_inr_currency(),
         tracking=True
     )
-    # amount = fields.Monetary(string='Amount', currency_field='currency_id', required=True)
-    # currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.ref('base.INR'))
+
     # Dates
     date = fields.Date(string='Date', required=True, default=fields.Date.today)
     due_date = fields.Date(string='Due Date')
@@ -50,7 +50,7 @@ class ArchitectFinancialTracking(models.Model):
     category_id = fields.Many2one('architect.financial.category', string='Category')
     subcategory_id = fields.Many2one('architect.financial.subcategory', string='Subcategory')
 
-    # Approval fields (removed duplicate)
+    # Approval fields
     approved_by = fields.Many2one('res.users', string='Approved By', readonly=True)
     approved_date = fields.Datetime(string='Approved Date', readonly=True)
     approval_notes = fields.Text(string='Approval Notes')
@@ -129,7 +129,6 @@ class ArchitectFinancialCategory(models.Model):
     _order = 'sequence, name'
 
     name = fields.Char(string='Category Name', required=True)
-    #code = fields.Char(string='Category Code')
     code = fields.Char(
         string='Category Code',
         required=True,
@@ -215,8 +214,18 @@ class ArchitectBudget(models.Model):
         currency_field='currency_id'
     )
 
-    currency_id = fields.Many2one('res.currency', string='Currency',
-                                  default=lambda self: self.env.company.currency_id)
+    @api.model
+    def _get_inr_currency(self):
+        """Get INR currency, fallback to company currency"""
+        inr = self.env['res.currency'].search([('name', '=', 'INR')], limit=1)
+        return inr.id if inr else self.env.company.currency_id.id
+
+    currency_id = fields.Many2one(
+        'res.currency',
+        string='Currency',
+        required=True,
+        default=lambda self: self._get_inr_currency()
+    )
 
     # Status and flags
     state = fields.Selection([
@@ -401,8 +410,19 @@ class ArchitectCostEstimate(models.Model):
         currency_field='currency_id',
         required=True
     )
-    currency_id = fields.Many2one('res.currency', string='Currency',
-                                  default=lambda self: self.env.company.currency_id)
+
+    @api.model
+    def _get_inr_currency(self):
+        """Get INR currency, fallback to company currency"""
+        inr = self.env['res.currency'].search([('name', '=', 'INR')], limit=1)
+        return inr.id if inr else self.env.company.currency_id.id
+
+    currency_id = fields.Many2one(
+        'res.currency',
+        string='Currency',
+        required=True,
+        default=lambda self: self._get_inr_currency()
+    )
 
     # Confidence and approval
     confidence_level = fields.Selection([
@@ -475,7 +495,6 @@ class ArchitectCostEstimate(models.Model):
 
     @api.depends('estimate_line_ids.total_amount', 'contingency_percentage',
                  'overhead_percentage', 'profit_percentage')
-
     def _compute_totals(self):
         for estimate in self:
             subtotal = sum(estimate.estimate_line_ids.mapped('total_amount'))
