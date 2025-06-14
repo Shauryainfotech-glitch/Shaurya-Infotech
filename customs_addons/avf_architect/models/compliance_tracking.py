@@ -265,8 +265,30 @@ class ArchitectComplianceType(models.Model):
     # Cost and Timeline
     typical_duration = fields.Integer(string='Typical Duration (Days)')
     typical_cost = fields.Monetary(string='Typical Cost', currency_field='currency_id')
-    currency_id = fields.Many2one('res.currency', default=lambda self: self.env.company.currency_id)
+    # currency_id = fields.Many2one('res.currency', default=lambda self: self.env.company.currency_id)
+@api.model
+def _get_inr_currency(self):
+    """Get INR currency, create if not exists"""
+    inr = self.env.ref('base.INR', raise_if_not_found=False)
+    if not inr:
+        # If INR doesn't exist, create it
+        inr = self.env['res.currency'].create({
+            'name': 'INR',
+            'symbol': '₹',
+            'position': 'before',
+            'decimal_places': 2,
+            'active': True,
+            'rounding': 0.01
+        })
+    return inr.id
 
+currency_id = fields.Many2one(
+    'res.currency',
+    string='Currency',
+    required=True,
+    default=lambda self: self._get_inr_currency(),
+    help="Currency for this transaction"
+)
 
 class ArchitectComplianceChecklist(models.Model):
     _name = 'architect.compliance.checklist'
