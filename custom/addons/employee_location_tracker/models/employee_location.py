@@ -399,3 +399,52 @@ class EmployeeLocation(models.Model):
                 return geofence
 
         return None
+    # Add these methods to the EmployeeLocation class in employee_location.py
+
+@api.model_create_multi
+def create(self, vals_list):
+    """Override create to add automation logic"""
+    records = super().create(vals_list)
+    
+    for record in records:
+        # Auto-validate high confidence locations
+        if (record.ai_confidence_score > 0.9 and 
+            not record.anomaly_detected):
+            record.write({
+                'status': 'validated',
+                'is_valid': True,
+                'validation_notes': 'Auto-validated: High AI confidence score'
+            })
+        
+        # Flag anomalies for review
+        if record.anomaly_detected and record.status == 'draft':
+            record.write({
+                'status': 'anomaly',
+                'validation_notes': 'Flagged for review: Anomaly detected by AI'
+            })
+            record._send_anomaly_notification()
+        
+        # Auto-create attendance from geofence
+        if (record.geofence_id and 
+            record.geofence_id.auto_attendance and 
+            record.inside_geofence):
+            record._auto_create_attendance()
+    
+    return records
+
+def _auto_create_attendance(self):
+    """Auto-create attendance record based on geofence entry"""
+    existing_attendance = self.env['hr.attendance'].search([
+        ('employee_id', '=', self.employee_id.id), 
+        ('check_out', '=', False)
+    ], limit=1)
+
+    if not existing_attendance and self.location_type == 'check_in':
+        self.env['hr.attendance'].create({
+            'employee_id': self.employee_id.id,
+            'check_in': self.timestamp,
+        })
+    elif existing_attendance and self.location_type == 'check_out':
+        existing_attendance.write({
+            'check_out': self.timestamp
+        })
