@@ -473,6 +473,35 @@ class ArchitectCostEstimate(models.Model):
     def action_reject(self):
         self.state = 'rejected'
         self.message_post(body=_("Cost estimate rejected."))
+class ArchitectFinancialCategory(models.Model):
+    _name = 'architect.financial.category'
+    _description = 'Financial Category'
+    _order = 'sequence, name'
+
+    name = fields.Char(string='Category Name', required=True)
+    code = fields.Char(
+        string='Category Code',
+        required=True,
+        copy=False,
+        readonly=True,
+        tracking=True,
+        default=lambda self: self.env['ir.sequence'].next_by_code('architect.financial.category') or 'new'
+    )
+    description = fields.Text(string='Description')
+    sequence = fields.Integer(string='Sequence', default=10)
+
+    # Category Type
+    category_type = fields.Selection([
+        ('income', 'Income'),
+        ('expense', 'Expense'),
+        ('both', 'Both')
+    ], string='Category Type', default='both')
+
+    # Accounting Integration
+    account_id = fields.Many2one('account.account', string='Default Account')
+
+    active = fields.Boolean(default=True)
+    color = fields.Integer(string='Color Index')
 
 
 class ArchitectCostEstimateLine(models.Model):
