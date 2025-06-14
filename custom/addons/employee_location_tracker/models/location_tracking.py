@@ -128,21 +128,54 @@ class LocationTrackingSettings(models.Model):
             ('employee_id', '=', self.employee_id.id)
         ])
 
+        count = len(locations)
         locations.unlink()
 
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
             'params': {
-                'message': f'Location data cleared for {self.employee_id.name}',
+                'message': f'Cleared {count} location records for {self.employee_id.name}',
+                'type': 'success',
+            }
+        }
+
+    def action_cleanup_old_data(self):
+        """Manual cleanup of old location data for this employee"""
+        self.ensure_one()
+        if self.data_retention_days <= 0:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'message': 'Data retention is disabled (0 days)',
+                    'type': 'warning',
+                }
+            }
+
+        cutoff_date = datetime.now() - timedelta(days=self.data_retention_days)
+        old_locations = self.env['hr.employee.location'].search([
+            ('employee_id', '=', self.employee_id.id),
+            ('timestamp', '<', cutoff_date)
+        ])
+
+        count = len(old_locations)
+        old_locations.unlink()
+
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'message': f'Cleaned up {count} old location records for {self.employee_id.name}',
                 'type': 'success',
             }
         }
 
     @api.model
     def cleanup_old_locations(self):
-        """Cleanup old location data based on retention settings"""
+        """Global cleanup of old location data based on retention settings"""
         settings = self.search([('data_retention_days', '>', 0)])
+        total_cleaned = 0
 
         for setting in settings:
             cutoff_date = datetime.now() - timedelta(days=setting.data_retention_days)
@@ -152,8 +185,27 @@ class LocationTrackingSettings(models.Model):
             ])
 
             if old_locations:
-                _logger.info(f"Cleaning up {len(old_locations)} old location records for {setting.employee_id.name}")
+                count = len(old_locations)
+                total_cleaned += count
+                _logger.info(f"Cleaning up {count} old location records for {setting.employee_id.name}")
                 old_locations.unlink()
+
+        _logger.info(f"Total location records cleaned up: {total_cleaned}")
+        return total_cleaned
+
+    @api.model
+    def action_global_cleanup(self):
+        """Action to manually trigger global cleanup"""
+        total_cleaned = self.cleanup_old_locations()
+        
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'message': f'Global cleanup completed. Removed {total_cleaned} old location records.',
+                'type': 'success',
+            }
+        }
 
 
 class LocationTrackingSession(models.Model):

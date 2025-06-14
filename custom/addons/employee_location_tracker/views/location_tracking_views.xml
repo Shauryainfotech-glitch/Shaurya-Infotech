@@ -8,6 +8,14 @@
             <field name="model">hr.location.tracking.settings</field>
             <field name="arch" type="xml">
                 <form string="Tracking Settings">
+                    <header>
+                        <button name="action_cleanup_old_data" type="object"
+                                string="Cleanup Old Data" class="btn-warning"
+                                confirm="This will delete old location data based on retention settings. Continue?"/>
+                        <button name="action_clear_location_data" type="object"
+                                string="Clear All Data" class="btn-danger"
+                                confirm="This will permanently delete ALL location data for this employee. Are you sure?"/>
+                    </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button class="oe_stat_button" type="object"
@@ -81,7 +89,7 @@
         <record id="action_tracking_settings" model="ir.actions.act_window">
             <field name="name">Tracking Settings</field>
             <field name="res_model">hr.location.tracking.settings</field>
-            <field name="view_mode">form</field>
+            <field name="view_mode">tree,form</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     Configure location tracking settings!
@@ -91,6 +99,15 @@
                     frequency, privacy settings, and automation rules.
                 </p>
             </field>
+        </record>
+
+        <!-- Global Cleanup Action -->
+        <record id="action_global_cleanup" model="ir.actions.server">
+            <field name="name">Global Location Data Cleanup</field>
+            <field name="model_id" ref="model_hr_location_tracking_settings"/>
+            <field name="binding_model_id" ref="model_hr_location_tracking_settings"/>
+            <field name="state">code</field>
+            <field name="code">action = model.action_global_cleanup()</field>
         </record>
 
         <!-- Tracking Session Form View -->
@@ -155,7 +172,7 @@
         <record id="action_tracking_sessions" model="ir.actions.act_window">
             <field name="name">Tracking Sessions</field>
             <field name="res_model">hr.location.tracking.session</field>
-            <field name="view_mode">form</field>
+            <field name="view_mode">tree,form</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     No tracking sessions found!
