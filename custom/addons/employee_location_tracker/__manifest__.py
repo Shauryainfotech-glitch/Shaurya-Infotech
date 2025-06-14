@@ -34,8 +34,10 @@
         'views/ai_dashboard_views.xml',
         'views/geofence_views.xml',
         'views/analytics_views.xml',
-        'views/menu_views.xml',
-        'wizard/location_report_wizard_views.xml',
+        'wizard/location_report_wizard_views.xml',  # Moved before menu_views.xml
+        'reports/location_report.xml',
+        'reports/location_report_template.xml',
+        'views/menu_views.xml',  # Now loads after wizard views
     ],
     'assets': {
         'web.assets_backend': [
