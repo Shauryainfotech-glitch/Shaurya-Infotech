@@ -1,15 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- INR Currency Configuration -->
-    <record id="inr_currency_setup" model="res.currency">
-        <field name="name">INR</field>
-        <field name="symbol">₹</field>
-        <field name="position">before</field>
-        <field name="active">True</field>
-        <field name="decimal_places">2</field>
-        <field name="rounding">0.01</field>
-    </record>
-
     <!-- Sequences -->
     <record id="sequence_architect_financial_category" model="ir.sequence">
         <field name="name">Financial Category Sequence</field>
