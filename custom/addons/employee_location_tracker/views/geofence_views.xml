@@ -136,7 +136,7 @@
             </field>
         </record>
 
-        <!-- Geofence Action -->
+        <!-- Geofence Action - FORM ONLY -->
         <record id="action_geofences" model="ir.actions.act_window">
             <field name="name">Geofences</field>
             <field name="res_model">hr.location.geofence</field>

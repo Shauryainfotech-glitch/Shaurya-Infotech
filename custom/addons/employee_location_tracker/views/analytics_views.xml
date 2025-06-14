@@ -88,12 +88,11 @@
             </field>
         </record>
 
-        <!-- Analytics Dashboard Action -->
+        <!-- Analytics Dashboard Action - FORM ONLY -->
         <record id="action_analytics_dashboard" model="ir.actions.act_window">
             <field name="name">Analytics Dashboard</field>
             <field name="res_model">hr.location.analytics.dashboard</field>
             <field name="view_mode">form</field>
-            <field name="view_id" ref="view_analytics_dashboard_form"/>
             <field name="target">current</field>
             <field name="context">{
                 'default_name': 'Main Dashboard',

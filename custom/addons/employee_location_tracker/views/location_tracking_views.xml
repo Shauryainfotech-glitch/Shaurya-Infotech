@@ -85,11 +85,11 @@
             </field>
         </record>
 
-        <!-- Tracking Settings Action -->
+        <!-- Tracking Settings Action - FORM ONLY -->
         <record id="action_tracking_settings" model="ir.actions.act_window">
             <field name="name">Tracking Settings</field>
             <field name="res_model">hr.location.tracking.settings</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">form</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     Configure location tracking settings!
@@ -168,11 +168,11 @@
             </field>
         </record>
 
-        <!-- Tracking Session Action -->
+        <!-- Tracking Session Action - FORM ONLY -->
         <record id="action_tracking_sessions" model="ir.actions.act_window">
             <field name="name">Tracking Sessions</field>
             <field name="res_model">hr.location.tracking.session</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">form</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     No tracking sessions found!
