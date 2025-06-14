@@ -154,7 +154,8 @@
                             </group>
                         </group>
 
-                        <group string="AI Analysis Results" attrs="{'invisible': [('anomaly_details', '=', False)]}">
+                        <!-- Fixed: Removed attrs and used invisible directly -->
+                        <group string="AI Analysis Results" invisible="anomaly_details == False">
                             <field name="anomaly_details" widget="text" readonly="1"/>
                             <field name="validation_notes" widget="text" readonly="1"/>
                         </group>
@@ -172,6 +173,37 @@
             <field name="view_id" ref="view_location_analysis_summary"/>
             <field name="domain">[('ai_confidence_score', '>', 0)]</field>
             <field name="context">{'search_default_anomalies': 1}</field>
+        </record>
+
+        <!-- Basic AI Model Form View -->
+        <record id="view_ai_analysis_form" model="ir.ui.view">
+            <field name="name">hr.location.ai.analysis.form</field>
+            <field name="model">hr.location.ai.analysis</field>
+            <field name="arch" type="xml">
+                <form string="AI Analysis Configuration">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="description"/>
+                                <field name="is_active"/>
+                            </group>
+                            <group>
+                                <field name="created_date"/>
+                                <field name="company_id"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- AI Analysis Action -->
+        <record id="action_ai_analysis_config" model="ir.actions.act_window">
+            <field name="name">AI Analysis Configuration</field>
+            <field name="res_model">hr.location.ai.analysis</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_ai_analysis_form"/>
         </record>
 
     </data>
