@@ -23,13 +23,11 @@
         'mail',
         'web',
         'portal',
-        # 'base_automation'
     ],
     'data': [
         'security/security.xml',
         'security/ir.model.access.csv',
         'data/ai_analysis_data.xml',
-        # 'data/automation_rules.xml',
         'data/geofence_demo_data.xml',
         'views/employee_location_views.xml',
         'views/location_tracking_views.xml',

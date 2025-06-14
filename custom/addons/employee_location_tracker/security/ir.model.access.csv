@@ -1,25 +1,22 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_employee_location_user,hr.employee.location user,model_hr_employee_location,group_location_user,1,1,1,0
-access_employee_location_manager,hr.employee.location manager,model_hr_employee_location,group_location_manager,1,1,1,1
-access_employee_location_admin,hr.employee.location admin,model_hr_employee_location,group_location_admin,1,1,1,1
-access_geofence_user,hr.location.geofence user,model_hr_location_geofence,group_location_user,1,0,0,0
-access_geofence_manager,hr.location.geofence manager,model_hr_location_geofence,group_location_manager,1,1,1,1
-access_geofence_admin,hr.location.geofence admin,model_hr_location_geofence,group_location_admin,1,1,1,1
-access_ai_analysis_user,hr.location.ai.analysis user,model_hr_location_ai_analysis,group_location_user,1,0,0,0
-access_ai_analysis_manager,hr.location.ai.analysis manager,model_hr_location_ai_analysis,group_location_manager,1,1,1,0
-access_ai_analysis_admin,hr.location.ai.analysis admin,model_hr_location_ai_analysis,group_location_admin,1,1,1,1
-access_tracking_settings_user,hr.location.tracking.settings user,model_hr_location_tracking_settings,group_location_user,1,1,1,0
-access_tracking_settings_manager,hr.location.tracking.settings manager,model_hr_location_tracking_settings,group_location_manager,1,1,1,1
-access_tracking_settings_admin,hr.location.tracking.settings admin,model_hr_location_tracking_settings,group_location_admin,1,1,1,1
-access_tracking_session_user,hr.location.tracking.session user,model_hr_location_tracking_session,group_location_user,1,1,1,0
-access_tracking_session_manager,hr.location.tracking.session manager,model_hr_location_tracking_session,group_location_manager,1,1,1,1
-access_tracking_session_admin,hr.location.tracking.session admin,model_hr_location_tracking_session,group_location_admin,1,1,1,1
-access_analytics_dashboard_user,hr.location.analytics.dashboard user,model_hr_location_analytics_dashboard,group_location_user,1,0,0,0
-access_analytics_dashboard_manager,hr.location.analytics.dashboard manager,model_hr_location_analytics_dashboard,group_location_manager,1,1,1,1
-access_analytics_dashboard_admin,hr.location.analytics.dashboard admin,model_hr_location_analytics_dashboard,group_location_admin,1,1,1,1
-access_analytics_report_user,hr.location.analytics.report user,model_hr_location_analytics_report,group_location_user,1,0,0,0
-access_analytics_report_manager,hr.location.analytics.report manager,model_hr_location_analytics_report,group_location_manager,1,0,0,0
-access_analytics_report_admin,hr.location.analytics.report admin,model_hr_location_analytics_report,group_location_admin,1,0,0,0
-access_report_wizard_user,hr.location.report.wizard user,model_hr_location_report_wizard,group_location_user,1,1,1,1
-access_report_wizard_manager,hr.location.report.wizard manager,model_hr_location_report_wizard,group_location_manager,1,1,1,1
-access_report_wizard_admin,hr.location.report.wizard admin,model_hr_location_report_wizard,group_location_admin,1,1,1,1
+access_employee_location_user,Employee Location User,model_hr_employee_location,group_location_user,1,1,1,0
+access_employee_location_manager,Employee Location Manager,model_hr_employee_location,group_location_manager,1,1,1,1
+access_employee_location_admin,Employee Location Admin,model_hr_employee_location,group_location_admin,1,1,1,1
+access_location_geofence_user,Location Geofence User,model_hr_location_geofence,group_location_user,1,0,0,0
+access_location_geofence_manager,Location Geofence Manager,model_hr_location_geofence,group_location_manager,1,1,1,1
+access_location_geofence_admin,Location Geofence Admin,model_hr_location_geofence,group_location_admin,1,1,1,1
+access_tracking_settings_user,Tracking Settings User,model_hr_location_tracking_settings,group_location_user,1,1,1,0
+access_tracking_settings_manager,Tracking Settings Manager,model_hr_location_tracking_settings,group_location_manager,1,1,1,1
+access_tracking_settings_admin,Tracking Settings Admin,model_hr_location_tracking_settings,group_location_admin,1,1,1,1
+access_tracking_session_user,Tracking Session User,model_hr_location_tracking_session,group_location_user,1,1,1,0
+access_tracking_session_manager,Tracking Session Manager,model_hr_location_tracking_session,group_location_manager,1,1,1,1
+access_tracking_session_admin,Tracking Session Admin,model_hr_location_tracking_session,group_location_admin,1,1,1,1
+access_analytics_dashboard_user,Analytics Dashboard User,model_hr_location_analytics_dashboard,group_location_user,1,0,0,0
+access_analytics_dashboard_manager,Analytics Dashboard Manager,model_hr_location_analytics_dashboard,group_location_manager,1,1,1,1
+access_analytics_dashboard_admin,Analytics Dashboard Admin,model_hr_location_analytics_dashboard,group_location_admin,1,1,1,1
+access_location_report_wizard_user,Location Report Wizard User,model_hr_location_report_wizard,group_location_user,1,1,1,1
+access_location_report_wizard_manager,Location Report Wizard Manager,model_hr_location_report_wizard,group_location_manager,1,1,1,1
+access_location_report_wizard_admin,Location Report Wizard Admin,model_hr_location_report_wizard,group_location_admin,1,1,1,1
+access_ai_analysis_user,AI Analysis User,model_hr_location_ai_analysis,group_location_user,1,0,0,0
+access_ai_analysis_manager,AI Analysis Manager,model_hr_location_ai_analysis,group_location_manager,1,1,1,0
+access_ai_analysis_admin,AI Analysis Admin,model_hr_location_ai_analysis,group_location_admin,1,1,1,1
