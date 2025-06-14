@@ -25,9 +25,23 @@ class ArchitectFinancialTracking(models.Model):
         ('payment', 'Payment'),
         ('adjustment', 'Adjustment')
     ], string='Transaction Type', required=True)
-
     amount = fields.Monetary(string='Amount', currency_field='currency_id', required=True)
-    currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.ref('base.INR'))
+
+    @api.model
+    def _get_inr_currency(self):
+        """Get INR currency, fallback to company currency"""
+        inr = self.env['res.currency'].search([('name', '=', 'INR')], limit=1)
+        return inr.id if inr else self.env.company.currency_id.id
+
+    currency_id = fields.Many2one(
+        'res.currency',
+        string='Currency',
+        required=True,
+        default=lambda self: self._get_inr_currency(),
+        tracking=True
+    )
+    # amount = fields.Monetary(string='Amount', currency_field='currency_id', required=True)
+    # currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.ref('base.INR'))
     # Dates
     date = fields.Date(string='Date', required=True, default=fields.Date.today)
     due_date = fields.Date(string='Due Date')

@@ -150,5 +150,12 @@
             <field name="number_next">1</field>
             <field name="number_increment">1</field>
         </record>
+        <record id="base.INR" model="res.currency">
+        <field name="name">INR</field>
+        <field name="symbol">₹</field>
+        <field name="position">before</field>
+        <field name="active">True</field>
+        <field name="decimal_places">2</field>
+    </record>
     </data>
 </odoo>
