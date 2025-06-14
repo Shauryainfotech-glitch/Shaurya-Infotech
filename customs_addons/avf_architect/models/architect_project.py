@@ -74,9 +74,31 @@ class ArchitectProject(models.Model):
     budget = fields.Monetary(string='Budget', currency_field='currency_id')
     estimated_cost = fields.Monetary(string='Estimated Cost', currency_field='currency_id')
     actual_cost = fields.Monetary(string='Actual Cost', compute='_compute_actual_cost', store=True)
-    currency_id = fields.Many2one('res.currency', string='Currency',
-                                  default=lambda self: self.env.company.currency_id)
+    # currency_id = fields.Many2one('res.currency', string='Currency',
+    #                               default=lambda self: self.env.company.currency_id)
+    @api.model
+    def _get_inr_currency(self):
+        """Get INR currency, create if not exists"""
+        inr = self.env.ref('base.INR', raise_if_not_found=False)
+        if not inr:
+            # If INR doesn't exist, create it
+            inr = self.env['res.currency'].create({
+                'name': 'INR',
+                'symbol': '₹',
+                'position': 'before',
+                'decimal_places': 2,
+                'active': True,
+                'rounding': 0.01
+            })
+        return inr.id
 
+    currency_id = fields.Many2one(
+        'res.currency',
+        string='Currency',
+        required=True,
+        default=lambda self: self._get_inr_currency(),
+        help="Currency for this transaction"
+    )
     progress = fields.Float(string='Progress (%)', compute='_compute_progress', store=True)
     task_count = fields.Integer(string='Task Count', compute='_compute_task_count')
     drawing_count = fields.Integer(string='Drawings', compute='_compute_drawing_count')
