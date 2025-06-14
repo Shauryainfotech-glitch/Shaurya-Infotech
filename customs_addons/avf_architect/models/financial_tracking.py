@@ -30,16 +30,26 @@ class ArchitectFinancialTracking(models.Model):
 
     @api.model
     def _get_inr_currency(self):
-        """Get INR currency, fallback to company currency"""
-        inr = self.env['res.currency'].search([('name', '=', 'INR')], limit=1)
-        return inr.id if inr else self.env.company.currency_id.id
+        """Get INR currency, create if not exists"""
+        inr = self.env.ref('base.INR', raise_if_not_found=False)
+        if not inr:
+            # If INR doesn't exist, create it
+            inr = self.env['res.currency'].create({
+                'name': 'INR',
+                'symbol': '₹',
+                'position': 'before',
+                'decimal_places': 2,
+                'active': True,
+                'rounding': 0.01
+            })
+        return inr.id
 
     currency_id = fields.Many2one(
         'res.currency',
         string='Currency',
         required=True,
         default=lambda self: self._get_inr_currency(),
-        tracking=True
+        help="Currency for this transaction"
     )
 
     # Dates
@@ -92,6 +102,9 @@ class ArchitectFinancialTracking(models.Model):
         for vals in vals_list:
             if not vals.get('name'):
                 vals['name'] = self.env['ir.sequence'].next_by_code('architect.financial.tracking')
+            # Ensure INR currency is set
+            if not vals.get('currency_id'):
+                vals['currency_id'] = self._get_inr_currency()
         return super().create(vals_list)
 
     def action_submit(self):
@@ -216,15 +229,25 @@ class ArchitectBudget(models.Model):
 
     @api.model
     def _get_inr_currency(self):
-        """Get INR currency, fallback to company currency"""
-        inr = self.env['res.currency'].search([('name', '=', 'INR')], limit=1)
-        return inr.id if inr else self.env.company.currency_id.id
+        """Get INR currency, create if not exists"""
+        inr = self.env.ref('base.INR', raise_if_not_found=False)
+        if not inr:
+            inr = self.env['res.currency'].create({
+                'name': 'INR',
+                'symbol': '₹',
+                'position': 'before',
+                'decimal_places': 2,
+                'active': True,
+                'rounding': 0.01
+            })
+        return inr.id
 
     currency_id = fields.Many2one(
         'res.currency',
         string='Currency',
         required=True,
-        default=lambda self: self._get_inr_currency()
+        default=lambda self: self._get_inr_currency(),
+        help="Currency for this budget"
     )
 
     # Status and flags
@@ -413,15 +436,25 @@ class ArchitectCostEstimate(models.Model):
 
     @api.model
     def _get_inr_currency(self):
-        """Get INR currency, fallback to company currency"""
-        inr = self.env['res.currency'].search([('name', '=', 'INR')], limit=1)
-        return inr.id if inr else self.env.company.currency_id.id
+        """Get INR currency, create if not exists"""
+        inr = self.env.ref('base.INR', raise_if_not_found=False)
+        if not inr:
+            inr = self.env['res.currency'].create({
+                'name': 'INR',
+                'symbol': '₹',
+                'position': 'before',
+                'decimal_places': 2,
+                'active': True,
+                'rounding': 0.01
+            })
+        return inr.id
 
     currency_id = fields.Many2one(
         'res.currency',
         string='Currency',
         required=True,
-        default=lambda self: self._get_inr_currency()
+        default=lambda self: self._get_inr_currency(),
+        help="Currency for this estimate"
     )
 
     # Confidence and approval
@@ -445,7 +478,7 @@ class ArchitectCostEstimate(models.Model):
         ('rejected', 'Rejected')
     ], string='Status', default='draft', tracking=True)
 
-    # Dates (renamed from estimate_date to date for XML compatibility)
+    # Dates
     date = fields.Date(string='Estimate Date', default=fields.Date.today)
     validity_date = fields.Date(string='Valid Until')
 
