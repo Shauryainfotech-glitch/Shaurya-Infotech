@@ -1,13 +1,172 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-    <!-- Chart Component Template - SINGLE DEFINITION -->
+    <!-- SINGLE DashboardChart definition -->
     <t t-name="day_plan_work_report_ai.DashboardChart">
-        <div t-att-style="props.style || 'height: 300px;'" class="chart-container">
-            <canvas t-ref="chart"></canvas>
+        <div class="chart-container" t-att-style="props.style || 'height: 300px;'">
+            <canvas t-ref="chart"/>
         </div>
     </t>
 
-    <!-- Main Dashboard Template -->
+    <!-- ProductivityDashboard template -->
+    <t t-name="day_plan_work_report_ai.ProductivityDashboard">
+        <div class="o_productivity_dashboard h-100 d-flex flex-column bg-light">
+            <div class="o_dashboard_header py-3 bg-white border-bottom shadow-sm">
+                <div class="container-fluid">
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <h1 class="h3 mb-0 text-primary">Productivity Dashboard</h1>
+                        </div>
+                        <div class="col-4 text-right">
+                            <div class="btn-group" role="group">
+                                <button class="btn btn-outline-primary" t-on-click="refreshDashboard">
+                                    <i class="fa fa-refresh mr-1"/> Refresh
+                                </button>
+                                <button class="btn btn-outline-info" t-on-click="printDashboard">
+                                    <i class="fa fa-print mr-1"/> Print Report
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container-fluid mt-3 flex-grow-1 overflow-auto">
+                <!-- Loading indicator -->
+                <div t-if="state.loading" class="d-flex justify-content-center my-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+
+                <!-- Error display -->
+                <div t-if="state.error" class="alert alert-danger" role="alert">
+                    <strong>Error:</strong> <t t-esc="state.error"/>
+                </div>
+
+                <!-- Dashboard Content -->
+                <div t-else="">
+                    <!-- Key Performance Indicators -->
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <div class="card bg-primary text-white">
+                                <div class="card-body">
+                                    <h6 class="card-title">Total Plans</h6>
+                                    <h2 class="display-4" t-esc="state.totalPlans || 0"></h2>
+                                    <p class="mt-2">
+                                        <span t-esc="state.plansChange || 0"></span>% from last period
+                                        <i class="fa fa-arrow-up ml-1" t-if="state.plansChange >= 0"></i>
+                                        <i class="fa fa-arrow-down ml-1" t-if="state.plansChange &lt; 0"></i>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-success text-white">
+                                <div class="card-body">
+                                    <h6 class="card-title">Completion Rate</h6>
+                                    <h2 class="display-4" t-esc="state.completionRate || 0"></h2>
+                                    <p class="mt-2">Tasks completed on time</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-info text-white">
+                                <div class="card-body">
+                                    <h6 class="card-title">Productivity Score</h6>
+                                    <h2 class="display-4" t-esc="state.productivityScore || 0"></h2>
+                                    <p class="mt-2">Overall efficiency rating</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-warning text-white">
+                                <div class="card-body">
+                                    <h6 class="card-title">Attention Items</h6>
+                                    <h2 class="display-4" t-esc="state.attentionItems || 0"></h2>
+                                    <p class="mt-2">Tasks needing review</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts Row 1 -->
+                    <div class="row mb-4">
+                        <!-- Bar Chart -->
+                        <div class="col-md-6">
+                            <div class="card shadow-sm">
+                                <div class="card-header bg-white">
+                                    <h5 class="card-title mb-0">Weekly Activity</h5>
+                                </div>
+                                <div class="card-body" style="height: 300px;">
+                                    <t t-if="state.chartData">
+                                        <t t-component="DashboardChart"
+                                           data="state.chartData"
+                                           type="'bar'"
+                                           style="'height: 100%; width: 100%;'" />
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pie Chart -->
+                        <div class="col-md-6">
+                            <div class="card shadow-sm">
+                                <div class="card-header bg-white">
+                                    <h5 class="card-title mb-0">Task Distribution</h5>
+                                </div>
+                                <div class="card-body" style="height: 300px;">
+                                    <t t-if="state.pieChartData">
+                                        <t t-component="DashboardChart"
+                                           data="state.pieChartData"
+                                           type="'pie'"
+                                           style="'height: 100%; width: 100%;'" />
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <!-- Line Chart -->
+                        <div class="col-md-6">
+                            <div class="card shadow-sm">
+                                <div class="card-header bg-white">
+                                    <h5 class="card-title mb-0">Productivity Trend</h5>
+                                </div>
+                                <div class="card-body" style="height: 300px;">
+                                    <t t-if="state.lineChartData">
+                                        <t t-component="DashboardChart"
+                                           data="state.lineChartData"
+                                           type="'line'"
+                                           style="'height: 100%; width: 100%;'" />
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Radar Chart -->
+                        <div class="col-md-6">
+                            <div class="card shadow-sm">
+                                <div class="card-header bg-white">
+                                    <h5 class="card-title mb-0">Skill Assessment</h5>
+                                </div>
+                                <div class="card-body" style="height: 300px;">
+                                    <t t-if="state.radarChartData">
+                                        <t t-component="DashboardChart"
+                                           data="state.radarChartData"
+                                           type="'radar'"
+                                           style="'height: 100%; width: 100%;'" />
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <!-- NewProductivityDashboard template - SIMPLIFIED -->
     <t t-name="day_plan_work_report_ai.NewProductivityDashboard">
         <div class="o_new_productivity_dashboard py-3">
             <!-- Header -->
@@ -15,13 +174,13 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="d-flex justify-content-between align-items-center">
-                            <h1>Productivity Dashboard</h1>
+                            <h1>New Productivity Dashboard</h1>
                             <div class="btn-group">
-                                <button t-on-click="printDashboard" class="btn btn-primary">
-                                    <i class="fa fa-print me-2"></i>Print Dashboard
-                                </button>
-                                <button t-on-click="refreshDashboard" class="btn btn-secondary">
+                                <button t-on-click="refreshDashboard" class="btn btn-primary">
                                     <i class="fa fa-refresh me-2"></i>Refresh
+                                </button>
+                                <button t-on-click="printDashboard" class="btn btn-secondary">
+                                    <i class="fa fa-print me-2"></i>Print
                                 </button>
                             </div>
                         </div>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<templates>
-    <t t-name="day_plan_work_report_ai.GuaranteedChartDashboard" owl="1">
-        <Layout className="'o_guaranteed_chart_dashboard'">
+<templates xml:space="preserve">
+    <t t-name="day_plan_work_report_ai.GuaranteedChartDashboard">
+        <div class="o_guaranteed_chart_dashboard">
             <div class="container-fluid pt-4">
                 <!-- Header Section -->
                 <div class="row mb-4">
@@ -10,18 +10,16 @@
                             <div>
                                 <h1 class="h2 mb-0 text-primary">
                                     <i class="fa fa-chart-line me-2"></i>
-                                    Guaranteed Working Chart Dashboard
+                                    Chart Dashboard
                                 </h1>
                                 <p class="text-muted mb-0">Real-time analytics and performance metrics</p>
                             </div>
                             <div class="btn-group">
-                                <button class="btn btn-outline-primary" t-on-click="refreshDashboard" title="Refresh Dashboard">
-                                    <i class="fa fa-refresh me-1"></i>
-                                    Refresh
+                                <button class="btn btn-outline-primary" t-on-click="refreshDashboard">
+                                    <i class="fa fa-refresh me-1"></i>Refresh
                                 </button>
-                                <button class="btn btn-outline-secondary" t-on-click="printDashboard" title="Print Dashboard">
-                                    <i class="fa fa-print me-1"></i>
-                                    Print
+                                <button class="btn btn-outline-secondary" t-on-click="printDashboard">
+                                    <i class="fa fa-print me-1"></i>Print
                                 </button>
                             </div>
                         </div>
@@ -101,7 +99,7 @@
                                                 </div>
                                                 <div class="col">
                                                     <div class="progress progress-sm mr-2">
-                                                        <div class="progress-bar bg-info" role="progressbar" style="width: 84%" aria-valuenow="84" aria-valuemin="0" aria-valuemax="100"></div>
+                                                        <div class="progress-bar bg-info" role="progressbar" style="width: 84%"></div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -133,12 +131,12 @@
                         </div>
                     </div>
 
-                    <!-- Charts Row -->
+                    <!-- Charts Row - Using direct canvas refs -->
                     <div class="row">
                         <!-- Line Chart -->
                         <div class="col-lg-8 mb-4">
                             <div class="card shadow">
-                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                <div class="card-header py-3">
                                     <h6 class="m-0 font-weight-bold text-primary">
                                         <i class="fa fa-chart-line me-2"></i>
                                         Productivity Trend Analysis
@@ -155,7 +153,7 @@
                         <!-- Pie Chart -->
                         <div class="col-lg-4 mb-4">
                             <div class="card shadow">
-                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                <div class="card-header py-3">
                                     <h6 class="m-0 font-weight-bold text-primary">
                                         <i class="fa fa-chart-pie me-2"></i>
                                         Task Distribution
@@ -174,7 +172,7 @@
                     <div class="row">
                         <div class="col-12 mb-4">
                             <div class="card shadow">
-                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                <div class="card-header py-3">
                                     <h6 class="m-0 font-weight-bold text-primary">
                                         <i class="fa fa-chart-bar me-2"></i>
                                         Monthly Performance Overview
@@ -191,6 +189,6 @@
                     </div>
                 </div>
             </div>
-        </Layout>
+        </div>
     </t>
 </templates>

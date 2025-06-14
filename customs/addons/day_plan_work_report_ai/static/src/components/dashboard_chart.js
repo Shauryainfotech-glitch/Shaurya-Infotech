@@ -2,77 +2,89 @@
 
 import { Component, onMounted, onWillUnmount, useRef } from "@odoo/owl";
 
-/**
- * Dashboard Chart Component
- * 
- * A reusable chart component that uses Chart.js to render different types of charts
- * for the day.plan dashboard.
- */
 export class DashboardChart extends Component {
+    static template = "day_plan_work_report_ai.DashboardChart";  // Single reference
+    static props = {
+        data: { type: [String, Object], optional: true },
+        type: { type: String, optional: true },
+        style: { type: String, optional: true },
+    };
+
     setup() {
         this.chartRef = useRef("chart");
         this.chart = null;
-        
-        onMounted(() => this._renderChart());
+
+        onMounted(() => {
+            // Add delay to ensure DOM is ready
+            setTimeout(() => this._renderChart(), 100);
+        });
+
         onWillUnmount(() => this._destroyChart());
     }
-    
-    /**
-     * Renders the chart using Chart.js
-     * @private
-     */
+
     _renderChart() {
-        if (this.chart) {
-            this._destroyChart();
+        if (!window.Chart) {
+            console.error("Chart.js not loaded");
+            return;
         }
-        
-        const ctx = this.chartRef.el.getContext('2d');
-        const chartData = this.props.data || {};
-        const chartType = this.props.type || 'bar';
-        const chartOptions = this.props.options || this._getDefaultOptions(chartType);
-        
-        this.chart = new Chart(ctx, {
-            type: chartType,
-            data: chartData,
-            options: chartOptions
-        });
+
+        if (!this.chartRef.el) {
+            console.error("Chart canvas element not found");
+            return;
+        }
+
+        try {
+            const ctx = this.chartRef.el.getContext("2d");
+            let chartData;
+
+            // Parse data if it's a string
+            if (typeof this.props.data === "string") {
+                try {
+                    chartData = JSON.parse(this.props.data);
+                } catch (e) {
+                    console.error("Invalid chart data JSON:", e);
+                    chartData = this._getDefaultData();
+                }
+            } else {
+                chartData = this.props.data || this._getDefaultData();
+            }
+
+            const options = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                    }
+                }
+            };
+
+            this.chart = new window.Chart(ctx, {
+                type: this.props.type || "bar",
+                data: chartData,
+                options: options,
+            });
+
+            console.log("Chart rendered successfully:", this.props.type);
+        } catch (error) {
+            console.error("Error rendering chart:", error);
+        }
     }
-    
-    /**
-     * Get default chart options based on chart type
-     * @private
-     * @param {string} chartType - The type of chart ('bar', 'line', 'pie', 'radar')
-     * @returns {Object} Chart options
-     */
-    _getDefaultOptions(chartType) {
-        const options = {
-            responsive: true,
-            maintainAspectRatio: false,
+
+    _getDefaultData() {
+        return {
+            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+            datasets: [{
+                label: 'Sample Data',
+                data: [12, 19, 3, 5, 2],
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
         };
-        
-        // Additional options based on chart type
-        if (chartType === 'line') {
-            options.scales = {
-                y: {
-                    beginAtZero: true
-                }
-            };
-        } else if (chartType === 'radar') {
-            options.scale = {
-                ticks: {
-                    beginAtZero: true,
-                    max: 100
-                }
-            };
-        }
-        
-        return options;
     }
-    
-    /**
-     * Clean up chart instance when component is unmounted
-     * @private
-     */
+
     _destroyChart() {
         if (this.chart) {
             this.chart.destroy();
@@ -80,11 +92,3 @@ export class DashboardChart extends Component {
         }
     }
 }
-
-DashboardChart.template = 'day_plan_work_report_ai.DashboardChart';
-DashboardChart.props = {
-    data: { type: Object, optional: true },
-    type: { type: String, optional: true },
-    options: { type: Object, optional: true },
-    style: { type: String, optional: true }
-};

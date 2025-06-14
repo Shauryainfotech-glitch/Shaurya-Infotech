@@ -50,7 +50,6 @@
         'resource',
         'web_enterprise',
         'iap',
-
     ],
     'data': [
         # Security
@@ -84,10 +83,10 @@
     ],
     'assets': {
         'web.assets_backend': [
-            # JavaScript Files
-            'day_plan_work_report_ai/static/src/guaranteed_chart_dashboard.js',
-            'day_plan_work_report_ai/static/src/new_dashboard_client_action.js',
+            # JavaScript Files - Load Chart.js first
             'day_plan_work_report_ai/static/src/components/dashboard_chart.js',
+            'day_plan_work_report_ai/static/src/new_dashboard_client_action.js',
+            'day_plan_work_report_ai/static/src/guaranteed_chart_dashboard.js',
             'day_plan_work_report_ai/static/src/components/dashboard/productivity_dashboard.js',
             'day_plan_work_report_ai/static/src/components/dashboard/productivity_dashboard_action.js',
 
@@ -100,15 +99,14 @@
             # CSS Styles
             'day_plan_work_report_ai/static/src/components/dashboard/dashboard.css',
 
-            # XML Templates - MOVED FROM web.assets_qweb to web.assets_backend
-            'day_plan_work_report_ai/static/src/guaranteed_chart_dashboard.xml',
+            # XML Templates - ONLY CLEAN TEMPLATES
             'day_plan_work_report_ai/static/src/day_plan_templates.xml',
-            'day_plan_work_report_ai/static/src/client_action_templates.xml',
+            'day_plan_work_report_ai/static/src/guaranteed_chart_dashboard.xml',
+
+            # REMOVED: client_action_templates.xml (contains conflicting templates)
+            # REMOVED: client_action_templates.xml.bak (backup file should not be loaded)
         ],
     },
-    # 'demo': [
-    #     'demo/day_plan_demo.xml',
-    # ],
     'installable': True,
     'application': True,
     'auto_install': False,
