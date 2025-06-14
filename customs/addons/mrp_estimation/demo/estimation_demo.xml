@@ -19,7 +19,7 @@
         <record id="demo_product_widget" model="product.product">
             <field name="name">Custom Widget</field>
             <field name="default_code">WIDGET-001</field>
-            <field name="type">product</field>
+            <field name="type">storable</field> <!-- Changed from 'product' to 'storable' -->
             <field name="categ_id" ref="product.product_category_all"/>
             <field name="standard_price">50.0</field>
             <field name="list_price">100.0</field>
@@ -30,7 +30,7 @@
         <record id="demo_material_steel" model="product.product">
             <field name="name">Steel Plate</field>
             <field name="default_code">STEEL-001</field>
-            <field name="type">product</field>
+            <field name="type">consu</field> <!-- Changed from 'product' to 'consu' -->
             <field name="categ_id" ref="product.product_category_all"/>
             <field name="standard_price">25.0</field>
             <field name="list_price">35.0</field>
@@ -41,7 +41,7 @@
         <record id="demo_material_aluminum" model="product.product">
             <field name="name">Aluminum Rod</field>
             <field name="default_code">ALU-001</field>
-            <field name="type">product</field>
+            <field name="type">consu</field> <!-- Changed from 'product' to 'consu' -->
             <field name="categ_id" ref="product.product_category_all"/>
             <field name="standard_price">15.0</field>
             <field name="list_price">22.0</field>
