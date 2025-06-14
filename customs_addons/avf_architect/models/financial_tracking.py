@@ -26,7 +26,7 @@ class ArchitectFinancialTracking(models.Model):
         ('adjustment', 'Adjustment')
     ], string='Transaction Type', required=True)
 
-    amount = fields.Monetary(string='Amount', currency_field='currency_id', required=True)
+    amount = fields.Monetary(string='Amount INR', currency_field='currency_id', required=True)
 
     @api.model
     def _get_inr_currency(self):
