@@ -264,6 +264,101 @@ class EmployeeLocation(models.Model):
             if record.accuracy and record.accuracy < 0:
                 raise ValidationError("GPS accuracy cannot be negative")
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        """Override create to add automation logic"""
+        records = super().create(vals_list)
+        
+        for record in records:
+            # Auto-validate high confidence locations
+            if (record.ai_confidence_score and record.ai_confidence_score > 0.9 and 
+                not record.anomaly_detected):
+                record.write({
+                    'status': 'validated',
+                    'is_valid': True,
+                    'validation_notes': 'Auto-validated: High AI confidence score'
+                })
+                _logger.info(f"Auto-validated location {record.id} for {record.employee_id.name}")
+            
+            # Flag anomalies for review
+            if record.anomaly_detected and record.status == 'draft':
+                record.write({
+                    'status': 'anomaly',
+                    'validation_notes': 'Flagged for review: Anomaly detected by AI'
+                })
+                record._send_anomaly_notification()
+                _logger.warning(f"Anomaly flagged for location {record.id} - {record.employee_id.name}")
+            
+            # Auto-create attendance from geofence
+            if (record.geofence_id and 
+                record.geofence_id.auto_attendance and 
+                record.inside_geofence):
+                record._auto_create_attendance()
+        
+        return records
+
+    def write(self, vals):
+        """Override write to handle status changes"""
+        result = super().write(vals)
+        
+        # Check for anomaly detection changes
+        if 'anomaly_detected' in vals and vals['anomaly_detected']:
+            for record in self:
+                if record.status == 'draft':
+                    record.write({
+                        'status': 'anomaly',
+                        'validation_notes': 'Flagged for review: Anomaly detected by AI'
+                    })
+                    record._send_anomaly_notification()
+        
+        return result
+
+    def _auto_create_attendance(self):
+        """Auto-create attendance record based on geofence entry"""
+        self.ensure_one()
+        
+        try:
+            existing_attendance = self.env['hr.attendance'].search([
+                ('employee_id', '=', self.employee_id.id), 
+                ('check_out', '=', False)
+            ], limit=1)
+
+            if not existing_attendance and self.location_type == 'check_in':
+                self.env['hr.attendance'].create({
+                    'employee_id': self.employee_id.id,
+                    'check_in': self.timestamp,
+                })
+                _logger.info(f"Auto check-in created for {self.employee_id.name} at {self.timestamp}")
+                
+            elif existing_attendance and self.location_type == 'check_out':
+                existing_attendance.write({
+                    'check_out': self.timestamp
+                })
+                _logger.info(f"Auto check-out created for {self.employee_id.name} at {self.timestamp}")
+                
+        except Exception as e:
+            _logger.error(f"Error creating auto-attendance for {self.employee_id.name}: {str(e)}")
+
+    def _send_anomaly_notification(self):
+        """Send notification when anomaly is detected"""
+        try:
+            message = f"Location anomaly detected for {self.employee_id.name} at {self.timestamp}"
+
+            # Send message to HR managers
+            managers = self.env['res.users'].search([
+                ('groups_id', 'in', [self.env.ref('employee_location_tracker.group_location_manager').id])
+            ])
+
+            for manager in managers:
+                if manager.partner_id:
+                    self.message_post(
+                        body=message,
+                        partner_ids=[manager.partner_id.id],
+                        message_type='notification'
+                    )
+        except Exception as e:
+            _logger.error(f"Error sending anomaly notification: {str(e)}")
+
     def _calculate_distance(self, lat1, lon1, lat2, lon2):
         """Calculate distance between two points using Haversine formula"""
         import math
@@ -332,24 +427,6 @@ class EmployeeLocation(models.Model):
             }
         }
 
-    def _send_anomaly_notification(self):
-        """Send notification when anomaly is detected"""
-        message = f"Location anomaly detected for {self.employee_id.name} at {self.timestamp}"
-
-        # Send message to HR managers
-        hr_managers = self.env['hr.employee'].search([
-            ('job_id.name', 'ilike', 'manager'),
-            ('company_id', '=', self.company_id.id)
-        ])
-
-        for manager in hr_managers:
-            if manager.user_id:
-                self.message_post(
-                    body=message,
-                    partner_ids=[manager.user_id.partner_id.id],
-                    message_type='notification'
-                )
-
     def action_show_on_map(self):
         """Show location on map"""
         self.ensure_one()
@@ -377,8 +454,11 @@ class EmployeeLocation(models.Model):
 
         location = self.create(vals)
 
-        # Trigger AI analysis asynchronously
-        location.with_delay().action_validate_location()
+        # Trigger AI analysis asynchronously (if available)
+        try:
+            location.action_validate_location()
+        except Exception as e:
+            _logger.warning(f"AI analysis failed for location {location.id}: {str(e)}")
 
         return location
 
@@ -399,52 +479,3 @@ class EmployeeLocation(models.Model):
                 return geofence
 
         return None
-    # Add these methods to the EmployeeLocation class in employee_location.py
-
-@api.model_create_multi
-def create(self, vals_list):
-    """Override create to add automation logic"""
-    records = super().create(vals_list)
-    
-    for record in records:
-        # Auto-validate high confidence locations
-        if (record.ai_confidence_score > 0.9 and 
-            not record.anomaly_detected):
-            record.write({
-                'status': 'validated',
-                'is_valid': True,
-                'validation_notes': 'Auto-validated: High AI confidence score'
-            })
-        
-        # Flag anomalies for review
-        if record.anomaly_detected and record.status == 'draft':
-            record.write({
-                'status': 'anomaly',
-                'validation_notes': 'Flagged for review: Anomaly detected by AI'
-            })
-            record._send_anomaly_notification()
-        
-        # Auto-create attendance from geofence
-        if (record.geofence_id and 
-            record.geofence_id.auto_attendance and 
-            record.inside_geofence):
-            record._auto_create_attendance()
-    
-    return records
-
-def _auto_create_attendance(self):
-    """Auto-create attendance record based on geofence entry"""
-    existing_attendance = self.env['hr.attendance'].search([
-        ('employee_id', '=', self.employee_id.id), 
-        ('check_out', '=', False)
-    ], limit=1)
-
-    if not existing_attendance and self.location_type == 'check_in':
-        self.env['hr.attendance'].create({
-            'employee_id': self.employee_id.id,
-            'check_in': self.timestamp,
-        })
-    elif existing_attendance and self.location_type == 'check_out':
-        existing_attendance.write({
-            'check_out': self.timestamp
-        })
